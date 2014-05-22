@@ -63,15 +63,13 @@ class QContactIdMock : public QContactEngineId
 {
 public:
     QContactIdMock(const QString& managerUri, uint id) : m_managerUri(managerUri), m_id(id) {}
+
     bool isEqualTo(const QContactEngineId* other) const {
-        if (m_managerUri == static_cast<const QContactIdMock*>(other)->m_managerUri)
-            return m_id == static_cast<const QContactIdMock*>(other)->m_id;
-        return false;
+        return m_id == static_cast<const QContactIdMock*>(other)->m_id;
     }
+
     bool isLessThan(const QContactEngineId* other) const {
-        if (m_managerUri == static_cast<const QContactIdMock*>(other)->m_managerUri)
-            return m_id < static_cast<const QContactIdMock*>(other)->m_id;
-        return m_managerUri < static_cast<const QContactIdMock*>(other)->m_managerUri;
+        return m_id < static_cast<const QContactIdMock*>(other)->m_id;
     }
 
     QString localId() const {

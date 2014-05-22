@@ -57,6 +57,27 @@ QT_BEGIN_NAMESPACE_ORGANIZER
  */
 
 /*!
+   \typedef QOrganizerItemChangeSet::ItemChangeList
+
+   This type describes a set of item changes, where each item whose
+   ID is listed in \c second is subject to a change that affects some or
+   all of the detail types listed in \c first.
+
+   Note that change grouping is of items affected by equivalent changes,
+   rather than of multiple changes affecting the same item.
+
+   \code
+        foreach (QOrganizerItemChangeSet::ItemChangeList changeList, set.changedItems()) {
+            if (changeList.first.contains(QOrganizerItemDetail::TypeDescription)) {
+                qDebug() << "Item IDs with description changes:" << changeList.second;
+            }
+        }
+   \endcode
+
+   \sa QOrganizerItemChangeSet::changedItems()
+ */
+
+/*!
     Constructs a new change set.
  */
 QOrganizerItemChangeSet::QOrganizerItemChangeSet()
@@ -146,33 +167,75 @@ void QOrganizerItemChangeSet::clearAddedItems()
 }
 
 /*!
-    Returns the set of IDs of organizer items which have been changed in the database.
+    Returns a list of ItemChangeLists describing which items have been
+    changed in the database, and what details of those items have changed.
+
  */
-QSet<QOrganizerItemId> QOrganizerItemChangeSet::changedItems() const
+QList<QOrganizerItemChangeSet::ItemChangeList> QOrganizerItemChangeSet::changedItems() const
 {
     return d->m_changedItems;
 }
 
 /*!
-    Inserts the given \a itemId into the set of IDs of organizer items which have been changed in
-    the database.
+    Inserts the given item ID \a itemId into the set of IDs of organizer items which have been changed in
+    the database, with the changes described by \a typesChanged.
  */
-void QOrganizerItemChangeSet::insertChangedItem(const QOrganizerItemId &itemId)
+void QOrganizerItemChangeSet::insertChangedItem(const QOrganizerItemId &itemId, const QList<QOrganizerItemDetail::DetailType> &typesChanged)
 {
-    d->m_changedItems.insert(itemId);
-    d->m_modifiedItems.append(QPair<QOrganizerItemId, QOrganizerManager::Operation>(itemId, QOrganizerManager::Change));
+    insertChangedItems(QList<QOrganizerItemId>() << itemId, typesChanged);
 }
 
 /*!
-    Inserts each of the given \a itemIds into the set of IDs of organizer items which have been
-    changed in the database.
+    Inserts each of the itemIDs listed in \a itemIds into the set of IDs of organizer items which have been
+    changed in the database, with the changes described by \a typesChanged.
  */
-void QOrganizerItemChangeSet::insertChangedItems(const QList<QOrganizerItemId> &itemIds)
+void QOrganizerItemChangeSet::insertChangedItems(const QList<QOrganizerItemId> &changedItemIds, const QList<QOrganizerItemDetail::DetailType> &typesChanged)
 {
-    foreach (const QOrganizerItemId &id, itemIds) {
-        d->m_changedItems.insert(id);
-        d->m_modifiedItems.append(QPair<QOrganizerItemId, QOrganizerManager::Operation>(id, QOrganizerManager::Change));
+    // Sort and de-duplicate the IDs and change types
+    QList<QOrganizerItemId> itemIds(changedItemIds);
+    std::sort(itemIds.begin(), itemIds.end());
+    {
+        QList<QOrganizerItemId>::iterator iit = std::unique(itemIds.begin(), itemIds.end());
+        while (iit != itemIds.end()) {
+            iit = itemIds.erase(iit);
+        }
     }
+
+    QList<QOrganizerItemDetail::DetailType> changeSet(typesChanged);
+    std::sort(changeSet.begin(), changeSet.end());
+    {
+        QList<QOrganizerItemDetail::DetailType>::iterator cit = std::unique(changeSet.begin(), changeSet.end());
+        while (cit != changeSet.end()) {
+            cit = changeSet.erase(cit);
+        }
+    }
+
+    // Add these items to the list of items that match this change set
+    QList<ItemChangeList>::iterator it = d->m_changedItems.begin(), end = d->m_changedItems.end();
+    for ( ; it != end; ++it) {
+        if ((*it).first == changeSet) {
+            break;
+        }
+    }
+    if (it == end) {
+        // Add a list for this set of changes
+        d->m_changedItems.append(qMakePair(changeSet, itemIds));
+    } else {
+        QList<QOrganizerItemId> &changedIds((*it).second);
+        QList<QOrganizerItemId>::iterator iit = changedIds.begin();
+
+        foreach (const QOrganizerItemId &itemId, itemIds) {
+            // Add this ID if not yet present
+            iit = std::lower_bound(iit, changedIds.end(), itemId);
+            if (iit == changedIds.end() || *iit != itemId) {
+                iit = changedIds.insert(iit, itemId);
+            }
+        }
+    }
+
+    // These items are all now modified
+    foreach (const QOrganizerItemId &id, itemIds)
+        d->m_modifiedItems.append(QPair<QOrganizerItemId, QOrganizerManager::Operation>(id, QOrganizerManager::Change));
 }
 
 /*!
@@ -265,8 +328,11 @@ void QOrganizerItemChangeSet::emitSignals(QOrganizerManagerEngine *engine) const
     } else {
         if (!d->m_addedItems.isEmpty())
             emit engine->itemsAdded(d->m_addedItems.toList());
-        if (!d->m_changedItems.isEmpty())
-            emit engine->itemsChanged(d->m_changedItems.toList());
+        if (!d->m_changedItems.isEmpty()) {
+            QList<ItemChangeList>::const_iterator it = d->m_changedItems.constBegin(), end = d->m_changedItems.constEnd();
+            for ( ; it != end; ++it)
+                emit engine->itemsChanged((*it).second, (*it).first);
+        }
         if (!d->m_removedItems.isEmpty())
             emit engine->itemsRemoved(d->m_removedItems.toList());
         if (!d->m_modifiedItems.isEmpty())

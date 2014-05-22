@@ -106,7 +106,7 @@ public:
     // observer stuff
     void registerObserver(QOrganizerItemObserver *observer);
     void unregisterObserver(QOrganizerItemObserver *observer);
-    void _q_itemsUpdated(const QList<QOrganizerItemId> &ids);
+    void _q_itemsUpdated(const QList<QOrganizerItemId> &ids, const QList<QOrganizerItemDetail::DetailType> &typesChanged);
     void _q_itemsDeleted(const QList<QOrganizerItemId> &ids);
     QMultiHash<QOrganizerItemId, QOrganizerItemObserver *> m_observerForItem;
 

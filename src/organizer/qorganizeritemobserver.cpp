@@ -96,9 +96,12 @@ QOrganizerItemId QOrganizerItemObserver::itemId() const
 }
 
 /*!
-    \fn void QOrganizerItemObserver::itemChanged()
+    \fn void QOrganizerItemObserver::itemChanged(const QList<QOrganizerItemDetail::DetailType> &typesChanged)
 
     This signal is emitted when the observed item is changed in the manager.
+
+    The set of item detail types modified in the reported change is a subset of those listed in \a typesChanged,
+    unless \a typesChanged is empty, in which case no limitation on the reported changes may be assumed.
  */
 
 /*!

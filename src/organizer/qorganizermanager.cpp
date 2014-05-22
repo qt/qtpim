@@ -283,14 +283,14 @@ void QOrganizerManager::createEngine(const QString &managerName, const QMap<QStr
 
     connect(d->m_engine, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
     connect(d->m_engine, SIGNAL(itemsAdded(QList<QOrganizerItemId>)), this, SIGNAL(itemsAdded(QList<QOrganizerItemId>)));
-    connect(d->m_engine, SIGNAL(itemsChanged(QList<QOrganizerItemId>)), this, SIGNAL(itemsChanged(QList<QOrganizerItemId>)));
+    connect(d->m_engine, SIGNAL(itemsChanged(QList<QOrganizerItemId>, QList<QOrganizerItemDetail::DetailType>)), this, SIGNAL(itemsChanged(QList<QOrganizerItemId>, QList<QOrganizerItemDetail::DetailType>)));
     connect(d->m_engine, SIGNAL(itemsRemoved(QList<QOrganizerItemId>)), this, SIGNAL(itemsRemoved(QList<QOrganizerItemId>)));
     connect(d->m_engine, SIGNAL(itemsModified(QList<QPair<QOrganizerItemId,QOrganizerManager::Operation> >)), this, SIGNAL(itemsModified(QList<QPair<QOrganizerItemId,QOrganizerManager::Operation> >)));
     connect(d->m_engine, SIGNAL(collectionsAdded(QList<QOrganizerCollectionId>)), this, SIGNAL(collectionsAdded(QList<QOrganizerCollectionId>)));
     connect(d->m_engine, SIGNAL(collectionsChanged(QList<QOrganizerCollectionId>)), this, SIGNAL(collectionsChanged(QList<QOrganizerCollectionId>)));
     connect(d->m_engine, SIGNAL(collectionsRemoved(QList<QOrganizerCollectionId>)), this, SIGNAL(collectionsRemoved(QList<QOrganizerCollectionId>)));
     connect(d->m_engine, SIGNAL(collectionsModified(QList<QPair<QOrganizerCollectionId,QOrganizerManager::Operation> >)), this, SIGNAL(collectionsModified(QList<QPair<QOrganizerCollectionId,QOrganizerManager::Operation> >)));
-    connect(d->m_engine, SIGNAL(itemsChanged(QList<QOrganizerItemId>)), this, SLOT(_q_itemsUpdated(QList<QOrganizerItemId>)));
+    connect(d->m_engine, SIGNAL(itemsChanged(QList<QOrganizerItemId>, QList<QOrganizerItemDetail::DetailType>)), this, SLOT(_q_itemsUpdated(QList<QOrganizerItemId>, QList<QOrganizerItemDetail::DetailType>)));
     connect(d->m_engine, SIGNAL(itemsRemoved(QList<QOrganizerItemId>)), this, SLOT(_q_itemsDeleted(QList<QOrganizerItemId>)));
 }
 

@@ -94,10 +94,14 @@ QT_BEGIN_NAMESPACE_ORGANIZER
  */
 
 /*!
-    \fn QOrganizerManagerEngine::itemsChanged(const QList<QOrganizerItemId> &itemIds);
+    \fn QOrganizerManagerEngine::itemsChanged(const QList<QOrganizerItemId> &itemIds, const QList<QOrganizerItemDetail::DetailType> &typesChanged);
 
     This signal should be emitted at some point once the items identified by \a itemIds have been
     modified in the backend.
+
+    The set of item detail types modified in the reported changes is a subset of those listed in
+    \a typesChanged, unless \a typesChanged is empty, in which case no limitation on the reported
+    changes may be assumed.
 
     This signal should not be emitted if the dataChanged() signal was previously emitted for these
     changes.

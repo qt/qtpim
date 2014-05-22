@@ -44,6 +44,7 @@
 
 #include <QtCore/qobject.h>
 
+#include <QtOrganizer/qorganizeritemdetail.h>
 #include <QtOrganizer/qorganizeritemid.h>
 
 QT_BEGIN_NAMESPACE_ORGANIZER
@@ -61,7 +62,7 @@ public:
     QOrganizerItemId itemId() const;
 
 Q_SIGNALS:
-    void itemChanged();
+    void itemChanged(const QList<QOrganizerItemDetail::DetailType> &typesChanged);
     void itemRemoved();
 
 private:

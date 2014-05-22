@@ -91,6 +91,7 @@ QTCONTACTS_USE_NAMESPACE
 typedef QMap<QString,QString> tst_QContactManager_QStringMap;
 Q_DECLARE_METATYPE(tst_QContactManager_QStringMap)
 Q_DECLARE_METATYPE(QList<QContactId>)
+Q_DECLARE_METATYPE(QList<QContactDetail::DetailType>)
 
 /* A class that no backend can support */
 class UnsupportedMetatype {
@@ -1873,12 +1874,13 @@ void tst_QContactManager::signalEmission()
 
     qRegisterMetaType<QContactId>("QContactId");
     qRegisterMetaType<QList<QContactId> >("QList<QContactId>");
+    qRegisterMetaType<QList<QContactDetail::DetailType> >("QList<QContactDetail::DetailType>");
     QSignalSpy spyCA(m1.data(), SIGNAL(contactsAdded(QList<QContactId>)));
-    QSignalSpy spyCM(m1.data(), SIGNAL(contactsChanged(QList<QContactId>)));
+    QSignalSpy spyCM(m1.data(), SIGNAL(contactsChanged(QList<QContactId>, QList<QContactDetail::DetailType>)));
     QSignalSpy spyCR(m1.data(), SIGNAL(contactsRemoved(QList<QContactId>)));
 
     QTestSignalSink casink(m1.data(), SIGNAL(contactsAdded(QList<QContactId>)));
-    QTestSignalSink cmsink(m1.data(), SIGNAL(contactsChanged(QList<QContactId>)));
+    QTestSignalSink cmsink(m1.data(), SIGNAL(contactsChanged(QList<QContactId>, QList<QContactDetail::DetailType>)));
     QTestSignalSink crsink(m1.data(), SIGNAL(contactsRemoved(QList<QContactId>)));
 
     QList<QVariant> args;
@@ -1904,7 +1906,7 @@ void tst_QContactManager::signalEmission()
     QCOMPARE(QContactId(arg.at(0)), cid);
 
     QScopedPointer<QContactObserver> c1Observer(new QContactObserver(m1.data(), cid));
-    QScopedPointer<QSignalSpy> spyCOM1(new QSignalSpy(c1Observer.data(), SIGNAL(contactChanged())));
+    QScopedPointer<QSignalSpy> spyCOM1(new QSignalSpy(c1Observer.data(), SIGNAL(contactChanged(QList<QContactDetail::DetailType>))));
     QScopedPointer<QSignalSpy> spyCOR1(new QSignalSpy(c1Observer.data(), SIGNAL(contactRemoved())));
 
     // verify save modified emits signal changed
@@ -1915,9 +1917,14 @@ void tst_QContactManager::signalEmission()
     QTRY_COMPARE(spyCOM1->count(), 1);
     args = spyCM.takeFirst();
     modSigCount -= 1;
-    arg = args.first().value<QList<QContactId> >();
+    QCOMPARE(args.count(), 2);
+    arg = args.at(0).value<QList<QContactId> >();
     QVERIFY(arg.count() == 1);
     QCOMPARE(QContactId(arg.at(0)), cid);
+    QCOMPARE(args.at(1).userType(), qMetaTypeId<QList<QContactDetail::DetailType> >());
+    args = spyCOM1->takeFirst();
+    QCOMPARE(args.count(), 1);
+    QCOMPARE(args.at(0).userType(), qMetaTypeId<QList<QContactDetail::DetailType> >());
 
     // verify remove emits signal removed
     m1->removeContact(c.id());
@@ -1945,8 +1952,8 @@ void tst_QContactManager::signalEmission()
     spyCOR1->clear();
     QScopedPointer<QContactObserver> c2Observer(new QContactObserver(m1.data(), c2.id()));
     QScopedPointer<QContactObserver> c3Observer(new QContactObserver(m1.data(), c3.id()));
-    QScopedPointer<QSignalSpy> spyCOM2(new QSignalSpy(c2Observer.data(), SIGNAL(contactChanged())));
-    QScopedPointer<QSignalSpy> spyCOM3(new QSignalSpy(c3Observer.data(), SIGNAL(contactChanged())));
+    QScopedPointer<QSignalSpy> spyCOM2(new QSignalSpy(c2Observer.data(), SIGNAL(contactChanged(QList<QContactDetail::DetailType>))));
+    QScopedPointer<QSignalSpy> spyCOM3(new QSignalSpy(c3Observer.data(), SIGNAL(contactChanged(QList<QContactDetail::DetailType>))));
     QScopedPointer<QSignalSpy> spyCOR2(new QSignalSpy(c2Observer.data(), SIGNAL(contactRemoved())));
     QScopedPointer<QSignalSpy> spyCOR3(new QSignalSpy(c3Observer.data(), SIGNAL(contactRemoved())));
 
@@ -2004,9 +2011,9 @@ void tst_QContactManager::signalEmission()
     c1Observer.reset(new QContactObserver(m1.data(), c.id()));
     c2Observer.reset(new QContactObserver(m1.data(), c2.id()));
     c3Observer.reset(new QContactObserver(m1.data(), c3.id()));
-    spyCOM1.reset(new QSignalSpy(c1Observer.data(), SIGNAL(contactChanged())));
-    spyCOM2.reset(new QSignalSpy(c2Observer.data(), SIGNAL(contactChanged())));
-    spyCOM3.reset(new QSignalSpy(c3Observer.data(), SIGNAL(contactChanged())));
+    spyCOM1.reset(new QSignalSpy(c1Observer.data(), SIGNAL(contactChanged(QList<QContactDetail::DetailType>))));
+    spyCOM2.reset(new QSignalSpy(c2Observer.data(), SIGNAL(contactChanged(QList<QContactDetail::DetailType>))));
+    spyCOM3.reset(new QSignalSpy(c3Observer.data(), SIGNAL(contactChanged(QList<QContactDetail::DetailType>))));
     spyCOR1.reset(new QSignalSpy(c1Observer.data(), SIGNAL(contactRemoved())));
     spyCOR2.reset(new QSignalSpy(c2Observer.data(), SIGNAL(contactRemoved())));
     spyCOR3.reset(new QSignalSpy(c3Observer.data(), SIGNAL(contactRemoved())));
@@ -2161,15 +2168,45 @@ void tst_QContactManager::changeSet()
     QVERIFY(changeSet.removedContacts().isEmpty());
     QVERIFY(changeSet.addedContacts().contains(id));
 
-    changeSet.insertChangedContact(id);
-    changeSet.insertChangedContacts(QList<QContactId>() << id);
-    QVERIFY(changeSet.changedContacts().size() == 1); // set, should only be added once.
+    changeSet.insertChangedContact(id, QList<QContactDetail::DetailType>());
+    changeSet.insertChangedContacts(QList<QContactId>() << id, QList<QContactDetail::DetailType>());
+    QCOMPARE(changeSet.changedContacts().size(), 1); // set, should only be added once.
+    QCOMPARE(changeSet.changedContacts().first().second.size(), 1); // only one changed contact ID
     QVERIFY(!changeSet.addedContacts().isEmpty());
     QVERIFY(!changeSet.changedContacts().isEmpty());
     QVERIFY(changeSet.removedContacts().isEmpty());
-    QVERIFY(changeSet.changedContacts().contains(id));
+
+    changeSet.clearChangedContacts();
+    changeSet.insertChangedContacts(QList<QContactId>() << id, QList<QContactDetail::DetailType>() << QContactName::Type);
+    changeSet.insertChangedContacts(QList<QContactId>() << id, QList<QContactDetail::DetailType>() << QContactBirthday::Type);
+    QCOMPARE(changeSet.changedContacts().size(), 2); // should be added twice with differing change types
+    QVERIFY(!changeSet.addedContacts().isEmpty());
+    QVERIFY(!changeSet.changedContacts().isEmpty());
+    QVERIFY(changeSet.removedContacts().isEmpty());
+    QSet<QContactId> changedIds;
+    QSet<QContactDetail::DetailType> changedTypes;
+    foreach (const QContactChangeSet::ContactChangeList &changes, changeSet.changedContacts()) {
+        changedIds |= changes.second.toSet();
+        if (changes.second.contains(id)) {
+            changedTypes |= changes.first.toSet();
+        }
+    }
+    QCOMPARE(changedIds, (QList<QContactId>() << id).toSet());
+    QCOMPARE(changedTypes, (QList<QContactDetail::DetailType>() << QContactName::Type << QContactBirthday::Type).toSet());
     changeSet.clearChangedContacts();
     QVERIFY(changeSet.changedContacts().isEmpty());
+
+    QList<QContactId> l1, l2;
+    foreach (int n, QList<int>() << 1 << 1 << 1 << 2 << 2 << 3 << 3 << 4 << 4 << 4 << 5 << 10 << 9 << 8 << 8 << 8 << 7 << 7 << 6) {
+        ((qrand() % 2) ? l1 : l2).append(QContactIdMock::createId("a", n));
+    }
+    changeSet.clearChangedContacts();
+    changeSet.insertChangedContacts(l1, QList<QContactDetail::DetailType>() << QContactName::Type << QContactBirthday::Type);
+    changeSet.insertChangedContacts(l2, QList<QContactDetail::DetailType>() << QContactBirthday::Type << QContactName::Type << QContactBirthday::Type);
+    QCOMPARE(changeSet.changedContacts().size(), 1);
+    QList<QContactId> expected((l1.toSet() | l2.toSet()).toList());
+    qSort(expected);
+    QCOMPARE(changeSet.changedContacts().first().second, expected);
 
     changeSet.insertRemovedContacts(QList<QContactId>() << id);
     QVERIFY(changeSet.removedContacts().contains(id));
@@ -3093,7 +3130,7 @@ void tst_QContactManager::lazyConnections()
     {
         QTestSignalSink casink(&lazy1, SIGNAL(contactsAdded(QList<QContactId>)));
         QTestSignalSink crsink(&lazy1, SIGNAL(contactsRemoved(QList<QContactId>)));
-        QTestSignalSink cmsink(&lazy1, SIGNAL(contactsChanged(QList<QContactId>)));
+        QTestSignalSink cmsink(&lazy1, SIGNAL(contactsChanged(QList<QContactId>, QList<QContactDetail::DetailType>)));
         QTestSignalSink dcsink(&lazy1, SIGNAL(dataChanged()));
         QTestSignalSink rasink(&lazy1, SIGNAL(relationshipsAdded(QList<QContactId>)));
         QTestSignalSink rrsink(&lazy1, SIGNAL(relationshipsRemoved(QList<QContactId>)));
@@ -3122,7 +3159,7 @@ void tst_QContactManager::lazyConnections()
     {
         QTestSignalSink casink(&lazy2, SIGNAL(contactsAdded(QList<QContactId>)));
         QTestSignalSink crsink(&lazy2, SIGNAL(contactsRemoved(QList<QContactId>)));
-        QTestSignalSink cmsink(&lazy2, SIGNAL(contactsChanged(QList<QContactId>)));
+        QTestSignalSink cmsink(&lazy2, SIGNAL(contactsChanged(QList<QContactId>, QList<QContactDetail::DetailType>)));
         QTestSignalSink dcsink(&lazy2, SIGNAL(dataChanged()));
         QTestSignalSink rasink(&lazy2, SIGNAL(relationshipsAdded(QList<QContactId>)));
         QTestSignalSink rrsink(&lazy2, SIGNAL(relationshipsRemoved(QList<QContactId>)));

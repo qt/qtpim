@@ -48,6 +48,7 @@
 #include <QtCore/qshareddata.h>
 
 #include <QtContacts/qcontactid.h>
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -57,6 +58,8 @@ class QContactChangeSetData;
 class Q_CONTACTS_EXPORT QContactChangeSet
 {
 public:
+    typedef QPair<QList<QContactDetail::DetailType>, QList<QContactId> > ContactChangeList;
+
     QContactChangeSet();
     QContactChangeSet(const QContactChangeSet& other);
     ~QContactChangeSet();
@@ -64,16 +67,16 @@ public:
     QContactChangeSet& operator=(const QContactChangeSet& other);
 
     void setDataChanged(bool dataChanged);
-    bool dataChanged();
+    bool dataChanged() const;
 
     QSet<QContactId> addedContacts() const;
     void insertAddedContact(QContactId addedContactId);
     void insertAddedContacts(const QList<QContactId>& addedContactIds);
     void clearAddedContacts();
 
-    QSet<QContactId> changedContacts() const;
-    void insertChangedContact(QContactId addedContactId);
-    void insertChangedContacts(const QList<QContactId>& addedContactIds);
+    QList<ContactChangeList> changedContacts() const;
+    void insertChangedContact(QContactId addedContactId, const QList<QContactDetail::DetailType> &typesChanged);
+    void insertChangedContacts(const QList<QContactId>& addedContactIds, const QList<QContactDetail::DetailType> &typesChanged);
     void clearChangedContacts();
 
     QSet<QContactId> removedContacts() const;
@@ -96,7 +99,7 @@ public:
 
     void clearAll();
 
-    void emitSignals(QContactManagerEngine *engine);
+    void emitSignals(QContactManagerEngine *engine) const;
 
 private:
     QSharedDataPointer<QContactChangeSetData> d;

@@ -287,8 +287,8 @@ void QContactManagerData::registerObserver(QContactManager *manager, QContactObs
     // If this is the first observer, connect to the engine too
     if (d->m_observerForContact.size() == 1) {
         // This takes advantage of the manager connectNotify code
-        QObject::connect(manager, SIGNAL(contactsChanged(QList<QContactId>)),
-                manager, SLOT(_q_contactsUpdated(QList<QContactId>)));
+        QObject::connect(manager, SIGNAL(contactsChanged(QList<QContactId>,QList<QContactDetail::DetailType>)),
+                manager, SLOT(_q_contactsUpdated(QList<QContactId>,QList<QContactDetail::DetailType>)));
         QObject::connect(manager, SIGNAL(contactsRemoved(QList<QContactId>)),
                 manager, SLOT(_q_contactsDeleted(QList<QContactId>)));
     }
@@ -307,20 +307,20 @@ void QContactManagerData::unregisterObserver(QContactManager *manager, QContactO
         // If there are now no more observers, disconnect from the engine
         if (d->m_observerForContact.size() == 0) {
             // This takes advantage of the manager disconnectNotify code
-            QObject::disconnect(manager, SIGNAL(contactsChanged(QList<QContactId>)),
-                    manager, SLOT(_q_contactsUpdated(QList<QContactId>)));
+            QObject::disconnect(manager, SIGNAL(contactsChanged(QList<QContactId>,QList<QContactDetail::DetailType>)),
+                    manager, SLOT(_q_contactsUpdated(QList<QContactId>,QList<QContactDetail::DetailType>)));
             QObject::disconnect(manager, SIGNAL(contactsRemoved(QList<QContactId>)),
                     manager, SLOT(_q_contactsDeleted(QList<QContactId>)));
         }
     }
 }
 
-void QContactManagerData::_q_contactsUpdated(const QList<QContactId> &ids)
+void QContactManagerData::_q_contactsUpdated(const QList<QContactId> &ids, const QList<QContactDetail::DetailType> &typesChanged)
 {
     foreach (const QContactId &id, ids) {
         QList<QContactObserver*> observers = m_observerForContact.values(id);
         foreach (QContactObserver* observer, observers) {
-            QMetaObject::invokeMethod(observer, "contactChanged");
+            QMetaObject::invokeMethod(observer, "contactChanged", Q_ARG(QList<QContactDetail::DetailType>, typesChanged));
         }
     }
 }

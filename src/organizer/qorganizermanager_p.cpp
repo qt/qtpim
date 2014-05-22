@@ -223,12 +223,12 @@ void QOrganizerManagerData::unregisterObserver(QOrganizerItemObserver *observer)
         m_observerForItem.remove(key, observer);
 }
 
-void QOrganizerManagerData::_q_itemsUpdated(const QList<QOrganizerItemId> &ids)
+void QOrganizerManagerData::_q_itemsUpdated(const QList<QOrganizerItemId> &ids, const QList<QOrganizerItemDetail::DetailType> &typesChanged)
 {
     foreach (QOrganizerItemId id, ids) {
         QList<QOrganizerItemObserver *> observers = m_observerForItem.values(id);
         foreach (QOrganizerItemObserver *observer, observers)
-            QMetaObject::invokeMethod(observer, "itemChanged");
+            QMetaObject::invokeMethod(observer, "itemChanged", Q_ARG(QList<QOrganizerItemDetail::DetailType>, typesChanged));
     }
 }
 

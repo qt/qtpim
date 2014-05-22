@@ -81,8 +81,10 @@ QT_BEGIN_NAMESPACE_CONTACTS
  */
 
 /*!
-  \fn QContactManager::contactsChanged(const QList<QContactId>& contactIds)
+  \fn QContactManager::contactsChanged(const QList<QContactId>& contactIds, const QList<QContactDetail::DetailType> &typesChanged)
   This signal is emitted at some point once the contacts identified by \a contactIds have been modified in a datastore managed by this manager.
+  The set of contact detail types modified in the reported changes is a subset of those listed in \a typesChanged,
+  unless \a typesChanged is empty, in which case no limitation on the reported changes may be assumed.
   This signal must not be emitted if the dataChanged() signal was previously emitted for these changes.
  */
 

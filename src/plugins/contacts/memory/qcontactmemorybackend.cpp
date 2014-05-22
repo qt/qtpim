@@ -884,7 +884,7 @@ bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &
 
         // Looks ok, so continue
         d->m_contacts.replace(index, *theContact);
-        changeSet.insertChangedContact(theContact->id());
+        changeSet.insertChangedContact(theContact->id(), mask);
     } else {
         // id does not exist; if not zero, fail.
         QContactId newId;

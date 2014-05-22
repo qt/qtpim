@@ -113,7 +113,7 @@ public:
     // Observer stuff
     static void registerObserver(QContactManager *m, QContactObserver *observer);
     static void unregisterObserver(QContactManager *m, QContactObserver *observer);
-    void _q_contactsUpdated(const QList<QContactId> &ids);
+    void _q_contactsUpdated(const QList<QContactId> &ids, const QList<QContactDetail::DetailType> &typesChanged);
     void _q_contactsDeleted(const QList<QContactId> &ids);
 
     QMultiHash<QContactId, QContactObserver*> m_observerForContact;

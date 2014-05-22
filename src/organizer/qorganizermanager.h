@@ -167,7 +167,7 @@ public:
 Q_SIGNALS:
     void dataChanged();
     void itemsAdded(const QList<QOrganizerItemId> &itemIds);
-    void itemsChanged(const QList<QOrganizerItemId> &itemIds);
+    void itemsChanged(const QList<QOrganizerItemId> &itemIds, const QList<QOrganizerItemDetail::DetailType> &typesChanged);
     void itemsRemoved(const QList<QOrganizerItemId> &itemIds);
     void itemsModified(const QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > &itemIds);
     void collectionsAdded(const QList<QOrganizerCollectionId> &collectionIds);
@@ -182,7 +182,7 @@ private:
 
     void createEngine(const QString &managerName, const QMap<QString, QString> &parameters);
 
-    Q_PRIVATE_SLOT(d, void _q_itemsUpdated(const QList<QOrganizerItemId> &ids))
+    Q_PRIVATE_SLOT(d, void _q_itemsUpdated(const QList<QOrganizerItemId> &ids, const QList<QOrganizerItemDetail::DetailType> &typesChanged))
     Q_PRIVATE_SLOT(d, void _q_itemsDeleted(const QList<QOrganizerItemId> &ids))
 };
 

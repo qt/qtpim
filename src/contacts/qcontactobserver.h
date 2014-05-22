@@ -45,6 +45,7 @@
 #include <QtCore/qobject.h>
 
 #include <QtContacts/qcontactid.h>
+#include <QtContacts/qcontactdetail.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -59,7 +60,7 @@ public:
     ~QContactObserver();
     QContactId contactId() const;
 Q_SIGNALS:
-    void contactChanged();
+    void contactChanged(const QList<QContactDetail::DetailType> &typesChanged);
     void contactRemoved();
 
 private:

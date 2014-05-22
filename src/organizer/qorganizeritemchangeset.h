@@ -46,6 +46,7 @@
 #include <QtCore/qset.h>
 #include <QtCore/qshareddata.h>
 
+#include <QtOrganizer/qorganizeritemdetail.h>
 #include <QtOrganizer/qorganizeritemid.h>
 #include <QtOrganizer/qorganizermanager.h>
 
@@ -57,6 +58,8 @@ class QOrganizerItemChangeSetData;
 class Q_ORGANIZER_EXPORT QOrganizerItemChangeSet
 {
 public:
+    typedef QPair<QList<QOrganizerItemDetail::DetailType>, QList<QOrganizerItemId> > ItemChangeList;
+
     QOrganizerItemChangeSet();
     QOrganizerItemChangeSet(const QOrganizerItemChangeSet &other);
     ~QOrganizerItemChangeSet();
@@ -71,9 +74,9 @@ public:
     void insertAddedItems(const QList<QOrganizerItemId> &itemIds);
     void clearAddedItems();
 
-    QSet<QOrganizerItemId> changedItems() const;
-    void insertChangedItem(const QOrganizerItemId &itemId);
-    void insertChangedItems(const QList<QOrganizerItemId> &itemIds);
+    QList<ItemChangeList> changedItems() const;
+    void insertChangedItem(const QOrganizerItemId &itemId, const QList<QOrganizerItemDetail::DetailType> &typesChanged);
+    void insertChangedItems(const QList<QOrganizerItemId> &itemIds, const QList<QOrganizerItemDetail::DetailType> &typesChanged);
     void clearChangedItems();
 
     QSet<QOrganizerItemId> removedItems() const;

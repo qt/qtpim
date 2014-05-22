@@ -58,6 +58,7 @@
 #include <QtCore/qshareddata.h>
 
 #include <QtContacts/qcontactid.h>
+#include <QtContacts/qcontactchangeset.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -88,7 +89,7 @@ public:
 
     bool m_dataChanged;
     QSet<QContactId> m_addedContacts;
-    QSet<QContactId> m_changedContacts;
+    QList<QContactChangeSet::ContactChangeList> m_changedContacts;
     QSet<QContactId> m_removedContacts;
     QSet<QContactId> m_addedRelationships;
     QSet<QContactId> m_removedRelationships;

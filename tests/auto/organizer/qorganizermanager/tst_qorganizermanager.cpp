@@ -68,6 +68,7 @@ Q_DECLARE_METATYPE(UnsupportedMetatype)
 Q_DECLARE_METATYPE(QOrganizerItem)
 Q_DECLARE_METATYPE(QOrganizerManager::Error)
 Q_DECLARE_METATYPE(QList<QDate>)
+Q_DECLARE_METATYPE(QList<QOrganizerItemDetail::DetailType>);
 
 class tst_QOrganizerManager : public QObject
 {
@@ -2437,8 +2438,9 @@ void tst_QOrganizerManager::signalEmission()
 
     qRegisterMetaType<QOrganizerItemId>("QOrganizerItemId");
     qRegisterMetaType<QList<QOrganizerItemId> >("QList<QOrganizerItemId>");
+    qRegisterMetaType<QList<QOrganizerItemDetail::DetailType> >("QList<QOrganizerItemDetail::DetailType>");
     QSignalSpy spyAdded(m1.data(), SIGNAL(itemsAdded(QList<QOrganizerItemId>)));
-    QSignalSpy spyModified(m1.data(), SIGNAL(itemsChanged(QList<QOrganizerItemId>)));
+    QSignalSpy spyModified(m1.data(), SIGNAL(itemsChanged(QList<QOrganizerItemId>, QList<QOrganizerItemDetail::DetailType>)));
     QSignalSpy spyRemoved(m1.data(), SIGNAL(itemsRemoved(QList<QOrganizerItemId>)));
     QSignalSpy spyChanged(m1.data(), SIGNAL(dataChanged()));
 
@@ -2466,7 +2468,7 @@ void tst_QOrganizerManager::signalEmission()
     QCOMPARE(QOrganizerItemId(arg.at(0)), cid);
 
     QScopedPointer<QOrganizerItemObserver> todo1Observer(new QOrganizerItemObserver(m1.data(), cid));
-    QScopedPointer<QSignalSpy> spyObserverModified1(new QSignalSpy(todo1Observer.data(), SIGNAL(itemChanged())));
+    QScopedPointer<QSignalSpy> spyObserverModified1(new QSignalSpy(todo1Observer.data(), SIGNAL(itemChanged(QList<QOrganizerItemDetail::DetailType>))));
     QScopedPointer<QSignalSpy> spyObserverRemoved1(new QSignalSpy(todo1Observer.data(), SIGNAL(itemRemoved())));
 
     // verify save modified emits signal changed
@@ -2509,8 +2511,8 @@ void tst_QOrganizerManager::signalEmission()
     spyObserverRemoved1->clear();
     QScopedPointer<QOrganizerItemObserver> todo2Observer(new QOrganizerItemObserver(m1.data(), todo2.id()));
     QScopedPointer<QOrganizerItemObserver> todo3Observer(new QOrganizerItemObserver(m1.data(), todo3.id()));
-    QScopedPointer<QSignalSpy> spyObserverModified2(new QSignalSpy(todo2Observer.data(), SIGNAL(itemChanged())));
-    QScopedPointer<QSignalSpy> spyObserverModified3(new QSignalSpy(todo3Observer.data(), SIGNAL(itemChanged())));
+    QScopedPointer<QSignalSpy> spyObserverModified2(new QSignalSpy(todo2Observer.data(), SIGNAL(itemChanged(QList<QOrganizerItemDetail::DetailType>))));
+    QScopedPointer<QSignalSpy> spyObserverModified3(new QSignalSpy(todo3Observer.data(), SIGNAL(itemChanged(QList<QOrganizerItemDetail::DetailType>))));
     QScopedPointer<QSignalSpy> spyObserverRemoved2(new QSignalSpy(todo2Observer.data(), SIGNAL(itemRemoved())));
     QScopedPointer<QSignalSpy> spyObserverRemoved3(new QSignalSpy(todo3Observer.data(), SIGNAL(itemRemoved())));
 
@@ -2573,9 +2575,9 @@ void tst_QOrganizerManager::signalEmission()
     todo1Observer.reset(new QOrganizerItemObserver(m1.data(), todo.id()));
     todo2Observer.reset(new QOrganizerItemObserver(m1.data(), todo2.id()));
     todo3Observer.reset(new QOrganizerItemObserver(m1.data(), todo3.id()));
-    spyObserverModified1.reset(new QSignalSpy(todo1Observer.data(), SIGNAL(itemChanged())));
-    spyObserverModified2.reset(new QSignalSpy(todo2Observer.data(), SIGNAL(itemChanged())));
-    spyObserverModified3.reset(new QSignalSpy(todo3Observer.data(), SIGNAL(itemChanged())));
+    spyObserverModified1.reset(new QSignalSpy(todo1Observer.data(), SIGNAL(itemChanged(QList<QOrganizerItemDetail::DetailType>))));
+    spyObserverModified2.reset(new QSignalSpy(todo2Observer.data(), SIGNAL(itemChanged(QList<QOrganizerItemDetail::DetailType>))));
+    spyObserverModified3.reset(new QSignalSpy(todo3Observer.data(), SIGNAL(itemChanged(QList<QOrganizerItemDetail::DetailType>))));
     spyObserverRemoved1.reset(new QSignalSpy(todo1Observer.data(), SIGNAL(itemRemoved())));
     spyObserverRemoved2.reset(new QSignalSpy(todo2Observer.data(), SIGNAL(itemRemoved())));
     spyObserverRemoved3.reset(new QSignalSpy(todo3Observer.data(), SIGNAL(itemRemoved())));
@@ -2791,15 +2793,45 @@ void tst_QOrganizerManager::changeSet()
     changeSet.clearAddedItems();
     changeSet.insertAddedItems(QList<QOrganizerItemId>() << id);
 
-    changeSet.insertChangedItem(id);
-    changeSet.insertChangedItems(QList<QOrganizerItemId>() << id);
-    QVERIFY(changeSet.changedItems().size() == 1); // set, should only be added once.
+    changeSet.insertChangedItem(id, QList<QOrganizerItemDetail::DetailType>());
+    changeSet.insertChangedItems(QList<QOrganizerItemId>() << id, QList<QOrganizerItemDetail::DetailType>());
+    QCOMPARE(changeSet.changedItems().size(), 1); // set, should only be added once.
+    QCOMPARE(changeSet.changedItems().first().second.size(), 1); // only one changed item ID
     QVERIFY(!changeSet.addedItems().isEmpty());
     QVERIFY(!changeSet.changedItems().isEmpty());
     QVERIFY(changeSet.removedItems().isEmpty());
-    QVERIFY(changeSet.changedItems().contains(id));
+
+    changeSet.clearChangedItems();
+    changeSet.insertChangedItems(QList<QOrganizerItemId>() << id, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription);
+    changeSet.insertChangedItems(QList<QOrganizerItemId>() << id, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeTag);
+    QCOMPARE(changeSet.changedItems().size(), 2); // should be added twice with differing change types
+    QVERIFY(!changeSet.addedItems().isEmpty());
+    QVERIFY(!changeSet.changedItems().isEmpty());
+    QVERIFY(changeSet.removedItems().isEmpty());
+    QSet<QOrganizerItemId> changedIds;
+    QSet<QOrganizerItemDetail::DetailType> changedTypes;
+    foreach (const QOrganizerItemChangeSet::ItemChangeList &changes, changeSet.changedItems()) {
+        changedIds |= changes.second.toSet();
+        if (changes.second.contains(id)) {
+            changedTypes |= changes.first.toSet();
+        }
+    }
+    QCOMPARE(changedIds, (QList<QOrganizerItemId>() << id).toSet());
+    QCOMPARE(changedTypes, (QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription << QOrganizerItemDetail::TypeTag).toSet());
     changeSet.clearChangedItems();
     QVERIFY(changeSet.changedItems().isEmpty());
+
+    QList<QOrganizerItemId> l1, l2;
+    foreach (int n, QList<int>() << 1 << 1 << 1 << 2 << 2 << 3 << 3 << 4 << 4 << 4 << 5 << 10 << 9 << 8 << 8 << 8 << 7 << 7 << 6) {
+        ((qrand() % 2) ? l1 : l2).append(makeItemId(n));
+    }
+    changeSet.clearChangedItems();
+    changeSet.insertChangedItems(l1, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription << QOrganizerItemDetail::TypeTag);
+    changeSet.insertChangedItems(l2, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeTag << QOrganizerItemDetail::TypeDescription << QOrganizerItemDetail::TypeTag);
+    QCOMPARE(changeSet.changedItems().size(), 1);
+    QList<QOrganizerItemId> expected((l1.toSet() | l2.toSet()).toList());
+    qSort(expected);
+    QCOMPARE(changeSet.changedItems().first().second, expected);
 
     changeSet.insertRemovedItems(QList<QOrganizerItemId>() << id);
     QVERIFY(changeSet.removedItems().contains(id));

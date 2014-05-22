@@ -266,13 +266,13 @@ protected:
 
 protected:
     /* Implement "signal coalescing" for batch functions via change set */
-    virtual bool saveItem(QOrganizerItem* theOrganizerItem, QOrganizerItemChangeSet& changeSet, QOrganizerManager::Error* error);
+    virtual bool storeItem(QOrganizerItem* theOrganizerItem, QOrganizerItemChangeSet& changeSet, const QList<QOrganizerItemDetail::DetailType> &detailMask, QOrganizerManager::Error* error);
     virtual bool removeItem(const QOrganizerItemId& organizeritemId, QOrganizerItemChangeSet& changeSet, QOrganizerManager::Error* error);
     virtual bool removeOccurrence(const QOrganizerItem& organizeritem, QOrganizerItemChangeSet& changeSet, QOrganizerManager::Error* error);
 
 private:
     QOrganizerItem item(const QOrganizerItemId& organizeritemId) const;
-    bool saveItems(QList<QOrganizerItem>* organizeritems, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
+    bool storeItems(QList<QOrganizerItem>* organizeritems, const QList<QOrganizerItemDetail::DetailType> &detailMask, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error);
     QList<QOrganizerItem> itemsForExport(const QList<QOrganizerItemId> &ids, const QOrganizerItemFetchHint &fetchHint, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error);
     QList<QOrganizerItem> internalItems(const QDateTime& startDate, const QDateTime& endDate, const QOrganizerItemFilter& filter, const QList<QOrganizerItemSortOrder>& sortOrders, const QOrganizerItemFetchHint& fetchHint, QOrganizerManager::Error* error, bool forExport) const;
     QList<QOrganizerItem> internalItemOccurrences(const QOrganizerItem& parentItem, const QDateTime& periodStart, const QDateTime& periodEnd, int maxCount, bool includeExceptions, bool sortItems, QList<QDate> *exceptionDates, QOrganizerManager::Error* error) const;

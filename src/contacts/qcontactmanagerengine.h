@@ -117,7 +117,7 @@ public:
 Q_SIGNALS:
     void dataChanged();
     void contactsAdded(const QList<QContactId> &contactIds);
-    void contactsChanged(const QList<QContactId> &contactIds);
+    void contactsChanged(const QList<QContactId> &contactIds, const QList<QContactDetail::DetailType> &typesChanged);
     void contactsRemoved(const QList<QContactId> &contactIds);
     void relationshipsAdded(const QList<QContactId> &affectedContactIds);
     void relationshipsRemoved(const QList<QContactId> &affectedContactIds);

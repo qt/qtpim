@@ -118,7 +118,7 @@ static bool validateActionFilter(const QContactFilter& filter);
  */
 
 /*!
-  \fn QContactManagerEngine::contactsChanged(const QList<QContactId>& contactIds);
+  \fn QContactManagerEngine::contactsChanged(const QList<QContactId>& contactIds, const QList<QContactDetail::DetailType> &typesChanged);
 
   This signal is emitted some time after a set of contacts has been modified in
   this engine where the \l dataChanged() signal was not emitted for those changes.
@@ -127,6 +127,10 @@ static bool validateActionFilter(const QContactFilter& filter);
 
   The list of ids of changed contacts is given by \a contactIds.  There may be one or more
   ids in the list.
+
+  The set of contact detail types modified in the reported changes is a subset of those
+  listed in \a typesChanged, unless \a typesChanged is empty, in which case no limitation
+  on the reported changes may be assumed.
 
   \sa dataChanged()
  */

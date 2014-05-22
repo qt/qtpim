@@ -183,7 +183,7 @@ public:
 Q_SIGNALS:
     void dataChanged();
     void itemsAdded(const QList<QOrganizerItemId> &itemIds);
-    void itemsChanged(const QList<QOrganizerItemId> &itemIds);
+    void itemsChanged(const QList<QOrganizerItemId> &itemIds, const QList<QOrganizerItemDetail::DetailType> &typesChanged);
     void itemsRemoved(const QList<QOrganizerItemId> &itemIds);
     void itemsModified(const QList<QPair<QOrganizerItemId, QOrganizerManager::Operation> > &itemIds);
     void collectionsAdded(const QList<QOrganizerCollectionId> &collectionIds);

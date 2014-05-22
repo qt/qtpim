@@ -156,7 +156,7 @@ public:
 Q_SIGNALS:
     void dataChanged();
     void contactsAdded(const QList<QContactId>& contactIds);
-    void contactsChanged(const QList<QContactId>& contactIds);
+    void contactsChanged(const QList<QContactId>& contactIds, const QList<QContactDetail::DetailType>& typesChanged);
     void contactsRemoved(const QList<QContactId>& contactIds);
     void relationshipsAdded(const QList<QContactId>& affectedContactIds);
     void relationshipsRemoved(const QList<QContactId>& affectedContactIds);
@@ -172,7 +172,7 @@ private:
 
     Q_DISABLE_COPY(QContactManager)
 
-    Q_PRIVATE_SLOT(d, void _q_contactsUpdated(const QList<QContactId>& ids))
+    Q_PRIVATE_SLOT(d, void _q_contactsUpdated(const QList<QContactId>& ids, const QList<QContactDetail::DetailType>& typesChanged))
     Q_PRIVATE_SLOT(d, void _q_contactsDeleted(const QList<QContactId>& ids))
 
     // private data pointer

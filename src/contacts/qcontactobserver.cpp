@@ -98,9 +98,12 @@ QContactId QContactObserver::contactId() const {
 }
 
 /*!
-  \fn QContactObserver::contactChanged()
+  \fn QContactObserver::contactChanged(const QList<QContactDetail::DetailType> &typesChanged)
 
   This signal is emitted when the observed contact is changed in the manager.
+
+  The set of contact detail types modified in the reported change is a subset of those listed in \a typesChanged,
+  unless \a typesChanged is empty, in which case no limitation on the reported changes may be assumed.
  */
 
 /*!

@@ -703,7 +703,7 @@ void QOrganizerItemMemoryEngine::addItemRecurrences(QList<QOrganizerItem>& sorte
 
 /*! Saves the given organizeritem \a theOrganizerItem, storing any error to \a error and
     filling the \a changeSet with ids of changed organizeritems as required */
-bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrganizerItemChangeSet& changeSet, QOrganizerManager::Error* error)
+bool QOrganizerItemMemoryEngine::storeItem(QOrganizerItem* theOrganizerItem, QOrganizerItemChangeSet& changeSet, const QList<QOrganizerItemDetail::DetailType> &detailMask, QOrganizerManager::Error* error)
 {
     QOrganizerCollectionId targetCollectionId = theOrganizerItem->collectionId();
 
@@ -749,7 +749,7 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
         }
         // Looks ok, so continue
         d->m_idToItemHash.insert(theOrganizerItemId, *theOrganizerItem); // replacement insert.
-        changeSet.insertChangedItem(theOrganizerItemId);
+        changeSet.insertChangedItem(theOrganizerItemId, detailMask);
 
         // cross-check if stored exception occurrences are still valid
         if (itemHasReccurence(oldOrganizerItem)) {
@@ -836,7 +836,7 @@ bool QOrganizerItemMemoryEngine::saveItem(QOrganizerItem* theOrganizerItem, QOrg
                 recurrence.setExceptionDates(currentExceptionDates);
                 parentItem.saveDetail(&recurrence);
                 d->m_idToItemHash.insert(parentId, parentItem); // replacement insert
-                changeSet.insertChangedItem(parentId); // is this correct?  it's an exception, so change parent?
+                changeSet.insertChangedItem(parentId, detailMask); // is this correct?  it's an exception, so change parent?
             }
         }
 
@@ -950,7 +950,8 @@ bool QOrganizerItemMemoryEngine::typesAreRelated(QOrganizerItemType::ItemType oc
                 && occurrenceType == QOrganizerItemType::TypeTodoOccurrence));
 }
 
-bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem>* organizeritems, QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
+bool QOrganizerItemMemoryEngine::storeItems(QList<QOrganizerItem>* organizeritems, const QList<QOrganizerItemDetail::DetailType> &detailMask,
+                                            QMap<int, QOrganizerManager::Error>* errorMap, QOrganizerManager::Error* error)
 {
     Q_ASSERT(errorMap);
 
@@ -966,7 +967,7 @@ bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem>* organizeritems
     QOrganizerManager::Error operationError = QOrganizerManager::NoError;
     for (int i = 0; i < organizeritems->count(); i++) {
         current = organizeritems->at(i);
-        if (!saveItem(&current, changeSet, error)) {
+        if (!storeItem(&current, changeSet, detailMask, error)) {
             operationError = *error;
             errorMap->insert(i, operationError);
         } else {
@@ -988,7 +989,7 @@ bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem> *items, const Q
     // TODO should the default implementation do the right thing, or return false?
     if (detailMask.isEmpty()) {
         // Non partial, just pass it on
-        return saveItems(items, errorMap, error);
+        return storeItems(items, detailMask, errorMap, error);
     } else {
         // Partial item save.
         // Basically
@@ -1083,7 +1084,7 @@ bool QOrganizerItemMemoryEngine::saveItems(QList<QOrganizerItem> *items, const Q
         // Now save them
         QMap<int, QOrganizerManager::Error> saveErrors;
         QOrganizerManager::Error saveError = QOrganizerManager::NoError;
-        saveItems(&itemsToSave, &saveErrors, &saveError);
+        storeItems(&itemsToSave, detailMask, &saveErrors, &saveError);
         // Now update the passed in arguments, where necessary
 
         // Update IDs of the items list
@@ -1163,7 +1164,7 @@ bool QOrganizerItemMemoryEngine::removeOccurrence(const QOrganizerItem &organize
         recurrenceDetail.setExceptionDates(exceptionDates);
         parentItem.saveDetail(&recurrenceDetail);
         d->m_idToItemHash.insert(parentDetail.parentId(), parentItem);
-        changeSet.insertChangedItem(parentDetail.parentId());
+        changeSet.insertChangedItem(parentDetail.parentId(), QList<QOrganizerItemDetail::DetailType>());
     }
     *error = QOrganizerManager::NoError;
     return true;
@@ -1554,7 +1555,7 @@ void QOrganizerItemMemoryEngine::performAsynchronousOperation(QOrganizerAbstract
 
             QOrganizerManager::Error operationError = QOrganizerManager::NoError;
             QMap<int, QOrganizerManager::Error> errorMap;
-            saveItems(&organizeritems, &errorMap, &operationError);
+            saveItems(&organizeritems, r->detailMask(), &errorMap, &operationError);
 
             updateItemSaveRequest(r, organizeritems, operationError, errorMap, QOrganizerAbstractRequest::FinishedState);
         }

@@ -47,33 +47,51 @@ ContactsSavingTestCase {
     name: "ContactsJsonDbTestCase"
     id: contactsJsonDbTestCase
 
-    ContactsJsonDbPartitions {
+    Loader {
         id: jsonDbPartitions
     }
-    property string jsonDbPartitionForDefaultStorageLocation: jsonDbPartitions.userPartition.name
+    property string jsonDbPartitionForDefaultStorageLocation: jsonDbPartitions.item ? jsonDbPartitions.item.userPartition.name : ''
 
-    ContactsJsonDbTestHelper {
+    Loader {
         id: jsonDbTestHelper
-        partition: jsonDbPartitionForDefaultStorageLocation
+    }
+
+    property bool jsonDbLoaded: jsonDbPartitions.item != null && jsonDbTestHelper.item != null
+
+    function verifyJsonDbLoaded()
+    {
+        if (!jsonDbLoaded) {
+            skip('Could not load jsondb components')
+        }
+    }
+
+    Component.onCompleted: {
+        jsonDbPartitions.setSource("ContactsJsonDbPartitions.qml")
+        jsonDbTestHelper.setSource("ContactsJsonDbTestHelper.qml", { "partition": jsonDbPartitionForDefaultStorageLocation })
     }
 
     function initJsonDbAccess() {
-        jsonDbTestHelper.initTestHelper();
+        if (jsonDbTestHelper.item)
+            jsonDbTestHelper.item.initTestHelper();
     }
 
     function createContactToJsonDb(contact) {
-        jsonDbTestHelper.createContactToJsonDb(contact);
+        if (jsonDbTestHelper.item)
+            jsonDbTestHelper.item.createContactToJsonDb(contact);
     }
 
     function removeContactFromJsonDb(contact) {
-        jsonDbTestHelper.removeContactFromJsonDb(contact);
+        if (jsonDbTestHelper.item)
+            jsonDbTestHelper.item.removeContactFromJsonDb(contact);
     }
 
     function updateContactInJsonDb(contact, update) {
-        jsonDbTestHelper.updateContactInJsonDb(contact, update);
+        if (jsonDbTestHelper.item)
+            jsonDbTestHelper.item.updateContactInJsonDb(contact, update);
     }
 
     function queryContactsInJsonDb() {
-        return jsonDbTestHelper.queryContactsInJsonDb();
+        if (jsonDbTestHelper.item)
+            return jsonDbTestHelper.item.queryContactsInJsonDb();
     }
 }

@@ -47,7 +47,6 @@ Rectangle {
 
 property bool start: false
 property SignalSpy contactsChangedSpy
-property ContactModel contactModel
 property Contact testContact
 
     TestCase {
@@ -65,16 +64,27 @@ property Contact testContact
             //TODO add a test case to remove the same detail N times and remove a detail which doesnt exist etc...
             var model = Qt.createQmlObject(
                     "import QtContacts 5.0;" +
-                    "ContactModel {id:model;autoUpdate:true;onContactsChanged:{console.log(\"CONTACTS CHANGED!\")}}", testHelper);
+                    "ContactModel {" +
+                        "id: model;" +
+                        "manager: \"memory\";" +
+                        "autoUpdate:true;" +
+                    "}",
+                    testHelper);
             var tmp = Qt.createQmlObject(
                     "import QtContacts 5.0;" +
-                    "Contact {Name{}}", testHelper);
-            var spy2 = Qt.createQmlObject("import QtTest 1.0;" +"SignalSpy {id: theSpy;signalName: \"contactsChanged\";}", testHelper);
+                    "Contact { Name {} }",
+                    testHelper);
+            var spy2 = Qt.createQmlObject(
+                    "import QtTest 1.0;" +
+                    "SignalSpy {" +
+                        "id: theSpy;" +
+                        "signalName: \"contactsChanged\";" +
+                    "}",
+                    testHelper);
             contactsChangedSpy = spy2;
             contactsChangedSpy.target = model;
             contactsChangedSpy.clear()
             testHelper.model = model;
-            waitForContactsChanged (1)
             testHelper.emptyContactsDb();
             testContact = tmp;
             var phone = Qt.createQmlObject("import QtContacts 5.0;" +

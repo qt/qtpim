@@ -70,7 +70,7 @@ ContactsSavingTestCase {
         id: contact3
     }
 
-    property Contact nonExistingContact
+    property string nonExistingId
 
     property int lastTransactionId
     property list<Contact> lastContactsFetched
@@ -101,9 +101,7 @@ ContactsSavingTestCase {
     }
 
     function test_fetchNonExistingContact() {
-        var id = nonExistingContact.contactId;
-
-        var trid = model.fetchContacts([id]);
+        var trid = model.fetchContacts([nonExistingId]);
         waitForContactsFetched();
 
         compare(lastContactsFetched.length, 0, "contacts length");
@@ -111,7 +109,7 @@ ContactsSavingTestCase {
 
     function test_fetchBothExistingAndNonExistingContacts() {
         var id1 = model.contacts[0].contactId;
-        var id2 = nonExistingContact.contactId;
+        var id2 = nonExistingId
 
         model.fetchContacts([id1, id2]);
         waitForContactsFetched();
@@ -202,7 +200,7 @@ ContactsSavingTestCase {
 
     function initTestCase() {
         initTestForModel(model);
-        waitForContactsChanged();
+        waitUntilContactsChanged();
         // The wait is needed so the model is populated
         // (e.g. with garbage left from previous test runs)
         // before cleanup() is called.
@@ -230,11 +228,11 @@ ContactsSavingTestCase {
         waitForContactsChanged();
         for (var i = 0; i < model.contacts.length; i++) {
             if (model.contacts[i].name.firstName == contactFirstSavedAndThenRemoved.name.firstName) {
-                nonExistingContact = model.contacts[i];
+                nonExistingId = model.contacts[i].contactId;
                 break;
             }
         }
-        model.removeContact(nonExistingContact.contactId);
+        model.removeContact(nonExistingId);
         waitForContactsChanged();
     }
 

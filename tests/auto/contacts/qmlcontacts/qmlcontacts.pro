@@ -1,6 +1,13 @@
+include(../../auto.pri)
+
 TEMPLATE=app
 TARGET=tst_qmlcontacts
+
+QT += contacts
+CONFIG += qmltestcase console
+
 SOURCES += tst_qmlcontacts.cpp
+
 OTHER_FILES += \
     testcases/ContactsJsonDbPartition.qml \
     testcases/ContactsJsonDbPartitions.qml \
@@ -42,5 +49,3 @@ OTHER_FILES += \
     testcases/tst_contacts_save_contact_e2e.qml \
     testcases/tst_contacts_sorting_e2e.qml \
     testcases/tst_contact_urls.qml
-QT += qmltest contacts versit
-DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

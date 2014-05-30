@@ -76,7 +76,7 @@ ContactsSavingTestCase {
     function test_sortByFirstName()
     {
         model.sortOrders = [sortOrderByFirstName];
-        waitForContactsChanged();
+        waitUntilContactsChanged();
 
         model.saveContact(contactWithFirstName2);
         waitForContactsChanged();
@@ -110,7 +110,7 @@ ContactsSavingTestCase {
     function test_sortByLastName()
     {
         model.sortOrders = [sortOrderByLastName];
-        waitForContactsChanged();
+        waitUntilContactsChanged();
 
         model.saveContact(contactWithLastName2);
         waitForContactsChanged();
@@ -144,7 +144,7 @@ ContactsSavingTestCase {
     function test_sortByEmail()
     {
         model.sortOrders = [sortOrderByEmailAddress];
-        waitForContactsChanged();
+        waitUntilContactsChanged();
 
         model.saveContact(contactWithEmailAddress2);
         waitForContactsChanged();
@@ -182,7 +182,7 @@ ContactsSavingTestCase {
     {
         skip("Backends do not support this at the moment.")
         model.sortOrders = [sortOrderByFirstName, sortOrderByLastName];
-        waitForContactsChanged();
+        waitUntilContactsChanged();
 
         model.saveContact(contactWithFirstAndLastName3);
         waitForContactsChanged();
@@ -219,7 +219,7 @@ ContactsSavingTestCase {
     function test_sortInDefaultOrder()
     {
         model.sortOrders = [sortOrderInDefaultOrder];
-        waitForContactsChanged();
+        waitUntilContactsChanged();
 
         model.saveContact(contactInDefaultOrder2);
         waitForContactsChanged();
@@ -254,7 +254,7 @@ ContactsSavingTestCase {
     function test_sortInAscendingOrder()
     {
         model.sortOrders = [sortOrderInAscendingOrder];
-        waitForContactsChanged();
+        waitUntilContactsChanged();
 
         model.saveContact(contactInAscendingOrder2);
         waitForContactsChanged();
@@ -289,7 +289,7 @@ ContactsSavingTestCase {
     function test_sortInDescendingOrder()
     {
         model.sortOrders = [sortOrderInDescendingOrder];
-        waitForContactsChanged();
+        waitUntilContactsChanged();
 
         model.saveContact(contactInDescendingOrder2);
         waitForContactsChanged();
@@ -304,7 +304,7 @@ ContactsSavingTestCase {
 
     function initTestCase() {
         initTestForModel(model);
-        waitForContactsChanged();
+        waitUntilContactsChanged();
         // The wait is needed so the model is populated
         // (e.g. with garbage left from previous test runs)
         // before cleanup() is called.
@@ -319,7 +319,7 @@ ContactsSavingTestCase {
     function cleanup() {
         if (model.sortOrders.length > 0) {
             model.sortOrders = [];
-            waitForContactsChanged();
+            waitUntilContactsChanged();
         }
         emptyContacts(model);
     }

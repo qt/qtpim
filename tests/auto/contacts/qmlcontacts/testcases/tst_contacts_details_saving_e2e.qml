@@ -778,7 +778,7 @@ ContactsSavingTestCase {
 
     function initTestCase() {
         initTestForModel(model);
-        waitForContactsChanged();
+        waitUntilContactsChanged();
         // The wait is needed so the model is populated
         // (e.g. with garbage left from previous test runs)
         // before cleanup() is called.

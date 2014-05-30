@@ -15,7 +15,8 @@ SUBDIRS += \
 #    qdeclarativecontact
     qcontactmanager \
     qcontactmanagerdetails \
-    qcontactmanagerfiltering
+    qcontactmanagerfiltering \
+    qmlcontacts
 
 qtHaveModule(jsondb) {
     SUBDIRS += qcontactjsondb \

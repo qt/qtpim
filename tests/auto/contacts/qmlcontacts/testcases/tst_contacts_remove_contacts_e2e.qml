@@ -53,20 +53,18 @@ ContactsSavingTestCase {
         autoUpdate: true
     }
 
-    Contact {
-        id: firstContact
-    }
-
-    Contact {
-        id: secondContact
-    }
+    property Contact firstContact
+    property Contact secondContact
 
     function init() {
         initTestForModel(model);
         emptyContacts(model);
 
+        firstContact = createEmptyContact();
         model.saveContact(firstContact);
         waitForContactsChanged();
+
+        secondContact = createEmptyContact();
         model.saveContact(secondContact);
         waitForContactsChanged();
     }
@@ -134,7 +132,7 @@ ContactsSavingTestCase {
 
     function initTestCase() {
         initTestForModel(model);
-        waitForContactsChanged();
+        waitUntilContactsChanged();
         // The wait is needed so the model is populated
         // (e.g. with garbage left from previous test runs)
         // before cleanup() is called.

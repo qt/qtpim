@@ -55,10 +55,8 @@ TestCase {
     }
 
     function getManagerUnderTest() {
-        logDebug("getManagerUnderTest");
         var managerName = configuration.getManagerUnderTest();
-        if (managerName.length > 0)
-            console.log("ContactsSavingTestCase: Testing against '" + managerName + "' manager backend.");
+        logDebug("ContactsSavingTestCase: Testing against '" + managerName + "' manager backend.");
         return managerName;
     }
 
@@ -79,9 +77,29 @@ TestCase {
         spy.clear();
     }
 
+    // Verify that the contactsChanged signal is emitted
     function waitForContactsChanged() {
         logDebug("waitForContactsChanged");
         spy.wait();
+    }
+
+    // Wait until duration has elapsed, or the contactsChanged signal is emitted
+    function waitUntilContactsChanged(duration) {
+        logDebug("waitUntilContactsChanged");
+        if (spy.count == 0) {
+            if (duration == undefined)
+                duration = 500;
+            while (duration > 0) {
+                wait(50);
+                if (spy.count) {
+                    spy.clear();
+                    return;
+                }
+                duration -= 50;
+            }
+        } else {
+            spy.clear();
+        }
     }
 
     function verifyNoContactsChangedReceived() {
@@ -110,15 +128,18 @@ TestCase {
 
     function emptyContacts(model) {
         logDebug("emptyContacts");
-        model.update();
-        spy.wait();
+        if (!model.autoUpdate)
+            model.update();
         var count = model.contacts.length;
+        if (count == 0)
+            return;
         for (var i = 0; i < count; i++) {
             var id = model.contacts[0].contactId;
             model.removeContact(id);
             if (!model.autoUpdate)
                 model.update()
             spy.wait();
+            spy.clear();
         }
         compare(model.contacts.length, 0, "model is empty");
     }
@@ -131,5 +152,15 @@ TestCase {
     function logDebug(message) {
         if (debug)
             console.log(message);
+    }
+
+    Component {
+        id: emptyContactComponent
+        Contact {}
+    }
+
+    function createEmptyContact()
+    {
+        return emptyContactComponent.createObject()
     }
 }

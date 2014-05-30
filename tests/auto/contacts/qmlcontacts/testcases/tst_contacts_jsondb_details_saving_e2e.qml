@@ -84,6 +84,7 @@ ContactsJsonDbTestCase {
     }
 
     function init() {
+        verifyJsonDbLoaded();
         cleanupContacts();
     }
 
@@ -97,7 +98,7 @@ ContactsJsonDbTestCase {
 
     function waitForModelToBeReady(model) {
         initTestForModel(model);
-        waitForContactsChanged();
+        waitUntilContactsChanged();
     }
 
     function cleanupContacts() {

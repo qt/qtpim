@@ -48,6 +48,6 @@ Item {
         //   "jsondb"
         //   "memory"
         //   "" (selects the default backend)
-        return "";
+        return "memory";
     }
 }

@@ -71,16 +71,19 @@ ContactsSavingTestCase {
         id: importResults
     }
 
-    Contact {
+    Component {
         id: testContact
-        Name {
-            firstName: "First"
-            lastName: "Last"
-        }
 
-        PhoneNumber {
-            contexts: ContactDetail.ContextOther
-            number: "5874983729"
+        Contact {
+            Name {
+                firstName: "First"
+                lastName: "Last"
+            }
+
+            PhoneNumber {
+                contexts: ContactDetail.ContextOther
+                number: "5874983729"
+            }
         }
     }
 
@@ -92,13 +95,17 @@ ContactsSavingTestCase {
 
     property string vcardFileNameBase: 'tst_contacts_export_import_signaling_e2e_'
 
+    function createTestContact() {
+        return testContact.createObject()
+    }
+
     function test_successfulExportEmitsSignalProperly() {
 
         var signalSpy = initTestForTargetListeningToSignal(model, "exportCompleted");
 
         // Save and export test contact.
         var vcardFilePath = Qt.resolvedUrl(vcardFileNameBase + "export_1.vcard");
-        model.saveContact(testContact);
+        model.saveContact(createTestContact());
         waitForContactsChanged();
         model.exportContacts(vcardFilePath, ["Sync"]);
 
@@ -115,7 +122,7 @@ ContactsSavingTestCase {
         // Save and export test contact.
         var vcardFilePath = Qt.resolvedUrl(vcardFileNameBase + "export_2.vcard");
         var vcardFilePath2 = Qt.resolvedUrl(vcardFileNameBase + "export_3.vcard");
-        model.saveContact(testContact);
+        model.saveContact(createTestContact());
         waitForContactsChanged();
         model.exportContacts(vcardFilePath, ["Sync"]);
 
@@ -146,7 +153,7 @@ ContactsSavingTestCase {
     function test_successfulImportEmitsSignalProperly() {
 
         // Save and fetch test contact.
-        model.saveContact(testContact);
+        model.saveContact(createTestContact());
         waitForContactsChanged();
 
         // Export contacts to vcard file.
@@ -168,10 +175,10 @@ ContactsSavingTestCase {
     }
 
 
-    function test_overlappingImportEmitsSingalWithError() {
+    function test_overlappingImportEmitsSignalWithError() {
 
         // Save and fetch test contact.
-        model.saveContact(testContact);
+        model.saveContact(createTestContact());
         waitForContactsChanged();
 
         // Export contacts to two vcard files.
@@ -216,7 +223,7 @@ ContactsSavingTestCase {
     function initTestCase() {
 
         initTestForModel(model);
-        waitForContactsChanged();
+        waitUntilContactsChanged();
 
         // The wait is needed so the model is populated
         // (e.g. with garbage left from previous test runs)
@@ -226,6 +233,7 @@ ContactsSavingTestCase {
 
     function init() {
         initTestForModel(model);
+        waitUntilContactsChanged();
 
         // Initial values for helper properties.
         exportErrorCode = ContactModel.ExportNoError

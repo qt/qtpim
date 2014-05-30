@@ -447,6 +447,7 @@ ContactsJsonDbTestCase {
     }
 
     function init() {
+        verifyJsonDbLoaded();
         initJsonDbAccess();
         createModel();
         waitForModelToBeReady(model);
@@ -463,6 +464,8 @@ ContactsJsonDbTestCase {
     }
 
     function cleanupContacts() {
+        if (!jsonDbLoaded)
+            return
         var modelForCleanup = Qt.createQmlObject(
                     'import QtContacts 5.0;' +
                     'ContactModel {' +

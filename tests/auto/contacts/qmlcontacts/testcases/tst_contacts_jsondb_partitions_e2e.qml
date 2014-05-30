@@ -68,12 +68,13 @@ ContactsSavingTestCase {
 
     // Partitions under test
 
-    ContactsJsonDbPartitions {
+    Loader {
         id: jsonDbPartitions
+        source: 'ContactsJsonDbPartitions.qml'
     }
 
-    property alias defaultPartition: jsonDbPartitions.userPartition
-    property alias testPartition: jsonDbPartitions.systemPartition
+    property var defaultPartition: jsonDbPartitions.item ? jsonDbPartitions.item.userPartition : undefined
+    property var testPartition: jsonDbPartitions.item ? jsonDbPartitions.item.systemPartition : undefined
 
     // Tests
 
@@ -341,6 +342,9 @@ ContactsSavingTestCase {
     }
 
     function init() {
+        if (jsonDbTestHelperForDefaultPartition.item == null || jsonDbTestHelperForTestPartition.item == null)
+            skip('Could not load jsondb components')
+
         cleanupContacts();
     }
 
@@ -350,7 +354,8 @@ ContactsSavingTestCase {
     }
 
     function cleanupTestCase() {
-        cleanupContacts();
+        if (jsonDbTestHelperForDefaultPartition.item != null && jsonDbTestHelperForTestPartition.item != null)
+            cleanupContacts();
     }
 
     function cleanupContacts() {
@@ -383,7 +388,7 @@ ContactsSavingTestCase {
 
     function waitForModelToBeReady(model) {
         initTestForModel(model);
-        waitForContactsChanged();
+        waitUntilContactsChanged();
     }
 
     function emptyContactsInPartition(partition) {
@@ -417,21 +422,25 @@ ContactsSavingTestCase {
         return partition.testHelper.convertJsonDbUuidAndStorageLocationToContactId(uuid, partition.storageLocation);
     }
 
-    ContactsJsonDbTestHelper {
+    Loader {
         id: jsonDbTestHelperForDefaultPartition
+        source: 'ContactsJsonDbTestHelper.qml'
     }
 
-    ContactsJsonDbTestHelper {
+    Loader {
         id: jsonDbTestHelperForTestPartition
+        source: 'ContactsJsonDbTestHelper.qml'
     }
 
     function initJsonDbAccess() {
-        jsonDbTestHelperForDefaultPartition.partition = defaultPartition.name;
-        jsonDbTestHelperForDefaultPartition.initTestHelper();
-        defaultPartition.testHelper = jsonDbTestHelperForDefaultPartition;
+        if (jsonDbTestHelperForDefaultPartition.item != null && jsonDbTestHelperForTestPartition.item != null) {
+            jsonDbTestHelperForDefaultPartition.item.partition = defaultPartition.name;
+            jsonDbTestHelperForDefaultPartition.item.initTestHelper();
+            defaultPartition.testHelper = jsonDbTestHelperForDefaultPartition.item;
 
-        jsonDbTestHelperForTestPartition.partition = testPartition.name;
-        jsonDbTestHelperForTestPartition.initTestHelper();
-        testPartition.testHelper = jsonDbTestHelperForTestPartition;
+            jsonDbTestHelperForTestPartition.item.partition = testPartition.name;
+            jsonDbTestHelperForTestPartition.item.initTestHelper();
+            testPartition.testHelper = jsonDbTestHelperForTestPartition.item;
+        }
     }
 }

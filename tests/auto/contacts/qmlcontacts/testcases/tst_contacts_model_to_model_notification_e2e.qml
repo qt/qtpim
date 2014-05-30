@@ -60,15 +60,11 @@ ContactsSavingTestCase {
         autoUpdate:true
     }
 
-    Contact {
-        id: contact
-    }
-
     function test_createContactShouldUpdateOtherModels()
     {
         initTestForModel(notifiedModel);
 
-        modifiedModel.saveContact(contact);
+        modifiedModel.saveContact(createEmptyContact());
         waitForContactsChanged();
         compare(notifiedModel.contacts.length, 1,
                 "contacts updated in the notified model");
@@ -203,7 +199,7 @@ ContactsSavingTestCase {
     function test_removeContactShouldUpdateOtherModel()
     {
         initTestForModel(modifiedModel);
-        modifiedModel.saveContact(contact);
+        modifiedModel.saveContact(createEmptyContact());
         modifiedModel.update();
         waitForContactsChanged();
         var id = modifiedModel.contacts[0].contactId;
@@ -221,7 +217,7 @@ ContactsSavingTestCase {
 
     function initTestCase() {
         initTestForModel(notifiedModel);
-        waitForContactsChanged();
+        waitUntilContactsChanged();
         emptyContacts(notifiedModel);
     }
 

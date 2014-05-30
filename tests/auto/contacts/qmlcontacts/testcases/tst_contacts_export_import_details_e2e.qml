@@ -289,7 +289,7 @@ ContactsSavingTestCase {
 
     function initTestCase() {
         initTestForModel(model);
-        waitForContactsChanged();
+        waitUntilContactsChanged();
 
         var signalSpy = initTestForTargetListeningToSignal(model, "exportCompleted");
 

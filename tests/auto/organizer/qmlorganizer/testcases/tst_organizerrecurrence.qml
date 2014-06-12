@@ -619,7 +619,7 @@ TestCase {
         return [
                     {
                         tag: "Invalid recurrence, no matching dates for rule",
-                        managers: ["jsondb", "memory"],
+                        managers: ["memory"],
                         definitions: {
 
                             "start" : new Date('2012-01-01T14:00:00'),

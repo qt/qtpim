@@ -9,15 +9,9 @@ CONFIG += qmltestcase console
 SOURCES += tst_qmlcontacts.cpp
 
 OTHER_FILES += \
-    testcases/ContactsJsonDbPartition.qml \
-    testcases/ContactsJsonDbPartitions.qml \
-    testcases/ContactsJsonDbPartitionTestHelper.qml \
-    testcases/ContactsJsonDbTestHelper.qml \
     testcases/ContactsSavingTestCase.qml \
     testcases/ContactsSignalingTestCase.qml \
     testcases/ContactsTestHelper.qml \
-    testcases/initialize_jsondb_for_tests.qml \
-    testcases/SignalingJsonDb.qml \
     testcases/tst_contact_add_detail.qml \
     testcases/tst_contact_addresses.qml \
     testcases/tst_contact_detail_access.qml \
@@ -41,8 +35,6 @@ OTHER_FILES += \
     testcases/tst_contacts_filtering_e2e.qml \
     testcases/tst_contact_signals.qml \
     testcases/tst_contacts_intersection_filter_e2e.qml \
-    testcases/tst_contacts_jsondb_partitions_e2e.qml \
-    testcases/tst_contacts_jsondb_to_model_notification_e2e.qml \
     testcases/tst_contacts_model_to_model_notification_e2e.qml \
     testcases/tst_contacts_remove_contacts_e2e.qml \
     testcases/tst_contacts_remove_detail_e2e.qml \

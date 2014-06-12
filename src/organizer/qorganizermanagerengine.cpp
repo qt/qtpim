@@ -1233,7 +1233,6 @@ bool QOrganizerManagerEngine::addDefaultSorted(QMultiMap<QDateTime, QOrganizerIt
     QDateTime sortTime;
     if (toAdd.type() == QOrganizerItemType::TypeEvent || toAdd.type() == QOrganizerItemType::TypeEventOccurrence) {
         QOrganizerEventTime eventTime = toAdd.detail(QOrganizerItemDetail::TypeEventTime);
-        // both start and end times are mandatory for an event in jsondb schema, so all this checking might redundant
         if (eventTime.startDateTime().isValid())
             sortTime = eventTime.startDateTime();
         else if (eventTime.endDateTime().isValid())

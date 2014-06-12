@@ -321,14 +321,7 @@ TestCase {
         errorsChangedSpy.signalName = "errorChanged";
         organizerModel.saveItem(savedEvent);
 
-        if (data.managerToBeTested == "jsondb") {
-            // jsondb backend supports changing collection of an item, collection id changes
-            modelChangedSpy.wait(spyWaitDelay);
-            savedEvent = organizerModel.items[organizerModel.items.length - 1];
-            compare(organizerModel.error, "NoError");
-            compare(savedEvent.collectionId, savedCollection.collectionId);
-        }
-        else if (data.managerToBeTested == "memory") {
+        if (data.managerToBeTested == "memory") {
             // memory backend does not support changing collection of an item, collection id does not change
             errorsChangedSpy.wait(spyWaitDelay);
             savedEvent = organizerModel.items[organizerModel.items.length - 1];
@@ -447,21 +440,6 @@ TestCase {
         compare(savedEmptyCollection.description, coll3.description);
         compare(savedEmptyCollection.color.toString(), coll3.color.toString());
         compare(savedEmptyCollection.image.toString(), coll3.image.toString());
-        // verify we can see same collections on different OrganizerModel element
-        if (data.managerToBeTested == "jsondb") {
-            var organizerModel2 = create_testobject("import QtQuick 2.0\n"
-              + "import QtOrganizer 5.0\n"
-              + "OrganizerModel {\n"
-              + "  manager: '" + data.managerToBeTested + "'\n"
-              + "  startPeriod:'2009-01-01'\n"
-              + "  endPeriod:'2012-12-31'\n"
-              + "}\n");
-            var collectionsChangedSpy2 = create_testobject( "import QtTest 1.0 \nSignalSpy {}");
-            collectionsChangedSpy2.target = organizerModel2;
-            collectionsChangedSpy2.signalName = "collectionsChanged"
-            collectionsChangedSpy2.wait(spyWaitDelay);//needed so that OrganizerModel is initialised properly (collections fetched)
-            compare(organizerModel.collections.length, organizerModel2.collections.length);
-        }
 
         // fetching existing and non-existing collection
         var existingCollection = organizerModel.collection(organizerModel.collections[organizerModel.collections.length - 1].collectionId);

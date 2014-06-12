@@ -384,13 +384,13 @@ TestCase {
                 filterDetail: Detail.EventTime, filterField: EventTime.FieldStartDateTime, filterValue: new Date("2011-10-23T16:42:00")},//notice, date-object
             {tag: "exact filter - EventTime.EndDateTime", expectedItemsAmount: 1,
                 filterDetail: Detail.EventTime, filterField: EventTime.FieldEndDateTime, filterValue: new Date("2011-10-23T21:00:00")},
-            {tag: "exact filter - EventTime.AllDayEvent", expectedItemsAmount: 1, expectedItemsAmount_Jsondb: 2,
+            {tag: "exact filter - EventTime.AllDayEvent", expectedItemsAmount: 1,
                 filterDetail: Detail.EventTime, filterField: EventTime.FieldAllDay, filterValue: true},
             {tag: "exact filter - TodoTime.StartDateTime", expectedItemsAmount: 1,
                 filterDetail: Detail.TodoTime, filterField: TodoTime.FieldStartDateTime, filterValue: new Date("2010-10-23T15:48:00")},
             {tag: "exact filter - TodoTime.DueDateTime", expectedItemsAmount: 1,
                 filterDetail: Detail.TodoTime, filterField: TodoTime.FieldDueDateTime, filterValue: new Date("2010-10-25T15:49:00")},
-            {tag: "exact filter - TodoTime.AllDay", expectedItemsAmount: 1, expectedItemsAmount_Jsondb: 2,
+            {tag: "exact filter - TodoTime.AllDay", expectedItemsAmount: 1,
                 filterDetail: Detail.TodoTime, filterField: TodoTime.FieldAllDay, filterValue: true},
             {tag: "exact filter - TodoProgress.Status", expectedItemsAmount: 1,
                 filterDetail: Detail.TodoProgress, filterField: TodoProgress.FieldStatus, filterValue: TodoProgress.InProgress},
@@ -517,12 +517,7 @@ TestCase {
                 applyFilter(data);
             }
 
-            if (managerToBeTested == "jsondb" ) {
-                // in some cases the stored details are utilising the same field on the backend, which means the amount of matches to be different
-                compare(organizerModel.items.length, data.expectedItemsAmount_Jsondb ? data.expectedItemsAmount_Jsondb : data.expectedItemsAmount);
-            } else {
-                compare(organizerModel.items.length, data.expectedItemsAmount);
-            }
+            compare(organizerModel.items.length, data.expectedItemsAmount);
 
             organizerModel.destroy();
         }
@@ -594,7 +589,6 @@ TestCase {
             {tag: "Filter set, Comment - MatchStartsWith", expectedItemsAmount: 1,
                 filterDetail: Detail.Comment, filterField: Comment.FieldComment, filterValue: "my",
                 matchFlags: Filter.MatchStartsWith,
-                // jsondb, depends on detail created in previous data set
                 // mem, needs to create again
                 separateDetailCtrStrMemory: "import QtQuick 2.0\n"
                 + "import QtOrganizer 5.0 \n"
@@ -604,7 +598,6 @@ TestCase {
             {tag: "Filter set, Comment - MatchContains", expectedItemsAmount: 1,
                 filterDetail: Detail.Comment, filterField: Comment.FieldComment, filterValue: "great",
                 matchFlags: Filter.MatchContains,
-                // jsondb, depends on detail created in previous data set
                 // mem, needs to create again
                 separateDetailCtrStrMemory: "import QtQuick 2.0\n"
                 + "import QtOrganizer 5.0 \n"
@@ -614,7 +607,6 @@ TestCase {
             {tag: "Filter set, Comment - MatchEndsWith", expectedItemsAmount: 1,
                 filterDetail: Detail.Comment, filterField: Comment.FieldComment, filterValue: "comment",
                 matchFlags: Filter.MatchEndsWith,
-                // jsondb, depends on detail created in previous data set
                 // mem, needs to create again
                 separateDetailCtrStrMemory: "import QtQuick 2.0\n"
                 + "import QtOrganizer 5.0 \n"
@@ -760,17 +752,6 @@ TestCase {
 
     function test_errors(data) {
         console.log();
-        //preparations
-        // error codes are backend specific, these are tested only for jsondb
-        if (utility.getManagerList().indexOf("jsondb") === -1)
-            skip("Cannot run tests for jsondb backend. No plugin available!");
-        organizerModel = utility.createModel("jsondb")
-
-        var errorChangedSpy = utility.create_spy(organizerModel, "errorChanged");
-        applyFilter(data);
-        errorChangedSpy.wait();
-
-        compare(organizerModel.error, "BadArgument");
-        organizerModel.destroy();
+        // error codes are backend specific - currently untested
     }
 }

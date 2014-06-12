@@ -45,7 +45,6 @@ Item {
     function getManagerUnderTest() {
         // Adjust this to run the tests against different manager backends
         // Supported values:
-        //   "jsondb"
         //   "memory"
         //   "" (selects the default backend)
         return "memory";

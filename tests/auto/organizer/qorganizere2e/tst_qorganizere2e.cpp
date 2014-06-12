@@ -44,7 +44,6 @@
 #include <QtOrganizer/qorganizeritemdetails.h>
 #include <QtOrganizer/qorganizeritems.h>
 #include <QtOrganizer/qorganizermanager.h>
-#include "../../jsondbprocess.h"
 
 QTORGANIZER_USE_NAMESPACE
 
@@ -73,19 +72,10 @@ private:
 
     // <manager, items> pair for existing items
     QMap<QString, QList<QOrganizerItem> > existingItems;
-
-    JsonDbProcess jsondbProcess;
 };
 
 void tst_QOrganizerE2E::initTestCase()
 {
-    // Start JsonDb daemon if needed
-    if (QOrganizerManager::availableManagers().contains("jsondb")) {
-        QString partitions_json = QFINDTESTDATA("partitions.json");
-        QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
-        QVERIFY2(jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
-    }
-
     // back-up all existing items
     QStringList availableManagers(QOrganizerManager::availableManagers());
     foreach (const QString &manager, availableManagers) {
@@ -115,9 +105,6 @@ void tst_QOrganizerE2E::cleanupTestCase()
         organizerManager.saveItems(&(i.value()));
         ++i;
     }
-
-    if (QOrganizerManager::availableManagers().contains("jsondb"))
-        jsondbProcess.terminate();
 }
 
 void tst_QOrganizerE2E::testMegaItem()

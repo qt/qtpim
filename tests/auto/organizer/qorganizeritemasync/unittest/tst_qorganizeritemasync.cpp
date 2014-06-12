@@ -46,7 +46,6 @@
 
 #include <QtOrganizer/qorganizer.h>
 #include "../../qorganizermanagerdataholder.h" //QOrganizerManagerDataHolder
-#include "../../../jsondbprocess.h"
 
 Q_DECLARE_METATYPE(QTORGANIZER_PREPEND_NAMESPACE(QOrganizerAbstractRequest::State))
 
@@ -203,10 +202,8 @@ private slots:
     void itemSave_data() { addManagers(); }
     void itemListSave();
     void itemListSave_data() { addManagers(); }
-#if defined(QT_NO_JSONDB)
     void itemPartialSave();
     void itemPartialSave_data() { addManagers(); }
-#endif
 
     void collectionFetch();
     void collectionFetch_data() { addManagers(); }
@@ -239,9 +236,6 @@ private:
     Qt::HANDLE m_mainThreadId;
     Qt::HANDLE m_resultsAvailableSlotThreadId;
     QScopedPointer<QOrganizerManagerDataHolder> managerDataHolder;
-
-    JsonDbProcess jsondbProcess;
-
 };
 
 tst_QOrganizerItemAsync::tst_QOrganizerItemAsync()
@@ -259,22 +253,12 @@ tst_QOrganizerItemAsync::~tst_QOrganizerItemAsync()
 
 void tst_QOrganizerItemAsync::initTestCase()
 {
-    // Start JsonDb daemon if needed
-    if (QOrganizerManager::availableManagers().contains("jsondb")) {
-        QString partitions_json = QFINDTESTDATA("partitions.json");
-        QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
-        QVERIFY2(jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
-    }
-
     managerDataHolder.reset(new QOrganizerManagerDataHolder());
 }
 
 void tst_QOrganizerItemAsync::cleanupTestCase()
 {
     managerDataHolder.reset(0);
-
-    if (QOrganizerManager::availableManagers().contains("jsondb"))
-        jsondbProcess.terminate();
 }
 
 bool tst_QOrganizerItemAsync::compareItemLists(QList<QOrganizerItem> lista, QList<QOrganizerItem> listb)
@@ -577,14 +561,12 @@ void tst_QOrganizerItemAsync::itemFetch()
 
     mitems = oim->items(QDateTime(), QDateTime(), dfil);
     items = ifr.items();
-    QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
     QVERIFY(!mitems.isEmpty());
     QCOMPARE(mitems.size(), items.size());
     for (int i = 0; i < items.size(); i++) {
         QVERIFY(containsIgnoringDetailKeys(mitems, items.at(i)));
     }
 
-#if defined(QT_NO_JSONDB)
     // sort order
     QOrganizerItemSortOrder sortOrder;
     sortOrder.setDetail(QOrganizerItemDetail::TypePriority, QOrganizerItemPriority::FieldPriority);
@@ -743,7 +725,6 @@ void tst_QOrganizerItemAsync::itemFetch()
         QVERIFY(ifr.state() == QOrganizerAbstractRequest::CanceledState);
         break;
     }
-#endif
 }
 
 void tst_QOrganizerItemAsync::itemFetchById()
@@ -867,11 +848,9 @@ void tst_QOrganizerItemAsync::itemIdFetch()
 
     itemIds = oim->itemIds(QDateTime(), QDateTime(), dfil);
     result = ifr.itemIds();
-    QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
     QVERIFY(!itemIds.isEmpty());
     QCOMPARE(itemIds, result);
 
-#if defined(QT_NO_JSONDB)
     // sort order
     QOrganizerItemSortOrder sortOrder;
     sortOrder.setDetail(QOrganizerItemDetail::TypePriority, QOrganizerItemPriority::FieldPriority);
@@ -958,7 +937,6 @@ void tst_QOrganizerItemAsync::itemIdFetch()
         spy.clear();
         break;
     }
-#endif
 }
 
 void tst_QOrganizerItemAsync::itemOccurrenceFetch()
@@ -1213,7 +1191,6 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
         QVERIFY(items.contains(curr));
     }
 
-#if defined(QT_NO_JSONDB)
     // asynchronous detail field filtering
     QOrganizerItemDetailFieldFilter dfil;
     dfil.setDetail(QOrganizerItemDetail::TypeLocation, QOrganizerItemLocation::FieldLabel);
@@ -1236,7 +1213,6 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
         QOrganizerItem curr = itemsfe.at(i);
         QVERIFY(items.contains(curr));
     }
-#endif
 
     // sort order
     QOrganizerItemSortOrder sortOrder;
@@ -1266,7 +1242,6 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
         QVERIFY(items.contains(curr));
     }
 
-#if defined(QT_NO_JSONDB)
     // restrictions
     sorting.clear();
     ifr.setFilter(fil);
@@ -1394,7 +1369,6 @@ void tst_QOrganizerItemAsync::itemFetchForExport()
         QVERIFY(ifr.state() == QOrganizerAbstractRequest::CanceledState);
         break;
     }
-#endif
 }
 
 void tst_QOrganizerItemAsync::itemRemove()
@@ -1461,7 +1435,6 @@ void tst_QOrganizerItemAsync::itemRemove()
     QThreadSignalSpy spy(&irr, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)));
     QVERIFY(!irr.cancel()); // not started
 
-    QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
     QVERIFY(!oim->items(QDateTime(), QDateTime(), dfil).isEmpty());
 
     QVERIFY(irr.start());
@@ -1474,7 +1447,6 @@ void tst_QOrganizerItemAsync::itemRemove()
     QVERIFY(spy.count() >= 1); // active + finished progress signals
     spy.clear();
 
-    QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
     QCOMPARE(oim->itemIds().size(), originalCount - 1);
     QVERIFY(oim->itemIds(QDateTime(), QDateTime(), dfil).isEmpty());
 
@@ -1640,7 +1612,6 @@ void tst_QOrganizerItemAsync::itemRemoveById()
     QThreadSignalSpy spy(&irr, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)));
     QVERIFY(!irr.cancel()); // not started
 
-    QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
     QVERIFY(!oim->itemIds(QDateTime(), QDateTime(), dfil).isEmpty());
 
     QVERIFY(irr.start());
@@ -1653,15 +1624,11 @@ void tst_QOrganizerItemAsync::itemRemoveById()
     QVERIFY(spy.count() >= 1); // active + finished progress signals
     spy.clear();
 
-    QEXPECT_FAIL("mgr='jsondb'","Jsondb backend does not support filtering based only on the detail/field and not value.", Continue);
     QCOMPARE(oim->itemIds().size(), originalCount - 1);
     QVERIFY(oim->itemIds(QDateTime(), QDateTime(), dfil).isEmpty());
 
     // remove all items
 ////    dfil.setDetail(QOrganizerItemDetail::TypeDisplayLabel); // delete everything.
-//#if !defined(QT_NO_JSONDB)
-//    qRegisterMetaType<QOrganizerItemRemoveRequest*>("QOrganizerItemRemoveRequest*");
-//#endif
     irr.setManager(oim.data());
 
     irr.setItemIds(oim->itemIds());
@@ -1850,7 +1817,6 @@ void tst_QOrganizerItemAsync::itemSave()
     // XXX: really, we should use isSuperset() from tst_QOrganizerManager, but this will do for now:
     QVERIFY(result.first().detail(QOrganizerItemDetail::TypePriority).value(QOrganizerItemPriority::FieldPriority) == priority.priority());
     QCOMPARE(oim->itemIds().size(), originalCount + 1);
-#if defined(QT_NO_JSONDB)
     // cancelling
     QOrganizerItem temp = testTodo;
     temp.setDisplayLabel("should not get saved");
@@ -1941,7 +1907,6 @@ void tst_QOrganizerItemAsync::itemSave()
         QCOMPARE(oim->itemIds().size(), originalCount + 1);
         break;
     }
-#endif
 }
 
 void tst_QOrganizerItemAsync::itemListSave()
@@ -2049,7 +2014,6 @@ void tst_QOrganizerItemAsync::itemListSave()
     QVERIFY(expected[1].id().isNull());
 }
 
-#if defined(QT_NO_JSONDB)
 void tst_QOrganizerItemAsync::itemPartialSave()
 {
 //    QFETCH(QString, uri);
@@ -2190,7 +2154,6 @@ void tst_QOrganizerItemAsync::itemPartialSave()
 
 //    // XXX TODO: partial save for organizer items as well as items!!!
 }
-#endif
 
 void tst_QOrganizerItemAsync::collectionFetch()
 {
@@ -2235,7 +2198,6 @@ void tst_QOrganizerItemAsync::collectionFetch()
         QVERIFY(syncCols.contains(curr));
     }
 
-#if defined(QT_NO_JSONDB)
     // cancelling
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     while (true) {
@@ -2290,7 +2252,6 @@ void tst_QOrganizerItemAsync::collectionFetch()
         QVERIFY(cfr.state() == QOrganizerAbstractRequest::CanceledState);
         break;
     }
-#endif
 }
 
 void tst_QOrganizerItemAsync::collectionRemove()
@@ -2365,7 +2326,6 @@ void tst_QOrganizerItemAsync::collectionRemove()
     QVERIFY(crr1.isFinished());
     QVERIFY(crr1.error() == QOrganizerManager::NoError);
 
-#if defined(QT_NO_JSONDB)
     // cancelling
     QOrganizerCollection temp;
     temp.setMetaData(QOrganizerCollection::KeyDescription, "Should not be removed!");
@@ -2450,7 +2410,6 @@ void tst_QOrganizerItemAsync::collectionRemove()
 
     // now clean up our temp collection.
     oim->removeCollection(temp.id());
-#endif
 }
 
 void tst_QOrganizerItemAsync::collectionSave()
@@ -2545,7 +2504,6 @@ void tst_QOrganizerItemAsync::collectionSave()
     QVERIFY(csr1.isFinished());
     QVERIFY(csr1.error() == QOrganizerManager::NoError);
 
-#if defined(QT_NO_JSONDB)
     // cancelling
     QOrganizerCollection temp;
     temp.setMetaData(testCollection.metaData());
@@ -2631,7 +2589,6 @@ void tst_QOrganizerItemAsync::collectionSave()
         QCOMPARE(oim->collections().size(), originalCount + 1);
         break;
     }
-#endif
 }
 
 
@@ -3183,11 +3140,9 @@ QOrganizerManager* tst_QOrganizerItemAsync::prepareModel(const QString& managerU
 
     // XXX TODO: ensure that this is the case:
     // there should be no items in the database.
-#if defined(QT_NO_JSONDB)
     QList<QOrganizerItemId> toRemove = oim->itemIds();
     foreach (const QOrganizerItemId& removeId, toRemove)
         oim->removeItem(removeId);
-#endif
 
     QOrganizerEvent a, b, c;
     a.setDisplayLabel("event a");

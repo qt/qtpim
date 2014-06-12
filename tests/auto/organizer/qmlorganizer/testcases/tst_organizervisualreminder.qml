@@ -107,8 +107,6 @@ Rectangle {
             //Test all manager backends
             for (var i = 0; i < list.length; i ++) {
                 var managerName = list[i];
-                if (managerName == "jsondb")//jsondb backend does not support visual reminder
-                    return;
                 console.log("VisualReminder test start! :" + managerName);
                 var model = Qt.createQmlObject(
                       "import QtOrganizer 5.0;"
@@ -136,21 +134,6 @@ Rectangle {
                 utility.debug("Create and save the detail test", debugFlag);
                 visualReminderDetail.dataUrl = "http://www.test0.com";
                 visualReminderEvent.setDetail(visualReminderDetail);
-                if (managerName == "jsondb") {
-                    // custom fields allowed in JsonDb for audible reminder
-                    // simple test here, since already fully tested in C++
-                    var extendedDetail = Qt.createQmlObject(
-                        "import QtOrganizer 5.0;"
-                        + "ExtendedDetail {"
-                        + "  name: \"reminder\";"
-                        + "  data: \{"
-                        + "    Qt: \"Everywhere\";"
-                        + "    Url: \"http://www.qt-project.org/\";"
-                        + "  }"
-                        + "}"
-                        , test);
-                    visualReminderEvent.addDetail(extendedDetail);
-                }
                 model.saveItem(visualReminderEvent);
                 //Let's wait for the model to be up-to-date
                 utility.waitModelChange(1);

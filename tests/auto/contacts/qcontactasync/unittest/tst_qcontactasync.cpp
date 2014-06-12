@@ -65,7 +65,6 @@
 #include <QtContacts/QContactName>
 #include <QtContacts/QContactIdFilter>
 
-#include "jsondbprocess.h"
 #include "qcontactidmock.h"
 #include "qcontactmanagerdataholder.h" //QContactManagerDataHolder
 
@@ -265,8 +264,6 @@ private:
     Qt::HANDLE m_resultsAvailableSlotThreadId;
     QScopedPointer<QContactManagerDataHolder> managerDataHolder;
 
-    JsonDbProcess m_jsondbProcess;
-
 };
 
 tst_QContactAsync::tst_QContactAsync()
@@ -276,19 +273,10 @@ tst_QContactAsync::tst_QContactAsync()
     QCoreApplication::addLibraryPath(path);
 
     qRegisterMetaType<QContactAbstractRequest::State>("QContactAbstractRequest::State");
-
-    // Start JsonDb daemon if needed
-    if (QContactManager::availableManagers().contains("jsondb")) {
-        QString partitions_json = QFINDTESTDATA("partitions.json");
-        QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
-        QVERIFY2(m_jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
-    }
 }
 
 tst_QContactAsync::~tst_QContactAsync()
 {
-    if (QContactManager::availableManagers().contains("jsondb"))
-        m_jsondbProcess.terminate();
 }
 
 void tst_QContactAsync::initTestCase()
@@ -584,9 +572,6 @@ void tst_QContactAsync::contactFetch()
     cfr.setFilter(fil);
     cfr.setSorting(sorting);
     cfr.setFetchHint(QContactFetchHint());
-
-    if (cm->managerName() == "jsondb")
-        QSKIP("JSONDB backend does not support request cancelling, skipping...");
 
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     while (true) {
@@ -984,9 +969,6 @@ void tst_QContactAsync::contactIdFetch()
     cfr.setFilter(fil);
     cfr.setSorting(sorting);
 
-    if (cm->managerName() == "jsondb")
-        QSKIP("JSONDB backend does not support request cancelling, skipping...");
-
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     while (true) {
         QVERIFY(!cfr.cancel()); // not started
@@ -1048,8 +1030,7 @@ void tst_QContactAsync::contactIdFetch()
     }
 
     // Error cases not tested here as can not generate common error case
-    // for all backends. For example, for jsondb backend can not generate
-    // error at all.
+    // for all backends.
 }
 
 void tst_QContactAsync::contactRemove()
@@ -1123,9 +1104,6 @@ void tst_QContactAsync::contactRemove()
     temp.saveDetail(&nameDetail);
     cm->saveContact(&temp);
     crr.setContactIds(cm->contactIds(dfil));
-
-    if (cm->managerName() == "jsondb")
-        QSKIP("JSONDB backend does not support request cancelling, skipping...");
 
     // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
@@ -1394,9 +1372,6 @@ void tst_QContactAsync::contactSave()
     saveList << temp;
     csr.setContacts(saveList);
 
-    if (cm->managerName() == "jsondb")
-        QSKIP("JSONDB backend does not support request cancelling, skipping...");
-
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     while (true) {
         QVERIFY(!csr.cancel()); // not started
@@ -1496,7 +1471,7 @@ void tst_QContactAsync::contactSaveErrorHandling()
     QVERIFY(!csr.cancel());
     QVERIFY(!csr.waitForFinished());
 
-    // Save a group of contacts, including few  TypeGroup contacts which are not supported by jsondb backend.
+    // Save a group of contacts, including few TypeGroup contacts which may not be supported by all backends.
     QContact testContact1, testContact2, testContact3, testContact4, testContact5, testContact6, testContact7,testContact8;
     QContactName nameDetail;
     nameDetail.setFirstName("Test Contact1");
@@ -1565,29 +1540,25 @@ void tst_QContactAsync::contactSaveErrorHandling()
     QVERIFY(spy.count() >= 1); // active + finished progress signals
     spy.clear();
 
-    // Check errors, the group type is not supported by jsondb backend so contacts with that detail should report error.
     // Note, the returned value is actually set/remapped in to the errorMap by common code in qcontactmanagerengine
-    // TODO: move these tests to JsonDb-specific test class
-    if (cm->managerName() == "jsondb") {
+    if (!cm->supportedContactTypes().contains(QContactType::TypeGroup)) {
         QCOMPARE(csr.errorMap().value(0), QContactManager::InvalidContactTypeError);
         QCOMPARE(csr.errorMap().value(2), QContactManager::InvalidContactTypeError);
         QCOMPARE(csr.errorMap().value(5), QContactManager::InvalidContactTypeError);
-        QCOMPARE(csr.errorMap().value(6), QContactManager::BadArgumentError);
-        QVERIFY(csr.contacts()[5].id().isNull());
         QCOMPARE(csr.error(), QContactManager::InvalidContactTypeError);
-    }
-    else {
+
+        // With errors in the batch, we can't know that the other contacts have no error...
+    } else {
         QCOMPARE(csr.errorMap().value(0), QContactManager::NoError);
         QCOMPARE(csr.errorMap().value(2), QContactManager::NoError);
         QCOMPARE(csr.errorMap().value(5), QContactManager::NoError);
-        QCOMPARE(csr.errorMap().value(6), QContactManager::NoError);
         QCOMPARE(csr.error(), QContactManager::NoError);
-    }
-    QCOMPARE(csr.errorMap().value(1), QContactManager::NoError);
-    QCOMPARE(csr.errorMap().value(3), QContactManager::NoError);
-    QCOMPARE(csr.errorMap().value(4), QContactManager::NoError);
-    QCOMPARE(csr.errorMap().value(7), QContactManager::NoError);
 
+        QCOMPARE(csr.errorMap().value(1), QContactManager::NoError);
+        QCOMPARE(csr.errorMap().value(3), QContactManager::NoError);
+        QCOMPARE(csr.errorMap().value(4), QContactManager::NoError);
+        QCOMPARE(csr.errorMap().value(7), QContactManager::NoError);
+    }
 }
 
 void tst_QContactAsync::contactSaveRemovedContacts()
@@ -1936,10 +1907,6 @@ void tst_QContactAsync::relationshipFetch()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(prepareModel(uri));
 
-    if (cm->managerName() == "jsondb") {
-       QSKIP("This contact manager does not support relationships!");
-    }
-
     if (cm->managerName() == "symbian") {
         QSKIP("This contact manager does not support the required relationship types for this test to pass!");
     }
@@ -2083,9 +2050,6 @@ void tst_QContactAsync::relationshipFetch()
     // cancelling
     rfr.setRelationshipType(QString());
 
-    if (cm->managerName() == "jsondb")
-        QSKIP("JSONDB backend does not support request cancelling, skipping...");
-
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     while (true) {
         QVERIFY(!rfr.cancel()); // not started
@@ -2145,10 +2109,6 @@ void tst_QContactAsync::relationshipRemove()
 {
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(prepareModel(uri));
-
-    if (cm->managerName() == "jsondb") {
-       QSKIP("This contact manager does not support relationships!");
-    }
 
     if (cm->managerName() == "symbian") {
         QSKIP("This contact manager does not support the required relationship types for this test to pass!");
@@ -2239,9 +2199,6 @@ void tst_QContactAsync::relationshipRemove()
     relationships.clear();
     relationships.push_back(r);
 
-    if (cm->managerName() == "jsondb")
-        QSKIP("JSONDB backend does not support request cancelling, skipping...");
-
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     while (true) {
         QVERIFY(!rrr.cancel()); // not started
@@ -2305,10 +2262,6 @@ void tst_QContactAsync::relationshipSave()
 {
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(prepareModel(uri));
-
-    if (cm->managerName() == "jsondb") {
-       QSKIP("This contact manager does not support relationships!");
-    }
 
     if (cm->managerName() == "symbian") {
         QSKIP("This contact manager does not support the required relationship types for this test to pass!");
@@ -2399,9 +2352,6 @@ void tst_QContactAsync::relationshipSave()
     saveList.clear();
     saveList << testRel;
     rsr.setRelationships(saveList);
-
-    if (cm->managerName() == "jsondb")
-        QSKIP("JSONDB backend does not support request cancelling, skipping...");
 
     int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
     while (true) {
@@ -2687,10 +2637,6 @@ QContactManager* tst_QContactAsync::prepareModel(const QString& managerUri)
 
     if (cm->contacts().size() != 3)
         qWarning() << Q_FUNC_INFO << "Failed to prepare model!";
-
-    if (cm->managerName() == "jsondb") {
-        return cm;
-    }
 
     QContactRelationship arb;
     arb.setFirst(a);

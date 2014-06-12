@@ -89,8 +89,7 @@ Rectangle {
         SystemPalette { id: activePalette }
         property OrganizerModel organizer:OrganizerModel{
             id: organizer
-            manager:"qtorganizer:jsondb:id=qml"
-            //manager:"qtorganizer:memory:id=qml"
+            manager:"qtorganizer:memory:id=qml"
             startPeriod:'2009-01-01'
             endPeriod:'2012-12-31'
             autoUpdate:true

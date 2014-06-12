@@ -44,7 +44,6 @@
 #include <QtContacts>
 
 #include "qcontactmanagerdataholder.h"
-#include "jsondbprocess.h"
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -75,8 +74,6 @@ private:
     void saveAndVerifyContact( QContactManager *cm, QContact &original );
 
     QScopedPointer<QContactManagerDataHolder> managerDataHolder;
-
-    JsonDbProcess m_jsondbProcess;
 
 private slots:
     void initTestCase();
@@ -149,22 +146,12 @@ void tst_QContactManagerDetails::addManagers()
 
 void tst_QContactManagerDetails::initTestCase()
 {
-    // Start JsonDb daemon if needed
-    if (QContactManager::availableManagers().contains("jsondb")) {
-        QString partitions_json = QFINDTESTDATA("partitions.json");
-        QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
-        QVERIFY2(m_jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
-    }
-
     managerDataHolder.reset(new QContactManagerDataHolder());
 }
 
 void tst_QContactManagerDetails::cleanupTestCase()
 {
     managerDataHolder.reset(0);
-
-    if (QContactManager::availableManagers().contains("jsondb"))
-        m_jsondbProcess.terminate();
 }
 
 bool tst_QContactManagerDetails::saveAndLoadContact( QContactManager *cm, QContact &original, QContact &loaded )
@@ -275,17 +262,13 @@ void tst_QContactManagerDetails::testAddress()
 void tst_QContactManagerDetails::testAnniversary()
 {
     QFETCH(QString, uri);
-    if (uri == "qtcontacts:jsondb:") {
-        QSKIP("JsonDb backend does not support QContactAnniversary detail!");
-    } else {
-        QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
-        QContact c;
-        QContactAnniversary a;
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+    QContact c;
+    QContactAnniversary a;
 
-        a.setOriginalDate( QDate(2009,9,9) );
-        c.saveDetail( &a );
-        saveAndVerifyContact( cm.data(), c );
-    }
+    a.setOriginalDate( QDate(2009,9,9) );
+    c.saveDetail( &a );
+    saveAndVerifyContact( cm.data(), c );
 }
 
 void tst_QContactManagerDetails::testAvatar()
@@ -384,8 +367,6 @@ void tst_QContactManagerDetails::testNickName()
 
     QContact loadedContact;
     QVERIFY(saveAndLoadContact(cm.data(), originalContact, loadedContact));
-    if (uri == "qtcontacts:jsondb:")
-        QEXPECT_FAIL("", "JsonDb backend does not support QContactNickname properly!", Abort);
     QCOMPARE(loadedContact.details().count(), originalContact.details().count());
     QCOMPARE(loadedContact, originalContact);
 }
@@ -408,18 +389,14 @@ void tst_QContactManagerDetails::testOrganisation()
 void tst_QContactManagerDetails::testOnlineAccount()
 {
     QFETCH(QString, uri);
-    if (uri == "qtcontacts:jsondb:") {
-        QSKIP("JsonDb backend does not support QContactOnlineAccount detail!");
-    } else {
-        QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
-        QContact c;
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+    QContact c;
 
-        QContactOnlineAccount o;
-        o.setAccountUri( "john@example.com" );
-        o.setProtocol(QContactOnlineAccount::ProtocolJabber);
-        c.saveDetail( &o );
-        saveAndVerifyContact( cm.data(), c );
-    }
+    QContactOnlineAccount o;
+    o.setAccountUri( "john@example.com" );
+    o.setProtocol(QContactOnlineAccount::ProtocolJabber);
+    c.saveDetail( &o );
+    saveAndVerifyContact( cm.data(), c );
 }
 
 void tst_QContactManagerDetails::testPhoneNumber()
@@ -482,8 +459,6 @@ void tst_QContactManagerDetails::testUrl()
     QContact loadedContact;
     QVERIFY(saveAndLoadContact(cm.data(), originalContact, loadedContact));
     QCOMPARE( loadedContact.details().count(), originalContact.details().count() );
-    if (uri == "qtcontacts:jsondb:")
-        QEXPECT_FAIL("", "JsonDb backend does not support QContactUrl detail properly!", Abort);
     QCOMPARE( loadedContact, originalContact );
 }
 
@@ -512,11 +487,7 @@ void tst_QContactManagerDetails::testEmptyExtendedDetail()
     // Adding an empty extended detail
     QContactExtendedDetail emptyDetail;
     QVERIFY(c.saveDetail(&emptyDetail));
-    if (uri == "qtcontacts:jsondb:") {
-        QSKIP("This manager does not store empty extended details, so skipping empty extended detail test!");
-    } else {
-        saveAndVerifyContact(cm.data(), c);
-    }
+    saveAndVerifyContact(cm.data(), c);
 }
 
 void tst_QContactManagerDetails::testExtendedDetail()

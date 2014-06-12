@@ -49,7 +49,6 @@ Rectangle {
             autoUpdate:true
 
             //! [Manager Choice]
-//            manager:"qtorganizer:jsondb:id=qml"
             manager:"qtorganizer:memory:id=qml"
             //! [Manager Choice]
 

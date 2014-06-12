@@ -147,7 +147,6 @@ Rectangle {
         id: organizer
         startPeriod: new Date("1970-01-01")
         endPeriod: new Date("2012-12-31")
-        //manager:"jsondb"
         manager: "memory"
 
         Component.onCompleted: {

@@ -43,7 +43,6 @@
 #include <QtCore/QDateTime>
 #include <QtOrganizer/qorganizer.h>
 #include "../qorganizermanagerdataholder.h"
-#include "../../jsondbprocess.h"
 
 QTORGANIZER_USE_NAMESPACE
 
@@ -58,8 +57,6 @@ private:
     void saveAndVerifyItem(QOrganizerManager *manager, QOrganizerItem &original);
 
     QScopedPointer<QOrganizerManagerDataHolder> managerDataHolder;
-
-    JsonDbProcess jsondbProcess;
 
 private slots:
     void initTestCase();
@@ -91,22 +88,12 @@ void tst_QOrganizerManagerDetails::addManagers()
 
 void tst_QOrganizerManagerDetails::initTestCase()
 {
-    // Start JsonDb daemon if needed
-    if (QOrganizerManager::availableManagers().contains("jsondb")) {
-        QString partitions_json = QFINDTESTDATA("partitions.json");
-        QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
-        QVERIFY2(jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
-    }
-
     managerDataHolder.reset(new QOrganizerManagerDataHolder());
 }
 
 void tst_QOrganizerManagerDetails::cleanupTestCase()
 {
     managerDataHolder.reset(0);
-
-    if (QOrganizerManager::availableManagers().contains("jsondb"))
-        jsondbProcess.terminate();
 }
 
 bool tst_QOrganizerManagerDetails::saveAndLoadItem(QOrganizerManager *manager, QOrganizerItem &original, QOrganizerItem &loaded)
@@ -138,9 +125,7 @@ void tst_QOrganizerManagerDetails::saveAndVerifyItem(QOrganizerManager *manager,
         qDebug() << "expected: " << original;
         qDebug() << "loaded: " << loaded;
         QCOMPARE(loaded.details().count(), original.details().count());
-#if defined(QT_NO_JSONDB)
         QCOMPARE(loaded, original);
-#endif
     }
 }
 

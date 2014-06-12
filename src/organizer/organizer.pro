@@ -67,10 +67,6 @@ SOURCES += \
     qorganizeritemsortorder.cpp \
     qorganizermanager_p.cpp
 
-qtHaveModule(jsondb) {
-    isEmpty(ORGANIZER_DEFAULT_ENGINE): ORGANIZER_DEFAULT_ENGINE=jsondb
-}
-
 !isEmpty(ORGANIZER_DEFAULT_ENGINE): DEFINES += Q_ORGANIZER_DEFAULT_ENGINE=$$ORGANIZER_DEFAULT_ENGINE
 
 HEADERS += $$PUBLIC_HEADERS $$PRIVATE_HEADERS

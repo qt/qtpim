@@ -93,20 +93,11 @@ ContactsSavingTestCase {
         contact.addDetail(addressSanitizable)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Address)
-        if (model.manager == "jsondb") {
-            compare(detail.street, "Street")
-            compare(detail.locality, "Locality")
-            compare(detail.region, "Region")
-            compare(detail.postcode, "Postcode")
-            compare(detail.country, "Country")
-        } else {
-            // we do not expect other backends to sanitize the input by default
-            compare(detail.street, " Street")
-            compare(detail.locality, "  Locality")
-            compare(detail.region, "   Region ")
-            compare(detail.postcode, " Postcode   ")
-            compare(detail.country, "     Country    ")
-        }
+        compare(detail.street, " Street")
+        compare(detail.locality, "  Locality")
+        compare(detail.region, "   Region ")
+        compare(detail.postcode, " Postcode   ")
+        compare(detail.country, "     Country    ")
     }
 
     Address {
@@ -121,20 +112,13 @@ ContactsSavingTestCase {
         addressNotSanitizable.postcode = " Postcode   "
         addressNotSanitizable.country = "     Country    "
         contact.addDetail(addressNotSanitizable)
-        if (model.manager == "jsondb") {
-            // jsondb backend will remove blank spaces and other invalid characters
-            // resulting this case into an invalid contact object. The model
-            // should return here a BadArgument error.
-            saveContactWithError("BadArgument")
-        } else {
-            saveAndRefreshContact()
-            var detail = contact.detail(ContactDetail.Address)
-            compare(detail.street, " Street")
-            compare(detail.locality, "")
-            compare(detail.region, "   Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee ")
-            compare(detail.postcode, " Postcode   ")
-            compare(detail.country, "     Country    ")
-        }
+        saveAndRefreshContact()
+        var detail = contact.detail(ContactDetail.Address)
+        compare(detail.street, " Street")
+        compare(detail.locality, "")
+        compare(detail.region, "   Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee ")
+        compare(detail.postcode, " Postcode   ")
+        compare(detail.country, "     Country    ")
     }
 
     Address {
@@ -220,11 +204,7 @@ ContactsSavingTestCase {
         contact.addDetail(emailaddressSanitizable)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Email)
-        if (model.manager == "jsondb") {
-            compare(detail.emailAddress, "test@qt.nokia.com")
-        } else { // we do not expect other backends to sanitize the input by default
-            compare(detail.emailAddress, "    test@qt.nokia.com ")
-        }
+        compare(detail.emailAddress, "    test@qt.nokia.com ")
     }
 
     EmailAddress {
@@ -240,13 +220,9 @@ ContactsSavingTestCase {
         emailaddressNotSanitizable.emailAddress = veryLongEmailAddress
         emailaddressNotSanitizable.contexts = [ContactDetail.ContextHome]
         contact.addDetail(emailaddressNotSanitizable)
-        if (model.manager == "jsondb") {
-            saveContactWithError("BadArgument")
-        } else {
-            saveAndRefreshContact()
-            var detail = contact.detail(ContactDetail.Email)
-            compare(detail.emailAddress, veryLongEmailAddress)
-        }
+        saveAndRefreshContact()
+        var detail = contact.detail(ContactDetail.Email)
+        compare(detail.emailAddress, veryLongEmailAddress)
     }
 
     EmailAddress {
@@ -277,8 +253,6 @@ ContactsSavingTestCase {
     }
 
     function test_favorite() {
-        if (model.manager === "jsondb")
-            skip("jsondb does not save favorite correctly");
         favorite.favorite = true;
         favorite.index = 1;
         contact.addDetail(favorite);
@@ -331,8 +305,6 @@ ContactsSavingTestCase {
         compare(detail.middleName, "B.")
         compare(detail.lastName, "Doe")
         compare(detail.suffix, "Sr.")
-        if (model.manager == 'jsondb')
-            expectFail("", "contexts are not supported at the moment")
         compare(detail.contexts.length, 1, "contexts length")
         compare(detail.contexts[0], ContactDetail.ContextHome, "contexts")
     }
@@ -350,19 +322,11 @@ ContactsSavingTestCase {
         contact.addDetail(nameSanitizable)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Name)
-        if (model.manager == "jsondb") {
-            compare(detail.prefix, "Mr.")
-            compare(detail.firstName, "Matti-Tapio")
-            compare(detail.middleName, "C.")
-            compare(detail.lastName, "De Angelis")
-            compare(detail.suffix, "Sr.")
-        } else {
-            compare(detail.prefix, "    Mr.  ")
-            compare(detail.firstName, " Matti-Tapio ")
-            compare(detail.middleName, "C. ")
-            compare(detail.lastName, " De  Angelis")
-            compare(detail.suffix, "Sr.")
-        }
+        compare(detail.prefix, "    Mr.  ")
+        compare(detail.firstName, " Matti-Tapio ")
+        compare(detail.middleName, "C. ")
+        compare(detail.lastName, " De  Angelis")
+        compare(detail.suffix, "Sr.")
     }
 
     Name {
@@ -377,17 +341,13 @@ ContactsSavingTestCase {
         nameNotSanitizable.lastName = "Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee"
         nameNotSanitizable.suffix = "Sr."
         contact.addDetail(nameNotSanitizable)
-        if (model.manager == "jsondb") {
-            saveContactWithError("BadArgument")
-        } else {
-            saveAndRefreshContact()
-            var detail = contact.detail(ContactDetail.Name)
-            compare(detail.prefix, "")
-            compare(detail.firstName, "Matti-Tapio")
-            compare(detail.middleName, "C. ")
-            compare(detail.lastName, "Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee")
-            compare(detail.suffix, "Sr.")
-        }
+        saveAndRefreshContact()
+        var detail = contact.detail(ContactDetail.Name)
+        compare(detail.prefix, "")
+        compare(detail.firstName, "Matti-Tapio")
+        compare(detail.middleName, "C. ")
+        compare(detail.lastName, "Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee")
+        compare(detail.suffix, "Sr.")
     }
 
     Nickname {
@@ -411,11 +371,7 @@ ContactsSavingTestCase {
         contact.addDetail(nicknameSanitizable)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.NickName)
-        if (model.manager == "jsondb") {
-            compare(detail.nickname, "Dummy")
-        } else {
-            compare(detail.nickname, "     Dummy     ")
-        }
+        compare(detail.nickname, "     Dummy     ")
     }
 
     Nickname {
@@ -426,13 +382,9 @@ ContactsSavingTestCase {
         // If nickname is longer than 50 chars it is invalid and won't be saved
         nicknameNotSanitizable.nickname = "Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee"
         contact.addDetail(nicknameNotSanitizable)
-        if (model.manager == "jsondb") {
-            saveContactWithError("BadArgument")
-        } else {
-            saveAndRefreshContact()
-            var detail = contact.detail(ContactDetail.NickName)
-            compare(detail.nickname, "Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee")
-        }
+        saveAndRefreshContact()
+        var detail = contact.detail(ContactDetail.NickName)
+        compare(detail.nickname, "Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee")
     }
 
     Note {
@@ -456,11 +408,7 @@ ContactsSavingTestCase {
         contact.addDetail(noteSanitizable)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Note)
-        if (model.manager == "jsondb") {
-            compare(detail.note, "Dummy")
-        } else {
-            compare(detail.note, "     Dummy     ")
-        }
+        compare(detail.note, "     Dummy     ")
     }
 
     Note {
@@ -475,13 +423,9 @@ ContactsSavingTestCase {
         }
         noteNotSanitizable.note = veryLongNote
         contact.addDetail(noteNotSanitizable)
-        if (model.manager == "jsondb") {
-            saveContactWithError("BadArgument")
-        } else {
-            saveAndRefreshContact()
-            var detail = contact.detail(ContactDetail.Note)
-            compare(detail.note, veryLongNote)
-        }
+        saveAndRefreshContact()
+        var detail = contact.detail(ContactDetail.Note)
+        compare(detail.note, veryLongNote)
     }
 
     OnlineAccount {
@@ -519,17 +463,11 @@ ContactsSavingTestCase {
         compare(detail.name, "Name")
         compare(detail.logoUrl, "http://qt.nokia.com")
         compare(detail.department[0], "Department")
-        if (model.manager == 'jsondb')
-            expectFail("", "TODO: location is not working as expected at the moment");
         compare(detail.location, "Location")
-        if (model.manager == 'jsondb')
-            expectFail("", "TODO: role is not working as expected at the moment");
         compare(detail.role, "Role")
         compare(detail.title, "Title")
         compare(detail.assistantName, "Assistant name")
 
-        if (model.manager == 'jsondb')
-            expectFail("", "TODO: contexts are not working as expected at the moment");
         compare(detail.contexts.length, 1, "contexts length")
         compare(detail.contexts[0], ContactDetail.ContextHome, "contexts")
     }
@@ -543,11 +481,7 @@ ContactsSavingTestCase {
         contact.addDetail(organizationSanitizable)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Organization)
-        if (model.manager == "jsondb") {
-            compare(detail.name, "Company Name")
-        } else {
-            compare(detail.name, "  Company   Name     ")
-        }
+        compare(detail.name, "  Company   Name     ")
     }
 
     Organization {
@@ -558,13 +492,9 @@ ContactsSavingTestCase {
         // If any of the organization fields is longer than 50 chars it is invalid, thus the contact won't be saved
         organizationNotSanitizable.name =  "Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee"
         contact.addDetail(organizationNotSanitizable)
-        if (model.manager == "jsondb") {
-            saveContactWithError("BadArgument")
-        } else {
-            saveAndRefreshContact()
-            var detail = contact.detail(ContactDetail.Organization)
-            compare(detail.name, "Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee")
-        }
+        saveAndRefreshContact()
+        var detail = contact.detail(ContactDetail.Organization)
+        compare(detail.name, "Vvvvvvvvvveeeeeeeeeerrrrrrrrrryyyyyyyyyylongnameeeeeeeeee")
     }
 
     Organization {
@@ -608,12 +538,7 @@ ContactsSavingTestCase {
         compare(detail.number, "1")
         compare(detail.contexts.length, 1, "contexts length")
         compare(detail.contexts[0], ContactDetail.ContextHome, "contexts")
-        if (model.manager == 'jsondb') {
-            compare(detail.subTypes.length, 1, "jsondb phone number subtypes length")
-            compare(detail.subTypes[0], phonenumber.subTypes[0])
-        } else {
-            compare(detail.subTypes.length, phonenumber.subTypes.length)
-        }
+        compare(detail.subTypes.length, phonenumber.subTypes.length)
     }
 
     PhoneNumber {
@@ -644,11 +569,7 @@ ContactsSavingTestCase {
         contact.addDetail(phonenumberSanitizable)
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.PhoneNumber)
-        if (model.manager == "jsondb")
-            // jsondb backend will remove blank spaces and other invalid characters
-            compare(detail.number, "+1(234)-56789abcd*#")
-        else // we do not expect other backends to sanitize the input by default
-            compare(detail.number, "+1     +(234)-56789abcdef*#     ")
+        compare(detail.number, "+1     +(234)-56789abcdef*#     ")
         compare(detail.subTypes.length, phonenumberSanitizable.subTypes.length)
     }
 
@@ -664,14 +585,10 @@ ContactsSavingTestCase {
         contact.addDetail(phonenumberNotSanitizable)
 
         var detail
-        if (model.manager == "jsondb") {
-            saveContactWithError("BadArgument")
-        } else {
-            saveAndRefreshContact()
-            detail = contact.detail(ContactDetail.PhoneNumber)
-            compare(detail.number, "     efghijk     []/>>>>>")
-            compare(detail.subTypes.length, phonenumberNotSanitizable.subTypes.length)
-        }
+        saveAndRefreshContact()
+        detail = contact.detail(ContactDetail.PhoneNumber)
+        compare(detail.number, "     efghijk     []/>>>>>")
+        compare(detail.subTypes.length, phonenumberNotSanitizable.subTypes.length)
     }
 
     PhoneNumber {
@@ -768,10 +685,6 @@ ContactsSavingTestCase {
         saveAndRefreshContact()
         var detail = contact.detail(ContactDetail.Version)
         verify(detail.sequenceNumber != undefined)
-        if (model.manager == "jsondb") {
-            compare(detail.sequenceNumber, 1, "sequenceNumber is always 1 for jsondb")
-            compare(detail.extendedVersion.length, 10, "jsondb extended version field is 10 characters long")
-        }
     }
 
     // Init & teardown

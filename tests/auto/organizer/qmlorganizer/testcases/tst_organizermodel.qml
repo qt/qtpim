@@ -1019,19 +1019,15 @@ TestCase {
 
     function test_updateMethodsStartWithAutoupdateFalse() {
 
-        if (utility.getManagerList().indexOf("jsondb") === -1)
-            skip("Cannot run tests for jsondb backend. No plugin available!");
-
         var organizerModel = Qt.createQmlObject(
                 "import QtOrganizer 5.0;"
                 + "OrganizerModel {"
-                + "   manager: 'jsondb'\n"
+                + "   manager:'memory'\n"
                 + "   startPeriod:'2009-01-01'\n"
                 + "   endPeriod:'2012-12-31'\n"
                 + "   autoUpdate: false\n"
                 + "}"
                 , modelTests);
-        console.log("## Testing only jsondb-plugin");
 
         var modelChangedSpy = Qt.createQmlObject("import QtTest 1.0; SignalSpy{}", modelTests)
         modelChangedSpy.target = organizerModel
@@ -1040,10 +1036,39 @@ TestCase {
         collectionsChangedSpy.target = organizerModel
         collectionsChangedSpy.signalName = "collectionsChanged"
 
-        // After test_updateMethods()-test there should be
-        // 2 items and 2 collections (+ default collection)
-        // on the jsondb. They're just not visible, since
-        // autoUpdate is false.
+        // Add data to this model
+        var event1 = utility.create_testobject(
+            "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 12, 7, 11)\n"
+            + "  endDateTime: new Date(2011, 12, 8, 0, 30)\n"
+            + "}\n", modelTests);
+        var event2 = utility.create_testobject(
+            "import QtOrganizer 5.0\n"
+            + "Event {\n"
+            + "  startDateTime: new Date(2011, 13, 7, 11)\n"
+            + "  endDateTime: new Date(2011, 13, 8, 0, 30)\n"
+            + "}\n", modelTests);
+
+        var collection1 = utility.create_testobject("import QtQuick 2.0 \n"
+          + "import QtOrganizer 5.0\n"
+          + "Collection {\n"
+          + "id: coll1\n"
+          + "}\n", modelTests);
+
+        var collection2 = utility.create_testobject("import QtQuick 2.0 \n"
+          + "import QtOrganizer 5.0\n"
+          + "Collection {\n"
+          + "id: coll1\n"
+          + "}\n", modelTests);
+
+        organizerModel.saveItem(event1);
+        organizerModel.saveItem(event2);
+        organizerModel.saveCollection(collection1);
+        organizerModel.saveCollection(collection2);
+
+        // Now there should be 2 items and 2 collections (+ default collection)
+        // in the model. They're just not visible, since autoUpdate is false.
         compare(organizerModel.items.length, 0);
         compare(organizerModel.collections.length, 0);
 

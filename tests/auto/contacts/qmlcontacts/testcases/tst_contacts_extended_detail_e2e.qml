@@ -103,13 +103,7 @@ ContactsSavingTestCase {
     {
         var fetchedExtendedDetail = saveAndUpdate(contactForDate);
         compare(fetchedExtendedDetail.name, "date", "extendedDetail.name");
-        if (model.manager == "jsondb") {
-            // Jsondb backend converts dates to strings in ISO 8601 format containing
-            // date and time in local time without timezone specified.
-            compare(fetchedExtendedDetail.data, "2001-08-14T00:00:00", "extendedDetail.data");
-       } else {
-            compare(fetchedExtendedDetail.data, myDate, "extendedDetail.data");
-       }
+        compare(fetchedExtendedDetail.data, myDate, "extendedDetail.data");
     }
 
 

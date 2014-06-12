@@ -47,7 +47,6 @@
 
 #include <QtContacts>
 #include "qcontactmanagerdataholder.h"
-#include "jsondbprocess.h"
 #include "qcontactidmock.h"
 
 #if defined(USE_VERSIT_PLZ)
@@ -119,8 +118,6 @@ private:
     void addManagers(); // add standard managers to the data
     QContact createContact(QString firstName, QString lastName, QString phoneNumber);
     void saveContactName(QContact *contact,QContactName *contactName, const QString &name) const;
-
-    JsonDbProcess m_jsondbProcess;
 
     QScopedPointer<QContactManagerDataHolder> managerDataHolder;
 
@@ -309,13 +306,6 @@ tst_QContactManager::~tst_QContactManager()
 
 void tst_QContactManager::initTestCase()
 {
-    // Start JsonDb daemon if needed
-    if (QContactManager::availableManagers().contains("jsondb")) {
-        QString partitions_json = QFINDTESTDATA("partitions.json");
-        QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
-        QVERIFY2(m_jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
-    }
-
     managerDataHolder.reset(new QContactManagerDataHolder());
 
     /* Make sure these other test plugins are NOT loaded by default */
@@ -328,9 +318,6 @@ void tst_QContactManager::initTestCase()
 void tst_QContactManager::cleanupTestCase()
 {
     managerDataHolder.reset(0);
-
-    if (QContactManager::availableManagers().contains("jsondb"))
-        m_jsondbProcess.terminate();
 }
 
 void tst_QContactManager::dumpContactDifferences(const QContact& ca, const QContact& cb)
@@ -752,15 +739,8 @@ void tst_QContactManager::ctors()
     QCOMPARE(em5->managerParameters(), tst_QContactManager_QStringMap());
     QCOMPARE(em3.managerParameters(), em6->managerParameters()); // memory engine discards the given params, replaces with id.
 
-
     // Finally test the platform specific engines are actually the defaults
-#if defined(QT_JSONDB_ENABLED)
-    QCOMPARE(defaultStore, QString("jsondb"));
-#elif !defined(QT_NO_JSONDB)
-    QCOMPARE(defaultStore, QString::fromLatin1("jsondb"));
-#else
     QCOMPARE(defaultStore, QString("invalid"));
-#endif
 }
 
 void tst_QContactManager::doDump()
@@ -2134,11 +2114,6 @@ void tst_QContactManager::actionPreferences()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    // early out if the manager doesn't support action preference saving.
-    if (cm->managerName() == "jsondb") {
-        QSKIP("Manager does not support action preferences");
-    }
-
     // create a sample contact
     QContactAvatar a;
     a.setImageUrl(QUrl("test.png"));
@@ -2281,9 +2256,6 @@ void tst_QContactManager::selfContactId()
 
     // early out if the manager doesn't support self contact id saving
     QContactId selfContact = cm->selfContactId();
-    if (cm->managerName() == "jsondb")
-        QSKIP("JSONDB backend does not support selfContact at the moment, skipping...");
-
 
     // create a new "self" contact and retrieve its Id
     QVERIFY(cm->error() == QContactManager::NoError || cm->error() == QContactManager::DoesNotExistError);
@@ -2342,7 +2314,7 @@ void tst_QContactManager::detailOrders()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    if (cm->managerName() == "jsondb" || cm->managerName() == "memory")
+    if (cm->managerName() == "memory")
         QSKIP("Skipping: This manager does not support detail ordering!");
 
     QContact a;
@@ -2475,10 +2447,6 @@ void tst_QContactManager::relationships()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
 
-    if (cm->managerName() == "jsondb")
-        QSKIP("Jsondb doesnt support relationships");
-
-
     // save some contacts
     QContact source;
     QContact dest1, dest2, dest3, dest4;
@@ -2501,7 +2469,7 @@ void tst_QContactManager::relationships()
 
     // check if manager supports relationships
 
-    if (cm->managerName() == "jsondb") {
+    if (!cm->isRelationshipTypeSupported(QContactRelationship::HasManager())) {
         // ensure that the operations all fail as required.
         QContactRelationship r1, r2, r3;
         r1.setFirst(source);

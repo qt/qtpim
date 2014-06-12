@@ -195,12 +195,6 @@ ContactsSavingTestCase {
                     intersection: [contact1B]
                 },
                 {
-                    tag: "Intersection filter with empty filter set (manager: jsondb)",
-                    manager: "jsondb",
-                    filters: [],
-                    intersection: [contact1A, contact2A, contact3A, contact1B, contact2B, contact3B]
-                },
-                {
                     tag: "Intersection filter with empty filter set (manager: memory)",
                     manager: "memory",
                     filters: [],

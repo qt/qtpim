@@ -148,7 +148,7 @@ TestCase {
 
     function getManagerList() {
 
-        var testManagers = ["memory", "jsondb"];
+        var testManagers = ["memory"];
 
         var model = Qt.createQmlObject(
                 "import QtOrganizer 5.0; OrganizerModel {}"

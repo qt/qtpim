@@ -1,9 +1,6 @@
 include(../../auto.pri)
 
 QT += contacts contacts-private
-qtHaveModule(jsondb) {
-    QT += jsondb
-}
 
 HEADERS += ../qcontactmanagerdataholder.h
 

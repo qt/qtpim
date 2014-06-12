@@ -389,12 +389,7 @@ TestCase {
                 applyFilter(detailToMatch);
             }
 
-            if (managerToBeTested == "jsondb" ) {
-                // in some cases the stored details are utilising the same field on the backend, which means the amount of matches to be different
-                compare(organizerModel.items.length, data.expectedItemsAmount_Jsondb ? data.expectedItemsAmount_Jsondb : data.expectedItemsAmount);
-            } else {
-                compare(organizerModel.items.length, data.expectedItemsAmount);
-            }
+            compare(organizerModel.items.length, data.expectedItemsAmount);
 
             organizerModel.destroy();
         }
@@ -500,17 +495,6 @@ TestCase {
 
     function test_errors(data) {
         console.log();
-        //preparations
-        // error codes are backend specific, these are tested only for jsondb
-        if (utility.getManagerList().indexOf("jsondb") === -1)
-            skip("Cannot run tests for jsondb backend. No plugin available!");
-        organizerModel = utility.createModel("jsondb")
-        var detailToMatch = create_testobject(data.filterDetailCtrStr)
-        var errorChangedSpy = utility.create_spy(organizerModel, "errorChanged");
-        applyFilter(detailToMatch);
-        errorChangedSpy.wait();
-
-        compare(organizerModel.error, "BadArgument");
-        organizerModel.destroy();
+        // error codes are backend specific - currently untested
     }
 }

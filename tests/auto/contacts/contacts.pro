@@ -18,9 +18,3 @@ SUBDIRS += \
     qcontactmanagerfiltering \
     qmlcontacts
 
-qtHaveModule(jsondb) {
-    SUBDIRS += qcontactjsondb \
-               qcontactjsondbconverter \
-               qcontactjsondbstoragelocations
-}
-

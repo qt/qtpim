@@ -47,7 +47,6 @@
 #include <QtOrganizer/qorganizer.h>
 #include <QtOrganizer/qorganizeritemchangeset.h>
 #include "../qorganizermanagerdataholder.h"
-#include "../../jsondbprocess.h"
 
 #include <QtOrganizer/qorganizernote.h>
 #include <QtOrganizer/qorganizerevent.h>
@@ -87,8 +86,6 @@ private:
     void addManagers(); // add standard managers to the data
 
     QScopedPointer<QOrganizerManagerDataHolder> managerDataHolder;
-
-    JsonDbProcess jsondbProcess;
 
 public slots:
     void initTestCase();
@@ -288,13 +285,6 @@ tst_QOrganizerManager::~tst_QOrganizerManager()
 
 void tst_QOrganizerManager::initTestCase()
 {
-    // Start JsonDb daemon if needed
-    if (QOrganizerManager::availableManagers().contains("jsondb")) {
-        QString partitions_json = QFINDTESTDATA("partitions.json");
-        QVERIFY2(!partitions_json.isEmpty(), "partitions.json file is missing");
-        QVERIFY2(jsondbProcess.start(partitions_json), "Failed to start JsonDb process");
-    }
-
     managerDataHolder.reset(new QOrganizerManagerDataHolder());
 
     /* Make sure these other test plugins are NOT loaded by default */
@@ -306,9 +296,6 @@ void tst_QOrganizerManager::initTestCase()
 void tst_QOrganizerManager::cleanupTestCase()
 {
     managerDataHolder.reset(0);
-
-    if (QOrganizerManager::availableManagers().contains("jsondb"))
-        jsondbProcess.terminate();
 }
 
 void tst_QOrganizerManager::dumpOrganizerItemDifferences(const QOrganizerItem& ca, const QOrganizerItem& cb)
@@ -732,11 +719,7 @@ void tst_QOrganizerManager::ctors()
 
 
     // Finally test the platform specific engines are actually the defaults
-#if !defined(QT_NO_JSONDB)
-    QCOMPARE(defaultStore, QString::fromLatin1("jsondb"));
-#else
     QCOMPARE(defaultStore, QString("invalid"));
-#endif
 }
 
 void tst_QOrganizerManager::doDump()
@@ -796,9 +779,7 @@ void tst_QOrganizerManager::add()
     QVERIFY(cm->saveItem(&nonexistentItem));       // should work
     QVERIFY(cm->removeItem(nonexistentItem.id())); // now nonexistentItem has an id which does not exist
 
-    QEXPECT_FAIL("mgr='jsondb'", "Expect fail due to Jsondb change", Continue);
     QVERIFY(!cm->saveItem(&nonexistentItem));      // hence, should fail
-    QEXPECT_FAIL("mgr='jsondb'", "Expect fail due to Jsondb change", Continue);
     QCOMPARE(cm->error(), QOrganizerManager::DoesNotExistError);
     nonexistentItem.setId(QOrganizerItemId());
     QVERIFY(cm->saveItem(&nonexistentItem));       // after setting id to zero, should save
@@ -810,84 +791,84 @@ void tst_QOrganizerManager::add()
     // - save the item
     // - read it back
     // - ensure that it's the same.
-#if defined(QT_NO_JSONDB)
-//    QOrganizerEvent megaevent;
-//    QMap<QString, QOrganizerItemDetailDefinition> defmap = cm->detailDefinitions(QOrganizerItemType::TypeEvent);
-//    QList<QOrganizerItemDetailDefinition> defs = defmap.values();
-//    foreach (const QOrganizerItemDetailDefinition def, defs) {
+#if 0 // This test is currently excluded; can it be reinstated?
+    QOrganizerEvent megaevent;
+    QMap<QString, QOrganizerItemDetailDefinition> defmap = cm->detailDefinitions(QOrganizerItemType::TypeEvent);
+    QList<QOrganizerItemDetailDefinition> defs = defmap.values();
+    foreach (const QOrganizerItemDetailDefinition def, defs) {
 
-//        // This is probably read-only
-//        if (def.name() == QOrganizerItemTimestamp::DefinitionName)
-//            continue;
+        // This is probably read-only
+        if (def.name() == QOrganizerItemTimestamp::DefinitionName)
+            continue;
 
-//        // otherwise, create a new detail of the given type and save it to the item
-//        QOrganizerItemDetail det(def.name());
-//        QMap<QString, QOrganizerItemDetailFieldDefinition> fieldmap = def.fields();
-//        QStringList fieldKeys = fieldmap.keys();
-//        foreach (const QString& fieldKey, fieldKeys) {
-//            // get the field, and check to see that it's not constrained.
-//            QOrganizerItemDetailFieldDefinition currentField = fieldmap.value(fieldKey);
+        // otherwise, create a new detail of the given type and save it to the item
+        QOrganizerItemDetail det(def.name());
+        QMap<QString, QOrganizerItemDetailFieldDefinition> fieldmap = def.fields();
+        QStringList fieldKeys = fieldmap.keys();
+        foreach (const QString& fieldKey, fieldKeys) {
+            // get the field, and check to see that it's not constrained.
+            QOrganizerItemDetailFieldDefinition currentField = fieldmap.value(fieldKey);
 
-//            // Attempt to create a worthy value
-//            if (!currentField.allowableValues().isEmpty()) {
-//                // we want to save a value that will be accepted.
-//                if (currentField.dataType() == QVariant::StringList)
-//                    det.setValue(fieldKey, QStringList() << currentField.allowableValues().first().toString());
-//                else if (currentField.dataType() == QVariant::List)
-//                    det.setValue(fieldKey, QVariantList() << currentField.allowableValues().first());
-//                else
-//                    det.setValue(fieldKey, currentField.allowableValues().first());
-//            } else {
-//                // any value of the correct type will be accepted
-//                bool savedSuccessfully = false;
-//                QVariant dummyValue = QVariant(fieldKey); // try to get some unique string data
-//                if (currentField.dataType() < static_cast<int>(QVariant::UserType)) {
-//                    QVariant::Type type = static_cast<QVariant::Type>(currentField.dataType());
-//                    // It is not a user-defined type
-//                    if (dummyValue.canConvert(type)) {
-//                        savedSuccessfully = dummyValue.convert(type);
-//                        if (savedSuccessfully) {
-//                            // we have successfully created a (supposedly) valid field for this detail.
-//                            det.setValue(fieldKey, dummyValue);
-//                            continue;
-//                        }
-//                    }
+            // Attempt to create a worthy value
+            if (!currentField.allowableValues().isEmpty()) {
+                // we want to save a value that will be accepted.
+                if (currentField.dataType() == QVariant::StringList)
+                    det.setValue(fieldKey, QStringList() << currentField.allowableValues().first().toString());
+                else if (currentField.dataType() == QVariant::List)
+                    det.setValue(fieldKey, QVariantList() << currentField.allowableValues().first());
+                else
+                    det.setValue(fieldKey, currentField.allowableValues().first());
+            } else {
+                // any value of the correct type will be accepted
+                bool savedSuccessfully = false;
+                QVariant dummyValue = QVariant(fieldKey); // try to get some unique string data
+                if (currentField.dataType() < static_cast<int>(QVariant::UserType)) {
+                    QVariant::Type type = static_cast<QVariant::Type>(currentField.dataType());
+                    // It is not a user-defined type
+                    if (dummyValue.canConvert(type)) {
+                        savedSuccessfully = dummyValue.convert(type);
+                        if (savedSuccessfully) {
+                            // we have successfully created a (supposedly) valid field for this detail.
+                            det.setValue(fieldKey, dummyValue);
+                            continue;
+                        }
+                    }
 
-//                    // nope, couldn't save the string value (test); try a date.
-//                    dummyValue = QVariant(QDate::currentDate());
-//                    if (dummyValue.canConvert(type)) {
-//                        savedSuccessfully = dummyValue.convert(type);
-//                        if (savedSuccessfully) {
-//                            // we have successfully created a (supposedly) valid field for this detail.
-//                            det.setValue(fieldKey, dummyValue);
-//                            continue;
-//                        }
-//                    }
+                    // nope, couldn't save the string value (test); try a date.
+                    dummyValue = QVariant(QDate::currentDate());
+                    if (dummyValue.canConvert(type)) {
+                        savedSuccessfully = dummyValue.convert(type);
+                        if (savedSuccessfully) {
+                            // we have successfully created a (supposedly) valid field for this detail.
+                            det.setValue(fieldKey, dummyValue);
+                            continue;
+                        }
+                    }
 
-//                    // nope, couldn't convert a string or a date - try the integer value (42)
-//                    dummyValue = QVariant(42);
-//                    if (dummyValue.canConvert(type)) {
-//                        savedSuccessfully = dummyValue.convert(type);
-//                        if (savedSuccessfully) {
-//                            // we have successfully created a (supposedly) valid field for this detail.
-//                            det.setValue(fieldKey, dummyValue);
-//                            continue;
-//                        }
-//                    }
-//                }
+                    // nope, couldn't convert a string or a date - try the integer value (42)
+                    dummyValue = QVariant(42);
+                    if (dummyValue.canConvert(type)) {
+                        savedSuccessfully = dummyValue.convert(type);
+                        if (savedSuccessfully) {
+                            // we have successfully created a (supposedly) valid field for this detail.
+                            det.setValue(fieldKey, dummyValue);
+                            continue;
+                        }
+                    }
+                }
 
-//                // if we get here, we don't know what sort of value can be saved...
-//            }
-//        }
-//        if (!det.isEmpty())
-//            megaevent.saveDetail(&det);
-//    }
+                // if we get here, we don't know what sort of value can be saved...
+            }
+        }
+        if (!det.isEmpty())
+            megaevent.saveDetail(&det);
+    }
 
-//    QVERIFY(cm->saveItem(&megaevent)); // must be able to save since built from definitions.
-//    QOrganizerItem retrievedMegaitem = cm->item(megaevent.id());
-//    if (!isSuperset(retrievedMegaitem, megaevent)) {
-//        dumpOrganizerItemDifferences(megaevent, retrievedMegaitem);
-//    }
+    QVERIFY(cm->saveItem(&megaevent)); // must be able to save since built from definitions.
+    QOrganizerItem retrievedMegaitem = cm->item(megaevent.id());
+    if (!isSuperset(retrievedMegaitem, megaevent)) {
+        dumpOrganizerItemDifferences(megaevent, retrievedMegaitem);
+    }
 
     // now a item with many details of a particular definition
     // if the detail is not unique it should then support minumum of two of the same kind
@@ -4023,9 +4004,6 @@ void tst_QOrganizerManager::partialSave()
     QFETCH(QString, uri);
     QScopedPointer<QOrganizerManager> cm(QOrganizerManager::fromUri(uri));
 
-    if (cm->managerName() == QStringLiteral("jsondb"))
-        QSKIP("Partial save is not supported by JsonDb!");
-
     QList<QOrganizerItem> items;
     QOrganizerEvent event = QOrganizerEvent();
     event.setDisplayLabel("One");
@@ -4521,8 +4499,6 @@ void tst_QOrganizerManager::testReminder()
             QVERIFY(item.detail(QOrganizerItemDetail::TypeAudibleReminder) == oi.detail(QOrganizerItemDetail::TypeAudibleReminder));
     }
 
-    if ("qtorganizer:jsondb:" == uri)// jsondb backend does not support email reminder and visual reminder
-        return;
     /*Email reminder test*/
     QOrganizerItemEmailReminder emailReminder;
     QOrganizerEvent emailEvent;
@@ -5090,73 +5066,6 @@ void tst_QOrganizerManager::testExtendedDetail()
     }
 
     QVERIFY(mgr->removeItem(event.id()));
-
-    // for JsonDb backend, we allow custom fields for reminder, rsvp, and location
-    if (mgr->managerName() == QString(QStringLiteral("jsondb"))) {
-        QOrganizerItemAudibleReminder audibleReminder;
-        audibleReminder.setSecondsBeforeStart(1989);
-        audibleReminder.setRepetition(6, 4);
-        audibleReminder.setDataUrl(QUrl(QString(QStringLiteral("http://www.qt-project.org/"))));
-
-        QOrganizerItemExtendedDetail extendedDetailForReminder;
-        extendedDetailForReminder.setName(QString(QStringLiteral("reminder")));
-        QVariantMap data;
-        data.insert(QString(QStringLiteral("Qt")), QString(QStringLiteral("Everywhere")));
-        data.insert(QString(QStringLiteral("URL")), QUrl(QString(QStringLiteral("http://www.qt-project.org/"))));
-        extendedDetailForReminder.setData(data);
-
-        QOrganizerEvent eventForReminder;
-        eventForReminder.setStartDateTime(QDateTime::fromString(QString(QStringLiteral("2012-02-01T00:11:22")), Qt::ISODate));
-        eventForReminder.saveDetail(&audibleReminder);
-        eventForReminder.saveDetail(&extendedDetailForReminder);
-        QVERIFY(mgr->saveItem(&eventForReminder));
-
-        QOrganizerItem fetchedItem = mgr->items(QList<QOrganizerItemId>() << eventForReminder.id()).at(0);
-        QVERIFY(fetchedItem == eventForReminder);
-
-        QOrganizerEventRsvp rsvp;
-        rsvp.setOrganizerName(QString(QStringLiteral("Qt")));
-
-        QOrganizerItemExtendedDetail extendedDetailForRsvp;
-        extendedDetailForRsvp.setName(QString(QStringLiteral("rsvp")));
-        extendedDetailForRsvp.setData(data);
-
-        QOrganizerEvent eventForRsvp;
-        eventForRsvp.saveDetail(&rsvp);
-        eventForRsvp.saveDetail(&extendedDetailForRsvp);
-        QVERIFY(mgr->saveItem(&eventForRsvp));
-
-        fetchedItem = mgr->items(QList<QOrganizerItemId>() << eventForRsvp.id()).at(0);
-        QVERIFY(fetchedItem == eventForRsvp);
-
-        QOrganizerItemLocation location;
-        location.setLatitude(19.84);
-
-        QOrganizerItemExtendedDetail extendedDetailForLocation;
-        extendedDetailForLocation.setName(QString(QStringLiteral("location")));
-        extendedDetailForLocation.setData(data);
-
-        QOrganizerEvent eventForLocation;
-        eventForLocation.saveDetail(&location);
-        eventForLocation.saveDetail(&extendedDetailForLocation);
-        QVERIFY(mgr->saveItem(&eventForLocation));
-
-        fetchedItem = mgr->items(QList<QOrganizerItemId>() << eventForLocation.id()).at(0);
-        QVERIFY(fetchedItem == eventForLocation);
-
-        QOrganizerEvent eventForAll;
-        eventForAll.setStartDateTime(QDateTime::fromString(QString(QStringLiteral("2012-02-01T00:11:22")), Qt::ISODate));
-        eventForAll.saveDetail(&audibleReminder);
-        eventForAll.saveDetail(&extendedDetailForReminder);
-        eventForAll.saveDetail(&rsvp);
-        eventForAll.saveDetail(&extendedDetailForRsvp);
-        eventForAll.saveDetail(&location);
-        eventForAll.saveDetail(&extendedDetailForLocation);
-        QVERIFY(mgr->saveItem(&eventForAll));
-
-        fetchedItem = mgr->items(QList<QOrganizerItemId>() << eventForAll.id()).at(0);
-        QVERIFY(fetchedItem == eventForAll);
-    }
 }
 
 void tst_QOrganizerManager::testAttendee()
@@ -5270,7 +5179,6 @@ void tst_QOrganizerManager::testClassification()
     QVERIFY(mgr->saveItem(&event));
     QOrganizerItemId id = event.id();
     QOrganizerItem item = mgr->item(id);
-    QEXPECT_FAIL("mgr='jsondb'", "No support on jsondb backend yet", Abort);
     QCOMPARE(1, item.details(QOrganizerItemDetail::TypeClassification).count());
     QVERIFY(item == event);//This will compare all details and their values
 
@@ -5312,7 +5220,7 @@ void tst_QOrganizerManager::testVersion()
     QVERIFY((version2.version() > version.version()) || (version2.extendedVersion() != version.extendedVersion()));
 }
 
-#if defined(QT_NO_JSONDB)
+#if 0 // This test is currently excluded; can it be reinstated?
 class errorSemanticsTester : public QObject {
     Q_OBJECT;
 public:

@@ -52,7 +52,7 @@ ContactsBenchmarkTestCase {
 
     ContactModel {
         id: model
-        manager:"jsondb";
+        manager:"memory";
         autoUpdate: true
     }
 

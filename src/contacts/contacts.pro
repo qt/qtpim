@@ -70,10 +70,6 @@ SOURCES += \
     qcontactsortorder.cpp \
     qcontactengineid.cpp \
 
-qtHaveModule(jsondb) {
-    isEmpty(CONTACTS_DEFAULT_ENGINE): CONTACTS_DEFAULT_ENGINE=jsondb
-}
-
 !isEmpty(CONTACTS_DEFAULT_ENGINE): DEFINES += Q_CONTACTS_DEFAULT_ENGINE=$$CONTACTS_DEFAULT_ENGINE
 
 HEADERS += $$PUBLIC_HEADERS $$PRIVATE_HEADERS

@@ -131,11 +131,8 @@ ContactsSavingTestCase {
         model.saveContact(contactToSaveMultipleTimes);
         waitUntilContactsChanged();
 
-        // Saving the same contact multiple times currently yields an insertion and then an update
-        // The tested behavior does not occur - was it specific to jsondb backend?
-        expectFail('', 'This test does not reflect the current behavior')
-        compare(model.contacts.length, 2, "contacts.length");
-        verify(model.contacts[0].contactId !== model.contacts[1].contactId, "contact ids are different");
+        // Saving the same contact multiple times yields an insertion and then an update
+        compare(model.contacts.length, 1, "contacts.length");
     }
 
     function test_saveTheSameContactMultipleTimesWithoutWaitingForTheModel() {
@@ -146,14 +143,9 @@ ContactsSavingTestCase {
         model.saveContact(contactToSaveMultipleTimes);
 
         waitForContactsChanged();
-        if (model.contacts.length < 2)
-            waitForContactsChanged();
 
-        // Saving the same contact multiple times currently yields an insertion and then an update
-        // The tested behavior does not occur - was it specific to jsondb backend?
-        expectFail('', 'This test does not reflect the current behavior')
-        compare(model.contacts.length, 2, "contacts.length");
-        verify(model.contacts[0].contactId !== model.contacts[1].contactId, "contact ids are different");
+        // Saving the same contact multiple times yields an insertion and then an update
+        compare(model.contacts.length, 1, "contacts.length");
     }
 
     // Init & teardown

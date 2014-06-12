@@ -127,21 +127,6 @@ Rectangle {
                 utility.debug("Create and save the detail test", debugFlag);
                 audibleReminderDetail.dataUrl = "http://www.test0.com";
                 event.setDetail(audibleReminderDetail);
-                if (managerName == "jsondb") {
-                    // custom fields allowed in JsonDb for audible reminder
-                    // simple test here, since already fully tested in C++
-                    var extendedDetail = Qt.createQmlObject(
-                            "import QtOrganizer 5.0;"
-                            + "ExtendedDetail {"
-                            + "  name: \"reminder\";"
-                            + "  data: \{"
-                            + "    Qt: \"Everywhere\";"
-                            + "    Url: \"http://www.qt-project.org/\";"
-                            + "  }"
-                            + "}"
-                            , test);
-                    event.setDetail(extendedDetail);
-                }
                 model.saveItem(event);
                 //Let's wait for the model to be up-to-date
                 utility.waitModelChange(1);

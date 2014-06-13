@@ -61,7 +61,8 @@ public:
     };
     enum TypeValues {
         TypeContact = 0,
-        TypeGroup
+        TypeGroup,
+        TypeFacet
     };
 
     void setType(const TypeValues newType) {setValue(FieldType, newType);}

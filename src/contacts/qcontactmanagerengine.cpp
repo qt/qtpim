@@ -619,6 +619,7 @@ bool QContactManagerEngine::isRelationshipTypeSupported(const QString& relations
 QList<QContactType::TypeValues> QContactManagerEngine::supportedContactTypes() const
 {
     QList<QContactType::TypeValues> list;
+    // By default, TypeFacet is not supported
     list << QContactType::TypeContact
          << QContactType::TypeGroup;
     return list;

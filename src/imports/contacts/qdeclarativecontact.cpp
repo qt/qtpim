@@ -190,6 +190,7 @@ void QDeclarativeContact::setModified()
     \list
     \li Contact.Contact
     \li Contact.Group
+    \li Contact.Facet
     \endlist
 */
 QDeclarativeContactType::ContactType QDeclarativeContact::type() const

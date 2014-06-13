@@ -1361,6 +1361,11 @@ const QContactDetail::DetailType QContactType::Type(QContactDetail::TypeType);
 /*!
    \enum QContactType::TypeValues
    \value TypeContact The value indicates that this contact is an ordinary contact.
+
+    Contacts of this type are able to be the second contact in
+    relationships of the \c QContactRelationship::HasMember type, and the
+    first contact in relationships of the \c QContactRelationship::Aggregates type.
+
    \value TypeGroup The value indicates that this contact is a group contact.
 
     Contacts of this type are able to be the first contact in
@@ -1369,6 +1374,19 @@ const QContactDetail::DetailType QContactType::Type(QContactDetail::TypeType);
     To enumerate the ids of members of a group, the client should
     retrieve the relationships which involve the group from the manager
     in which the group is saved.
+
+   \value TypeFacet The value indicates that this contact is a facet of an individual contact.
+
+    Contact facets are collections of details that form one representation
+    of an individual contact. Facets can be aggregated together to create
+    composite representations of a contact, represented by contacts of type
+    \c TypeContact.
+
+    Contacts of this type are able to be the second contact in
+    relationships of the \c QContactRelationship::Aggregates type.
+
+    Contact managers may automatically create composite contacts from facets, or
+    require composition to be specified by clients, using QContactRelationship.
 
    \sa type(), setType()
  */

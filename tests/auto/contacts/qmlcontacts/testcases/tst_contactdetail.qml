@@ -579,6 +579,8 @@ TestCase {
         compare(type.type, Type.Group)
         type.type = Type.Contact;
         compare(type.type, Type.Contact)
+        type.type = Type.Facet;
+        compare(type.type, Type.Facet)
     }
 
 

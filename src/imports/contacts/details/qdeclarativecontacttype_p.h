@@ -65,7 +65,8 @@ public:
     enum ContactType {
         Unspecified = 0,
         Contact = QContactType::TypeContact,
-        Group = QContactType::TypeGroup
+        Group = QContactType::TypeGroup,
+        Facet = QContactType::TypeFacet
     };
 
 
@@ -87,6 +88,7 @@ public:
             switch (newType) {
             case Contact:
             case Group:
+            case Facet:
                 detail().setValue(QContactType::FieldType, newType);
                 break;
             default:

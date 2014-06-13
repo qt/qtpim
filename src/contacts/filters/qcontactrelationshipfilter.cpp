@@ -77,6 +77,16 @@ QT_BEGIN_NAMESPACE_CONTACTS
   whichGroupsFilter.setRelatedContactRole(QContactRelationship::Second);  // where the particular contact is the second participant
   \endcode
 
+  Relationships are also used to define composition of facets into contacts.  To find the
+  facets from which a contact is composed:
+
+  \code
+  QContactRelationshipFilter whichFacetsFilter;                            // select all facets which are involved
+  whichFacetsFilter.setRelationshipType(QContactRelationship::Aggregates); // in an aggregation relationship
+  whichFacetsFilter.setRelatedContact(particularContact());                // with the particular contact
+  whichFacetsFilter.setRelatedContactRole(QContactRelationship::First);    // where the particular contact is the first participant
+  \endcode
+
  */
 
 Q_IMPLEMENT_CONTACTFILTER_PRIVATE(QContactRelationshipFilter)

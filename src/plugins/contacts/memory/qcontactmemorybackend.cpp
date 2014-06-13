@@ -766,10 +766,18 @@ void QContactMemoryEngine::partiallySyncDetails(QContact *to, const QContact &fr
 bool QContactMemoryEngine::isRelationshipTypeSupported(const QString& relationshipType, QContactType::TypeValues contactType) const
 {
     // the memory backend supports arbitrary relationship types
-    // but some relationship types don't make sense for groups.
-    if (contactType == QContactType::TypeGroup) {
+    // but some relationship types don't make sense for groups or facets.
+    if (contactType == QContactType::TypeGroup || contactType == QContactType::TypeFacet) {
         if (relationshipType == QContactRelationship::HasSpouse() || relationshipType == QContactRelationship::HasAssistant()) {
             return false;
+        }
+
+        if (contactType == QContactType::TypeGroup) {
+            if (relationshipType == QContactRelationship::Aggregates())
+                return false;
+        } else {
+            if (relationshipType == QContactRelationship::HasMember())
+                return false;
         }
     }
 

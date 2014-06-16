@@ -76,20 +76,20 @@ QContactRelationshipFetchRequest::~QContactRelationshipFetchRequest()
 {
 }
 
-/*! Sets the source contact criterion of the fetch request to \a firstContact.
-    If \a firstContact is empty, or the first contact is not set,
+/*! Sets the source contact criterion of the fetch request to \a firstContactId.
+    If \a firstContactId is default-constructed, or the first contact is not set,
     the request will fetch relationships involving any first contact.
 */
-void QContactRelationshipFetchRequest::setFirst(const QContact& firstContact)
+void QContactRelationshipFetchRequest::setFirst(const QContactId& firstContactId)
 {
     Q_D(QContactRelationshipFetchRequest);
     QMutexLocker ml(&d->m_mutex);
-    d->m_first = firstContact;
+    d->m_first = firstContactId;
 }
 
-/*! Returns the source contact criterion of the fetch request
+/*! Returns the ID of the source contact criterion of the fetch request
  */
-QContact QContactRelationshipFetchRequest::first() const
+QContactId QContactRelationshipFetchRequest::first() const
 {
     Q_D(const QContactRelationshipFetchRequest);
     QMutexLocker ml(&d->m_mutex);
@@ -116,20 +116,20 @@ QString QContactRelationshipFetchRequest::relationshipType() const
     return d->m_relationshipType;
 }
 
-/*! Sets the destination contact criterion of the fetch request to \a secondContact.
-    If \a secondContact is the default-constructed empty contact or the second contact is not set,
+/*! Sets the destination contact criterion of the fetch request to \a secondContactId.
+    If \a secondContactId is default-constructed or the second contact is not set,
     the request will fetch relationships involving any second contact.
 */
-void QContactRelationshipFetchRequest::setSecond(const QContact& secondContact)
+void QContactRelationshipFetchRequest::setSecond(const QContactId& secondContactId)
 {
     Q_D(QContactRelationshipFetchRequest);
     QMutexLocker ml(&d->m_mutex);
-    d->m_second = secondContact;
+    d->m_second = secondContactId;
 }
 
-/*! Returns the destination contact criterion of the fetch request
+/*! Returns the ID of the destination contact criterion of the fetch request
  */
-QContact QContactRelationshipFetchRequest::second() const
+QContactId QContactRelationshipFetchRequest::second() const
 {
     Q_D(const QContactRelationshipFetchRequest);
     QMutexLocker ml(&d->m_mutex);

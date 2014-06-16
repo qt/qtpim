@@ -634,27 +634,27 @@ QList<QContactRelationship> QContact::relationships(const QString& relationshipT
 
     \sa QContactRelationshipFetchRequest, QContactManager::relationships()
  */
-QList<QContact> QContact::relatedContacts(const QString& relationshipType, QContactRelationship::Role role) const
+QList<QContactId> QContact::relatedContacts(const QString& relationshipType, QContactRelationship::Role role) const
 {
-    QList<QContact> retn;
+    QList<QContactId> retn;
     for (int i = 0; i < d.constData()->m_relationshipsCache.size(); i++) {
         QContactRelationship curr = d.constData()->m_relationshipsCache.at(i);
         if (relationshipType.isEmpty() || curr.relationshipType() == relationshipType) {
             // check that the other contacts fill the given role
             if (role == QContactRelationship::First) {
-                if (curr.first().id() != d.constData()->m_id) {
+                if (curr.first() != d.constData()->m_id) {
                     if (!retn.contains(curr.first())) {
                         retn.append(curr.first());
                     }
                 }
             } else if (role == QContactRelationship::Second) {
-                if (curr.first().id() == d.constData()->m_id) {
+                if (curr.first() == d.constData()->m_id) {
                     if (!retn.contains(curr.second())) {
                         retn.append(curr.second());
                     }
                 }
             } else { // role == Either.
-                if (curr.first().id() == d.constData()->m_id) {
+                if (curr.first() == d.constData()->m_id) {
                     if (!retn.contains(curr.second())) {
                         retn.append(curr.second());
                     }

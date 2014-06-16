@@ -667,24 +667,24 @@ QContactId QContactManager::selfContactId() const
 }
 
 /*!
-  Returns a list of relationships in which the contact \a participant participates in the given \a role.
-  If \a participant is empty, \a role is ignored and all relationships are returned.
+  Returns a list of relationships in which the contact identified by \a participantId participates in the given \a role.
+  If \a participantId is default-constructed, \a role is ignored and all relationships are returned.
  */
-QList<QContactRelationship> QContactManager::relationships(const QContact &participant, QContactRelationship::Role role) const
+QList<QContactRelationship> QContactManager::relationships(const QContactId &participantId, QContactRelationship::Role role) const
 {
     QContactManagerSyncOpErrorHolder h(this);
-    return d->m_engine->relationships(QString(), participant, role, &h.error);
+    return d->m_engine->relationships(QString(), participantId, role, &h.error);
 }
 
 /*!
-  Returns a list of relationships of the given \a relationshipType in which the contact identified by the given \a participant participates in the given \a role.
-  If \a participant is empty, \a role is ignored and all relationships of the given \a relationshipType are returned.
+  Returns a list of relationships of the given \a relationshipType in which the contact identified by \a participantId participates in the given \a role.
+  If \a participantId is default-constructed, \a role is ignored and all relationships of the given \a relationshipType are returned.
   If \a relationshipType is empty, relationships of any type are returned.
  */
-QList<QContactRelationship> QContactManager::relationships(const QString &relationshipType, const QContact &participant, QContactRelationship::Role role) const
+QList<QContactRelationship> QContactManager::relationships(const QString &relationshipType, const QContactId &participantId, QContactRelationship::Role role) const
 {
     QContactManagerSyncOpErrorHolder h(this);
-    return d->m_engine->relationships(relationshipType, participant, role, &h.error);
+    return d->m_engine->relationships(relationshipType, participantId, role, &h.error);
 }
 
 /*!

@@ -63,11 +63,25 @@ TestCase {
         }
     }
 
+    ContactModel {
+        id: model
+        manager: "memory"
+        autoUpdate: true
+    }
+
+    function initTestCase() {
+        compare(model.contacts.length, 0)
+        model.saveContact(contact1)
+        model.saveContact(contact2)
+        tryCompare(model.contacts, 'length', 2)
+    }
+
     function setAndVerifyRelationship(first, second, relationship) {
-        relationship.first = first
-        relationship.second = second
-        compare(relationship.first.name.firstName, first.name.firstName)
-        compare(relationship.second.name.firstName, second.name.firstName)
+        relationship.first = first.contactId
+        relationship.second = second.contactId
+
+        compare(relationship.first, first.contactId)
+        compare(relationship.second, second.contactId)
     }
 
     Relationship {
@@ -180,12 +194,12 @@ TestCase {
 
     function test_nullParticipants() {
         //just check we do not crash in these cases
-        relationshipForNullContacts.first = null;
-        relationshipForNullContacts.second = null;
+        relationshipForNullContacts.first = ''
+        relationshipForNullContacts.second = ''
         try {
             //next two lines will throw an exception, so we catch it)
-            relationshipForNullContacts.second = undefined;
-            relationshipForNullContacts.second = undefined;
+            relationshipForNullContacts.first = undefined
+            relationshipForNullContacts.second = undefined
         } catch(err) {
         }
     }

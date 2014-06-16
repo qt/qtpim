@@ -61,14 +61,14 @@ public:
     ~QContactRelationshipFetchRequest();
 
     /* Selection */
-    void setFirst(const QContact& firstContact);
-    QContact first() const;
+    void setFirst(const QContactId& firstContactId);
+    QContactId first() const;
 
     void setRelationshipType(const QString& relationshipType);
     QString relationshipType() const;
 
-    void setSecond(const QContact& secondContact);
-    QContact second() const;
+    void setSecond(const QContactId& secondContactId);
+    QContactId second() const;
 
     /* Results */
     QList<QContactRelationship> relationships() const;

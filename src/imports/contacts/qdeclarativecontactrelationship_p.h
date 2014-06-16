@@ -55,8 +55,8 @@ QT_BEGIN_NAMESPACE
 class QDeclarativeContactRelationship : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QDeclarativeContact* first READ first WRITE setFirst NOTIFY valueChanged)
-    Q_PROPERTY(QDeclarativeContact* second READ second WRITE setSecond NOTIFY valueChanged)
+    Q_PROPERTY(QString first READ first WRITE setFirst NOTIFY valueChanged)
+    Q_PROPERTY(QString second READ second WRITE setSecond NOTIFY valueChanged)
     Q_PROPERTY(QVariant type READ relationshipType WRITE setRelationshipType NOTIFY valueChanged)
     Q_ENUMS(RelationshipRole)
     Q_ENUMS(RelationshipType)
@@ -79,12 +79,12 @@ public:
 
     QDeclarativeContactRelationship(QObject* parent = 0);
 
-    QDeclarativeContact* first() const;
-    QDeclarativeContact* second() const;
+    QString first() const;
+    QString second() const;
     QVariant relationshipType() const;
 
-    void setFirst( QDeclarativeContact* firstContact);
-    void setSecond( QDeclarativeContact* secondContact);
+    void setFirst(const QString& firstContactId);
+    void setSecond(const QString& secondContactId);
     void setRelationshipType(const QVariant& relationshipType);
 
     QContactRelationship relationship() const;

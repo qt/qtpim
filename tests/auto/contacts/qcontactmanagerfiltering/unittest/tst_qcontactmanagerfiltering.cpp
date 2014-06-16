@@ -2022,8 +2022,8 @@ void tst_QContactManagerFiltering::relationshipFiltering()
     second.setId(contactB.id());
 
     QContactRelationship h2i;
-    h2i.setFirst(first);
-    h2i.setSecond(second);
+    h2i.setFirst(first.id());
+    h2i.setSecond(second.id());
     h2i.setRelationshipType(relationshipType);
     // save and check error code
     bool succeeded = false;
@@ -2042,9 +2042,9 @@ void tst_QContactManagerFiltering::relationshipFiltering()
     crf.setRelatedContactRole(static_cast<QContactRelationship::Role>(relatedContactRole));
     crf.setRelationshipType(relationshipType);
     if (relatedContact == 'a') {
-        crf.setRelatedContact(first);
+        crf.setRelatedContactId(first.id());
     } else if (relatedContact == 'b') {
-        crf.setRelatedContact(second);
+        crf.setRelatedContactId(second.id());
     }
 
     // 4. Grab the filtering results

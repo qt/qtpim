@@ -61,7 +61,7 @@ QT_BEGIN_NAMESPACE_CONTACTS
   \ingroup contacts-main
 
   Each relationship is uniquely identified by the combination of the first
-  contact, second contact, and the relationship type.
+  contact ID, second contact ID, and the relationship type.
 
   A relationship should not contain a second contact which is the same as
   the first contact.
@@ -197,9 +197,9 @@ QDataStream& operator>>(QDataStream& in, QContactRelationship& rel)
     quint8 formatVersion;
     in >> formatVersion;
     if (formatVersion == 1) {
-        QContact first;
+        QContactId first;
         QString relationshipType;
-        QContact second;
+        QContactId second;
         in >> first >> relationshipType >> second;
         rel.setFirst(first);
         rel.setRelationshipType(relationshipType);
@@ -217,19 +217,19 @@ QDataStream& operator>>(QDataStream& in, QContactRelationship& rel)
  */
 
 /*!
- * Returns the locally-stored contact which has a relationship of the given type with the second contact
+ * Returns the ID of the locally-stored contact which has a relationship of the given type with the second contact
  * \sa relationshipType(), second(), setFirst()
  */
-QContact QContactRelationship::first() const
+QContactId QContactRelationship::first() const
 {
     return d.constData()->m_first;
 }
 
 /*!
- * Returns the contact with which the first contact has a relationship of the given type
+ * Returns the ID of the contact with which the first contact has a relationship of the given type
  * \sa relationshipType(), first()
  */
-QContact QContactRelationship::second() const
+QContactId QContactRelationship::second() const
 {
     return d.constData()->m_second;
 }
@@ -244,14 +244,14 @@ QString QContactRelationship::relationshipType() const
 }
 
 /*!
- * Sets the first contact in the relationship to \a firstContact.  This contact
+ * Sets the ID of the first contact in the relationship to \a firstContactId.  This contact
  * must be stored in the manager in which the relationship is stored, and has
  * a relationship of the specified type with the second contact.
  * \sa first()
  */
-void QContactRelationship::setFirst(const QContact& firstContact)
+void QContactRelationship::setFirst(const QContactId& firstContactId)
 {
-    d->m_first = firstContact;
+    d->m_first = firstContactId;
 }
 
 /*!
@@ -259,9 +259,9 @@ void QContactRelationship::setFirst(const QContact& firstContact)
  * has a relationship of the specified type with this contact.
  * \sa second()
  */
-void QContactRelationship::setSecond(const QContact& secondContact)
+void QContactRelationship::setSecond(const QContactId& secondContactId)
 {
-    d->m_second = secondContact;
+    d->m_second = secondContactId;
 }
 
 /*!

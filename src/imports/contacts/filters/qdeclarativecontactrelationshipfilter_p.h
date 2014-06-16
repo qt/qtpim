@@ -56,7 +56,7 @@ class QDeclarativeContactRelationshipFilter : public QDeclarativeContactFilter
 {
     Q_OBJECT
     Q_PROPERTY(QVariant relationshipType READ relationshipType WRITE setRelationshipType NOTIFY valueChanged)
-    Q_PROPERTY(QDeclarativeContact* relatedContact READ relatedContact WRITE setRelatedContact NOTIFY valueChanged)
+    Q_PROPERTY(QString relatedContactId READ relatedContactId WRITE setRelatedContactId NOTIFY valueChanged)
     Q_PROPERTY(QDeclarativeContactRelationship::RelationshipRole relatedContactRole READ relatedContactRole WRITE setRelatedContactRole NOTIFY valueChanged)
 
 public:
@@ -107,17 +107,19 @@ public:
         }
     }
 
-    QDeclarativeContact* relatedContact() const
+    QString relatedContactId() const
     {
-        QDeclarativeContact *v = new QDeclarativeContact();
-        v->setContact(d.relatedContact());
-        return v;
+        const QContactId contactId(d.relatedContactId());
+        if (!contactId.isNull())
+            return contactId.toString();
+        return QString();
     }
 
-    void setRelatedContact(const QDeclarativeContact* v)
+    void setRelatedContactId(const QString& id)
     {
-        if (v->contact() != d.relatedContact()) {
-            d.setRelatedContact(v->contact());
+        const QContactId contactId(QContactId::fromString(id));
+        if (contactId != d.relatedContactId()) {
+            d.setRelatedContactId(contactId);
             emit valueChanged();
         }
     }

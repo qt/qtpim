@@ -57,7 +57,7 @@
 #include <QtCore/qshareddata.h>
 #include <QtCore/qstring.h>
 
-#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactid.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -81,8 +81,8 @@ public:
     {
     }
 
-    QContact m_first;
-    QContact m_second;
+    QContactId m_first;
+    QContactId m_second;
     QString m_relationshipType;
 };
 

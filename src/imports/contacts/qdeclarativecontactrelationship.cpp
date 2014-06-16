@@ -73,12 +73,12 @@ QDeclarativeContactRelationship::QDeclarativeContactRelationship(QObject* parent
 
   This property holds the locally-stored contact which has a relationship of the given type with the second contact.
   */
-
-QDeclarativeContact* QDeclarativeContactRelationship::first() const
+QString QDeclarativeContactRelationship::first() const
 {
-    QDeclarativeContact *v = new QDeclarativeContact();
-    v->setContact(m_relationship.first());
-    return v;
+    const QContactId contactId(m_relationship.first());
+    if (!contactId.isNull())
+        return contactId.toString();
+    return QString();
 }
 
 /*!
@@ -86,11 +86,12 @@ QDeclarativeContact* QDeclarativeContactRelationship::first() const
 
   This property holds the contact with which the first contact has a relationship of the given type.
   */
-QDeclarativeContact*  QDeclarativeContactRelationship::second() const
+QString QDeclarativeContactRelationship::second() const
 {
-    QDeclarativeContact *v = new QDeclarativeContact();
-    v->setContact(m_relationship.second());
-    return v;
+    const QContactId contactId(m_relationship.second());
+    if (!contactId.isNull())
+        return contactId.toString();
+    return QString();
 }
 
 /*!
@@ -114,16 +115,14 @@ QVariant QDeclarativeContactRelationship::relationshipType() const
     return m_relationship.relationshipType();
 }
 
-void QDeclarativeContactRelationship::setFirst(QDeclarativeContact* firstContact)
+void QDeclarativeContactRelationship::setFirst(const QString& firstContactId)
 {
-    if (firstContact)
-        m_relationship.setFirst(firstContact->contact());
+    m_relationship.setFirst(QContactId::fromString(firstContactId));
 }
 
-void QDeclarativeContactRelationship::setSecond(QDeclarativeContact* secondContact)
+void QDeclarativeContactRelationship::setSecond(const QString& secondContactId)
 {
-    if (secondContact)
-        m_relationship.setSecond(secondContact->contact());
+    m_relationship.setSecond(QContactId::fromString(secondContactId));
 }
 
 void QDeclarativeContactRelationship::setRelationshipType(const QVariant& relationshipType)

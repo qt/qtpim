@@ -63,7 +63,7 @@ QT_BEGIN_NAMESPACE_CONTACTS
   \code
   QContactRelationshipFilter groupFilter;                               // select all contacts which are involved
   groupFilter.setRelationshipType(QContactRelationship::HasMember);     // in a group relationship
-  groupFilter.setRelatedContact(groupContact());                   // with the group contact
+  groupFilter.setRelatedContactId(groupContact.id());                   // with the group contact
   groupFilter.setRelatedContactRole(QContactRelationship::First); // where the group contact is the first participant
   \endcode
 
@@ -73,7 +73,7 @@ QT_BEGIN_NAMESPACE_CONTACTS
   \code
   QContactRelationshipFilter whichGroupsFilter;                                 // select all contacts which are involved
   whichGroupsFilter.setRelationshipType(QContactRelationship::HasMember); // in a group relationship
-  whichGroupsFilter.setRelatedContact(particularContact());                // with the particular contact
+  whichGroupsFilter.setRelatedContactId(particularContact.id());                // with the particular contact
   whichGroupsFilter.setRelatedContactRole(QContactRelationship::Second);  // where the particular contact is the second participant
   \endcode
 
@@ -123,21 +123,21 @@ QString QContactRelationshipFilter::relationshipType() const
 }
 
 /*!
-  Sets the contact with whom the tested contact must have a relationship in order for the tested contact to match this filter to be \a relatedContact
+  Sets the ID of the contact with whom the tested contact must have a relationship in order for the tested contact to match this filter, to be \a relatedContactId
  */
-void QContactRelationshipFilter::setRelatedContact(const QContact &relatedContact)
+void QContactRelationshipFilter::setRelatedContactId(const QContactId &relatedContactId)
 {
     Q_D(QContactRelationshipFilter);
-    d->m_relatedContact = relatedContact;
+    d->m_relatedContactId = relatedContactId;
 }
 
 /*!
-  Returns the contact with whom the tested contact must have a relationship in order for the tested contact to match this filter
+  Returns the ID of the contact with whom the tested contact must have a relationship in order for the tested contact to match this filter
  */
-QContact QContactRelationshipFilter::relatedContact() const
+QContactId QContactRelationshipFilter::relatedContactId() const
 {
     Q_D(const QContactRelationshipFilter);
-    return d->m_relatedContact;
+    return d->m_relatedContactId;
 }
 
 /*!

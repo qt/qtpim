@@ -282,7 +282,7 @@ QVariant QDeclarativeContactRelationshipModel::data(const QModelIndex &index, in
     if (role == RelationshipRole) {
         return QVariant::fromValue(dcr);
     } else if (role == Qt::DisplayRole) {
-        return QString(QStringLiteral("%1 %2 %3")).arg(dcr->relationship().first().id().toString()).arg(dcr->relationship().relationshipType()).arg(dcr->relationship().second().id().toString());
+        return QString(QStringLiteral("%1 %2 %3")).arg(dcr->relationship().first().toString()).arg(dcr->relationship().relationshipType()).arg(dcr->relationship().second().toString());
     }
     return QVariant();
 }
@@ -295,9 +295,9 @@ void QDeclarativeContactRelationshipModel::fetchAgain()
         if (d->m_participant) {
             QContact contact (d->m_participant->contact());
             if (d->m_role == QDeclarativeContactRelationship::First || d->m_role == QDeclarativeContactRelationship::Either)
-                req->setFirst(contact);
+                req->setFirst(contact.id());
             if (d->m_role == QDeclarativeContactRelationship::Second || d->m_role == QDeclarativeContactRelationship::Either)
-                req->setSecond(contact);
+                req->setSecond(contact.id());
             req->setRelationshipType(d->m_relationshipTypeHolder.relationship().relationshipType());
             connect(req,SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(requestUpdated()));
             req->start();

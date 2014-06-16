@@ -42,6 +42,7 @@
 #include <QMetaType>
 
 #include <QtContacts/qcontacts.h>
+#include "../qcontactidmock.h"
 
 //TESTED_COMPONENT=src/contacts
 
@@ -641,25 +642,24 @@ void tst_QContactFilter::relationshipFilter()
 
 
     QVERIFY(crf.relationshipType() == QString());
-    QVERIFY(crf.relatedContact() == QContact());
+    QVERIFY(crf.relatedContactId() == QContactId());
 
     QContact newContact;
-    /*newContact.id().setManagerUri("test");
-    newContact.id().setLocalId(QContactId(5));*/
-    crf.setRelatedContact(newContact);
+    newContact.setId(QContactIdMock::createId("test", 5));
+    crf.setRelatedContactId(newContact.id());
 
     QVERIFY(crf.relationshipType() == QString());
-    QVERIFY(crf.relatedContact() == newContact);
+    QVERIFY(crf.relatedContactId() == newContact.id());
 
     crf.setRelatedContactRole(QContactRelationship::First);
 
     QVERIFY(crf.relationshipType() == QString());
-    QVERIFY(crf.relatedContact() == newContact);
+    QVERIFY(crf.relatedContactId() == newContact.id());
 
     crf.setRelationshipType(QContactRelationship::HasManager());
 
     QVERIFY(crf.relationshipType() == QContactRelationship::HasManager());
-    QVERIFY(crf.relatedContact() == newContact);
+    QVERIFY(crf.relatedContactId() == newContact.id());
 
     /* Test op= */
     QContactFilter f = crf;
@@ -1271,8 +1271,7 @@ void tst_QContactFilter::datastream_data()
     {
         QContactRelationshipFilter filter;
         filter.setRelationshipType("member");
-        QContact contact;
-        filter.setRelatedContact(contact);
+        filter.setRelatedContactId(QContactId());
         filter.setRelatedContactRole(QContactRelationship::First);
         QTest::newRow("relationship") << (QContactFilter)filter;
     }

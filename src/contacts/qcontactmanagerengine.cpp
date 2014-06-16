@@ -307,16 +307,16 @@ QContactId QContactManagerEngine::selfContactId(QContactManager::Error* error) c
 }
 
 /*!
-  Returns a list of relationships of the given \a relationshipType in which the contact identified by the given \a participant participates in the given \a role.
-  If \a participant is empty, \a role is ignored and all relationships of the given \a relationshipType are returned.
+  Returns a list of relationships of the given \a relationshipType in which the contact identified by \a participantId participates in the given \a role.
+  If \a participantId is default-constructed, \a role is ignored and all relationships of the given \a relationshipType are returned.
   If \a relationshipType is empty, relationships of any type are returned.
-  If no relationships of the given \a relationshipType in which the contact identified by the given \a participant is involved in the given \a role exists,
+  If no relationships of the given \a relationshipType in which the contact identified by \a participantId is involved in the given \a role exists,
   \a error is set to QContactManager::DoesNotExistError.
  */
-QList<QContactRelationship> QContactManagerEngine::relationships(const QString& relationshipType, const QContact& participant, QContactRelationship::Role role, QContactManager::Error* error) const
+QList<QContactRelationship> QContactManagerEngine::relationships(const QString& relationshipType, const QContactId& participantId, QContactRelationship::Role role, QContactManager::Error* error) const
 {
     Q_UNUSED(relationshipType);
-    Q_UNUSED(participant);
+    Q_UNUSED(participantId);
     Q_UNUSED(role);
 
     *error = QContactManager::NotSupportedError;
@@ -1270,9 +1270,8 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                 // of the specified type with the specified other participant.
                 const QContactRelationshipFilter rf(filter);
 
-                // first, retrieve contact uris
-                QContact relatedContact = rf.relatedContact();
-                QContactId relatedId = relatedContact.id();
+                // first, retrieve contact IDs
+                QContactId relatedId = rf.relatedContactId();
 
                 QContactId contactId = contact.id();
                 if (relatedId == contactId) {
@@ -1288,17 +1287,17 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                     // perform the matching.
                     if (rf.relatedContactRole() == QContactRelationship::Second) { // this is the role of the related contact; ie, to match, contact must be the first in the relationship.
                         if ((rf.relationshipType().isEmpty() || rel.relationshipType() == rf.relationshipType())
-                                && (rel.first().id() == contactId) && (relatedId.isNull() || relatedId == rel.second().id())) {
+                                && (rel.first() == contactId) && (relatedId.isNull() || relatedId == rel.second())) {
                             return true;
                         }
                     } else if (rf.relatedContactRole() == QContactRelationship::First) { // this is the role of the related contact; ie, to match, contact must be the second in the relationship.
                         if ((rf.relationshipType().isEmpty() || rel.relationshipType() == rf.relationshipType())
-                                && (rel.second().id() == contactId) && (relatedId.isNull() || relatedId == rel.first().id())) {
+                                && (rel.second() == contactId) && (relatedId.isNull() || relatedId == rel.first())) {
                             return true;
                         }
                     } else { // QContactRelationship::Either
                         if ((rf.relationshipType().isEmpty() || rel.relationshipType() == rf.relationshipType())
-                                && (relatedId.isNull() || (relatedId == rel.first().id() || relatedId == rel.second().id()))) {
+                                && (relatedId.isNull() || (relatedId == rel.first() || relatedId == rel.second()))) {
                             return true;
                         }
                     }

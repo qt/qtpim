@@ -113,7 +113,7 @@ public:
 
     /* Relationships that this contact was involved in when it was retrieved from the manager */
     QList<QContactRelationship> relationships(const QString& relationshipType = QString()) const;
-    QList<QContact> relatedContacts(const QString& relationshipType = QString(), QContactRelationship::Role role = QContactRelationship::Either) const;
+    QList<QContactId> relatedContacts(const QString& relationshipType = QString(), QContactRelationship::Role role = QContactRelationship::Either) const;
 
     /* Actions available to be performed on this contact */
     QList<QContactActionDescriptor> availableActions(const QString& serviceName = QString()) const;

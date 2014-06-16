@@ -49,7 +49,7 @@
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContact;
+class QContactId;
 
 class QContactRelationshipPrivate;
 class Q_CONTACTS_EXPORT QContactRelationship
@@ -70,12 +70,12 @@ public:
     bool operator==(const QContactRelationship &other) const;
     bool operator!=(const QContactRelationship &other) const { return !(*this==other); }
 
-    QContact first() const;
-    QContact second() const;
+    QContactId first() const;
+    QContactId second() const;
     QString relationshipType() const;
 
-    void setFirst(const QContact& firstContact);
-    void setSecond(const QContact& secondContact);
+    void setFirst(const QContactId& firstContact);
+    void setSecond(const QContactId& secondContact);
     void setRelationshipType(const QString& relationshipType);
 
     enum Role {

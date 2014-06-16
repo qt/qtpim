@@ -42,7 +42,7 @@
 #ifndef QCONTACTRELATIONSHIPFILTER_H
 #define QCONTACTRELATIONSHIPFILTER_H
 
-#include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactid.h>
 #include <QtContacts/qcontactfilter.h>
 #include <QtContacts/qcontactrelationship.h>
 
@@ -56,11 +56,11 @@ public:
     QContactRelationshipFilter(const QContactFilter& other);
 
     void setRelationshipType(const QString& relationshipType);
-    void setRelatedContact(const QContact& relatedContact);
+    void setRelatedContactId(const QContactId& relatedContactId);
     void setRelatedContactRole(QContactRelationship::Role relatedContactRole);
 
     QString relationshipType() const;
-    QContact relatedContact() const;
+    QContactId relatedContactId() const;
     QContactRelationship::Role relatedContactRole() const;
 
 private:

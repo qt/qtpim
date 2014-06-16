@@ -119,9 +119,9 @@ public:
     }
 
     /* Relationships between contacts */
-    QList<QContactRelationship> relationships(const QString& relType, const QContact& contact, QContactRelationship::Role role, QContactManager::Error* error) const
+    QList<QContactRelationship> relationships(const QString& relType, const QContactId& contactId, QContactRelationship::Role role, QContactManager::Error* error) const
     {
-        return QContactManagerEngine::relationships(relType, contact, role, error);
+        return QContactManagerEngine::relationships(relType, contactId, role, error);
     }
 
     bool saveRelationships(QList<QContactRelationship>* relationships, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error* error)

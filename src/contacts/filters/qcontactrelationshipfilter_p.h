@@ -70,7 +70,7 @@ public:
     QContactRelationshipFilterPrivate(const QContactRelationshipFilterPrivate& other)
         : QContactFilterPrivate(other),
         m_relationshipType(other.m_relationshipType),
-        m_relatedContact(other.m_relatedContact),
+        m_relatedContactId(other.m_relatedContactId),
         m_relatedContactRole(other.m_relatedContactRole)
     {
     }
@@ -80,7 +80,7 @@ public:
         const QContactRelationshipFilterPrivate *od = static_cast<const QContactRelationshipFilterPrivate*>(other);
         if (m_relatedContactRole != od->m_relatedContactRole)
             return false;
-        if (m_relatedContact != od->m_relatedContact)
+        if (m_relatedContactId != od->m_relatedContactId)
             return false;
         if (m_relationshipType != od->m_relationshipType)
             return false;
@@ -90,7 +90,7 @@ public:
     QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
     {
         if (formatVersion == 1) {
-            stream << m_relationshipType << m_relatedContact << static_cast<quint32>(m_relatedContactRole);
+            stream << m_relationshipType << m_relatedContactId << static_cast<quint32>(m_relatedContactRole);
         }
         return stream;
     }
@@ -99,7 +99,7 @@ public:
     {
         if (formatVersion == 1) {
             quint32 role;
-            stream >> m_relationshipType >> m_relatedContact >> role;
+            stream >> m_relationshipType >> m_relatedContactId >> role;
             m_relatedContactRole = QContactRelationship::Role(role);
         }
         return stream;
@@ -110,7 +110,7 @@ public:
     {
         dbg.nospace() << "QContactRelationshipFilter(";
         dbg.nospace() << "relationshipType=" << m_relationshipType << ","
-                      << "relatedContact=" << m_relatedContact << ","
+                      << "relatedContactId=" << m_relatedContactId << ","
                       << "relatedContactRole=" << static_cast<quint32>(m_relatedContactRole);
         dbg.nospace() << ")";
         return dbg.maybeSpace();
@@ -120,7 +120,7 @@ public:
     Q_IMPLEMENT_CONTACTFILTER_VIRTUALCTORS(QContactRelationshipFilter, QContactFilter::RelationshipFilter)
 
     QString m_relationshipType;
-    QContact m_relatedContact;
+    QContactId m_relatedContactId;
     QContactRelationship::Role m_relatedContactRole;
 };
 

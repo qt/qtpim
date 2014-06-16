@@ -253,8 +253,8 @@ public:
 #endif
 
     // selection criteria
-    QContact m_first;
-    QContact m_second;
+    QContactId m_first;
+    QContactId m_second;
     QString m_relationshipType;
 
     // results

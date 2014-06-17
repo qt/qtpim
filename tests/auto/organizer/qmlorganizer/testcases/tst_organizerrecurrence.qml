@@ -90,6 +90,42 @@ TestCase {
         model.manager = ""
     }
 
+    function localDateTime(tsSpec) {
+        // Parse a ISO8601 time spec and return it as local time; if passed to the Date
+        // ctor, it will be interpreted as UTC
+        var dt = tsSpec.split('T')
+        if (dt.length == 2) {
+            var d = dt[0].split('-')
+            if (d.length == 3) {
+                // If there is UTC offset information, we can't treat it as local time
+                var t = dt[1].split(/[\:\.\+\-]/)
+                if (t.length == 4) {
+                    return new Date(d[0], d[1] - 1, d[2], t[0], t[1], t[2], t[3])
+                } else if (t.length == 3) {
+                    return new Date(d[0], d[1] - 1, d[2], t[0], t[1], t[2])
+                }
+            }
+        } else if (dt.length == 1) {
+            // Only parse if this is exactly a date
+            if (dt[0].length <= 10) {
+                var d = dt[0].split('-')
+                if (d.length == 3) {
+                    return new Date(d[0], d[1] - 1, d[2])
+                }
+            }
+        }
+
+        return new Date(tsSpec)
+    }
+
+    function localDate(dSpec) {
+        // Despite the name, return this date as UTC - on conversion to a QDate, it will
+        // be converted from UTC value to a date portion, so from a positive UTC offset, it
+        // will be converted to the prior date.
+        // The date will always be interpreted as local time by the recurrence rule.
+        return new Date(dSpec)
+    }
+
     function test_recurrenceDates_data() {
         return [
                     {
@@ -97,14 +133,14 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
-                            "recurrenceDates": [new Date('2012-01-02'), new Date('2012-01-03')],
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
+                            "recurrenceDates": [localDate('2012-01-02'), localDate('2012-01-03')],
                             "exceptionDates": [],
                             "recurrenceRules": [],
                             "exceptionRules": []
                         },
-                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-03T14:00:00')]
+                        results: [localDateTime('2012-01-01T14:00:00'), localDateTime('2012-01-02T14:00:00'), localDateTime('2012-01-03T14:00:00')]
                     },
 
                     {
@@ -112,14 +148,14 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
-                            "recurrenceDates": [new Date('2011-01-01')],
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
+                            "recurrenceDates": [localDate('2011-01-01')],
                             "exceptionDates": [],
                             "recurrenceRules": [],
                             "exceptionRules": []
                         },
-                        results: [new Date('2012-01-01T14:00:00')]
+                        results: [localDateTime('2012-01-01T14:00:00')]
                     },
 
                     {
@@ -127,14 +163,14 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2008-01-01T14:00:00'),
-                            "end" : new Date('2008-01-01T15:00:00'),
-                            "recurrenceDates": [new Date('2012-01-02'), new Date('2012-01-03')],
+                            "start" : localDateTime('2008-01-01T14:00:00'),
+                            "end" : localDateTime('2008-01-01T15:00:00'),
+                            "recurrenceDates": [localDate('2012-01-02'), localDate('2012-01-03')],
                             "exceptionDates": [],
                             "recurrenceRules": [],
                             "exceptionRules": []
                         },
-                        results: [new Date('2012-01-02T14:00:00'), new Date('2012-01-03T14:00:00')]
+                        results: [localDateTime('2012-01-02T14:00:00'), localDateTime('2012-01-03T14:00:00')]
                     },
 
                     {
@@ -142,14 +178,14 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
-                            "recurrenceDates": [new Date('2020-01-02'), new Date('2020-01-03')],
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
+                            "recurrenceDates": [localDate('2020-01-02'), localDate('2020-01-03')],
                             "exceptionDates": [],
                             "recurrenceRules": [],
                             "exceptionRules": []
                         },
-                        results: [new Date('2012-01-01T14:00:00')]
+                        results: [localDateTime('2012-01-01T14:00:00')]
                     },
 
                     {
@@ -157,14 +193,14 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
-                            "recurrenceDates": [new Date('2012-01-02'), new Date('2020-01-02')],
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
+                            "recurrenceDates": [localDate('2012-01-02'), localDate('2020-01-02')],
                             "exceptionDates": [],
                             "recurrenceRules": [],
                             "exceptionRules": []
                         },
-                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00')]
+                        results: [localDateTime('2012-01-01T14:00:00'), localDateTime('2012-01-02T14:00:00')]
                     }
                 ]
     }
@@ -181,8 +217,8 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
                             "recurrenceDates": [],
                             "exceptionDates": [],
                             "recurrenceRules": [testRule],
@@ -200,7 +236,7 @@ TestCase {
                             "firstDayOfWeek": Qt.Monday
                         },
 
-                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-03T14:00:00')]
+                        results: [localDateTime('2012-01-01T14:00:00'), localDateTime('2012-01-02T14:00:00'), localDateTime('2012-01-03T14:00:00')]
                     },
 
                     {
@@ -208,8 +244,8 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
                             "recurrenceDates": [],
                             "exceptionDates": [],
                             "recurrenceRules": [testRule],
@@ -227,16 +263,16 @@ TestCase {
                             "firstDayOfWeek": Qt.Monday
                         },
 
-                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-03T14:00:00'), new Date('2012-01-05T14:00:00')]
+                        results: [localDateTime('2012-01-01T14:00:00'), localDateTime('2012-01-03T14:00:00'), localDateTime('2012-01-05T14:00:00')]
                     },
 
                     {
-                        tag: "Daily recurrence, limit to date",
+                        tag: "Daily recurrence, limit to date (high)",
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
+                            "start" : localDateTime('2012-01-01T23:15:00'),
+                            "end" : localDateTime('2012-01-01T23:45:00'),
                             "recurrenceDates": [],
                             "exceptionDates": [],
                             "recurrenceRules": [testRule],
@@ -244,7 +280,7 @@ TestCase {
                         },
                         rrule: {
                             "frequency": RecurrenceRule.Daily,
-                            "limit": new Date('2012-01-05'),
+                            "limit": localDate('2012-01-05'),
                             "interval": 1,
                             "daysOfWeek": [],
                             "daysOfMonth": [],
@@ -254,8 +290,36 @@ TestCase {
                             "firstDayOfWeek": Qt.Monday
                         },
 
-                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-03T14:00:00'),
-                            new Date('2012-01-04T14:00:00'), new Date('2012-01-05T14:00:00')]
+                        results: [localDateTime('2012-01-01T23:15:00'), localDateTime('2012-01-02T23:15:00'), localDateTime('2012-01-03T23:15:00'),
+                            localDateTime('2012-01-04T23:15:00'), localDateTime('2012-01-05T23:15:00')]
+                    },
+
+                    {
+                        tag: "Daily recurrence, limit to date (low)",
+                        managers: utility.getManagerList(),
+                        definitions: {
+
+                            "start" : localDateTime('2012-01-01T00:15:00'),
+                            "end" : localDateTime('2012-01-01T00:45:00'),
+                            "recurrenceDates": [],
+                            "exceptionDates": [],
+                            "recurrenceRules": [testRule],
+                            "exceptionRules": []
+                        },
+                        rrule: {
+                            "frequency": RecurrenceRule.Daily,
+                            "limit": localDate('2012-01-05'),
+                            "interval": 1,
+                            "daysOfWeek": [],
+                            "daysOfMonth": [],
+                            "daysOfYear": [],
+                            "monthsOfYear": [],
+                            "positions": [],
+                            "firstDayOfWeek": Qt.Monday
+                        },
+
+                        results: [localDateTime('2012-01-01T00:15:00'), localDateTime('2012-01-02T00:15:00'), localDateTime('2012-01-03T00:15:00'),
+                            localDateTime('2012-01-04T00:15:00'), localDateTime('2012-01-05T00:15:00')]
                     },
 
                     {
@@ -263,10 +327,10 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
                             "recurrenceDates": [],
-                            "exceptionDates": [new Date('2012-01-04T14:00:00'), new Date('2012-01-09T14:00:00')],
+                            "exceptionDates": [localDate('2012-01-04'), localDate('2012-01-09')],
                             "recurrenceRules": [testRule],
                             "exceptionRules": []
                         },
@@ -282,8 +346,8 @@ TestCase {
                             "firstDayOfWeek": Qt.Monday
                         },
 
-                        results: [new Date('2012-01-02T14:00:00'),  new Date('2012-01-07T14:00:00'),
-                            new Date('2012-01-11T14:00:00'), new Date('2012-01-14T14:00:00')]
+                        results: [localDateTime('2012-01-02T14:00:00'),  localDateTime('2012-01-07T14:00:00'),
+                            localDateTime('2012-01-11T14:00:00'), localDateTime('2012-01-14T14:00:00')]
                     },
 
                     {
@@ -291,8 +355,8 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
                             "recurrenceDates": [],
                             "exceptionDates": [],
                             "recurrenceRules": [testRule],
@@ -310,7 +374,7 @@ TestCase {
                             "firstDayOfWeek": Qt.Monday
                         },
 
-                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-10T14:00:00'), new Date('2012-01-11T14:00:00')]
+                        results: [localDateTime('2012-01-01T14:00:00'), localDateTime('2012-01-02T14:00:00'), localDateTime('2012-01-10T14:00:00'), localDateTime('2012-01-11T14:00:00')]
                     },
 
                     // Weekly recurrences
@@ -320,8 +384,8 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
                             "recurrenceDates": [],
                             "exceptionDates": [],
                             "recurrenceRules": [testRule],
@@ -329,7 +393,7 @@ TestCase {
                         },
                         rrule: {
                             "frequency": RecurrenceRule.Weekly,
-                            "limit": new Date('2012-02-05'),
+                            "limit": localDate('2012-02-05'),
                             "interval": 2,
                             "daysOfWeek": [],
                             "daysOfMonth": [],
@@ -339,7 +403,7 @@ TestCase {
                             "firstDayOfWeek": Qt.Monday
                         },
 
-                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-15T14:00:00'), new Date('2012-01-29T14:00:00')]
+                        results: [localDateTime('2012-01-01T14:00:00'), localDateTime('2012-01-15T14:00:00'), localDateTime('2012-01-29T14:00:00')]
                     },
 
                     // Monthly recurrences
@@ -349,8 +413,8 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
                             "recurrenceDates": [],
                             "exceptionDates": [],
                             "recurrenceRules": [testRule],
@@ -368,8 +432,8 @@ TestCase {
                             "firstDayOfWeek": Qt.Monday
                         },
 
-                        results: [new Date('2012-02-01T14:00:00'), new Date('2012-05-01T14:00:00'), new Date('2012-12-01T14:00:00'),
-                            new Date('2013-02-01T14:00:00'), new Date('2013-05-01T14:00:00'), new Date('2013-12-01T14:00:00')]
+                        results: [localDateTime('2012-02-01T14:00:00'), localDateTime('2012-05-01T14:00:00'), localDateTime('2012-12-01T14:00:00'),
+                            localDateTime('2013-02-01T14:00:00'), localDateTime('2013-05-01T14:00:00'), localDateTime('2013-12-01T14:00:00')]
                     },
 
                     {
@@ -377,8 +441,8 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
                             "recurrenceDates": [],
                             "exceptionDates": [],
                             "recurrenceRules": [testRule],
@@ -396,8 +460,8 @@ TestCase {
                             "firstDayOfWeek": Qt.Monday
                         },
 
-                        results: [new Date('2012-01-01T14:00:00'), new Date('2012-01-02T14:00:00'), new Date('2012-01-31T14:00:00'),
-                            new Date('2012-02-01T14:00:00'), new Date('2012-02-02T14:00:00'), new Date('2012-02-29T14:00:00')]
+                        results: [localDateTime('2012-01-01T14:00:00'), localDateTime('2012-01-02T14:00:00'), localDateTime('2012-01-31T14:00:00'),
+                            localDateTime('2012-02-01T14:00:00'), localDateTime('2012-02-02T14:00:00'), localDateTime('2012-02-29T14:00:00')]
                     },
 
                     {
@@ -405,8 +469,8 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
                             "recurrenceDates": [],
                             "exceptionDates": [],
                             "recurrenceRules": [testRule],
@@ -424,8 +488,8 @@ TestCase {
                             "firstDayOfWeek": Qt.Monday
                         },
 
-                        results: [new Date('2012-01-31T14:00:00'), new Date('2012-03-31T14:00:00'), new Date('2012-05-31T14:00:00'),
-                            new Date('2012-07-31T14:00:00'), new Date('2012-08-31T14:00:00'), new Date('2012-10-31T14:00:00')]
+                        results: [localDateTime('2012-01-31T14:00:00'), localDateTime('2012-03-31T14:00:00'), localDateTime('2012-05-31T14:00:00'),
+                            localDateTime('2012-07-31T14:00:00'), localDateTime('2012-08-31T14:00:00'), localDateTime('2012-10-31T14:00:00')]
                     },
 
                     // Yearly recurrences
@@ -435,10 +499,10 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
                             "recurrenceDates": [],
-                            "exceptionDates": [new Date('2012-01-04T14:00:00'), new Date('2012-01-09T14:00:00')],
+                            "exceptionDates": [localDate('2012-01-04'), localDate('2012-01-09')],
                             "recurrenceRules": [testRule],
                             "exceptionRules": []
                         },
@@ -454,7 +518,7 @@ TestCase {
                             "firstDayOfWeek": Qt.Monday
                         },
 
-                        results: [new Date('2012-01-01T14:00:00'),  new Date('2013-01-01T14:00:00'), new Date('2014-01-01T14:00:00')]
+                        results: [localDateTime('2012-01-01T14:00:00'),  localDateTime('2013-01-01T14:00:00'), localDateTime('2014-01-01T14:00:00')]
                     },
 
                     {
@@ -462,8 +526,8 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
                             "recurrenceDates": [],
                             "exceptionDates": [],
                             "recurrenceRules": [testRule],
@@ -481,8 +545,8 @@ TestCase {
                             "firstDayOfWeek": Qt.Monday
                         },
 
-                        results: [new Date('2012-07-01T14:00:00'), new Date('2012-08-01T14:00:00'), new Date('2013-07-01T14:00:00'),
-                            new Date('2013-08-01T14:00:00'), new Date('2014-07-01T14:00:00'), new Date('2014-08-01T14:00:00')]
+                        results: [localDateTime('2012-07-01T14:00:00'), localDateTime('2012-08-01T14:00:00'), localDateTime('2013-07-01T14:00:00'),
+                            localDateTime('2013-08-01T14:00:00'), localDateTime('2014-07-01T14:00:00'), localDateTime('2014-08-01T14:00:00')]
                     }
                 ]
     }
@@ -498,14 +562,14 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T23:00:00'),
-                            "end" : new Date('2012-01-02T01:00:00'),
-                            "recurrenceDates": [new Date('2012-01-02'), new Date('2012-01-03'), new Date('2012-01-04')],
-                            "exceptionDates": [new Date('2012-01-02'), new Date('2012-01-04')],
+                            "start" : localDateTime('2012-01-01T23:00:00'),
+                            "end" : localDateTime('2012-01-02T01:00:00'),
+                            "recurrenceDates": [localDate('2012-01-02'), localDate('2012-01-03'), localDate('2012-01-04')],
+                            "exceptionDates": [localDate('2012-01-02'), localDate('2012-01-04')],
                             "recurrenceRules": [],
                             "exceptionRules": []
                         },
-                        results: [new Date('2012-01-01T23:00:00'), new Date('2012-01-03T23:00:00')]
+                        results: [localDateTime('2012-01-01T23:00:00'), localDateTime('2012-01-03T23:00:00')]
                     },
 
                     {
@@ -513,14 +577,14 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
                             "recurrenceDates": [],
-                            "exceptionDates": [new Date('2012-01-02'), new Date('2012-01-03')],
+                            "exceptionDates": [localDate('2012-01-02'), localDate('2012-01-03')],
                             "recurrenceRules": [],
                             "exceptionRules": []
                         },
-                        results: [new Date('2012-01-01T14:00:00')]
+                        results: [localDateTime('2012-01-01T14:00:00')]
                     }
                 ]
     }
@@ -536,9 +600,9 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
-                            "recurrenceDates": [new Date('2012-05-18')],
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
+                            "recurrenceDates": [localDate('2012-05-18')],
                             "exceptionDates": [],
                             "recurrenceRules": [testRule],
                             "exceptionRules": [testXRule]
@@ -566,7 +630,7 @@ TestCase {
                             "firstDayOfWeek": Qt.Monday
                         },
 
-                        results: [new Date('2012-05-18T14:00:00')]
+                        results: [localDateTime('2012-05-18T14:00:00')]
                     },
 
                     {
@@ -574,8 +638,8 @@ TestCase {
                         managers: utility.getManagerList(),
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
                             "recurrenceDates": [],
                             "exceptionDates": [],
                             "recurrenceRules": [testRule],
@@ -604,8 +668,8 @@ TestCase {
                             "firstDayOfWeek": Qt.Monday
                         },
 
-                        results: [new Date('2012-01-03T14:00:00'), new Date('2012-01-04T14:00:00'), new Date('2012-01-05T14:00:00'),
-                            new Date('2012-01-06T14:00:00'), new Date('2012-01-07T14:00:00'), new Date('2012-01-10T14:00:00')]
+                        results: [localDateTime('2012-01-03T14:00:00'), localDateTime('2012-01-04T14:00:00'), localDateTime('2012-01-05T14:00:00'),
+                            localDateTime('2012-01-06T14:00:00'), localDateTime('2012-01-07T14:00:00'), localDateTime('2012-01-10T14:00:00')]
 
                     }]
     }
@@ -622,9 +686,9 @@ TestCase {
                         managers: ["memory"],
                         definitions: {
 
-                            "start" : new Date('2012-01-01T14:00:00'),
-                            "end" : new Date('2012-01-01T15:00:00'),
-                            "recurrenceDates": [new Date('2012-01-01T14:00:00')],
+                            "start" : localDateTime('2012-01-01T14:00:00'),
+                            "end" : localDateTime('2012-01-01T15:00:00'),
+                            "recurrenceDates": [localDateTime('2012-01-01T14:00:00')],
                             "exceptionDates": [],
                             "recurrenceRules": [testRule],
                             "exceptionRules": []
@@ -640,7 +704,7 @@ TestCase {
                             "positions": [],
                             "firstDayOfWeek": Qt.Monday
                         },
-                        results: [new Date('2012-01-01T14:00:00')]
+                        results: [localDateTime('2012-01-01T14:00:00')]
                     }]
     }
 
@@ -826,7 +890,7 @@ TestCase {
 
         for (var i = 0; i < results.length; i++) {
             var itemStart = model.items[i].startDateTime;
-            compare(itemStart, results[i], " Occurrence start date is not correct");
+            compare(itemStart, results[i], " Occurrence start date is not correct at " + i);
         }
     }
 

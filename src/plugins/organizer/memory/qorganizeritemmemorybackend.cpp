@@ -479,14 +479,16 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::internalItemOccurrences(const 
         xdates += xdate;
     }
     if (realPeriodStart.isValid()) {
+        // Dates are interpreted as local time, but realPeriodStart is UTC
+        const QDate localStartDate(realPeriodStart.toLocalTime().date());
         QSet<QOrganizerRecurrenceRule> xrules = recur.exceptionRules();
         foreach (const QOrganizerRecurrenceRule& xrule, xrules) {
             if (xrule.frequency() != QOrganizerRecurrenceRule::Invalid
-                    && ((xrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (xrule.limitDate() >= realPeriodStart.date()))) {
+                    && ((xrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (xrule.limitDate() >= localStartDate))) {
                 // we cannot skip it, since it applies in the given time period.
                 QList<QDateTime> xdatetimes = generateDateTimes(initialDateTime, xrule, realPeriodStart, realPeriodEnd, 50); // max count of 50 is arbitrary...
                 foreach (const QDateTime& xdatetime, xdatetimes)
-                    xdates += xdatetime.date();
+                    xdates += xdatetime.toLocalTime().date();
             }
         }
     }
@@ -496,14 +498,18 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::internalItemOccurrences(const 
     // we want to have dates sorted
     // Only key of the map is relevant (QDateTime), the value (int) is not used
     QMap<QDateTime, int> rdateMap;
-    foreach (const QDate& rdate, recur.recurrenceDates())
-        rdateMap.insert(QDateTime(rdate, initialDateTime.time()), 0);
+    foreach (const QDate& rdate, recur.recurrenceDates()) {
+        QDateTime dt(initialDateTime.toLocalTime());
+        dt.setDate(rdate);
+        rdateMap.insert(dt.toUTC(), 0);
+    }
 
     if (realPeriodStart.isValid()) {
+        const QDate localStartDate(realPeriodStart.toLocalTime().date());
         QSet<QOrganizerRecurrenceRule> rrules = recur.recurrenceRules();
         foreach (const QOrganizerRecurrenceRule& rrule, rrules) {
             if (rrule.frequency() != QOrganizerRecurrenceRule::Invalid
-                    && ((rrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (rrule.limitDate() >= realPeriodStart.date()))) {
+                    && ((rrule.limitType() != QOrganizerRecurrenceRule::DateLimit) || (rrule.limitDate() >= localStartDate))) {
                 // we cannot skip it, since it applies in the given time period.
                 QList<QDateTime> rdatetimes = generateDateTimes(initialDateTime, rrule, realPeriodStart, realPeriodEnd, 50); // max count of 50 is arbitrary...
                 foreach (const QDateTime& rdatetime, rdatetimes)
@@ -521,17 +527,18 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::internalItemOccurrences(const 
     // now for each rdate which isn't also an xdate
     foreach (const QDateTime& rdate, rdates) {
         if (rdate >= realPeriodStart && rdate <= realPeriodEnd) {
-            if (!xdates.contains(rdate.date())) {
+            const QDate localRDate(rdate.toLocalTime().date());
+            if (!xdates.contains(localRDate)) {
                 // generate the required instance and add it to the return list.
                 retn.append(QOrganizerManagerEngine::generateOccurrence(parentItem, rdate));
             } else if (includeExceptions) {
                 for (int i = 0; i < xoccurrences.size(); i++) {
                     QOrganizerItemParent parentDetail = xoccurrences[i].detail(QOrganizerItemDetail::TypeParent);
-                    if (parentDetail.originalDate() == rdate.date())
+                    if (parentDetail.originalDate() == localRDate)
                         retn.append(xoccurrences[i]);
                 }
             } else if (exceptionDates) {
-                exceptionDates->append(rdate.date());
+                exceptionDates->append(localRDate);
             }
         }
     }

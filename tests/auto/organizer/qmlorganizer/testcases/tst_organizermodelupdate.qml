@@ -94,6 +94,42 @@ TestCase {
         model.manager = ""
     }
 
+    function localDateTime(tsSpec) {
+        // Parse a ISO8601 time spec and return it as local time; if passed to the Date
+        // ctor, it will be interpreted as UTC
+        var dt = tsSpec.split('T')
+        if (dt.length == 2) {
+            var d = dt[0].split('-')
+            if (d.length == 3) {
+                // If there is UTC offset information, we can't treat it as local time
+                var t = dt[1].split(/[\:\.\+\-]/)
+                if (t.length == 4) {
+                    return new Date(d[0], d[1] - 1, d[2], t[0], t[1], t[2], t[3])
+                } else if (t.length == 3) {
+                    return new Date(d[0], d[1] - 1, d[2], t[0], t[1], t[2])
+                }
+            }
+        } else if (dt.length == 1) {
+            // Only parse if this is exactly a date
+            if (dt[0].length <= 10) {
+                var d = dt[0].split('-')
+                if (d.length == 3) {
+                    return new Date(d[0], d[1] - 1, d[2])
+                }
+            }
+        }
+
+        return new Date(tsSpec)
+    }
+
+    function localDate(dSpec) {
+        // Despite the name, return this date as UTC - on conversion to a QDate, it will
+        // be converted from UTC value to a date portion, so from a positive UTC offset, it
+        // will be converted to the prior date.
+        // The date will always be interpreted as local time by the recurrence rule.
+        return new Date(dSpec)
+    }
+
     function test_changeTimePeriod_data() {
         return [{
                 managers: utility.getManagerList(),
@@ -102,8 +138,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "event0",
-                        "start" : new Date('2011-10-25T15:00:00'),
-                        "end" : new Date('2011-10-10T16:00:00'),
+                        "start" : localDateTime('2011-10-25T15:00:00'),
+                        "end" : localDateTime('2011-10-10T16:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -113,14 +149,14 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "recevent1",
-                        "start" : new Date('2012-01-01T14:00:00'),
-                        "end" : new Date('2012-01-01T15:00:00'),
+                        "start" : localDateTime('2012-01-01T14:00:00'),
+                        "end" : localDateTime('2012-01-01T15:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
                     rrule: {
                         "frequency": RecurrenceRule.Daily,
-                        "limit": new Date('2012-01-03'),
+                        "limit": localDate('2012-01-03'),
                         "interval": 1,
                         "daysOfWeek": [],
                         "daysOfMonth": [],
@@ -135,8 +171,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "event1",
-                        "start" : new Date('2012-01-02T15:00:00'),
-                        "end" : new Date('2012-01-02T16:00:00'),
+                        "start" : localDateTime('2012-01-02T15:00:00'),
+                        "end" : localDateTime('2012-01-02T16:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -146,8 +182,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "event2",
-                        "start" : new Date('2012-01-03T11:00:00'),
-                        "end" : new Date('2012-01-03T18:00:00'),
+                        "start" : localDateTime('2012-01-03T11:00:00'),
+                        "end" : localDateTime('2012-01-03T18:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -157,8 +193,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "recevent2",
-                        "start" : new Date('2011-01-01T16:00:00'),
-                        "end" : new Date('2011-01-01T17:00:00'),
+                        "start" : localDateTime('2011-01-01T16:00:00'),
+                        "end" : localDateTime('2011-01-01T17:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -179,8 +215,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "event3",
-                        "start" : new Date('2012-05-15T09:00:00'),
-                        "end" : new Date('2012-05-15T10:00:00'),
+                        "start" : localDateTime('2012-05-15T09:00:00'),
+                        "end" : localDateTime('2012-05-15T10:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -190,8 +226,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "recevent3",
-                        "start" : new Date('2012-06-03T20:00:00'),
-                        "end" : new Date('2012-06-03T21:00:00'),
+                        "start" : localDateTime('2012-06-03T20:00:00'),
+                        "end" : localDateTime('2012-06-03T21:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -212,62 +248,62 @@ TestCase {
 
                 ],
                 results: [
-                          {label: "recevent2", start: new Date('2011-12-01T16:00:00')},
-                          {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                          {label: "recevent2", start: new Date('2012-01-01T16:00:00')},
-                          {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                          {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                          {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                          {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                          {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                          {label: "recevent2", start: new Date('2012-03-01T16:00:00')}
+                          {label: "recevent2", start: localDateTime('2011-12-01T16:00:00')},
+                          {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                          {label: "recevent2", start: localDateTime('2012-01-01T16:00:00')},
+                          {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                          {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                          {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                          {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                          {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                          {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')}
                 ],
                 timePeriods: [
                 {
-                    start: new Date('2012-01-03T00:00:00'),
+                    start: localDateTime('2012-01-03T00:00:00'),
                     autoUpdate: true,
                     results: [
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                        {label: "recevent2", start: new Date('2012-03-01T16:00:00')}
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')}
                     ]
                 },
                 {
-                    end: new Date('2012-07-25T15:00:00'),
+                    end: localDateTime('2012-07-25T15:00:00'),
                     autoUpdate: true,
                     results: [
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                        {label: "recevent2", start: new Date('2012-03-01T16:00:00')},
-                        {label: "event3", start: new Date('2012-05-15T09:00:00')},
-                        {label: "recevent3", start: new Date('2012-06-03T20:00:00')},
-                        {label: "recevent3", start: new Date('2012-07-03T20:00:00')}
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')},
+                        {label: "event3", start: localDateTime('2012-05-15T09:00:00')},
+                        {label: "recevent3", start: localDateTime('2012-06-03T20:00:00')},
+                        {label: "recevent3", start: localDateTime('2012-07-03T20:00:00')}
                     ]
                 },
                 {
-                    start: new Date('2011-09-25T15:00:00'),
-                    end: new Date('2012-12-25T15:00:00'),
+                    start: localDateTime('2011-09-25T15:00:00'),
+                    end: localDateTime('2012-12-25T15:00:00'),
                     autoUpdate: false,
                     results: [
-                        {label: "recevent2", start: new Date('2011-10-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-10-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2011-11-01T16:00:00')},
-                        {label: "recevent2", start: new Date('2011-12-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-01-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                        {label: "recevent2", start: new Date('2012-03-01T16:00:00')},
-                        {label: "event3", start: new Date('2012-05-15T09:00:00')},
-                        {label: "recevent3", start: new Date('2012-06-03T20:00:00')},
-                        {label: "recevent3", start: new Date('2012-07-03T20:00:00')},
-                        {label: "recevent3", start: new Date('2012-08-03T20:00:00')},
-                        {label: "recevent3", start: new Date('2012-09-03T20:00:00')}
+                        {label: "recevent2", start: localDateTime('2011-10-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-10-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2011-11-01T16:00:00')},
+                        {label: "recevent2", start: localDateTime('2011-12-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-01-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')},
+                        {label: "event3", start: localDateTime('2012-05-15T09:00:00')},
+                        {label: "recevent3", start: localDateTime('2012-06-03T20:00:00')},
+                        {label: "recevent3", start: localDateTime('2012-07-03T20:00:00')},
+                        {label: "recevent3", start: localDateTime('2012-08-03T20:00:00')},
+                        {label: "recevent3", start: localDateTime('2012-09-03T20:00:00')}
                     ]
                 }
             ]
@@ -277,14 +313,13 @@ TestCase {
     // initialize db with normal and recurring items, some are in mode time period some not
     // change time period and check correct items are in model
     function test_changeTimePeriod(data) {
-        skip("TODO Currently fails");
         var j = 0;
         for (var i in data.managers) {
             console.log("Testing "+data.managers[i]+" backend")
             model.manager = data.managers[i];
             model.autoUpdate = true;
-            model.startPeriod = new Date('2011-12-01');
-            model.endPeriod = new Date('2012-04-30');
+            model.startPeriod = localDate('2011-12-01');
+            model.endPeriod = localDate('2012-04-30');
             spyManagerChanged.wait(spyWaitDelay)
             cleanDatabase();
             compare(model.itemCount, 0, "Model not empty")
@@ -296,6 +331,7 @@ TestCase {
             }
             compareResultDatesToModel(data.results, model);
 
+            skip("TODO Currently fails");
             for (j = 0; j < data.timePeriods.length; j++) {
                 model.autoUpdate = data.timePeriods[j].autoUpdate;
                 if (data.timePeriods[j].start !== undefined) {
@@ -328,8 +364,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "event0",
-                        "start" : new Date('2011-10-25T15:00:00'),
-                        "end" : new Date('2011-10-10T16:00:00'),
+                        "start" : localDateTime('2011-10-25T15:00:00'),
+                        "end" : localDateTime('2011-10-10T16:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -339,14 +375,14 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "recevent1",
-                        "start" : new Date('2012-01-01T14:00:00'),
-                        "end" : new Date('2012-01-01T15:00:00'),
+                        "start" : localDateTime('2012-01-01T14:00:00'),
+                        "end" : localDateTime('2012-01-01T15:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
                     rrule: {
                         "frequency": RecurrenceRule.Daily,
-                        "limit": new Date('2012-01-03'),
+                        "limit": localDate('2012-01-03'),
                         "interval": 1,
                         "daysOfWeek": [],
                         "daysOfMonth": [],
@@ -361,8 +397,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "event1",
-                        "start" : new Date('2012-01-02T15:00:00'),
-                        "end" : new Date('2012-01-02T16:00:00'),
+                        "start" : localDateTime('2012-01-02T15:00:00'),
+                        "end" : localDateTime('2012-01-02T16:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -372,8 +408,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "event2",
-                        "start" : new Date('2012-01-03T11:00:00'),
-                        "end" : new Date('2012-01-03T18:00:00'),
+                        "start" : localDateTime('2012-01-03T11:00:00'),
+                        "end" : localDateTime('2012-01-03T18:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -383,8 +419,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "recevent2",
-                        "start" : new Date('2011-01-01T16:00:00'),
-                        "end" : new Date('2011-01-01T17:00:00'),
+                        "start" : localDateTime('2011-01-01T16:00:00'),
+                        "end" : localDateTime('2011-01-01T17:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -405,8 +441,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "event3",
-                        "start" : new Date('2012-05-15T09:00:00'),
-                        "end" : new Date('2012-05-15T10:00:00'),
+                        "start" : localDateTime('2012-05-15T09:00:00'),
+                        "end" : localDateTime('2012-05-15T10:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -416,8 +452,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "recevent3",
-                        "start" : new Date('2012-06-03T20:00:00'),
-                        "end" : new Date('2012-06-03T21:00:00'),
+                        "start" : localDateTime('2012-06-03T20:00:00'),
+                        "end" : localDateTime('2012-06-03T21:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -438,15 +474,15 @@ TestCase {
 
                 ],
                 results: [
-                          {label: "recevent2", start: new Date('2011-12-01T16:00:00')},
-                          {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                          {label: "recevent2", start: new Date('2012-01-01T16:00:00')},
-                          {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                          {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                          {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                          {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                          {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                          {label: "recevent2", start: new Date('2012-03-01T16:00:00')}
+                          {label: "recevent2", start: localDateTime('2011-12-01T16:00:00')},
+                          {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                          {label: "recevent2", start: localDateTime('2012-01-01T16:00:00')},
+                          {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                          {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                          {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                          {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                          {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                          {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')}
                 ],
                 modifications: {
                 addRule:
@@ -463,17 +499,17 @@ TestCase {
                         "firstDayOfWeek": Qt.Monday
                     },
                     results: [
-                        {label: "recevent2", start: new Date('2011-12-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-01-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-03T15:00:00')},
-                        {label: "event1", start: new Date('2012-01-04T15:00:00')},
-                        {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                        {label: "recevent2", start: new Date('2012-03-01T16:00:00')}
+                        {label: "recevent2", start: localDateTime('2011-12-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-01-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-03T15:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-04T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')}
                     ]
                 },
                 modifyRule1:
@@ -490,17 +526,17 @@ TestCase {
                         "firstDayOfWeek": Qt.Monday
                     },
                     results: [
-                        {label: "recevent2", start: new Date('2011-12-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-01-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                        {label: "event1", start: new Date('2012-02-02T15:00:00')},
-                        {label: "recevent2", start: new Date('2012-03-01T16:00:00')},
-                        {label: "event1", start: new Date('2012-03-02T15:00:00')}
+                        {label: "recevent2", start: localDateTime('2011-12-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-01-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                        {label: "event1", start: localDateTime('2012-02-02T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')},
+                        {label: "event1", start: localDateTime('2012-03-02T15:00:00')}
                     ]
                 },
                 modifyRule2:
@@ -517,31 +553,31 @@ TestCase {
                         "firstDayOfWeek": Qt.Monday
                     },
                     results: [
-                        {label: "recevent2", start: new Date('2011-12-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-01-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-09T15:00:00')},
-                        {label: "event1", start: new Date('2012-01-16T15:00:00')},
-                        {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                        {label: "recevent2", start: new Date('2012-03-01T16:00:00')}
+                        {label: "recevent2", start: localDateTime('2011-12-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-01-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-09T15:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-16T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')}
                     ]
                 },
                 removeRule:
                 {
                     results: [
-                        {label: "recevent2", start: new Date('2011-12-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-01-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                        {label: "recevent2", start: new Date('2012-03-01T16:00:00')}
+                        {label: "recevent2", start: localDateTime('2011-12-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-01-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')}
                     ]
                 }
             }
@@ -556,8 +592,8 @@ TestCase {
         for (var i in data.managers) {
             console.log("Testing "+data.managers[i]+" backend")
             model.manager = data.managers[i];
-            model.startPeriod = new Date('2011-12-01');
-            model.endPeriod = new Date('2012-04-30');
+            model.startPeriod = localDate('2011-12-01');
+            model.endPeriod = localDate('2012-04-30');
             model.autoUpdate = true;
             spyManagerChanged.wait(spyWaitDelay)
             cleanDatabase();
@@ -605,8 +641,8 @@ TestCase {
             compareResultDatesToModel(data.modifications.removeRule.results, model);
 
             // clean db
-            model.startPeriod = new Date('2011-01-01');
-            model.endPeriod = new Date('2012-08-30');
+            model.startPeriod = localDate('2011-01-01');
+            model.endPeriod = localDate('2012-08-30');
             modelChangedSpy.wait(spyWaitDelay);
             cleanDatabase();
             compare(model.itemCount, 0, "Model not empty")
@@ -621,8 +657,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "event0",
-                        "start" : new Date('2011-10-25T15:00:00'),
-                        "end" : new Date('2011-10-10T16:00:00'),
+                        "start" : localDateTime('2011-10-25T15:00:00'),
+                        "end" : localDateTime('2011-10-10T16:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -632,14 +668,14 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "recevent1",
-                        "start" : new Date('2012-01-01T14:00:00'),
-                        "end" : new Date('2012-01-01T15:00:00'),
+                        "start" : localDateTime('2012-01-01T14:00:00'),
+                        "end" : localDateTime('2012-01-01T15:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
                     rrule: {
                         "frequency": RecurrenceRule.Daily,
-                        "limit": new Date('2012-01-03'),
+                        "limit": localDate('2012-01-03'),
                         "interval": 1,
                         "daysOfWeek": [],
                         "daysOfMonth": [],
@@ -654,8 +690,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "event1",
-                        "start" : new Date('2012-01-02T15:00:00'),
-                        "end" : new Date('2012-01-02T16:00:00'),
+                        "start" : localDateTime('2012-01-02T15:00:00'),
+                        "end" : localDateTime('2012-01-02T16:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -665,8 +701,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "event2",
-                        "start" : new Date('2012-01-03T11:00:00'),
-                        "end" : new Date('2012-01-03T18:00:00'),
+                        "start" : localDateTime('2012-01-03T11:00:00'),
+                        "end" : localDateTime('2012-01-03T18:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -676,8 +712,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "recevent2",
-                        "start" : new Date('2011-01-01T16:00:00'),
-                        "end" : new Date('2011-01-01T17:00:00'),
+                        "start" : localDateTime('2011-01-01T16:00:00'),
+                        "end" : localDateTime('2011-01-01T17:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -698,8 +734,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "event3",
-                        "start" : new Date('2012-05-15T09:00:00'),
-                        "end" : new Date('2012-05-15T10:00:00'),
+                        "start" : localDateTime('2012-05-15T09:00:00'),
+                        "end" : localDateTime('2012-05-15T10:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -709,8 +745,8 @@ TestCase {
                     event :
                     {
                         "displayLabel" : "recevent3",
-                        "start" : new Date('2012-06-03T20:00:00'),
-                        "end" : new Date('2012-06-03T21:00:00'),
+                        "start" : localDateTime('2012-06-03T20:00:00'),
+                        "end" : localDateTime('2012-06-03T21:00:00'),
                         "recurrenceDates": [],
                         "exceptionDates": []
                     },
@@ -731,25 +767,25 @@ TestCase {
 
                 ],
                 results: [
-                    {label: "recevent2", start: new Date('2011-10-01T16:00:00')},
-                    {label: "event0", start: new Date('2011-10-25T15:00:00')},
-                    {label: "recevent2", start: new Date('2011-11-01T16:00:00')},
-                    {label: "recevent2", start: new Date('2011-12-01T16:00:00')},
-                    {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                    {label: "recevent2", start: new Date('2012-01-01T16:00:00')},
-                    {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                    {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                    {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                    {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                    {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                    {label: "recevent2", start: new Date('2012-03-01T16:00:00')}
+                    {label: "recevent2", start: localDateTime('2011-10-01T16:00:00')},
+                    {label: "event0", start: localDateTime('2011-10-25T15:00:00')},
+                    {label: "recevent2", start: localDateTime('2011-11-01T16:00:00')},
+                    {label: "recevent2", start: localDateTime('2011-12-01T16:00:00')},
+                    {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                    {label: "recevent2", start: localDateTime('2012-01-01T16:00:00')},
+                    {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                    {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                    {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                    {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                    {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                    {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')}
                 ],
                 modifications: {
                 addRule:
                 {
                     rrule: {
                         "frequency": RecurrenceRule.Monthly,
-                        "limit": new Date('2012-05-31'),
+                        "limit": localDate('2012-05-31'),
                         "interval": 1,
                         "daysOfWeek": [],
                         "daysOfMonth": [],
@@ -759,138 +795,138 @@ TestCase {
                         "firstDayOfWeek": Qt.Monday
                     },
                     results: [
-                        {label: "recevent2", start: new Date('2011-10-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-10-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2011-11-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-11-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2011-12-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-12-25T15:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-01-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                        {label: "event0", start: new Date('2012-01-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                        {label: "event0", start: new Date('2012-02-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2012-03-01T16:00:00')},
-                        {label: "event0", start: new Date('2012-03-25T15:00:00')},
-                        {label: "event0", start: new Date('2012-04-25T15:00:00')}
+                        {label: "recevent2", start: localDateTime('2011-10-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-10-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2011-11-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-11-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2011-12-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-12-25T15:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-01-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                        {label: "event0", start: localDateTime('2012-01-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2012-02-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2012-03-25T15:00:00')},
+                        {label: "event0", start: localDateTime('2012-04-25T15:00:00')}
                     ]
                 },
                 addException:
                 {
                     results: [
-                        {label: "recevent2", start: new Date('2011-10-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-10-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2011-11-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-11-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2011-12-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-12-25T15:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-01-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                        {label: "event0", start: new Date('2012-02-02T15:00:00')},
-                        {label: "event0", start: new Date('2012-02-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2012-03-01T16:00:00')},
-                        {label: "event0", start: new Date('2012-03-25T15:00:00')},
-                        {label: "event0", start: new Date('2012-04-25T15:00:00')}
+                        {label: "recevent2", start: localDateTime('2011-10-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-10-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2011-11-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-11-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2011-12-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-12-25T15:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-01-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2012-02-02T15:00:00')},
+                        {label: "event0", start: localDateTime('2012-02-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2012-03-25T15:00:00')},
+                        {label: "event0", start: localDateTime('2012-04-25T15:00:00')}
                     ]
                 },
                 removeException:
                 {
                     results: [
-                        {label: "recevent2", start: new Date('2011-10-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-10-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2011-11-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-11-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2011-12-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-12-25T15:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-01-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                        {label: "event0", start: new Date('2012-02-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2012-03-01T16:00:00')},
-                        {label: "event0", start: new Date('2012-03-25T15:00:00')},
-                        {label: "event0", start: new Date('2012-04-25T15:00:00')}
+                        {label: "recevent2", start: localDateTime('2011-10-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-10-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2011-11-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-11-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2011-12-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-12-25T15:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-01-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2012-02-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2012-03-25T15:00:00')},
+                        {label: "event0", start: localDateTime('2012-04-25T15:00:00')}
                     ]
                 },
                 addException2:
                 {
                     results: [
-                        {label: "recevent2", start: new Date('2011-10-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-10-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2011-11-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-11-25T15:00:00')},
-                        {label: "modifiedrecevent2", start: new Date('2011-12-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-12-25T15:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-01-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                        {label: "event0", start: new Date('2012-02-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2012-03-01T16:00:00')},
-                        {label: "event0", start: new Date('2012-03-25T15:00:00')},
-                        {label: "event0", start: new Date('2012-04-25T15:00:00')}
+                        {label: "recevent2", start: localDateTime('2011-10-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-10-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2011-11-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-11-25T15:00:00')},
+                        {label: "modifiedrecevent2", start: localDateTime('2011-12-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-12-25T15:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-01-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2012-02-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2012-03-25T15:00:00')},
+                        {label: "event0", start: localDateTime('2012-04-25T15:00:00')}
                     ]
                 },
                 removeGeneratedOccurrence:
                 {
                     results: [
-                        {label: "event0", start: new Date('2011-10-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2011-11-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-11-25T15:00:00')},
-                        {label: "modifiedrecevent2", start: new Date('2011-12-01T16:00:00')},
-                        {label: "event0", start: new Date('2011-12-25T15:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-01-01T16:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                        {label: "recevent2", start: new Date('2012-02-01T16:00:00')},
-                        {label: "event0", start: new Date('2012-02-25T15:00:00')},
-                        {label: "recevent2", start: new Date('2012-03-01T16:00:00')},
-                        {label: "event0", start: new Date('2012-03-25T15:00:00')},
-                        {label: "event0", start: new Date('2012-04-25T15:00:00')}
+                        {label: "event0", start: localDateTime('2011-10-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2011-11-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-11-25T15:00:00')},
+                        {label: "modifiedrecevent2", start: localDateTime('2011-12-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2011-12-25T15:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-01-01T16:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-02-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2012-02-25T15:00:00')},
+                        {label: "recevent2", start: localDateTime('2012-03-01T16:00:00')},
+                        {label: "event0", start: localDateTime('2012-03-25T15:00:00')},
+                        {label: "event0", start: localDateTime('2012-04-25T15:00:00')}
                     ]
                 },
                 removeParent:
                 {
                     results: [
-                        {label: "event0", start: new Date('2011-10-25T15:00:00')},
-                        {label: "event0", start: new Date('2011-11-25T15:00:00')},
-                        {label: "event0", start: new Date('2011-12-25T15:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')},
-                        {label: "event0", start: new Date('2012-02-25T15:00:00')},
-                        {label: "event0", start: new Date('2012-03-25T15:00:00')},
-                        {label: "event0", start: new Date('2012-04-25T15:00:00')}
+                        {label: "event0", start: localDateTime('2011-10-25T15:00:00')},
+                        {label: "event0", start: localDateTime('2011-11-25T15:00:00')},
+                        {label: "event0", start: localDateTime('2011-12-25T15:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')},
+                        {label: "event0", start: localDateTime('2012-02-25T15:00:00')},
+                        {label: "event0", start: localDateTime('2012-03-25T15:00:00')},
+                        {label: "event0", start: localDateTime('2012-04-25T15:00:00')}
                     ]
                 },
                 removeParent2:
                 {
                     results: [
-                        {label: "recevent1", start: new Date('2012-01-01T14:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-02T14:00:00')},
-                        {label: "event1", start: new Date('2012-01-02T15:00:00')},
-                        {label: "event2", start: new Date('2012-01-03T11:00:00')},
-                        {label: "recevent1", start: new Date('2012-01-03T14:00:00')}
+                        {label: "recevent1", start: localDateTime('2012-01-01T14:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-02T14:00:00')},
+                        {label: "event1", start: localDateTime('2012-01-02T15:00:00')},
+                        {label: "event2", start: localDateTime('2012-01-03T11:00:00')},
+                        {label: "recevent1", start: localDateTime('2012-01-03T14:00:00')}
                     ]
                 }
             }
@@ -910,8 +946,8 @@ TestCase {
         for (var i in data.managers) {
             console.log("Testing "+data.managers[i]+" backend")
             model.manager = data.managers[i];
-            model.startPeriod = new Date('2011-10-01');
-            model.endPeriod = new Date('2012-04-30');
+            model.startPeriod = localDate('2011-10-01');
+            model.endPeriod = localDate('2012-04-30');
             model.autoUpdate = true;
             spyManagerChanged.wait(spyWaitDelay)
             cleanDatabase();
@@ -936,8 +972,8 @@ TestCase {
 
             // addException, modify generated occurrence and save it
             var xoccurrence = model.items[12];
-            xoccurrence.startDateTime = new Date('2012-02-02T15:00:00');
-            xoccurrence.endDateTime = new Date('2012-02-02T16:00:00');
+            xoccurrence.startDateTime = localDateTime('2012-02-02T15:00:00');
+            xoccurrence.endDateTime = localDateTime('2012-02-02T16:00:00');
             model.saveItem(xoccurrence);
             modelChangedSpy.wait(spyWaitDelay);
             compareResultDatesToModel(data.modifications.addException.results, model);
@@ -980,8 +1016,8 @@ TestCase {
             compareResultDatesToModel(data.modifications.removeParent2.results, model);
 
             // clean db
-            model.startPeriod = new Date('2011-01-01');
-            model.endPeriod = new Date('2012-08-30');
+            model.startPeriod = localDate('2011-01-01');
+            model.endPeriod = localDate('2012-08-30');
             modelChangedSpy.wait(spyWaitDelay);
             cleanDatabase();
             compare(model.itemCount, 0, "Model not empty")
@@ -1067,8 +1103,8 @@ TestCase {
         for (var i = 0; i < results.length; i++) {
             var itemDisplayLabel = model.items[i].displayLabel;
             var itemStart = model.items[i].startDateTime;
-            compare(itemDisplayLabel, results[i].label, "Item displayLabel is not correct");
-            compare(itemStart, results[i].start, "Item start date is not correct")
+            compare(itemDisplayLabel, results[i].label, "Item displayLabel is not correct at " + i);
+            compare(itemStart, results[i].start, "Item start date is not correct at " + i)
         }
     }
 

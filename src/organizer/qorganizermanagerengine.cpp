@@ -1290,10 +1290,12 @@ QOrganizerItem QOrganizerManagerEngine::generateOccurrence(const QOrganizerItem 
         }
     }
 
+    const QDate localRDate(rdate.toLocalTime().date());
+
     // add the detail which identifies exactly which instance this item is.
     QOrganizerItemParent parentDetail;
     parentDetail.setParentId(parentItem.id());
-    parentDetail.setOriginalDate(rdate.date());
+    parentDetail.setOriginalDate(localRDate);
     occDetails.append(parentDetail);
 
     // save those details in the instance.
@@ -1312,13 +1314,14 @@ QOrganizerItem QOrganizerManagerEngine::generateOccurrence(const QOrganizerItem 
             int eventDayCount = 0;
             if (etr.startDateTime().isValid() && etr.endDateTime().isValid())
                 eventDayCount = etr.startDateTime().daysTo(etr.endDateTime());
-            QDateTime temp = etr.startDateTime();
-            temp.setDate(rdate.date());
-            etr.setStartDateTime(temp);
-            temp = etr.endDateTime();
-            QDate endDate = rdate.addDays(eventDayCount).date();
+            // Perform time manipulations in local time
+            QDateTime temp = etr.startDateTime().toLocalTime();
+            temp.setDate(localRDate);
+            etr.setStartDateTime(temp.toUTC());
+            temp = etr.endDateTime().toLocalTime();
+            QDate endDate = localRDate.addDays(eventDayCount);
             temp.setDate(endDate);
-            etr.setEndDateTime(temp);
+            etr.setEndDateTime(temp.toUTC());
             instanceItem.saveDetail(&etr);
         }
     }
@@ -1330,13 +1333,13 @@ QOrganizerItem QOrganizerManagerEngine::generateOccurrence(const QOrganizerItem 
             int todoDayCount = 0;
             if (ttr.startDateTime().isValid() && ttr.dueDateTime().isValid())
                 todoDayCount = ttr.startDateTime().daysTo(ttr.dueDateTime());
-            QDateTime temp = ttr.startDateTime();
-            temp.setDate(rdate.date());
-            ttr.setStartDateTime(temp);
-            temp = ttr.dueDateTime();
-            QDate endDate = rdate.addDays(todoDayCount).date();
+            QDateTime temp = ttr.startDateTime().toLocalTime();
+            temp.setDate(localRDate);
+            ttr.setStartDateTime(temp.toUTC());
+            temp = ttr.dueDateTime().toLocalTime();
+            QDate endDate = localRDate.addDays(todoDayCount);
             temp.setDate(endDate);
-            ttr.setDueDateTime(temp);
+            ttr.setDueDateTime(temp.toUTC());
             instanceItem.saveDetail(&ttr);
         }
     }
@@ -1355,7 +1358,12 @@ QList<QDateTime> QOrganizerManagerEngine::generateDateTimes(const QDateTime &ini
     if (periodEnd.isValid() || maxCount <= 0)
         maxCount = INT_MAX; // count of returned items is unlimited
 
-    QDateTime realPeriodEnd(periodEnd);
+    // Perform calculations in local time, for meaningful comparison with date values
+    const QDateTime localInitialDateTime = initialDateTime.toLocalTime();
+    const QDateTime localPeriodStart = periodStart.toLocalTime();
+    const QDateTime localPeriodEnd = periodEnd.toLocalTime();
+
+    QDateTime realPeriodEnd(localPeriodEnd);
     if (rrule.limitType() == QOrganizerRecurrenceRule::DateLimit
             && rrule.limitDate() < realPeriodEnd.date()) {
         realPeriodEnd.setDate(rrule.limitDate());
@@ -1364,18 +1372,18 @@ QList<QDateTime> QOrganizerManagerEngine::generateDateTimes(const QDateTime &ini
 
     QDate nextDate;
     if (rrule.limitType() == QOrganizerRecurrenceRule::CountLimit)
-        nextDate = initialDateTime.date();
+        nextDate = localInitialDateTime.date();
     else
-        nextDate = periodStart.date();
+        nextDate = localPeriodStart.date();
 
-    inferMissingCriteria(&rrule, initialDateTime.date());
+    inferMissingCriteria(&rrule, localInitialDateTime.date());
     int countLimitDates = 0;
     bool periodEndReached = false;
     while (!periodEndReached && nextDate <= realPeriodEnd.date() && retn.size() < maxCount) {
         if (rrule.limitType() == QOrganizerRecurrenceRule::CountLimit && countLimitDates >= rrule.limitCount())
             break; // reached limit count defined in the recurrence rule
         // Skip nextDate if it is not the right multiple of intervals away from initialDateTime.
-        if (inMultipleOfInterval(nextDate, initialDateTime.date(), rrule.frequency(), rrule.interval(), rrule.firstDayOfWeek())) {
+        if (inMultipleOfInterval(nextDate, localInitialDateTime.date(), rrule.frequency(), rrule.interval(), rrule.firstDayOfWeek())) {
             // Calculate the inclusive start and inclusive end of nextDate's week/month/year
             QDate subPeriodStart(firstDateInPeriod(nextDate, rrule.frequency(), rrule.firstDayOfWeek()));
             QDate subPeriodEnd(firstDateInNextPeriod(nextDate, rrule.frequency(), rrule.firstDayOfWeek()).addDays(-1));
@@ -1386,17 +1394,18 @@ QList<QDateTime> QOrganizerManagerEngine::generateDateTimes(const QDateTime &ini
             // A final filter over the dates list before adding it to the returned list
             foreach (const QDate &match, matchesInPeriod) {
                 nextDate = match;
-                if (match < initialDateTime.date())
+                if (match < localInitialDateTime.date())
                     continue;
                 if (match > realPeriodEnd.date() || retn.size() >= maxCount)
                     break;
 
-                QDateTime generatedDateTime(initialDateTime);
+                QDateTime generatedDateTime(localInitialDateTime);
 
                 generatedDateTime.setDate(match);
                 countLimitDates++;
-                if (generatedDateTime >= periodStart && generatedDateTime <= realPeriodEnd) {
-                    retn.append(generatedDateTime);
+                if (generatedDateTime >= localPeriodStart && generatedDateTime <= realPeriodEnd) {
+                    // Convert back to UTC for returned value
+                    retn.append(generatedDateTime.toUTC());
                 } else if (generatedDateTime > realPeriodEnd) {
                     // We've gone past the end of the period.  Ensure we break both the foreach and
                     // the while loop

@@ -46,6 +46,10 @@
 #include <QtCore/qmap.h>
 #include <QtCore/qpointer.h>
 #include <QtCore/qurl.h>
+#include <QtCore/qmimedatabase.h>
+#include <QtCore/qmimetype.h>
+#include <QtCore/qtemporaryfile.h>
+#include <QtCore/qdir.h>
 
 #include <QtGui/qcolor.h>
 #include <QtGui/qpixmap.h>
@@ -95,6 +99,76 @@ QT_BEGIN_NAMESPACE
     \sa RelationshipModel, Contact, {QContactManager}
 */
 
+// Helper class to store contact binary data into a temporary file
+//
+// QContactVcard only supports URL values for images. During a vcard import if the contact cotains
+// an avatar, ringtone or any property formated in a binary data, QVersit will use the
+// ContactExporterResourceHandler to store the binary data.
+// The default implementation of QVersitResourceHandler does not store any data and that
+// causes avatar data loss during the import process.
+// This class will store the data into a temporary file and removes the file when the model gets destroyed.
+class ContactExporterResourceHandler : public QVersitResourceHandler
+{
+public:
+    ContactExporterResourceHandler()
+    {
+    }
+
+    ~ContactExporterResourceHandler()
+    {
+        foreach (const QString& fileName, m_files)
+            QFile::remove(fileName);
+
+        m_files.clear();
+    }
+
+    bool saveResource(const QByteArray& contents,
+                      const QVersitProperty& property,
+                      QString* location)
+    {
+        const QMimeType mt = QMimeDatabase().mimeTypeForData(contents);
+        QString extension(QStringLiteral("data"));
+        if (mt.isValid())
+            extension = mt.suffixes()[0];
+
+        // use property.name() to create a new file for each binary property (avatar, ringtone, etc...)
+        QTemporaryFile tmpFile(QString::fromLatin1("%1/%2_XXXXXX.%3")
+                               .arg(QDir::tempPath())
+                               .arg(property.name().toLower())
+                               .arg(extension));
+        tmpFile.setAutoRemove(false);
+        if (tmpFile.open()) {
+            // the location expect a string in url format ex: file:///tmp/filename.png
+            *location = QUrl::fromLocalFile(tmpFile.fileName()).toString();
+            m_files << *location;
+            tmpFile.write(contents);
+            tmpFile.close();
+            return true;
+        }
+        return false;
+    }
+
+    bool loadResource(const QString &location, QByteArray *contents, QString *mimeType)
+    {
+        if (location.isEmpty())
+            return false;
+
+        QFile file(location);
+        if (!file.open(QIODevice::ReadOnly))
+            return false;
+
+        *contents = file.readAll();
+        const QMimeType mt = QMimeDatabase().mimeTypeForData(*contents);
+        if (mt.isValid())
+            *mimeType = mt.suffixes()[0];
+
+        return !contents->isEmpty();
+    }
+
+    QStringList m_files;
+};
+
+
 class QDeclarativeContactModelPrivate
 {
 public:
@@ -125,6 +199,7 @@ public:
     QVersitReader m_reader;
     QVersitWriter m_writer;
     QStringList m_importProfiles;
+    ContactExporterResourceHandler m_resourceHandler;
 
     QContactManager::Error m_error;
 
@@ -404,6 +479,7 @@ void QDeclarativeContactModel::exportContacts(const QUrl& url, const QStringList
         QString profile = profiles.isEmpty()? QString() : profiles.at(0);
         //only one profile string supported now.
         QVersitContactExporter exporter(profile);
+        exporter.setResourceHandler(&d->m_resourceHandler);
 
         QList<QContact> contacts;
         if (declarativeContacts.isEmpty()) {
@@ -574,6 +650,7 @@ void QDeclarativeContactModel::startImport(QVersitReader::State state)
 {
     if (state == QVersitReader::FinishedState || state == QVersitReader::CanceledState) {
         QVersitContactImporter importer(d->m_importProfiles);
+        importer.setResourceHandler(&d->m_resourceHandler);
         importer.importDocuments(d->m_reader.results());
         QList<QContact> contacts = importer.contacts();
 

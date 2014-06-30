@@ -526,9 +526,7 @@ void QVersitContactExporterPrivate::encodeDisplayLabel(
     QVersitProperty property =
         VersitUtils::takeProperty(document, QStringLiteral("FN"), removedProperties);
     property.setName(QStringLiteral("FN"));
-    QStringList value(property.variantValue().toStringList());
-    value.append(displaylabelDetail.label());
-    property.setValue(value);
+    property.setValue(displaylabelDetail.label());
     *generatedProperties << property;
     *processedFields << QContactDisplayLabel::FieldLabel;
 }

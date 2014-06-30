@@ -108,8 +108,8 @@ void QVCard30Writer::encodeVersitProperty(const QVersitProperty& property)
             separator = QStringLiteral(";");
         } else {
             if (property.valueType() != QVersitProperty::ListType) {
-                qWarning("Variant value is a QStringList but the property's value type is neither "
-                         "CompoundType or ListType");
+                qWarning("Property: %s, variant value is a QStringList but the property's value type is neither "
+                         "CompoundType or ListType", property.name().toLatin1().constData());
             }
             // Assume it's a ListType
             separator = QStringLiteral(",");

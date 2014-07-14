@@ -48,6 +48,8 @@
 #include "qversitproperty.h"
 #include "qversitutils_p.h"
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE_VERSIT
 
 /*! Constructs a writer. */
@@ -144,7 +146,9 @@ void QVCard30Writer::encodeVersitProperty(const QVersitProperty& property)
  */
 void QVCard30Writer::encodeParameters(const QMultiHash<QString,QString>& parameters)
 {
+    // Sort the parameter names to yield deterministic ordering
     QList<QString> names = parameters.uniqueKeys();
+    std::sort(names.begin(), names.end());
     foreach (QString nameString, names) {
         writeString(QStringLiteral(";"));
         QStringList values = parameters.values(nameString);

@@ -46,6 +46,8 @@
 
 #include "qversitproperty.h"
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE_VERSIT
 
 /*! Constructs a writer. */
@@ -215,7 +217,9 @@ void sortTypeValues(QStringList* values)
  */
 void QVCard21Writer::encodeParameters(const QMultiHash<QString,QString>& parameters)
 {
+    // Sort the parameter names to yield deterministic ordering
     QList<QString> names = parameters.uniqueKeys();
+    std::sort(names.begin(), names.end());
     foreach (const QString& name, names) {
         QStringList values = parameters.values(name);
         if (name == QStringLiteral("TYPE")) {

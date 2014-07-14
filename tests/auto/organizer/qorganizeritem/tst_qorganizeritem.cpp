@@ -1213,7 +1213,6 @@ void tst_QOrganizerItem::testDebugStreamOut()
     Qt::DayOfWeek firstDay;
     firstDay = Qt::Tuesday;
     rrule.setFirstDayOfWeek(firstDay);
-    QSKIP("QTBUG-25382: Assumes QSet is an ordered collection, which it's not");
     QTest::ignoreMessage(QtDebugMsg, "QOrganizerRecurrenceRule(frequency=2,interval=10,limitCount=20,daysOfWeek=\"4 5 \",daysOfMonth=\"1 2 3 \",daysOfYear=\"5 6 7 8 \",monthsOfYear=\"1 2 \",positions=\"-1 \",firstDayOfWeek=2)");
     qDebug() << rrule;
 }

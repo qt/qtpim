@@ -56,6 +56,8 @@
 #include <QtOrganizer/qorganizeritemcollectionfilter.h>
 #include <QtOrganizer/private/qorganizeritemfilter_p.h>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE_ORGANIZER
 
 class QOrganizerItemCollectionFilterPrivate : public QOrganizerItemFilterPrivate
@@ -99,7 +101,9 @@ public:
     QDebug &debugStreamOut(QDebug &dbg) const
     {
         dbg.nospace() << "QOrganizerItemCollectionFilter(collectionIds=";
-        dbg.nospace() << m_ids;
+        QList<QOrganizerCollectionId> ids(m_ids.toList());
+        std::sort(ids.begin(), ids.end());
+        dbg.nospace() << ids;
         dbg.nospace() << ")";
         return dbg.maybeSpace();
     }

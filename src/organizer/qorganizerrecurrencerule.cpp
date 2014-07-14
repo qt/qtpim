@@ -557,35 +557,45 @@ QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule &rule)
         break;
     }
     dbg.nospace() << ",daysOfWeek=\"";
-    foreach (Qt::DayOfWeek day, rule.daysOfWeek()) {
+    QList<Qt::DayOfWeek> wdays(rule.daysOfWeek().toList());
+    std::sort(wdays.begin(), wdays.end());
+    foreach (Qt::DayOfWeek day, wdays) {
         dbg.nospace() << static_cast<quint32>(day);
         dbg.space();
     }
     dbg.nospace() << "\"";
 
     dbg.nospace() << ",daysOfMonth=\"";
-    foreach (int day, rule.daysOfMonth()) {
+    QList<int> mdays(rule.daysOfMonth().toList());
+    std::sort(mdays.begin(), mdays.end());
+    foreach (int day, mdays) {
         dbg.nospace() << day;
         dbg.space();
     }
     dbg.nospace() << "\"";
 
     dbg.nospace() << ",daysOfYear=\"";
-    foreach (int day, rule.daysOfYear()) {
+    QList<int> ydays(rule.daysOfYear().toList());
+    std::sort(ydays.begin(), ydays.end());
+    foreach (int day, ydays) {
         dbg.nospace() << day;
         dbg.space();
     }
     dbg.nospace() << "\"";
 
     dbg.nospace() << ",monthsOfYear=\"";
-    foreach (QOrganizerRecurrenceRule::Month month, rule.monthsOfYear()) {
+    QList<QOrganizerRecurrenceRule::Month> months(rule.monthsOfYear().toList());
+    std::sort(months.begin(), months.end());
+    foreach (QOrganizerRecurrenceRule::Month month, months) {
         dbg.nospace() << static_cast<quint32>(month);
         dbg.space();
     }
     dbg.nospace() << "\"";
 
     dbg.nospace() << ",positions=\"";
-    foreach (int position, rule.positions()) {
+    QList<int> positions(rule.positions().toList());
+    std::sort(positions.begin(), positions.end());
+    foreach (int position, positions) {
         dbg.nospace() << position;
         dbg.space();
     }

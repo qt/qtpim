@@ -1244,32 +1244,31 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
         ids << id1 << id2 << id3;
         filter.setCollectionIds(ids);
         // Testing method setCollectionIds
-        // FIXME: QTBUG-25382: Assumes QSet is an ordered collection, which it's not
-        // QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=QSet(QOrganizerCollectionId(5), QOrganizerCollectionId(6), QOrganizerCollectionId(7))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(5), QOrganizerCollectionId(6), QOrganizerCollectionId(7))))";
 
         filter.setCollectionId(id2);
         // Testing method setCollectionId (and the related clearing of the collection)
-        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=QSet(QOrganizerCollectionId(6))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(6))))";
         filter.setCollectionId(id4);
         // Testing again method setCollectionId (and the related clearing of the collection)
-        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=QSet(QOrganizerCollectionId(12))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(12))))";
         ids.clear();
         ids << id4;
         // Testing again method setCollectionIds
-        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=QSet(QOrganizerCollectionId(12))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(12))))";
 
         QOrganizerItemCollectionFilter filter2;
         filter2 = filter;
         // Testing again method setCollectionIds on the copied filter
-        QTest::newRow("collection") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=QSet(QOrganizerCollectionId(12))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(12))))";
 
         QOrganizerItemFilter fil;
         fil = filter;
         // Testing that the assignment/conversion went fine
-        QTest::newRow("collection") << (QOrganizerItemFilter)fil << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=QSet(QOrganizerCollectionId(12))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)fil << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(12))))";
 
         QOrganizerItemCollectionFilter filter3(fil);
-        QTest::newRow("collection") << (QOrganizerItemFilter)filter3 << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=QSet(QOrganizerCollectionId(12))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)filter3 << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(12))))";
     }
 
     {

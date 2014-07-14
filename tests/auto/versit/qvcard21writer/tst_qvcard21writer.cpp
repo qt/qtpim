@@ -166,7 +166,7 @@ void tst_QVCard21Writer::testEncodeVersitProperty_data()
     property.insertParameter(QString::fromLatin1("TYPE"),QString::fromLatin1("HOME"));
     QTest::newRow("With parameters, plain value") << property << expectedResult << codec;
 
-    expectedResult = "EMAIL;HOME;ENCODING=QUOTED-PRINTABLE:john.citizen=40example.com\r\n";
+    expectedResult = "EMAIL;ENCODING=QUOTED-PRINTABLE;HOME:john.citizen=40example.com\r\n";
     property.setName(QString::fromLatin1("EMAIL"));
     property.setValue(QString::fromLatin1("john.citizen@example.com"));
     QTest::newRow("With parameters, special value") << property << expectedResult << codec;
@@ -282,7 +282,7 @@ void tst_QVCard21Writer::testEncodeParameters_data()
     QTest::newRow("One ENCODING parameter") << parameters << QByteArray(";ENCODING=8BIT");
 
     parameters.insert(QString::fromLatin1("X-PARAM"),QString::fromLatin1("VALUE"));
-    QTest::newRow("Two parameters") << parameters << QByteArray(";X-PARAM=VALUE;ENCODING=8BIT");
+    QTest::newRow("Two parameters") << parameters << QByteArray(";ENCODING=8BIT;X-PARAM=VALUE");
 
     parameters.clear();
     parameters.insert(QStringLiteral("TYPE"), QStringLiteral("VOICE"));
@@ -301,7 +301,7 @@ void tst_QVCard21Writer::testEncodeParameters_data()
     // Besides these conditions, there are no other ordering constraints.  The data here is simply
     // what the writer produces (as dictated by its internal data structures).
     QTest::newRow("TYPE parameters order") << parameters
-        << QByteArray(";CELL;FAX;WORK;HOME;MODEM;CAR;VIDEO;BBS;PAGER;VOICE");
+        << QByteArray(";FAX;CELL;WORK;HOME;PAGER;BBS;VIDEO;CAR;MODEM;VOICE");
 }
 
 void tst_QVCard21Writer::testEncodeGroupsAndName()

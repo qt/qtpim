@@ -76,7 +76,8 @@ public:
         SubTypeBulletinBoardSystem,
         SubTypeMessagingCapable,
         SubTypeAssistant,
-        SubTypeDtmfMenu
+        SubTypeDtmfMenu,
+        SubTypeIsdn
     };
 
     void setNumber(const QString& number) {setValue(FieldNumber, number);}

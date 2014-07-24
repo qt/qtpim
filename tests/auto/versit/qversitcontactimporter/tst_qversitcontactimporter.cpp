@@ -544,7 +544,7 @@ void tst_QVersitContactImporter::testTel()
     QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypeFax));
     QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypeBulletinBoardSystem));
     QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypePager));
-    QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypeLandline));
+    QVERIFY(subTypes.contains(QContactPhoneNumber::SubTypeIsdn));
 
     const QList<int> contexts = phone.contexts();
     QCOMPARE(contexts.count(),2);

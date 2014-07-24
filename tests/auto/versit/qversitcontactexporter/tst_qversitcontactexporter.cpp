@@ -453,7 +453,7 @@ void tst_QVersitContactExporter::testEncodePhoneNumber()
     QVERIFY(property.parameters().contains(
         QStringLiteral("TYPE"),QStringLiteral("WORK")));
     QVERIFY(property.parameters().contains(
-        QStringLiteral("TYPE"), QStringLiteral("ISDN")));
+        QStringLiteral("TYPE"), QStringLiteral("VOICE")));
     QCOMPARE(property.value(), assistantNumber.number());
 }
 

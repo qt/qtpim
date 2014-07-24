@@ -130,7 +130,7 @@ public: // Data
     QVCardRestoreHandler mRestoreHandler;
 
     QHash<QString, QPair<QContactDetail::DetailType, int> > mDetailMappings;
-    QMap< QPair<QContactDetail::DetailType, int>, QString> mSubTypeMappings;
+    QMultiHash<QString, QPair<QContactDetail::DetailType, int> > mSubTypeMappings;
     QHash< int ,QString> mContextMappings;
 };
 

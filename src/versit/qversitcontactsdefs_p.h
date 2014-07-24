@@ -191,7 +191,8 @@ const VersitSubTypeMapping versitSubTypeMappings[] = {
     {"FAX",    QContactDetail::TypePhoneNumber, QContactPhoneNumber::SubTypeFax},
     {"BBS",    QContactDetail::TypePhoneNumber, QContactPhoneNumber::SubTypeBulletinBoardSystem},
     {"PAGER",  QContactDetail::TypePhoneNumber, QContactPhoneNumber::SubTypePager},
-    {"ISDN",   QContactDetail::TypePhoneNumber, QContactPhoneNumber::SubTypeLandline},
+    {"ISDN",   QContactDetail::TypePhoneNumber, QContactPhoneNumber::SubTypeIsdn},
+    {"VOICE",  QContactDetail::TypePhoneNumber, QContactPhoneNumber::SubTypeLandline},
     {"SWIS",   QContactDetail::TypeOnlineAccount, QContactOnlineAccount::SubTypeVideoShare},
     {"VOIP",   QContactDetail::TypeOnlineAccount, QContactOnlineAccount::SubTypeSipVoip}
 };

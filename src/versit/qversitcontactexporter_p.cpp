@@ -926,8 +926,13 @@ void QVersitContactExporterPrivate::encodeParameters(
         }
     }
 
+    QSet<int> inserted;
     while (!subtypesList.isEmpty()) {
         int value = subtypesList.takeLast();
+        if (inserted.contains(value))
+            continue;
+
+        inserted.insert(value);
         QString mappedValue = mSubTypeMappings.value(QPair<QContactDetail::DetailType, int>(
                                                           detailType, value));
         if (mappedValue.length() > 0) {

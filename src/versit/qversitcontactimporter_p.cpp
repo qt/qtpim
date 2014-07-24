@@ -87,14 +87,14 @@ QVersitContactImporterPrivate::QVersitContactImporterPrivate(const QStringList& 
             QLatin1String(versitContextMappings[i].versitString));
     }
 
-    // Subtype mappings
+    // Subtype mappings (insert in reverse order, so first definition (most recent insertion) is found first)
     int subTypeCount = sizeof(versitSubTypeMappings)/sizeof(VersitSubTypeMapping);
-    for (int i=0; i < subTypeCount; i++) {
+    for (int i=(subTypeCount - 1); i >= 0; --i) {
         mSubTypeMappings.insert(
+            QLatin1String(versitSubTypeMappings[i].versitString),
             QPair<QContactDetail::DetailType, int>(
                         versitSubTypeMappings[i].detailType,
-                        versitSubTypeMappings[i].contactSubType),
-            QLatin1String(versitSubTypeMappings[i].versitString));
+                        versitSubTypeMappings[i].contactSubType));
     }
 
     mPluginPropertyHandlers = QVersitContactPluginLoader::instance()->createContactHandlers(profiles);
@@ -323,8 +323,12 @@ bool QVersitContactImporterPrivate::createPhone(
 
     foreach (const QString &stringValue, subTypes) {
         if (!mContextMappings.values().contains(stringValue)) {
-            int mappedValue = mSubTypeMappings.key(stringValue).second;
-            subTypesInt << mappedValue;
+            QMultiHash<QString, QPair<QContactDetail::DetailType, int> >::const_iterator
+                it = mSubTypeMappings.constFind(stringValue);
+            if (it != mSubTypeMappings.constEnd()) {
+                int mappedValue = it.value().second;
+                subTypesInt << mappedValue;
+            }
         }
     }
 
@@ -377,8 +381,10 @@ bool QVersitContactImporterPrivate::createAddress(
     QList<int> subTypesInt;
 
     foreach (const QString &stringValue, subTypes) {
-        if (mSubTypeMappings.values().contains(stringValue)) {
-            int mappedValue = mSubTypeMappings.key(stringValue).second;
+        QMultiHash<QString, QPair<QContactDetail::DetailType, int> >::const_iterator
+            it = mSubTypeMappings.constFind(stringValue);
+        if (it != mSubTypeMappings.constEnd()) {
+            int mappedValue = it.value().second;
             subTypesInt << mappedValue;
         }
     }
@@ -657,8 +663,12 @@ bool QVersitContactImporterPrivate::createOnlineAccount(
         QList<int> subTypesInt;
 
         foreach (const QString &stringValue, subTypes) {
-            int mappedValue = mSubTypeMappings.key(stringValue).second;
-            subTypesInt << mappedValue;
+            QMultiHash<QString, QPair<QContactDetail::DetailType, int> >::const_iterator
+                it = mSubTypeMappings.constFind(stringValue);
+            if (it != mSubTypeMappings.constEnd()) {
+                int mappedValue = it.value().second;
+                subTypesInt << mappedValue;
+            }
         }
         if (subTypes.isEmpty())
             subTypesInt.append(QContactOnlineAccount::SubTypeSip);

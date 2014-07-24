@@ -220,7 +220,7 @@ ContactsSavingTestCase {
 
         PhoneNumber {
             subTypes: [
-                PhoneNumber.Landline,
+                PhoneNumber.Voice,
                 PhoneNumber.Mobile,
                 PhoneNumber.Fax,
                 PhoneNumber.Video,
@@ -231,7 +231,7 @@ ContactsSavingTestCase {
 
         PhoneNumber {
             subTypes: [
-                PhoneNumber.Landline,
+                PhoneNumber.Voice,
                 PhoneNumber.Mobile,
                 PhoneNumber.Fax,
                 PhoneNumber.Video,

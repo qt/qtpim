@@ -72,7 +72,7 @@ public:
     virtual QMap<QString, QString> idInterpretationParameters() const;
 
     inline QString managerUri() const
-    { return QOrganizerManager::buildUri(managerName(), idInterpretationParameters()); }
+    { if (m_uri.isNull()) m_uri = QOrganizerManager::buildUri(managerName(), idInterpretationParameters()); return m_uri; }
 
     inline QOrganizerItemId itemId(const QString &localId) const
     { return QOrganizerItemId(managerUri(), localId); }
@@ -200,6 +200,8 @@ private:
     Q_DISABLE_COPY(QOrganizerManagerEngine)
     friend class QOrganizerItemChangeSet;
     friend class QOrganizerCollectionChangeSet;
+
+    mutable QString m_uri;
 };
 
 QT_END_NAMESPACE_ORGANIZER

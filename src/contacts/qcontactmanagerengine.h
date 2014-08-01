@@ -73,7 +73,7 @@ public:
     virtual int managerVersion() const = 0;
 
     inline QString managerUri() const
-    { return QContactManager::buildUri(managerName(), idInterpretationParameters()); }
+    { if (m_uri.isNull()) m_uri = QContactManager::buildUri(managerName(), idInterpretationParameters()); return m_uri; }
 
     inline QContactId contactId(const QString &localId) const
     { return QContactId(managerUri(), localId); }
@@ -156,6 +156,8 @@ public:
 private:
     /* QContactChangeSet is a utility class used to emit the appropriate signals */
     friend class QContactChangeSet;
+
+    mutable QString m_uri;
 };
 
 QT_END_NAMESPACE_CONTACTS

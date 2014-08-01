@@ -556,6 +556,7 @@ void tst_QOrganizerItem::emptiness()
 {
     QOrganizerItem oi;
     QVERIFY(oi.isEmpty() == true);
+    QVERIFY(oi.id().isNull() == true);
 
     oi.setType(QOrganizerItemType::TypeNote);
     QVERIFY(oi.type() == QOrganizerItemType::TypeNote);
@@ -569,13 +570,48 @@ void tst_QOrganizerItem::idComparison()
     QVERIFY(!(id1 < id2));
     QVERIFY(!(id2 < id1));
     QVERIFY(id1 == id2);
+
     QOrganizerItemId id3(makeId("a", 2));
     QOrganizerItemId id4(makeId("b", 1));
-    QOrganizerItemId id5(makeId(QString(), 2)); // no Uri specified.
+    QOrganizerItemId id5(makeId("b", 2));
     QVERIFY((((id1 < id3) && !(id3 < id1)) || ((id3 < id1) && !(id1 < id3))) && (id1 != id3));
     QVERIFY((((id1 < id4) && !(id4 < id1)) || ((id4 < id1) && !(id1 < id4))) && (id1 != id4));
     QVERIFY((((id3 < id4) && !(id4 < id3)) || ((id4 < id3) && !(id3 < id4))) && (id3 != id4));
     QVERIFY((((id1 < id5) && !(id5 < id1)) || ((id5 < id1) && !(id1 < id5))) && (id3 != id4));
+
+    QOrganizerItemId id6;
+    QOrganizerItemId id7(QString(), "1");
+    QOrganizerItemId id8(QString(), "2");
+    QOrganizerItemId id9(QStringLiteral("qtorganizer:basic:"), "");
+    QVERIFY(id6.isNull());
+    QVERIFY(id7.isNull());
+    QVERIFY(id8.isNull());
+    QVERIFY(id9.isNull());
+    QVERIFY(id6 == id7);
+    QVERIFY(!(id6 < id7));
+    QVERIFY(id7 == id6);
+    QVERIFY(!(id7 < id6));
+    QVERIFY(id7 == id8);
+    QVERIFY(!(id7 < id8));
+    QVERIFY(id8 == id7);
+    QVERIFY(!(id9 < id8));
+    QVERIFY(id8 == id9);
+    QVERIFY(!(id8 < id9));
+    QVERIFY(id9 == id8);
+    QVERIFY(!(id9 < id8));
+
+    QVERIFY(!(id1 == id6));
+    QVERIFY(!(id1 < id6));
+    QVERIFY(id6 < id1);
+    QVERIFY(!(id1 == id7));
+    QVERIFY(!(id1 < id7));
+    QVERIFY(id7 < id1);
+    QVERIFY(!(id1 == id8));
+    QVERIFY(!(id1 < id8));
+    QVERIFY(id8 < id1);
+    QVERIFY(!(id1 == id9));
+    QVERIFY(!(id1 < id9));
+    QVERIFY(id9 < id1);
 }
 
 void tst_QOrganizerItem::idHash()

@@ -152,15 +152,12 @@ property Contact testContact
             compare(contact.modified, false)
 
             // access Type
-            console.log("type is: " + contact.type)
             compare(contact.type, Type.Contact)  // Type is Contact and not Group
 
             // access contactId
-            console.log("contactId is: " + JSON.stringify(contact.contactId) )
-            compare(contact.contactId, "qtcontacts:::")
+            compare(contact.contactId, "")
 
             // access manager
-            console.log("manager is: " + JSON.stringify(contact.manager))
             compare(contact.manager, "")
         }
 

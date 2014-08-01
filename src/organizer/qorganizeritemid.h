@@ -55,16 +55,16 @@ class Q_ORGANIZER_EXPORT QOrganizerItemId
 public:
     inline QOrganizerItemId() {}
     inline QOrganizerItemId(const QString &managerUri, const QString &localId)
-        : m_managerUri(managerUri), m_localId(localId)
+        : m_managerUri(localId.isEmpty() ? QString() : managerUri),
+          m_localId(m_managerUri.isEmpty() ? QString() : localId)
     {}
     // compiler-generated dtor and copy/move ctors/assignment operators are fine!
 
     inline bool operator==(const QOrganizerItemId &other) const
     { return localId() == other.localId() && managerUri() == other.managerUri(); }
     inline bool operator!=(const QOrganizerItemId &other) const
-    { return localId() != other.localId() || managerUri() != other.managerUri(); }
+    { return !operator==(other); }
 
-    inline bool isValid() const { return !m_managerUri.isEmpty(); }
     inline bool isNull() const { return m_localId.isEmpty(); }
 
     inline QString managerUri() const { return m_managerUri; }
@@ -79,7 +79,7 @@ private:
 };
 
 inline bool operator<(const QOrganizerItemId &id1, const QOrganizerItemId &id2)
-{ return (id1.managerUri() != id2.managerUri()) ? id1.managerUri() < id2.managerUri() : id1.localId() < id2.localId(); }
+{ return id1.managerUri() != id2.managerUri() ? id1.managerUri() < id2.managerUri() : id1.localId() < id2.localId(); }
 
 inline uint qHash(const QOrganizerItemId &id)
 { return qHash(id.localId()); }

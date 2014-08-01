@@ -160,10 +160,10 @@ QT_BEGIN_NAMESPACE_CONTACTS
 */
 QString QContactId::toString() const
 {
-    if (QContactManagerData::parseIdString(m_managerUri, 0, 0))
+    if (!isNull() && QContactManagerData::parseIdString(m_managerUri, 0, 0))
         return QContactManagerData::buildIdString(m_managerUri, m_localId);
 
-    return QContactManagerData::buildIdString(QString(), QMap<QString, QString>(), QStringLiteral(""));
+    return QString();
 }
 
 /*!

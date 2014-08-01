@@ -160,10 +160,10 @@ QT_BEGIN_NAMESPACE_ORGANIZER
 */
 QString QOrganizerItemId::toString() const
 {
-    if (QOrganizerManagerData::parseIdString(m_managerUri, 0, 0))
+    if (!isNull() && QOrganizerManagerData::parseIdString(m_managerUri, 0, 0))
         return QOrganizerManagerData::buildIdString(m_managerUri, m_localId);
 
-    return QOrganizerManagerData::buildIdString(QString(), QMap<QString, QString>(), QStringLiteral(""));
+    return QString();
 }
 
 /*!

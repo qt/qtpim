@@ -425,7 +425,7 @@ bool QContactManagerData::parseIdString(const QString &idString, QString *manage
         *managerName = unescapeParam(mgrName);
 
     if (managerUri)
-        *managerUri = prefix + QLatin1Char(':') + mgrName + QLatin1Char(':') + paramString;
+        *managerUri = cachedUri(prefix + QLatin1Char(':') + mgrName + QLatin1Char(':') + paramString);
 
     // and unescape the engine id string
     if (engineIdString)
@@ -477,6 +477,23 @@ QString QContactManagerData::buildIdString(const QString &managerName, const QMa
         idString += QLatin1Char(':') + escapeParam(engineIdString);
 
     return idString;
+}
+
+/*!
+    Returns a cached instance of the manager URI string that matches \a managerUri.
+    This instance should be preferred when constructing ID objects in order to promote
+    data sharing of the URI string.
+*/
+QString QContactManagerData::cachedUri(const QString &managerUri)
+{
+    static QStringList managerUris;
+
+    int index = managerUris.indexOf(managerUri);
+    if (index != -1)
+        return managerUris.at(index);
+
+    managerUris.append(managerUri);
+    return managerUri;
 }
 
 QT_END_NAMESPACE_CONTACTS

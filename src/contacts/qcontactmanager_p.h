@@ -90,6 +90,8 @@ public:
     static QString buildIdString(const QString &managerUri, const QString &engineIdString = QString());
     static QString buildIdString(const QString &managerName, const QMap<QString, QString> &params, const QString &engineIdString = QString());
 
+    static QString cachedUri(const QString &managerUri);
+
     void createEngine(const QString &managerName, const QMap<QString, QString> &parameters);
     static QContactManagerData* get(const QContactManager *manager);
     static QContactManagerEngine* engine(const QContactManager *manager);

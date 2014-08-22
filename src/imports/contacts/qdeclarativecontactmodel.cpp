@@ -306,6 +306,35 @@ static QString urlToLocalFileName(const QUrl& url)
 }
 
 /*!
+  \qmlproperty enumeration ContactModel::ImportError
+
+  Defines the errors cases for \l ContactModel::importContacts() -function.
+
+  \list
+  \li ContactModel::ImportNoError             Completed successfully, no error.
+  \li ContactModel::ImportUnspecifiedError    Unspecified error.
+  \li ContactModel::ImportIOError             Input/output error.
+  \li ContactModel::ImportOutOfMemoryError    Out of memory error.
+  \li ContactModel::ImportNotReadyError       Not ready for importing. Only one import operation can be active at a time.
+  \li ContactModel::ImportParseError          Error during parsing.
+  \endlist
+*/
+
+/*!
+  \qmlsignal ContactModel::onImportCompleted(ImportError error, URL url, list<string> ids)
+
+  This signal is emitted, when \l ContactModel::importContacts() completes. The success of operation
+  can be seen on \a error which is defined in \l ContactModel::ImportError. \a url indicates the
+  file, which was imported. \a ids contains the imported contacts ids.
+
+  If the operation was successful, contacts are now imported to backend. If \l ContactModel::autoUpdate
+  is enabled, \l ContactModel::modelChanged will be emitted when imported contacts are also visible on
+  \l ContactModel's data model.
+
+  \sa ContactModel::importContacts
+ */
+
+/*!
   \qmlmethod void ContactModel::importContacts(url url, list<string> profiles)
 
   Import contacts from a vcard by the given \a url and optional \a profiles.
@@ -344,7 +373,7 @@ void QDeclarativeContactModel::importContacts(const QUrl& url, const QStringList
             importError = ImportIOError;
         }
     }
-    emit importCompleted(importError, url);
+    emit importCompleted(importError, url, QStringList());
 }
 
 /*!
@@ -551,15 +580,22 @@ void QDeclarativeContactModel::startImport(QVersitReader::State state)
         delete d->m_reader.device();
         d->m_reader.setDevice(0);
 
+        QStringList ids;
+
         if (d->m_manager) {
             if (!d->m_manager->saveContacts(&contacts)) {
                 if (d->m_error != d->m_manager->error()) {
                     d->m_error = d->m_manager->error();
                     emit errorChanged();
                 }
+            } else {
+                foreach (const QContact &c, contacts) {
+                    ids << c.id().toString();
+                }
             }
         }
-        emit importCompleted(QDeclarativeContactModel::ImportError(d->m_reader.error()), d->m_lastImportUrl);
+
+        emit importCompleted(QDeclarativeContactModel::ImportError(d->m_reader.error()), d->m_lastImportUrl, ids);
     }
 }
 

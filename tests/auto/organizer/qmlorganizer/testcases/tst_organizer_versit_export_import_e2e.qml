@@ -190,6 +190,10 @@ TestCase {
                 "imported description different from the exported description.")
         compare(importedEvent.displayLabel, "Event 1",
                 "imported event label different to exported label.")
+
+        // Check if importComplete contains the correct itemId
+        var importedIds = importModelChangedSpy.signalArguments[0][2]
+        compare(importedIds[0], importedEvent.itemId)
     }
 
     function test_overlappingExportEmitsSignalWithError_data() {

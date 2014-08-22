@@ -421,7 +421,7 @@ void QDeclarativeOrganizerModel::setEndPeriod(const QDateTime& end)
   Defines the errors cases for \l OrganizerModel::importItems() -function.
 
   \list
-  \li OrganizerModel::ImportNoError             Completed succesfully, no error.
+  \li OrganizerModel::ImportNoError             Completed successfully, no error.
   \li OrganizerModel::ImportUnspecifiedError    Unspecified error.
   \li OrganizerModel::ImportIOError             Input/output error.
   \li OrganizerModel::ImportOutOfMemoryError    Out of memory error.
@@ -431,15 +431,17 @@ void QDeclarativeOrganizerModel::setEndPeriod(const QDateTime& end)
 */
 
 /*!
-  \qmlsignal OrganizerModel::onImportCompleted()
+  \qmlsignal OrganizerModel::onImportCompleted(ImportError error, URL url, list<string> ids)
 
   This signal is emitted, when \l OrganizerModel::importItems() completes. The success of operation
   can be seen on \a error which is defined in \l OrganizerModel::ImportError. \a url indicates the
-  file, which was imported.
+  file, which was imported. \a ids contains the imported items ids.
 
-  If the operation was succesful, items are now imported to backend. If \l OrganizerModel::autoUpdate
+  If the operation was successful, items are now imported to backend. If \l OrganizerModel::autoUpdate
   is enabled, \l OrganizerModel::modelChanged will be emitted when imported items are also visible on
   \l OrganizerModel's data model.
+
+  \sa OrganizerModel::importItems
  */
 
 /*!
@@ -479,7 +481,7 @@ void QDeclarativeOrganizerModel::importItems(const QUrl& url, const QStringList 
   }
 
     // If cannot startReading because already running then report the import error now
-    emit importCompleted(importError, url);
+    emit importCompleted(importError, url, QStringList());
 }
 
 /*!
@@ -730,6 +732,8 @@ void QDeclarativeOrganizerModel::startImport(QVersitReader::State state)
 {
     Q_D(QDeclarativeOrganizerModel);
     if (state == QVersitReader::FinishedState || state == QVersitReader::CanceledState) {
+        QStringList ids;
+
         if (!d->m_reader->results().isEmpty()) {
             QVersitOrganizerImporter importer;
             importer.importDocument(d->m_reader->results().at(0));
@@ -737,12 +741,18 @@ void QDeclarativeOrganizerModel::startImport(QVersitReader::State state)
             delete d->m_reader->device();
             d->m_reader->setDevice(0);
 
-            if (d->m_manager && !d->m_manager->saveItems(&items) && d->m_error != d->m_manager->error()) {
-                d->m_error = d->m_manager->error();
-                emit errorChanged();
+            if (d->m_manager && !d->m_manager->saveItems(&items)) {
+                if (d->m_error != d->m_manager->error()) {
+                    d->m_error = d->m_manager->error();
+                    emit errorChanged();
+                }
+            } else {
+                foreach (const QOrganizerItem i, items) {
+                    ids << i.id().toString();
+                }
             }
         }
-        emit importCompleted(QDeclarativeOrganizerModel::ImportError(d->m_reader->error()), d->m_lastImportUrl);
+        emit importCompleted(QDeclarativeOrganizerModel::ImportError(d->m_reader->error()), d->m_lastImportUrl, ids);
     }
 }
 

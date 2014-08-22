@@ -187,7 +187,7 @@ signals:
     void collectionsChanged();
     void itemsFetched(int requestId, const QVariantList &fetchedItems);
     void exportCompleted(ExportError error, QUrl url);
-    void importCompleted(ImportError error, QUrl url);
+    void importCompleted(ImportError error, QUrl url, const QStringList &ids);
 
 public slots:
     void update();

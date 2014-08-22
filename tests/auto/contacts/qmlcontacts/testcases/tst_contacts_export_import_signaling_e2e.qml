@@ -172,6 +172,10 @@ ContactsSavingTestCase {
         waitForTargetSignal(signalSpy2);
         compare(importErrorCode, ContactModel.ImportNoError, 'signal finished state error');
         compare(importFileName, vcardFilePath, 'signal finished state filename');
+
+        // Check if importComplete contains the correct contactId
+        var importedIds = signalSpy2.signalArguments[0][2]
+        compare(importedIds[0], model.contacts[model.contacts.length - 1].contactId)
     }
 
 

@@ -156,7 +156,7 @@ signals:
     void sortOrdersChanged();
     void autoUpdateChanged();
     void exportCompleted(ExportError error, QUrl url);
-    void importCompleted(ImportError error, QUrl url);
+    void importCompleted(ImportError error, QUrl url, const QStringList &ids);
     void contactsFetched(int requestId, const QVariantList &fetchedContacts);
 
 public slots:

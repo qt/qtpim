@@ -257,7 +257,7 @@ void QDeclarativeContactModel::setManager(const QString& managerName)
         delete d->m_manager;
     d->m_manager = new QContactManager(managerName);
 
-    connect(d->m_manager, SIGNAL(dataChanged()), this, SLOT(update()));
+    connect(d->m_manager, SIGNAL(dataChanged()), this, SLOT(doUpdate()));
     connect(d->m_manager, SIGNAL(contactsAdded(QList<QContactId>)), this, SLOT(onContactsAdded(QList<QContactId>)));
     connect(d->m_manager, SIGNAL(contactsRemoved(QList<QContactId>)), this, SLOT(onContactsRemoved(QList<QContactId>)));
     connect(d->m_manager, SIGNAL(contactsChanged(QList<QContactId>,QList<QContactDetail::DetailType>)), this, SLOT(onContactsChanged(QList<QContactId>)));

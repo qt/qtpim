@@ -49,7 +49,7 @@ QT_BEGIN_NAMESPACE
     \qmltype SortOrder
     \instantiates QDeclarativeOrganizerItemSortOrder
     \brief The SortOrder element defines how a list of organizer item should be ordered according to some criteria.
-    \inqmlmodule QtOrganizer 5.0
+    \inqmlmodule QtOrganizer
     \ingroup qml-organizer-filters
  */
 QDeclarativeOrganizerItemSortOrder::QDeclarativeOrganizerItemSortOrder(QObject *parent)

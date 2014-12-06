@@ -59,7 +59,7 @@ QT_BEGIN_NAMESPACE
     \instantiates QDeclarativeContact
     \brief The Contact element represents an addressbook contact.
     \ingroup qml-contacts-main
-    \inqmlmodule QtContacts 5.0
+    \inqmlmodule QtContacts
 
     The Contact element is part of the \b{QtContacts} module.
 

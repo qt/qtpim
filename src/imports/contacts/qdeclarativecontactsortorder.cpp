@@ -51,7 +51,7 @@ QT_BEGIN_NAMESPACE
    \brief The SortOrder element defines how a list of contacts should be ordered according to some criteria.
 
    \ingroup qml-contacts-main
-   \inqmlmodule QtContacts 5.0
+   \inqmlmodule QtContacts
 
    This element is part of the \b{QtContacts} module.
 

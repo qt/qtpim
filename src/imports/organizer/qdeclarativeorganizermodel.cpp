@@ -155,7 +155,7 @@ public:
     \qmltype OrganizerModel
     \instantiates QDeclarativeOrganizerModel
     \brief The OrganizerModel element provides access to organizer items from the organizer store.
-    \inqmlmodule QtOrganizer 5.0
+    \inqmlmodule QtOrganizer
     \ingroup qml-organizer-main
 
     OrganizerModel provides a model of organizer items from the organizer store.

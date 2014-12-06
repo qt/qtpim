@@ -80,7 +80,7 @@ QT_BEGIN_NAMESPACE
     \instantiates QDeclarativeContactModel
     \brief The ContactModel element provides access to contacts from the contacts store.
     \ingroup qml-contacts-main
-    \inqmlmodule QtContacts 5.0
+    \inqmlmodule QtContacts
 
     This element is part of the \b{QtContacts} module.
 

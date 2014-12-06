@@ -54,7 +54,7 @@ QT_BEGIN_NAMESPACE
   between a locally-stored contact and another (possibly remote) contact.
 
    \ingroup qml-contacts-main
-   \inqmlmodule QtContacts 5.0
+   \inqmlmodule QtContacts
    This element is part of the \b{QtContacts} module.
 
    \sa QContactRelationship

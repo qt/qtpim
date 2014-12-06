@@ -51,7 +51,7 @@ QT_BEGIN_NAMESPACE
     \brief The FetchHint element provides hints to the manager about which organizer item
            information needs to be retrieved in an asynchronous fetch request or a synchronous
            function call.
-    \inqmlmodule QtOrganizer 5.0
+    \inqmlmodule QtOrganizer
     \ingroup qml-organizer-filters
  */
 

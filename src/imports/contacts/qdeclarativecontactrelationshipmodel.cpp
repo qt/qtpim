@@ -58,7 +58,7 @@ QT_BEGIN_NAMESPACE
    \brief The RelationshipModel provides a model of contact relationships from the contacts store.
 
    \ingroup qml-contacts-main
-   \inqmlmodule QtContacts 5.0
+   \inqmlmodule QtContacts
 
    This element is part of the \b{QtContacts} module.
 

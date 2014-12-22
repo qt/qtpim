@@ -342,9 +342,9 @@ static inline QString escapeParam(const QString &param)
 {
     QString ret;
     const int len = param.length();
-    ret.reserve(int(len * 1.1));
-    for (int i = 0; i < len; ++i) {
-        switch (param.at(i).unicode()) {
+    ret.reserve(len + (len >> 3));
+    for (QString::const_iterator it = param.begin(), end = param.end(); it != end; ++it) {
+        switch (it->unicode()) {
         case ':':
             ret += QStringLiteral("&#58;");
             break;
@@ -355,7 +355,7 @@ static inline QString escapeParam(const QString &param)
             ret += QStringLiteral("&amp;");
             break;
         default:
-            ret += param.at(i);
+            ret += *it;
             break;
         }
     }
@@ -383,10 +383,16 @@ static inline QByteArray escapeColon(const QByteArray &param)
 static inline QString unescapeParam(const QString &param)
 {
     QString ret(param);
-    if (ret.contains(QLatin1Char('&'))) {
-        ret.replace(QStringLiteral("&#58;"), QStringLiteral(":"));
-        ret.replace(QStringLiteral("&equ;"), QStringLiteral("="));
-        ret.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
+    int index = 0;
+    while ((index = ret.indexOf(QLatin1Char('&'), index)) != -1) {
+        const QString partial(ret.mid(index, 5));
+        if (partial == QStringLiteral("&#58;"))
+            ret.replace(index, 5, QStringLiteral(":"));
+        else if (partial == QStringLiteral("&equ;"))
+            ret.replace(index, 5, QStringLiteral("="));
+        else if (partial == QStringLiteral("&amp;"))
+            ret.replace(index, 5, QStringLiteral("&"));
+        ++index;
     }
     return ret;
 }

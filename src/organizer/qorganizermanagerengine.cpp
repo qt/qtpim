@@ -240,14 +240,14 @@ QMap<QString, QString> QOrganizerManagerEngine::idInterpretationParameters() con
  */
 
 /*!
-    \fn QOrganizerItemId QOrganizerManagerEngine::itemId(const QString &localId) const
+    \fn QOrganizerItemId QOrganizerManagerEngine::itemId(const QByteArray &localId) const
 
     Returns the organizer item ID for this managerUri() and the given
     engine specific ID part \a localId.
 */
 
 /*!
-    \fn QOrganizerCollectionId QOrganizerManagerEngine::collectionId(const QString &localId) const
+    \fn QOrganizerCollectionId QOrganizerManagerEngine::collectionId(const QByteArray &localId) const
 
     Returns the organizer collection ID for this managerUri() and the given
     engine specific ID part \a localId.

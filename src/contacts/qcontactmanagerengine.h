@@ -75,7 +75,7 @@ public:
     inline QString managerUri() const
     { if (m_uri.isNull()) m_uri = QContactManager::buildUri(managerName(), idInterpretationParameters()); return m_uri; }
 
-    inline QContactId contactId(const QString &localId) const
+    inline QContactId contactId(const QByteArray &localId) const
     { return QContactId(managerUri(), localId); }
 
     /* Filtering */

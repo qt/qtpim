@@ -70,12 +70,12 @@ Q_DECLARE_METATYPE(QList<QOrganizerItemDetail::DetailType>);
 
 static inline QOrganizerItemId makeItemId(uint id)
 {
-    return QOrganizerItemId(QStringLiteral("qtorganizer:basic:"), QString::number(id));
+    return QOrganizerItemId(QStringLiteral("qtorganizer:basic:"), QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint)));
 }
 
 static inline QOrganizerCollectionId makeCollectionId(uint id)
 {
-    return QOrganizerCollectionId(QStringLiteral("qtorganizer:basic:"), QString::number(id));
+    return QOrganizerCollectionId(QStringLiteral("qtorganizer:basic:"), QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint)));
 }
 
 

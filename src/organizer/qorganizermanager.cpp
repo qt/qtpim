@@ -221,7 +221,7 @@ QStringList QOrganizerManager::availableManagers()
  */
 bool QOrganizerManager::parseUri(const QString &uri, QString *managerName, QMap<QString, QString> *params)
 {
-    return QOrganizerManagerData::parseIdString(uri, managerName, params);
+    return QOrganizerManagerData::parseUri(uri, managerName, params, false);
 }
 
 /*!
@@ -230,7 +230,7 @@ bool QOrganizerManager::parseUri(const QString &uri, QString *managerName, QMap<
  */
 QString QOrganizerManager::buildUri(const QString &managerName, const QMap<QString, QString> &params)
 {
-    return QOrganizerManagerData::buildIdString(managerName, params);
+    return QOrganizerManagerData::buildUri(managerName, params);
 }
 
 /*!

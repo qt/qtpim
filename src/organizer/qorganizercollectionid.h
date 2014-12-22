@@ -54,9 +54,9 @@ class Q_ORGANIZER_EXPORT QOrganizerCollectionId
 {
 public:
     inline QOrganizerCollectionId() {}
-    inline QOrganizerCollectionId(const QString &managerUri, const QString &localId)
+    inline QOrganizerCollectionId(const QString &managerUri, const QByteArray &localId)
         : m_managerUri(localId.isEmpty() ? QString() : managerUri),
-          m_localId(m_managerUri.isEmpty() ? QString() : localId)
+          m_localId(m_managerUri.isEmpty() ? QByteArray() : localId)
     {}
     // compiler-generated dtor and copy/move ctors/assignment operators are fine!
 
@@ -68,14 +68,17 @@ public:
     inline bool isNull() const { return m_localId.isEmpty(); }
 
     inline QString managerUri() const { return m_managerUri; }
-    inline QString localId() const { return m_localId; }
+    inline QByteArray localId() const { return m_localId; }
 
     QString toString() const;
     static QOrganizerCollectionId fromString(const QString &idString);
 
+    QByteArray toByteArray() const;
+    static QOrganizerCollectionId fromByteArray(const QByteArray &idData);
+
 private:
     QString m_managerUri;
-    QString m_localId;
+    QByteArray m_localId;
 };
 
 inline bool operator<(const QOrganizerCollectionId &id1, const QOrganizerCollectionId &id2)

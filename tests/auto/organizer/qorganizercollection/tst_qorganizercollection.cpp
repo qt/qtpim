@@ -52,7 +52,7 @@ QTORGANIZER_USE_NAMESPACE
 
 static inline QOrganizerCollectionId makeId(const QString &managerName, uint id)
 {
-    return QOrganizerCollectionId(QStringLiteral("qtorganizer:basic%1:").arg(managerName), QString::number(id));
+    return QOrganizerCollectionId(QStringLiteral("qtorganizer:%1:").arg(managerName), QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint)));
 }
 
 
@@ -149,7 +149,7 @@ void tst_QOrganizerCollection::idComparison()
     QOrganizerCollectionId id6;
     QOrganizerCollectionId id7(QString(), "1");
     QOrganizerCollectionId id8(QString(), "2");
-    QOrganizerCollectionId id9(QStringLiteral("qtorganizer:basic:"), "");
+    QOrganizerCollectionId id9(QStringLiteral("qtorganizer:basic:"), QByteArray());
     QVERIFY(id6.isNull());
     QVERIFY(id7.isNull());
     QVERIFY(id8.isNull());
@@ -220,27 +220,33 @@ void tst_QOrganizerCollection::idStringFunctions()
     QVERIFY(id3.toString() != id4.toString());
 
     // this should "work" -- string of the correct format
-    QString prebuiltidstring = QString("qtorganizer") + QString(":") + QString("a") + QString("::") + QString::number(2);
+    const uint numericId2 = 2u;
+    const QByteArray localId2 = QByteArray(reinterpret_cast<const char *>(&numericId2), sizeof(uint));
+    QString prebuiltidstring = QString("qtorganizer") + QString(":") + QString("a") + QString("::") + localId2.toHex();
     QOrganizerCollectionId rebuiltid = QOrganizerCollectionId::fromString(prebuiltidstring);
-    // QVERIFY(rebuiltid == id4); // -- this requires a working backend.
+    QVERIFY(rebuiltid == id4);
+    QVERIFY(rebuiltid.localId() == id4.localId());
 
     // this string has the right format and one parameter, but requires a working backend
-    prebuiltidstring = QString("qtorganizer") + QString(":") + QString("a") + QString(":") + QString("key=value") + QString(":") + QString::number(2);
+    prebuiltidstring = QString("qtorganizer") + QString(":") + QString("a") + QString(":") + QString("key=value") + QString(":") + localId2.toHex();
     rebuiltid = QOrganizerCollectionId::fromString(prebuiltidstring);
-    // QVERIFY(rebuiltid == id4); // -- this requires a working backend.
+    QVERIFY(rebuiltid != id4);
+    QVERIFY(rebuiltid.localId() == id4.localId());
 
     // this string has the right format and some parameters, but requires a working backend
-    prebuiltidstring = QString("qtorganizer") + QString(":") + QString("a") + QString(":") + QString("key=value&key2=value2") + QString(":") + QString::number(2);
+    prebuiltidstring = QString("qtorganizer") + QString(":") + QString("a") + QString(":") + QString("key=value&key2=value2") + QString(":") + localId2.toHex();
     rebuiltid = QOrganizerCollectionId::fromString(prebuiltidstring);
-    // QVERIFY(rebuiltid == id4); // -- this requires a working backend.
+    QVERIFY(rebuiltid != id4);
+    QVERIFY(rebuiltid.localId() == id4.localId());
 
     // this string has the right format but misses the value for a parameter
-    prebuiltidstring = QString("qtorganizer") + QString(":") + QString("a") + QString(":") + QString("key=value&key2=") + QString(":") + QString::number(2);
+    prebuiltidstring = QString("qtorganizer") + QString(":") + QString("a") + QString(":") + QString("key=value&key2=") + QString(":") + localId2.toHex();
     rebuiltid = QOrganizerCollectionId::fromString(prebuiltidstring);
-    // QVERIFY(rebuiltid == id4); // -- this requires a working backend.
+    QVERIFY(rebuiltid != id4);
+    QVERIFY(rebuiltid.localId() == id4.localId());
 
     // this string misses a field (the parameters)
-    prebuiltidstring = QString("qtorganizer") + QString(":") + QString("a") + QString(":") + QString::number(2);
+    prebuiltidstring = QString("qtorganizer") + QString(":") + QString("a") + QString(":") + localId2.toHex();
     rebuiltid = QOrganizerCollectionId::fromString(prebuiltidstring);
     QVERIFY(rebuiltid == QOrganizerCollectionId()); // invalid so should be null.
 
@@ -250,12 +256,12 @@ void tst_QOrganizerCollection::idStringFunctions()
     QVERIFY(rebuiltid == QOrganizerCollectionId()); // invalid so should be null.
 
     // this string misses the prefix (qtorganizer)
-    prebuiltidstring = QString("notorganizer") + QString(":") + QString("a") + QString("::") + QString::number(2);
+    prebuiltidstring = QString("notorganizer") + QString(":") + QString("a") + QString("::") + localId2.toHex();
     rebuiltid = QOrganizerCollectionId::fromString(prebuiltidstring);
     QVERIFY(rebuiltid == QOrganizerCollectionId()); // invalid so should be null.
 
     // this string misses the manager uri
-    prebuiltidstring = QString("notorganizer") + QString(":::") + QString::number(2);
+    prebuiltidstring = QString("notorganizer") + QString(":::") + localId2.toHex();
     rebuiltid = QOrganizerCollectionId::fromString(prebuiltidstring);
     QVERIFY(rebuiltid == QOrganizerCollectionId()); // invalid so should be null.
 }

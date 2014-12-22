@@ -73,7 +73,7 @@ QT_BEGIN_NAMESPACE_ORGANIZER
 
 // TODO: Document and remove internal once the correct signature has been determined
 /*!
-    \fn QOrganizerCollectionId::QOrganizerCollectionId(const QString &managerUri, const QString &localId)
+    \fn QOrganizerCollectionId::QOrganizerCollectionId(const QString &managerUri, const QByteArray &localId)
     \internal
 
     Constructs an ID from the supplied manager URI \a managerUri and the engine
@@ -145,7 +145,7 @@ QT_BEGIN_NAMESPACE_ORGANIZER
 */
 
 /*!
-    \fn QString QOrganizerCollectionId::localId() const
+    \fn QByteArray QOrganizerCollectionId::localId() const
 
     Returns the collection's engine specific ID part.
 
@@ -154,14 +154,18 @@ QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     Serializes the collection ID to a string. The format of the string will be:
-    "qtorganizer:managerName:constructionParams:engineLocalCollectionId".
+    "qtorganizer:managerName:params:localId", where localId is encoded binary data
+    formatted as hexadecimal to ensure it is in a printable form.
 
-    \sa fromString()
+    \sa fromString(), toByteArray()
 */
 QString QOrganizerCollectionId::toString() const
 {
-    if (!isNull() && QOrganizerManagerData::parseIdString(m_managerUri, 0, 0))
-        return QOrganizerManagerData::buildIdString(m_managerUri, m_localId);
+    if (!isNull()) {
+        // Ensure the localId component has a valid string representation by hex encoding
+        const QByteArray encodedLocalId(m_localId.toHex());
+        return QString::fromUtf8(QOrganizerManagerData::buildIdData(m_managerUri, encodedLocalId));
+    }
 
     return QString();
 }
@@ -170,15 +174,47 @@ QString QOrganizerCollectionId::toString() const
     Deserializes the given \a idString. Returns a default-constructed (null)
     collection ID if the given \a idString is not a valid, serialized collection ID.
 
-    \sa toString()
+    \sa toString(), fromByteArray()
 */
 QOrganizerCollectionId QOrganizerCollectionId::fromString(const QString &idString)
 {
     QString managerUri;
-    QString engineIdString;
+    QByteArray localId;
 
-    if (QOrganizerManagerData::parseIdString(idString, 0, 0, &managerUri, &engineIdString))
-        return QOrganizerCollectionId(managerUri, engineIdString);
+    if (QOrganizerManagerData::parseIdData(idString.toUtf8(), 0, 0, &managerUri, &localId)) {
+        // The localId component must be decoded from hex
+        return QOrganizerCollectionId(managerUri, QByteArray::fromHex(localId));
+    }
+
+    return QOrganizerCollectionId();
+}
+
+/*!
+    Serializes the collection ID to a byte array.
+
+    \sa fromByteArray(), toString()
+*/
+QByteArray QOrganizerCollectionId::toByteArray() const
+{
+    if (!isNull())
+        return QOrganizerManagerData::buildIdData(m_managerUri, m_localId);
+
+    return QByteArray();
+}
+
+/*!
+    Deserializes the given \a idData. Returns a default-constructed (null)
+    collection ID if the given \a idData does not contain a valid, serialized collection ID.
+
+    \sa toByteArray(), fromString()
+*/
+QOrganizerCollectionId QOrganizerCollectionId::fromByteArray(const QByteArray &idData)
+{
+    QString managerUri;
+    QByteArray localId;
+
+    if (QOrganizerManagerData::parseIdData(idData, 0, 0, &managerUri, &localId))
+        return QOrganizerCollectionId(managerUri, localId);
 
     return QOrganizerCollectionId();
 }
@@ -190,7 +226,7 @@ QOrganizerCollectionId QOrganizerCollectionId::fromString(const QString &idStrin
 */
 QDebug operator<<(QDebug dbg, const QOrganizerCollectionId &id)
 {
-    dbg.nospace() << "QOrganizerCollectionId(" << id.toString() << ")";
+    dbg.nospace() << "QOrganizerCollectionId(" << id.toString().toUtf8().constData() << ")";
     return dbg.maybeSpace();
 }
 #endif // QT_NO_DEBUG_STREAM
@@ -202,7 +238,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerCollectionId &id)
 */
 QDataStream &operator<<(QDataStream &out, const QOrganizerCollectionId &id)
 {
-    out << id.toString();
+    out << id.toByteArray();
     return out;
 }
 
@@ -212,9 +248,9 @@ QDataStream &operator<<(QDataStream &out, const QOrganizerCollectionId &id)
 */
 QDataStream &operator>>(QDataStream &in, QOrganizerCollectionId &id)
 {
-    QString idString;
-    in >> idString;
-    id = QOrganizerCollectionId::fromString(idString);
+    QByteArray idData;
+    in >> idData;
+    id = QOrganizerCollectionId::fromByteArray(idData);
     return in;
 }
 #endif // QT_NO_DATASTREAM

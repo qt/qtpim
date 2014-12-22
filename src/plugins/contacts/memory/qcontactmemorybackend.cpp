@@ -908,7 +908,8 @@ bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &
         theContact->saveDetail(&ts);
 
         // update the contact item - set its ID
-        QContactId newContactId = contactId(QString::number(d->m_nextContactId++));
+        QContactId newContactId = contactId(QByteArray(reinterpret_cast<const char *>(&d->m_nextContactId), sizeof(quint32)));
+        ++(d->m_nextContactId);
         theContact->setId(newContactId);
 
         // finally, add the contact to our internal lists and return

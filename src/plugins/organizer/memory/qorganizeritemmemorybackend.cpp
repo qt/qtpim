@@ -652,7 +652,8 @@ bool QOrganizerItemMemoryEngine::storeItem(QOrganizerItem* theOrganizerItem, QOr
             targetCollectionId = defaultCollectionId();
 
         // update the organizer item - set its ID
-        theOrganizerItemId = this->itemId(QString::number(d->m_nextOrganizerItemId++));
+        theOrganizerItemId = itemId(QByteArray(reinterpret_cast<const char *>(&d->m_nextOrganizerItemId), sizeof(quint32)));
+        ++(d->m_nextOrganizerItemId);
         theOrganizerItem->setId(theOrganizerItemId);
         // finally, add the organizer item to our internal lists and return
         theOrganizerItem->setCollectionId(targetCollectionId);
@@ -1095,7 +1096,8 @@ bool QOrganizerItemMemoryEngine::saveCollection(QOrganizerCollection* collection
         }
 
         // this is a new collection with a null id; create a new id, add it to our list.
-        collectionId = this->collectionId(QString::number(d->m_nextOrganizerCollectionId++));
+        collectionId = this->collectionId(QByteArray(reinterpret_cast<const char *>(&d->m_nextOrganizerCollectionId), sizeof(quint32)));
+        ++(d->m_nextOrganizerCollectionId);
         collection->setId(collectionId);
         cs.insertAddedCollection(collectionId);
     }

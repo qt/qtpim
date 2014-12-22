@@ -73,11 +73,11 @@ QT_BEGIN_NAMESPACE_CONTACTS
 
 // TODO: Document and remove internal once the correct signature has been determined
 /*!
-    \fn QContactId::QContactId(const QString &managerUri, const QString &localId)
+    \fn QContactId::QContactId(const QString &managerUri, const QByteArray &localId)
     \internal
 
     Constructs an ID from the supplied manager URI \a managerUri and the engine
-    specific \a localId string.
+    specific \a localId value.
 */
 
 /*!
@@ -145,7 +145,7 @@ QT_BEGIN_NAMESPACE_CONTACTS
 */
 
 /*!
-    \fn QString QContactId::localId() const
+    \fn QByteArray QContactId::localId() const
 
     Returns the contact's engine specific ID part.
 
@@ -154,14 +154,18 @@ QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
     Serializes the contact ID to a string. The format of the string will be:
-    "qtcontacts:managerName:constructionParams:engineLocalItemId".
+    "qtcontacts:managerName:params:locaId", where localId is encoded binary data
+    formatted as hexadecimal to ensure it is in a printable form.
 
-    \sa fromString()
+    \sa fromString(), toByteArray()
 */
 QString QContactId::toString() const
 {
-    if (!isNull() && QContactManagerData::parseIdString(m_managerUri, 0, 0))
-        return QContactManagerData::buildIdString(m_managerUri, m_localId);
+    if (!isNull()) {
+        // Ensure the localId component has a valid string representation by hex encoding
+        const QByteArray encodedLocalId(m_localId.toHex());
+        return QString::fromUtf8(QContactManagerData::buildIdData(m_managerUri, encodedLocalId));
+    }
 
     return QString();
 }
@@ -170,15 +174,47 @@ QString QContactId::toString() const
     Deserializes the given \a idString. Returns a default-constructed (null)
     contact ID if the given \a idString is not a valid, serialized contact ID.
 
-    \sa toString()
+    \sa toString(), fromByteArray()
 */
 QContactId QContactId::fromString(const QString &idString)
 {
     QString managerUri;
-    QString engineIdString;
+    QByteArray localId;
 
-    if (QContactManagerData::parseIdString(idString, 0, 0, &managerUri, &engineIdString))
-        return QContactId(managerUri, engineIdString);
+    if (QContactManagerData::parseIdData(idString.toUtf8(), 0, 0, &managerUri, &localId)) {
+        // The localId component must be decoded from hex
+        return QContactId(managerUri, QByteArray::fromHex(localId));
+    }
+
+    return QContactId();
+}
+
+/*!
+    Serializes the contact ID to a byte array.
+
+    \sa fromByteArray(), toString()
+*/
+QByteArray QContactId::toByteArray() const
+{
+    if (!isNull())
+        return QContactManagerData::buildIdData(m_managerUri, m_localId);
+
+    return QByteArray();
+}
+
+/*!
+    Deserializes the given \a idData. Returns a default-constructed (null)
+    contact ID if the given \a idData does not contain a valid, serialized contact ID.
+
+    \sa toByteArray(), fromString()
+*/
+QContactId QContactId::fromByteArray(const QByteArray &idData)
+{
+    QString managerUri;
+    QByteArray localId;
+
+    if (QContactManagerData::parseIdData(idData, 0, 0, &managerUri, &localId))
+        return QContactId(managerUri, localId);
 
     return QContactId();
 }
@@ -190,7 +226,7 @@ QContactId QContactId::fromString(const QString &idString)
 */
 QDebug operator<<(QDebug dbg, const QContactId &id)
 {
-    dbg.nospace() << "QContactId(" << id.toString() << ")";
+    dbg.nospace() << "QContactId(" << id.toString().toUtf8().constData() << ")";
     return dbg.maybeSpace();
 }
 #endif // QT_NO_DEBUG_STREAM
@@ -202,7 +238,7 @@ QDebug operator<<(QDebug dbg, const QContactId &id)
 */
 QDataStream& operator<<(QDataStream &out, const QContactId &id)
 {
-    out << id.toString();
+    out << id.toByteArray();
     return out;
 }
 
@@ -212,9 +248,9 @@ QDataStream& operator<<(QDataStream &out, const QContactId &id)
 */
 QDataStream& operator>>(QDataStream &in, QContactId &id)
 {
-    QString idString;
-    in >> idString;
-    id = QContactId::fromString(idString);
+    QByteArray idData;
+    in >> idData;
+    id = QContactId::fromByteArray(idData);
     return in;
 }
 #endif // QT_NO_DATASTREAM

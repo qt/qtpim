@@ -73,7 +73,7 @@ QT_BEGIN_NAMESPACE_ORGANIZER
 
 // TODO: Document and remove internal once the correct signature has been determined
 /*!
-    \fn QOrganizerItemId::QOrganizerItemId(const QString &managerUri, const QString &localId)
+    \fn QOrganizerItemId::QOrganizerItemId(const QString &managerUri, const QByteArray &localId)
     \internal
 
     Constructs an ID from the supplied manager URI \a managerUri and the engine
@@ -145,7 +145,7 @@ QT_BEGIN_NAMESPACE_ORGANIZER
 */
 
 /*!
-    \fn QString QOrganizerItemId::localId() const
+    \fn QByteArray QOrganizerItemId::localId() const
 
     Returns the organizer item's engine specific ID part.
 
@@ -154,31 +154,67 @@ QT_BEGIN_NAMESPACE_ORGANIZER
 
 /*!
     Serializes the organizer item ID to a string. The format of the string will be:
-    "qtorganizer:managerName:constructionParams:engineLocalItemId".
+    "qtorganizer:managerName:params:localId", where localId is encoded binary data
+    formatted as hexadecimal to ensure it is in a printable form.
 
-    \sa fromString()
+    \sa fromString(), toByteArray()
 */
 QString QOrganizerItemId::toString() const
 {
-    if (!isNull() && QOrganizerManagerData::parseIdString(m_managerUri, 0, 0))
-        return QOrganizerManagerData::buildIdString(m_managerUri, m_localId);
+    if (!isNull()) {
+        // Ensure the localId component has a valid string representation by hex encoding
+        const QByteArray encodedLocalId(m_localId.toHex());
+        return QString::fromUtf8(QOrganizerManagerData::buildIdData(m_managerUri, encodedLocalId));
+    }
 
     return QString();
 }
 
 /*!
     Deserializes the given \a idString. Returns a default-constructed (null)
-    organizer item ID if the given \a idString is not a valid, serialized organizer item ID.
+    item ID if the given \a idString is not a valid, serialized item ID.
 
-    \sa toString()
+    \sa toString(), fromByteArray()
 */
 QOrganizerItemId QOrganizerItemId::fromString(const QString &idString)
 {
     QString managerUri;
-    QString engineIdString;
+    QByteArray localId;
 
-    if (QOrganizerManagerData::parseIdString(idString, 0, 0, &managerUri, &engineIdString))
-        return QOrganizerItemId(managerUri, engineIdString);
+    if (QOrganizerManagerData::parseIdData(idString.toUtf8(), 0, 0, &managerUri, &localId)) {
+        // The localId component must be decoded from hex
+        return QOrganizerItemId(managerUri, QByteArray::fromHex(localId));
+    }
+
+    return QOrganizerItemId();
+}
+
+/*!
+    Serializes the organizer item ID to a byte array.
+
+    \sa fromByteArray(), toString()
+*/
+QByteArray QOrganizerItemId::toByteArray() const
+{
+    if (!isNull())
+        return QOrganizerManagerData::buildIdData(m_managerUri, m_localId);
+
+    return QByteArray();
+}
+
+/*!
+    Deserializes the given \a idData. Returns a default-constructed (null)
+    item ID if the given \a idData does not contain a valid, serialized item ID.
+
+    \sa toByteArray(), fromString()
+*/
+QOrganizerItemId QOrganizerItemId::fromByteArray(const QByteArray &idData)
+{
+    QString managerUri;
+    QByteArray localId;
+
+    if (QOrganizerManagerData::parseIdData(idData, 0, 0, &managerUri, &localId))
+        return QOrganizerItemId(managerUri, localId);
 
     return QOrganizerItemId();
 }
@@ -190,7 +226,7 @@ QOrganizerItemId QOrganizerItemId::fromString(const QString &idString)
 */
 Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemId &id)
 {
-    dbg.nospace() << "QOrganizerItemId(" << id.toString() << ")";
+    dbg.nospace() << "QOrganizerItemId(" << qPrintable(id.toString()) << ")";
     return dbg.maybeSpace();
 }
 #endif // QT_NO_DEBUG_STREAM
@@ -202,7 +238,7 @@ Q_ORGANIZER_EXPORT QDebug operator<<(QDebug dbg, const QOrganizerItemId &id)
 */
 Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemId &id)
 {
-    out << id.toString();
+    out << id.toByteArray();
     return out;
 }
 
@@ -212,9 +248,9 @@ Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerIte
 */
 Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemId &id)
 {
-    QString idString;
-    in >> idString;
-    id = QOrganizerItemId::fromString(idString);
+    QByteArray idData;
+    in >> idData;
+    id = QOrganizerItemId::fromByteArray(idData);
     return in;
 }
 #endif // QT_NO_DATASTREAM

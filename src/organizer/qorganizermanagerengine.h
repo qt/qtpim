@@ -74,9 +74,9 @@ public:
     inline QString managerUri() const
     { if (m_uri.isNull()) m_uri = QOrganizerManager::buildUri(managerName(), idInterpretationParameters()); return m_uri; }
 
-    inline QOrganizerItemId itemId(const QString &localId) const
+    inline QOrganizerItemId itemId(const QByteArray &localId) const
     { return QOrganizerItemId(managerUri(), localId); }
-    inline QOrganizerCollectionId collectionId(const QString &localId) const
+    inline QOrganizerCollectionId collectionId(const QByteArray &localId) const
     { return QOrganizerCollectionId(managerUri(), localId); }
 
     // items

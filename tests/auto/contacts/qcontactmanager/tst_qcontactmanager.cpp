@@ -290,7 +290,7 @@ QContactManagerEngine* LazyEngineFactory::engine(const QMap<QString, QString>& p
 
 static inline QContactId makeId(const QString &managerName, uint id)
 {
-    return QContactId(QStringLiteral("qtcontacts:basic%1:").arg(managerName), QString::number(id));
+    return QContactId(QStringLiteral("qtcontacts:basic%1:").arg(managerName), QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint)));
 }
 
 tst_QContactManager::tst_QContactManager()

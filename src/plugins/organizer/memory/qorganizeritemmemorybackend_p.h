@@ -123,7 +123,7 @@ public:
     QMap<QString, QString> idInterpretationParameters() const;
 
     inline QOrganizerCollectionId defaultCollectionId() const
-    { return collectionId(QString::number(QOrganizerItemMemoryEngineData::DefaultCollectionLocalId)); }
+    { const uint id(QOrganizerItemMemoryEngineData::DefaultCollectionLocalId); return collectionId(QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint))); }
 
     // items
     QList<QOrganizerItem> items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint,

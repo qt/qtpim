@@ -165,7 +165,7 @@ QStringList QContactManager::availableManagers()
 */
 bool QContactManager::parseUri(const QString &uri, QString *managerName, QMap<QString, QString> *params)
 {
-    return QContactManagerData::parseIdString(uri, managerName, params);
+    return QContactManagerData::parseUri(uri, managerName, params, false);
 }
 
 /*!
@@ -174,7 +174,7 @@ bool QContactManager::parseUri(const QString &uri, QString *managerName, QMap<QS
 */
 QString QContactManager::buildUri(const QString &managerName, const QMap<QString, QString> &params)
 {
-    return QContactManagerData::buildIdString(managerName, params);
+    return QContactManagerData::buildUri(managerName, params);
 }
 
 /*!

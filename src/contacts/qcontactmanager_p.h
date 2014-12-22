@@ -85,10 +85,13 @@ public:
     }
 
     // helpers
-    static bool parseIdString(const QString &idString, QString *managerName, QMap<QString, QString> *params, QString *managerUri = 0, QString *engineIdString = 0);
+    static bool parseUri(const QString &uriString, QString *managerName, QMap<QString, QString> *params, bool strict = true);
+    static QString buildUri(const QString &managerName, const QMap<QString, QString> &params);
 
-    static QString buildIdString(const QString &managerUri, const QString &engineIdString = QString());
-    static QString buildIdString(const QString &managerName, const QMap<QString, QString> &params, const QString &engineIdString = QString());
+    static bool parseIdData(const QByteArray &idData, QString *managerName, QMap<QString, QString> *params, QString *managerUri = 0, QByteArray *localId = 0);
+
+    static QByteArray buildIdData(const QString &managerUri, const QByteArray &localId = QByteArray());
+    static QByteArray buildIdData(const QString &managerName, const QMap<QString, QString> &params, const QByteArray &localId = QByteArray());
 
     static QString cachedUri(const QString &managerUri);
 

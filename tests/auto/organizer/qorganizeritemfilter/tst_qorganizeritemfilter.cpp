@@ -53,12 +53,12 @@ Q_DECLARE_METATYPE(QOrganizerItemDetailFieldFilter)
 
 static inline QOrganizerItemId makeItemId(uint id)
 {
-    return QOrganizerItemId(QStringLiteral("qtorganizer:basic:"), QString::number(id));
+    return QOrganizerItemId(QStringLiteral("qtorganizer:basic:"), QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint)));
 }
 
 static inline QOrganizerCollectionId makeCollectionId(uint id)
 {
-    return QOrganizerCollectionId(QStringLiteral("qtorganizer:basic:"), QString::number(id));
+    return QOrganizerCollectionId(QStringLiteral("qtorganizer:basic:"), QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint)));
 }
 
 
@@ -1180,31 +1180,31 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
         ids << id1 << id2 << id3;
         filter.setCollectionIds(ids);
         // Testing method setCollectionIds
-        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(\"qtorganizer:basic::5\"), QOrganizerCollectionId(\"qtorganizer:basic::6\"), QOrganizerCollectionId(\"qtorganizer:basic::7\"))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(qtorganizer:basic::05000000), QOrganizerCollectionId(qtorganizer:basic::06000000), QOrganizerCollectionId(qtorganizer:basic::07000000))))";
 
         filter.setCollectionId(id2);
         // Testing method setCollectionId (and the related clearing of the collection)
-        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(\"qtorganizer:basic::6\"))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(qtorganizer:basic::06000000))))";
         filter.setCollectionId(id4);
         // Testing again method setCollectionId (and the related clearing of the collection)
-        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(\"qtorganizer:basic::12\"))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(qtorganizer:basic::0c000000))))";
         ids.clear();
         ids << id4;
         // Testing again method setCollectionIds
-        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(\"qtorganizer:basic::12\"))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(qtorganizer:basic::0c000000))))";
 
         QOrganizerItemCollectionFilter filter2;
         filter2 = filter;
         // Testing again method setCollectionIds on the copied filter
-        QTest::newRow("collection") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(\"qtorganizer:basic::12\"))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(qtorganizer:basic::0c000000))))";
 
         QOrganizerItemFilter fil;
         fil = filter;
         // Testing that the assignment/conversion went fine
-        QTest::newRow("collection") << (QOrganizerItemFilter)fil << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(\"qtorganizer:basic::12\"))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)fil << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(qtorganizer:basic::0c000000))))";
 
         QOrganizerItemCollectionFilter filter3(fil);
-        QTest::newRow("collection") << (QOrganizerItemFilter)filter3 << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(\"qtorganizer:basic::12\"))))";
+        QTest::newRow("collection") << (QOrganizerItemFilter)filter3 << "QOrganizerItemFilter(QOrganizerItemCollectionFilter(collectionIds=(QOrganizerCollectionId(qtorganizer:basic::0c000000))))";
     }
 
     {
@@ -1288,7 +1288,7 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
         QList<QOrganizerItemId> ids;
         ids << makeItemId(5) << makeItemId(6) << makeItemId(17);
         filter.setIds(ids);
-        QTest::newRow("Id") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(\"qtorganizer:basic::5\"), QOrganizerItemId(\"qtorganizer:basic::6\"), QOrganizerItemId(\"qtorganizer:basic::17\"))))";
+        QTest::newRow("Id") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(qtorganizer:basic::05000000), QOrganizerItemId(qtorganizer:basic::06000000), QOrganizerItemId(qtorganizer:basic::11000000))))";
 
         // Resetting the list of Ids
         filter.setIds(QList<QOrganizerItemId>());
@@ -1297,7 +1297,7 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
         // Testing the method insert
         QOrganizerItemId singleId = makeItemId(12);
         filter.insert(singleId);
-        QTest::newRow("Id") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(\"qtorganizer:basic::12\"))))";
+        QTest::newRow("Id") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(qtorganizer:basic::0c000000))))";
 
         // Testing the method remove
         filter.remove(singleId);
@@ -1312,28 +1312,28 @@ void tst_QOrganizerItemFilter::testDebugStreamOut_data()
         // Test op=
         filter.setIds(ids);
         QOrganizerItemFilter f = filter;
-        QTest::newRow("Id") << (QOrganizerItemFilter)f << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(\"qtorganizer:basic::5\"), QOrganizerItemId(\"qtorganizer:basic::6\"), QOrganizerItemId(\"qtorganizer:basic::17\"))))";
+        QTest::newRow("Id") << (QOrganizerItemFilter)f << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(qtorganizer:basic::05000000), QOrganizerItemId(qtorganizer:basic::06000000), QOrganizerItemId(qtorganizer:basic::11000000))))";
         QOrganizerItemIdFilter filter2 = f;
-        QTest::newRow("Id") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(\"qtorganizer:basic::5\"), QOrganizerItemId(\"qtorganizer:basic::6\"), QOrganizerItemId(\"qtorganizer:basic::17\"))))";
+        QTest::newRow("Id") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(qtorganizer:basic::05000000), QOrganizerItemId(qtorganizer:basic::06000000), QOrganizerItemId(qtorganizer:basic::11000000))))";
         filter2 = filter;
-        QTest::newRow("Id") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(\"qtorganizer:basic::5\"), QOrganizerItemId(\"qtorganizer:basic::6\"), QOrganizerItemId(\"qtorganizer:basic::17\"))))";
+        QTest::newRow("Id") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(qtorganizer:basic::05000000), QOrganizerItemId(qtorganizer:basic::06000000), QOrganizerItemId(qtorganizer:basic::11000000))))";
 
         // Self assignment should do nothing
         filter2 = filter2;
-        QTest::newRow("Id") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(\"qtorganizer:basic::5\"), QOrganizerItemId(\"qtorganizer:basic::6\"), QOrganizerItemId(\"qtorganizer:basic::17\"))))";
+        QTest::newRow("Id") << (QOrganizerItemFilter)filter2 << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(qtorganizer:basic::05000000), QOrganizerItemId(qtorganizer:basic::06000000), QOrganizerItemId(qtorganizer:basic::11000000))))";
 
         QOrganizerItemDetailFieldFilter dfil;
         QOrganizerItemIdFilter filter3(dfil);
         QTest::newRow("Id") << (QOrganizerItemFilter)filter3 << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=()))";
 
         QOrganizerItemIdFilter filter4(filter);
-        QTest::newRow("Id") << (QOrganizerItemFilter)filter4 << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(\"qtorganizer:basic::5\"), QOrganizerItemId(\"qtorganizer:basic::6\"), QOrganizerItemId(\"qtorganizer:basic::17\"))))";
+        QTest::newRow("Id") << (QOrganizerItemFilter)filter4 << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(qtorganizer:basic::05000000), QOrganizerItemId(qtorganizer:basic::06000000), QOrganizerItemId(qtorganizer:basic::11000000))))";
         filter = dfil; // now assign.
         QTest::newRow("Id") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=()))";
         QTest::newRow("Id") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=()))";
         filter = filter3;
         filter.setIds(ids); // force a detach
-        QTest::newRow("Id") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(\"qtorganizer:basic::5\"), QOrganizerItemId(\"qtorganizer:basic::6\"), QOrganizerItemId(\"qtorganizer:basic::17\"))))";
+        QTest::newRow("Id") << (QOrganizerItemFilter)filter << "QOrganizerItemFilter(QOrganizerItemIdFilter(ids=(QOrganizerItemId(qtorganizer:basic::05000000), QOrganizerItemId(qtorganizer:basic::06000000), QOrganizerItemId(qtorganizer:basic::11000000))))";
     }
 
     {

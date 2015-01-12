@@ -43,6 +43,7 @@
 #define QORGANIZERRECURRENCERULE_H
 
 #include <QtCore/qdatetime.h>
+#include <QtCore/qmetatype.h>
 #include <QtCore/qset.h>
 #include <QtCore/qshareddata.h>
 

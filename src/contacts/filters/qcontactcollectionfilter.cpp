@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2015 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtContacts module of the Qt Toolkit.
@@ -39,66 +39,63 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACT_P_H
-#define QCONTACT_P_H
-
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
-
-#include <QtCore/qlist.h>
-#include <QtCore/qmap.h>
-#include <QtCore/qshareddata.h>
-
-#include <QtContacts/qcontact.h>
-#include <QtContacts/qcontactdetail.h>
-#include <QtContacts/qcontactid.h>
-#include <QtContacts/qcontactrelationship.h>
-#include <QtContacts/qcontactcollectionid.h>
+#include "qcontactcollectionfilter.h"
+#include "qcontactcollectionfilter_p.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContactData : public QSharedData
+/*!
+    \class QContactCollectionFilter
+    \brief The QContactCollectionFilter class provides a filter based around the collection one
+           contact belongs to.
+    \inmodule QtContacts
+    \ingroup contacts-filters
+
+    It may be used to select contacts belonging to certain collections.
+ */
+
+Q_IMPLEMENT_CONTACTFILTER_PRIVATE(QContactCollectionFilter)
+
+/*!
+    \fn QContactCollectionFilter::QContactCollectionFilter(const QContactCollectionFilter &other)
+
+    Constructs a copy of \a other if possible, otherwise constructs a new contact collection filter.
+ */
+
+/*!
+    Constructs a new contact collection filter.
+ */
+QContactCollectionFilter::QContactCollectionFilter()
+    : QContactFilter(new QContactCollectionFilterPrivate)
 {
-public:
-    QContactData()
-        : QSharedData()
-    {
-    }
+}
 
-    QContactData(const QContactData& other)
-        : QSharedData(other),
-        m_id(other.m_id),
-        m_collectionId(other.m_collectionId),
-        m_details(other.m_details),
-        m_relationshipsCache(other.m_relationshipsCache),
-        m_preferences(other.m_preferences)
-    {
-    }
+/*!
+    Sets the \a id of the collection, which the contacts should belong to.
+ */
+void QContactCollectionFilter::setCollectionId(const QContactCollectionId &id)
+{
+    Q_D(QContactCollectionFilter);
+    d->m_ids.clear();
+    d->m_ids.insert(id);
+}
 
-    ~QContactData() {}
+/*!
+    Sets the list of collection \a ids, which the contacts should belong to.
+ */
+void QContactCollectionFilter::setCollectionIds(const QSet<QContactCollectionId> &ids)
+{
+    Q_D(QContactCollectionFilter);
+    d->m_ids = ids;
+}
 
-    QContactId m_id;
-    QContactCollectionId m_collectionId;
-    QList<QContactDetail> m_details;
-    QList<QContactRelationship> m_relationshipsCache;
-    QMap<QString, int> m_preferences;
-
-    // Helper function
-    void removeOnly(QContactDetail::DetailType type);
-    void removeOnly(const QSet<QContactDetail::DetailType>& types);
-
-    // Trampoline
-    static QSharedDataPointer<QContactData>& contactData(QContact& contact) {return contact.d;}
-};
+/*!
+    Returns the list of collection IDs of contacts should belong to.
+ */
+QSet<QContactCollectionId> QContactCollectionFilter::collectionIds() const
+{
+    Q_D(const QContactCollectionFilter);
+    return d->m_ids;
+}
 
 QT_END_NAMESPACE_CONTACTS
-
-#endif // QCONTACT_P_H

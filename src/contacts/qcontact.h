@@ -56,6 +56,7 @@ QT_BEGIN_NAMESPACE_CONTACTS
 class QContactActionDescriptor;
 class QContactId;
 class QContactManager;
+class QContactCollectionId;
 
 class QContactData;
 class Q_CONTACTS_EXPORT QContact
@@ -114,6 +115,9 @@ public:
     /* Relationships that this contact was involved in when it was retrieved from the manager */
     QList<QContactRelationship> relationships(const QString& relationshipType = QString()) const;
     QList<QContactId> relatedContacts(const QString& relationshipType = QString(), QContactRelationship::Role role = QContactRelationship::Either) const;
+
+    QContactCollectionId collectionId() const;
+    void setCollectionId(const QContactCollectionId &collectionId);
 
     /* Actions available to be performed on this contact */
     QList<QContactActionDescriptor> availableActions(const QString& serviceName = QString()) const;

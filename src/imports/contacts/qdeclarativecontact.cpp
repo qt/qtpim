@@ -125,6 +125,7 @@ QDeclarativeContact::~QDeclarativeContact()
 void QDeclarativeContact::setContact(const QContact& contact)
 {
     m_id = contact.id();
+    m_collectionId = contact.collectionId();
     foreach (QDeclarativeContactDetail *detail, m_details)
         delete detail;
     m_details.clear();
@@ -154,6 +155,7 @@ QContact QDeclarativeContact::contact() const
 {
     QContact contact;
     contact.setId(m_id);
+    contact.setCollectionId(m_collectionId);
     foreach (QDeclarativeContactDetail *detail, m_details)
         contact.saveDetail(&detail->detail());
 
@@ -351,6 +353,29 @@ QVariantMap QDeclarativeContact::preferredDetails() const
         it++;
     }
     return result;
+}
+
+/*!
+    \qmlproperty string OContact::collectionId
+
+    This property holds the id of collection where the contact belongs to.
+*/
+QString QDeclarativeContact::collectionId() const
+{
+    return m_collectionId.toString();
+}
+
+void QDeclarativeContact::setCollectionId(const QString &collectionId)
+{
+    QContactCollectionId newCollectionId(QContactCollectionId::fromString(collectionId));
+
+    // in case invalid collectionId-string, fromString() will return default collectionId-string
+    // instead of the intended collectionId-string
+    if (newCollectionId.toString() == collectionId && m_collectionId.toString() != collectionId) {
+        m_collectionId = newCollectionId;
+        m_modified = true;
+        emit contactChanged();
+    }
 }
 
 /*!

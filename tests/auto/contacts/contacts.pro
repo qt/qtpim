@@ -4,6 +4,7 @@ TEMPLATE = subdirs
 SUBDIRS += \
     qcontact \
     qcontactasync \
+    qcontactcollection \
     qcontactdetail \
     qcontactdetails \
     qcontactfilter \

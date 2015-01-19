@@ -1,9 +1,10 @@
 /****************************************************************************
 **
 ** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2015 Canonical Ltd
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the QtContacts module of the Qt Toolkit.
+** This file is part of the QtOrganizer module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +40,8 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACT_P_H
-#define QCONTACT_P_H
+#ifndef QCONTACTCOLLECTIONFILTER_P_H
+#define QCONTACTCOLLECTIONFILTER_P_H
 
 //
 //  W A R N I N G
@@ -53,52 +54,67 @@
 // We mean it.
 //
 
-#include <QtCore/qlist.h>
-#include <QtCore/qmap.h>
-#include <QtCore/qshareddata.h>
+#include <QtContacts/qcontactcollectionfilter.h>
+#include <QtContacts/private/qcontactfilter_p.h>
 
-#include <QtContacts/qcontact.h>
-#include <QtContacts/qcontactdetail.h>
-#include <QtContacts/qcontactid.h>
-#include <QtContacts/qcontactrelationship.h>
-#include <QtContacts/qcontactcollectionid.h>
+#include <algorithm>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContactData : public QSharedData
+class QContactCollectionFilterPrivate : public QContactFilterPrivate
 {
 public:
-    QContactData()
-        : QSharedData()
+    QContactCollectionFilterPrivate()
+        : QContactFilterPrivate()
     {
     }
 
-    QContactData(const QContactData& other)
-        : QSharedData(other),
-        m_id(other.m_id),
-        m_collectionId(other.m_collectionId),
-        m_details(other.m_details),
-        m_relationshipsCache(other.m_relationshipsCache),
-        m_preferences(other.m_preferences)
+    QContactCollectionFilterPrivate(const QContactCollectionFilterPrivate &other)
+        : QContactFilterPrivate(other), m_ids(other.m_ids)
     {
     }
 
-    ~QContactData() {}
+    virtual bool compare(const QContactFilterPrivate *other) const
+    {
+        const QContactCollectionFilterPrivate *od = static_cast<const QContactCollectionFilterPrivate *>(other);
+        if (od)
+            return m_ids == od->m_ids;
+        return false;
+    }
 
-    QContactId m_id;
-    QContactCollectionId m_collectionId;
-    QList<QContactDetail> m_details;
-    QList<QContactRelationship> m_relationshipsCache;
-    QMap<QString, int> m_preferences;
+#ifndef QT_NO_DATASTREAM
+    QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
+    {
+        if (formatVersion == 1)
+            stream << m_ids;
+        return stream;
+    }
 
-    // Helper function
-    void removeOnly(QContactDetail::DetailType type);
-    void removeOnly(const QSet<QContactDetail::DetailType>& types);
+    QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion)
+    {
+        if (formatVersion == 1)
+            stream >> m_ids;
+        return stream;
+    }
+#endif // QT_NO_DATASTREAM
 
-    // Trampoline
-    static QSharedDataPointer<QContactData>& contactData(QContact& contact) {return contact.d;}
+#ifndef QT_NO_DEBUG_STREAM
+    QDebug &debugStreamOut(QDebug &dbg) const
+    {
+        dbg.nospace() << "QContactCollectionFilter(collectionIds=";
+        QList<QContactCollectionId> ids(m_ids.toList());
+        std::sort(ids.begin(), ids.end());
+        dbg.nospace() << ids;
+        dbg.nospace() << ")";
+        return dbg.maybeSpace();
+    }
+#endif // QT_NO_DEBUG_STREAM
+
+    Q_IMPLEMENT_CONTACTFILTER_VIRTUALCTORS(QContactCollectionFilter, QContactFilter::CollectionFilter)
+
+    QSet<QContactCollectionId> m_ids;
 };
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif // QCONTACT_P_H
+#endif // QCONTACTCOLLECTIONFILTER_P_H

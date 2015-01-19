@@ -47,6 +47,7 @@
 #include <QtCore/qstringlist.h>
 
 #include <QtContacts/qcontact.h>
+#include <QtContacts/qcontactcollection.h>
 #include <QtContacts/qcontactid.h>
 #include <QtContacts/qcontactfetchhint.h>
 #include <QtContacts/qcontactrelationship.h>
@@ -110,6 +111,12 @@ public:
         MissingPlatformRequirementsError
     };
 
+    enum Operation {
+        Add,
+        Change,
+        Remove
+    };
+
     /* Error reporting */
     QContactManager::Error error() const;
     QMap<int, QContactManager::Error> errorMap() const;
@@ -150,6 +157,13 @@ public:
     QList<QContactType::TypeValues> supportedContactTypes() const;
     QList<QContactDetail::DetailType> supportedContactDetailTypes() const;
 
+    // collections
+    QContactCollection defaultCollection();
+    QContactCollection collection(const QContactCollectionId& collectionId);
+    QList<QContactCollection> collections();
+    bool saveCollection(QContactCollection* collection);
+    bool removeCollection(const QContactCollectionId& collectionId);
+
     /* return a list of available backends for which a QContactManager can be constructed. */
     static QStringList availableManagers();
 
@@ -161,6 +175,10 @@ Q_SIGNALS:
     void relationshipsAdded(const QList<QContactId>& affectedContactIds);
     void relationshipsRemoved(const QList<QContactId>& affectedContactIds);
     void selfContactIdChanged(const QContactId& oldId, const QContactId& newId); // need both? or just new?
+    void collectionsAdded(const QList<QContactCollectionId> &collectionIds);
+    void collectionsChanged(const QList<QContactCollectionId> &collectionIds);
+    void collectionsRemoved(const QList<QContactCollectionId> &collectionIds);
+    void collectionsModified(const QList<QPair<QContactCollectionId, QContactManager::Operation> > &collectionIds);
 
 protected:
     void connectNotify(const QMetaMethod &signal);

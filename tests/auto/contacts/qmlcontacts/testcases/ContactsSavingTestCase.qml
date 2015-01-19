@@ -48,6 +48,7 @@ TestCase {
     id: contactsSavingTestCase
 
     property SignalSpy spy
+    property SignalSpy collectionSpy
     property bool debug: false
 
     ContactsTestConfiguration {
@@ -69,6 +70,15 @@ TestCase {
                     contactsSavingTestCase);
         spy.target = model;
         spy.signalName = "contactsChanged";
+
+        collectionSpy = Qt.createQmlObject(
+                    "import QtTest 1.0;" +
+                    "SignalSpy {" +
+                    "}",
+                    contactsSavingTestCase);
+        collectionSpy.target = model
+        collectionSpy.signalName = "collectionsChanged"
+
         return spy;
     }
 
@@ -82,6 +92,13 @@ TestCase {
         logDebug("waitForContactsChanged");
         spy.wait();
     }
+
+    // Verify that the collectionsChanged signal is emitted
+    function waitForCollectionsChanged() {
+        logDebug("waitForCollectionsChanged");
+        collectionSpy.wait();
+    }
+
 
     // Wait until duration has elapsed, or the contactsChanged signal is emitted
     function waitUntilContactsChanged(duration) {

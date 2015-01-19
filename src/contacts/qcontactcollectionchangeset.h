@@ -1,9 +1,10 @@
 /****************************************************************************
 **
 ** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2015 Canonical Ltd
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the QtContacts module of the Qt Toolkit.
+** This file is part of the QtOrganizer module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,66 +40,59 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACT_P_H
-#define QCONTACT_P_H
-
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
+#ifndef QCONTACTCOLLECTIONCHANGESET_H
+#define QCONTACTCOLLECTIONCHANGESET_H
 
 #include <QtCore/qlist.h>
-#include <QtCore/qmap.h>
+#include <QtCore/qset.h>
 #include <QtCore/qshareddata.h>
 
-#include <QtContacts/qcontact.h>
-#include <QtContacts/qcontactdetail.h>
-#include <QtContacts/qcontactid.h>
-#include <QtContacts/qcontactrelationship.h>
 #include <QtContacts/qcontactcollectionid.h>
+#include <QtContacts/qcontactmanager.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContactData : public QSharedData
+class QContactManagerEngine;
+
+class QContactCollectionChangeSetData;
+class Q_CONTACTS_EXPORT QContactCollectionChangeSet
 {
 public:
-    QContactData()
-        : QSharedData()
-    {
-    }
+    QContactCollectionChangeSet();
+    QContactCollectionChangeSet(const QContactCollectionChangeSet &other);
+    ~QContactCollectionChangeSet();
 
-    QContactData(const QContactData& other)
-        : QSharedData(other),
-        m_id(other.m_id),
-        m_collectionId(other.m_collectionId),
-        m_details(other.m_details),
-        m_relationshipsCache(other.m_relationshipsCache),
-        m_preferences(other.m_preferences)
-    {
-    }
+    QContactCollectionChangeSet &operator=(const QContactCollectionChangeSet &other);
 
-    ~QContactData() {}
+    void setDataChanged(bool dataChanged);
+    bool dataChanged() const;
 
-    QContactId m_id;
-    QContactCollectionId m_collectionId;
-    QList<QContactDetail> m_details;
-    QList<QContactRelationship> m_relationshipsCache;
-    QMap<QString, int> m_preferences;
+    QSet<QContactCollectionId> addedCollections() const;
+    void insertAddedCollection(const QContactCollectionId &collectionId);
+    void insertAddedCollections(const QList<QContactCollectionId> &collectionIds);
+    void clearAddedCollections();
 
-    // Helper function
-    void removeOnly(QContactDetail::DetailType type);
-    void removeOnly(const QSet<QContactDetail::DetailType>& types);
+    QSet<QContactCollectionId> changedCollections() const;
+    void insertChangedCollection(const QContactCollectionId &collectionId);
+    void insertChangedCollections(const QList<QContactCollectionId> &collectionIds);
+    void clearChangedCollections();
 
-    // Trampoline
-    static QSharedDataPointer<QContactData>& contactData(QContact& contact) {return contact.d;}
+    QSet<QContactCollectionId> removedCollections() const;
+    void insertRemovedCollection(const QContactCollectionId &collectionId);
+    void insertRemovedCollections(const QList<QContactCollectionId> &collectionIds);
+    void clearRemovedCollections();
+
+    QList<QPair<QContactCollectionId, QContactManager::Operation> > modifiedCollections() const;
+    void clearModifiedCollections();
+
+    void clearAll();
+
+    void emitSignals(QContactManagerEngine *engine) const;
+
+private:
+    QSharedDataPointer<QContactCollectionChangeSetData> d;
 };
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif // QCONTACT_P_H
+#endif // QCONTACTCOLLECTIONCHANGESET_H

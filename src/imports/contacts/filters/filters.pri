@@ -3,6 +3,7 @@ INCLUDEPATH += filters
 HEADERS += \
     filters/qdeclarativecontactactionfilter_p.h \
     filters/qdeclarativecontactchangelogfilter_p.h \
+    filters/qdeclarativecontactcollectionfilter_p.h \
     filters/qdeclarativecontactdetailfilter_p.h \
     filters/qdeclarativecontactdetailrangefilter_p.h \
     filters/qdeclarativecontactidfilter_p.h \

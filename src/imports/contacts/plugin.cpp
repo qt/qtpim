@@ -46,6 +46,7 @@
 #include <QtContacts/qcontactabstractrequest.h>
 
 #include "qdeclarativecontact_p.h"
+#include "qdeclarativecontactcollection_p.h"
 #include "qdeclarativecontactdetail_p.h"
 #include "qdeclarativecontactfetchhint_p.h"
 #include "qdeclarativecontactfilter_p.h"
@@ -73,8 +74,10 @@ public:
         qRegisterMetaType<QContactAbstractRequest::State>("QContactAbstractRequest::State");
         qRegisterMetaType<QContactId>("QContactId");
         qRegisterMetaType<QList<QContactId> >("QList<QContactId>");
+        qRegisterMetaType<QList<QContactCollectionId> >("QList<QContactCollectionId>");
         qmlRegisterType<QDeclarativeContactModel>(uri, major, minor, "ContactModel");
         qmlRegisterType<QDeclarativeContact>(uri, major, minor, "Contact");
+        qmlRegisterType<QDeclarativeContactCollection>(uri, major, minor, "Collection");
         qmlRegisterType<QDeclarativeContactFetchHint>(uri, major, minor, "FetchHint");
         qmlRegisterType<QDeclarativeContactRelationshipModel>(uri, major, minor, "RelationshipModel");
         qmlRegisterType<QDeclarativeContactRelationship>(uri, major, minor, "Relationship");
@@ -115,6 +118,7 @@ public:
         qmlRegisterType<QDeclarativeContactFilter>(uri, major, minor, "Filter");
         qmlRegisterType<QDeclarativeContactActionFilter>(uri, major, minor, "ActionFilter");
         qmlRegisterType<QDeclarativeContactChangeLogFilter>(uri, major, minor, "ChangeLogFilter");
+        qmlRegisterType<QDeclarativeContactCollectionFilter>(uri, major, minor, "CollectionFilter");
         qmlRegisterType<QDeclarativeContactDetailFilter>(uri, major, minor, "DetailFilter");
         qmlRegisterType<QDeclarativeContactDetailRangeFilter>(uri, major, minor, "DetailRangeFilter");
         qmlRegisterType<QDeclarativeContactIdFilter>(uri, major, minor, "IdFilter");

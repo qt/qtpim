@@ -1,9 +1,10 @@
 /****************************************************************************
 **
 ** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2015 Canonical Ltd
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the QtContacts module of the Qt Toolkit.
+** This file is part of the QtOrganizer module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +40,8 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACT_P_H
-#define QCONTACT_P_H
+#ifndef QCONTACTCOLLECTION_P_H
+#define QCONTACTCOLLECTION_P_H
 
 //
 //  W A R N I N G
@@ -53,52 +54,36 @@
 // We mean it.
 //
 
-#include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
 #include <QtCore/qshareddata.h>
+#include <QtCore/qvariant.h>
 
-#include <QtContacts/qcontact.h>
-#include <QtContacts/qcontactdetail.h>
-#include <QtContacts/qcontactid.h>
-#include <QtContacts/qcontactrelationship.h>
+#include <QtContacts/qcontactcollection.h>
 #include <QtContacts/qcontactcollectionid.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContactData : public QSharedData
+class QContactCollectionData : public QSharedData
 {
 public:
-    QContactData()
+    QContactCollectionData()
         : QSharedData()
     {
     }
 
-    QContactData(const QContactData& other)
-        : QSharedData(other),
-        m_id(other.m_id),
-        m_collectionId(other.m_collectionId),
-        m_details(other.m_details),
-        m_relationshipsCache(other.m_relationshipsCache),
-        m_preferences(other.m_preferences)
+    QContactCollectionData(const QContactCollectionData &other)
+        : QSharedData(other), m_metaData(other.m_metaData), m_id(other.m_id)
     {
     }
 
-    ~QContactData() {}
+    ~QContactCollectionData()
+    {
+    }
 
-    QContactId m_id;
-    QContactCollectionId m_collectionId;
-    QList<QContactDetail> m_details;
-    QList<QContactRelationship> m_relationshipsCache;
-    QMap<QString, int> m_preferences;
-
-    // Helper function
-    void removeOnly(QContactDetail::DetailType type);
-    void removeOnly(const QSet<QContactDetail::DetailType>& types);
-
-    // Trampoline
-    static QSharedDataPointer<QContactData>& contactData(QContact& contact) {return contact.d;}
+    QMap<QContactCollection::MetaDataKey, QVariant> m_metaData;
+    QContactCollectionId m_id;
 };
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif // QCONTACT_P_H
+#endif // QCONTACTCOLLECTION_P_H

@@ -1,9 +1,10 @@
 /****************************************************************************
 **
 ** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2015 Canonical Ltd
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the QtContacts module of the Qt Toolkit.
+** This file is part of the QtOrganizer module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,66 +40,47 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACT_P_H
-#define QCONTACT_P_H
+#include "qcontactcollectionfetchrequest.h"
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
-
-#include <QtCore/qlist.h>
-#include <QtCore/qmap.h>
-#include <QtCore/qshareddata.h>
-
-#include <QtContacts/qcontact.h>
-#include <QtContacts/qcontactdetail.h>
-#include <QtContacts/qcontactid.h>
-#include <QtContacts/qcontactrelationship.h>
-#include <QtContacts/qcontactcollectionid.h>
+#include "qcontactrequests_p.h"
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContactData : public QSharedData
+/*!
+    \class QContactCollectionFetchRequest
+    \brief The QContactCollectionFetchRequest class allows a client to asynchronously fetch collections
+           from a backend.
+    \inmodule QtContacts
+    \ingroup contacts-requests
+
+    This request will fetch all the collections stored in the given backend.
+ */
+
+/*!
+    Constructs a new contact fetch request whose parent is the specified \a parent.
+*/
+QContactCollectionFetchRequest::QContactCollectionFetchRequest(QObject *parent)
+    : QContactAbstractRequest(new QContactCollectionFetchRequestPrivate, parent)
 {
-public:
-    QContactData()
-        : QSharedData()
-    {
-    }
+}
 
-    QContactData(const QContactData& other)
-        : QSharedData(other),
-        m_id(other.m_id),
-        m_collectionId(other.m_collectionId),
-        m_details(other.m_details),
-        m_relationshipsCache(other.m_relationshipsCache),
-        m_preferences(other.m_preferences)
-    {
-    }
+/*!
+    Frees memory in use by this request.
+*/
+QContactCollectionFetchRequest::~QContactCollectionFetchRequest()
+{
+}
 
-    ~QContactData() {}
+/*!
+    Returns the collections retrieved by this request.
+*/
+QList<QContactCollection> QContactCollectionFetchRequest::collections() const
+{
+    Q_D(const QContactCollectionFetchRequest);
+    QMutexLocker ml(&d->m_mutex);
+    return d->m_collections;
+}
 
-    QContactId m_id;
-    QContactCollectionId m_collectionId;
-    QList<QContactDetail> m_details;
-    QList<QContactRelationship> m_relationshipsCache;
-    QMap<QString, int> m_preferences;
-
-    // Helper function
-    void removeOnly(QContactDetail::DetailType type);
-    void removeOnly(const QSet<QContactDetail::DetailType>& types);
-
-    // Trampoline
-    static QSharedDataPointer<QContactData>& contactData(QContact& contact) {return contact.d;}
-};
+#include "moc_qcontactcollectionfetchrequest.cpp"
 
 QT_END_NAMESPACE_CONTACTS
-
-#endif // QCONTACT_P_H

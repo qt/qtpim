@@ -39,66 +39,78 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACT_P_H
-#define QCONTACT_P_H
+#ifndef QDECLARATIVECONTACTCOLLECTIONFILTER_H
+#define QDECLARATIVECONTACTCOLLECTIONFILTER_H
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
+#include <QtContacts/qcontactcollectionfilter.h>
 
-#include <QtCore/qlist.h>
-#include <QtCore/qmap.h>
-#include <QtCore/qshareddata.h>
+#include "qdeclarativecontactfilter_p.h"
 
-#include <QtContacts/qcontact.h>
-#include <QtContacts/qcontactdetail.h>
-#include <QtContacts/qcontactid.h>
-#include <QtContacts/qcontactrelationship.h>
-#include <QtContacts/qcontactcollectionid.h>
+QTCONTACTS_USE_NAMESPACE
 
-QT_BEGIN_NAMESPACE_CONTACTS
+QT_BEGIN_NAMESPACE
 
-class QContactData : public QSharedData
+class QDeclarativeContactCollectionFilter : public QDeclarativeContactFilter
 {
+    Q_OBJECT
+    Q_PROPERTY(QStringList ids READ ids WRITE setIds NOTIFY valueChanged)
+
 public:
-    QContactData()
-        : QSharedData()
+    QDeclarativeContactCollectionFilter(QObject *parent = 0)
+        : QDeclarativeContactFilter(parent)
     {
+        connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));
     }
 
-    QContactData(const QContactData& other)
-        : QSharedData(other),
-        m_id(other.m_id),
-        m_collectionId(other.m_collectionId),
-        m_details(other.m_details),
-        m_relationshipsCache(other.m_relationshipsCache),
-        m_preferences(other.m_preferences)
+    QStringList ids() const
     {
+        return m_ids;
     }
 
-    ~QContactData() {}
+    void setIds(const QStringList &ids)
+    {
+        foreach (const QString &id, ids) {
+            if (!m_ids.contains(id)) {
+                m_ids = ids;
+                emit valueChanged();
+                return;
+            }
+        }
 
-    QContactId m_id;
-    QContactCollectionId m_collectionId;
-    QList<QContactDetail> m_details;
-    QList<QContactRelationship> m_relationshipsCache;
-    QMap<QString, int> m_preferences;
+        foreach (const QString &id, m_ids) {
+            if (!ids.contains(id)) {
+                m_ids = ids;
+                emit valueChanged();
+                return;
+            }
+        }
+    }
 
-    // Helper function
-    void removeOnly(QContactDetail::DetailType type);
-    void removeOnly(const QSet<QContactDetail::DetailType>& types);
+    // used by model
+    QContactFilter filter() const
+    {
+        QContactCollectionFilter f;
+        QSet<QContactCollectionId> ids;
 
-    // Trampoline
-    static QSharedDataPointer<QContactData>& contactData(QContact& contact) {return contact.d;}
+        foreach (const QVariant &id, m_ids) {
+            QContactCollectionId cId = QContactCollectionId::fromString(id.toString());
+            if (!cId.isNull())
+                ids << cId;
+        }
+
+        f.setCollectionIds(ids);
+        return f;
+    }
+
+Q_SIGNALS:
+    void valueChanged();
+
+private:
+    QStringList m_ids;
 };
 
-QT_END_NAMESPACE_CONTACTS
+QT_END_NAMESPACE
 
-#endif // QCONTACT_P_H
+QML_DECLARE_TYPE(QDeclarativeContactCollectionFilter)
+
+#endif // QDECLARATIVECONTACTCOLLECTIONFILTER_H

@@ -451,6 +451,79 @@ bool QContactManagerEngine::removeRelationships(const QList<QContactRelationship
     return false;
 }
 
+/*!
+    This function should be reimplemented to support synchronous calls to fetch the default collection.
+    Any errors encountered during this operation should be stored to \a error.
+*/
+QContactCollection QContactManagerEngine::defaultCollection(QContactManager::Error* error)
+{
+    *error = QContactManager::NotSupportedError;
+    return QContactCollection();
+}
+
+/*!
+    This function should be reimplemented to support synchronous calls to fetch a collection based
+    on its ID. Any errors encountered during this operation should be stored to \a error. If the
+    given \a collectionId does not specify a valid collection, \a error will be set to
+    \c QContactManager::DoesNotExistError.
+
+*/
+QContactCollection QContactManagerEngine::collection(const QContactCollectionId& collectionId, QContactManager::Error* error)
+{
+    Q_UNUSED(collectionId);
+    *error = QContactManager::NotSupportedError;
+    return QContactCollection();
+}
+
+/*!
+    This function should be reimplemented to support synchronous calls to fetch all the collections
+    managed by this backend. Any errors encountered during this operation should be stored to \a error.
+ */
+QList<QContactCollection> QContactManagerEngine::collections(QContactManager::Error* error)
+{
+    *error = QContactManager::NotSupportedError;
+    return QList<QContactCollection>();
+}
+
+/*!
+    This function should be reimplemented to support synchronous calls to save a collection.
+
+    This function is supposed to save the given \a collection to the backend, and returns true on
+    success or false otherwise. Any errors encountered during this operation should be stored to
+    \a error.
+
+    A new collection will be created in the backend store if the collection ID of it is null.
+    Otherwise, an existing collection with the same ID will be updated. If the given collection ID
+    does not exist in the backend, it will result a QContactManager::DoesNotExistError error.
+
+    Note that upon successful saving, the backend may update the collection, e.g. collection ID for
+    newly saved collections.
+*/
+bool QContactManagerEngine::saveCollection(QContactCollection* collection, QContactManager::Error* error)
+{
+    Q_UNUSED(collection);
+
+    *error = QContactManager::NotSupportedError;
+    return false;
+}
+
+/*!
+    This function should be reimplemented to support synchronous calls to remove a collection.
+
+    This function is supposed to remove the collection identified by the given \a collectionId, and
+    all items in the collection. Returns true on success, or false otherwise. Any errors encountered
+    during this operation should be stored to \a error.
+
+    Note that removing the default collection should not be allowed and should result a
+    QContactManager::PermissionsError error.
+*/
+bool QContactManagerEngine::removeCollection(const QContactCollectionId& collectionId, QContactManager::Error* error)
+{
+    Q_UNUSED(collectionId);
+
+    *error = QContactManager::NotSupportedError;
+    return false;
+}
 
 /*!
   Given an input \a filter, returns the canonical version of the filter.
@@ -1416,6 +1489,15 @@ bool QContactManagerEngine::testFilter(const QContactFilter &filter, const QCont
                 // Fall through to end
             }
             break;
+
+        case QContactFilter::CollectionFilter:
+            {
+                const QContactCollectionFilter cf(filter);
+                const QSet<QContactCollectionId>& ids = cf.collectionIds();
+                if (ids.contains(contact.collectionId()))
+                    return true;
+                return false;
+            }
     }
     return false;
 }
@@ -1920,6 +2002,116 @@ void QContactManagerEngine::updateRelationshipFetchRequest(QContactRelationshipF
     Q_ASSERT(guard);
 #endif
 }
+
+/*!
+  Updates the given QContactCollectionFetchRequest \a req with the latest results \a result and an operation error \a error.
+  In addition, the state of the request will be changed to \a newState.
+
+  It then causes the request to emit its resultsAvailable() signal to notify clients of the request progress.
+  If the new request state is different from the previous state, the stateChanged() signal will also be emitted from the request.
+ */
+void QContactManagerEngine::updateCollectionFetchRequest(QContactCollectionFetchRequest* req, const QList<QContactCollection>& result, QContactManager::Error error, QContactAbstractRequest::State newState)
+{
+    Q_ASSERT(req);
+    QContactCollectionFetchRequestPrivate* rd = static_cast<QContactCollectionFetchRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_collections = result;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+    QPointer<QContactAbstractRequest> guard(req);
+#endif
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+    Q_ASSERT(guard);
+#endif
+    if (emitState)
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QContactAbstractRequest::State, newState));
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+    Q_ASSERT(guard);
+#endif
+}
+
+/*!
+  Updates the given QContactCollectionRemoveRequest \a req with the operation error \a error, and map of input index to individual error \a errorMap.
+  In addition, the state of the request will be changed to \a newState.
+
+  It then causes the request to emit its resultsAvailable() signal to notify clients of the request progress.
+  If the new request state is different from the previous state, the stateChanged() signal will also be emitted from the request.
+ */
+void QContactManagerEngine::updateCollectionRemoveRequest(QContactCollectionRemoveRequest* req, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State newState)
+{
+    Q_ASSERT(req);
+    QContactCollectionRemoveRequestPrivate* rd = static_cast<QContactCollectionRemoveRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_errors = errorMap;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+    QPointer<QContactAbstractRequest> guard(req);
+#endif
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+    Q_ASSERT(guard);
+#endif
+    if (emitState)
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QContactAbstractRequest::State, newState));
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+    Q_ASSERT(guard);
+#endif
+}
+
+/*!
+  Updates the given QContactCollectionSaveRequest \a req with the latest results \a result, operation error \a error, and map of input index to individual error \a errorMap.
+  In addition, the state of the request will be changed to \a newState.
+
+  It then causes the request to emit its resultsAvailable() signal to notify clients of the request progress.
+  If the new request state is different from the previous state, the stateChanged() signal will also be emitted from the request.
+ */
+void QContactManagerEngine::updateCollectionSaveRequest(QContactCollectionSaveRequest* req, const QList<QContactCollection>& result, QContactManager::Error error, const QMap<int, QContactManager::Error>& errorMap, QContactAbstractRequest::State newState)
+{
+    Q_ASSERT(req);
+    QContactCollectionSaveRequestPrivate* rd = static_cast<QContactCollectionSaveRequestPrivate*>(req->d_ptr);
+    QMutexLocker ml(&rd->m_mutex);
+    bool emitState = rd->m_state != newState;
+    rd->m_collections = result;
+    rd->m_errors = errorMap;
+    rd->m_error = error;
+    rd->m_state = newState;
+    ml.unlock();
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+    QPointer<QContactAbstractRequest> guard(req);
+#endif
+    Qt::ConnectionType connectionType = Qt::DirectConnection;
+#ifdef QT_NO_THREAD
+    if (req->thread() != QThread::currentThread())
+        connectionType = Qt::BlockingQueuedConnection;
+#endif
+    QMetaObject::invokeMethod(req, "resultsAvailable", connectionType);
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+    Q_ASSERT(guard);
+#endif
+    if (emitState)
+        QMetaObject::invokeMethod(req, "stateChanged", connectionType, Q_ARG(QContactAbstractRequest::State, newState));
+#if !defined(QT_NO_DEBUG) || defined(QT_FORCE_ASSERTS)
+    Q_ASSERT(guard);
+#endif
+}
+
 
 /*!
   For each contact in \a contacts, either add it to the database or update an existing one.

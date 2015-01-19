@@ -56,6 +56,9 @@
 #include <QtContacts/qcontactmanager.h>
 #include <QtContacts/qcontactrequests.h>
 #include <QtContacts/qcontactsortorder.h>
+#include <QtContacts/qcontactcollectionfetchrequest.h>
+#include <QtContacts/qcontactcollectionsaverequest.h>
+#include <QtContacts/qcontactcollectionremoverequest.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -77,6 +80,8 @@ public:
 
     inline QContactId contactId(const QByteArray &localId) const
     { return QContactId(managerUri(), localId); }
+    inline QContactCollectionId collectionId(const QByteArray &localId) const
+    { return QContactCollectionId(managerUri(), localId); }
 
     /* Filtering */
     virtual QList<QContactId> contactIds(const QContactFilter &filter, const QList<QContactSortOrder> &sortOrders, QContactManager::Error *error) const;
@@ -102,6 +107,13 @@ public:
     virtual bool saveRelationships(QList<QContactRelationship> *relationships, QMap<int, QContactManager::Error>* errorMap, QContactManager::Error *error);
     virtual bool removeRelationships(const QList<QContactRelationship> &relationships, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error);
 
+    // collections
+    virtual QContactCollection defaultCollection(QContactManager::Error *error);
+    virtual QContactCollection collection(const QContactCollectionId &collectionId, QContactManager::Error *error);
+    virtual QList<QContactCollection> collections(QContactManager::Error *error);
+    virtual bool saveCollection(QContactCollection *collection, QContactManager::Error *error);
+    virtual bool removeCollection(const QContactCollectionId &collectionId, QContactManager::Error *error);
+
     /* Validation for saving */
     virtual bool validateContact(const QContact &contact, QContactManager::Error *error) const;
 
@@ -126,6 +138,10 @@ Q_SIGNALS:
     void relationshipsAdded(const QList<QContactId> &affectedContactIds);
     void relationshipsRemoved(const QList<QContactId> &affectedContactIds);
     void selfContactIdChanged(const QContactId &oldId, const QContactId &newId);
+    void collectionsAdded(const QList<QContactCollectionId> &collectionIds);
+    void collectionsChanged(const QList<QContactCollectionId> &collectionIds);
+    void collectionsRemoved(const QList<QContactCollectionId> &collectionIds);
+    void collectionsModified(const QList<QPair<QContactCollectionId, QContactManager::Operation> > &collectionIds);
 
 public:
     // Async update functions
@@ -139,6 +155,11 @@ public:
     static void updateRelationshipSaveRequest(QContactRelationshipSaveRequest *req, const QList<QContactRelationship> &result, QContactManager::Error error, const QMap<int, QContactManager::Error> &errorMap, QContactAbstractRequest::State);
     static void updateRelationshipRemoveRequest(QContactRelationshipRemoveRequest *req, QContactManager::Error error, const QMap<int, QContactManager::Error> &errorMap, QContactAbstractRequest::State);
     static void updateRelationshipFetchRequest(QContactRelationshipFetchRequest *req, const QList<QContactRelationship> &result, QContactManager::Error error, QContactAbstractRequest::State);
+
+    // collections
+    static void updateCollectionFetchRequest(QContactCollectionFetchRequest *request, const QList<QContactCollection> &result, QContactManager::Error error, QContactAbstractRequest::State newState);
+    static void updateCollectionRemoveRequest(QContactCollectionRemoveRequest *request, QContactManager::Error error, const QMap<int, QContactManager::Error> &errorMap, QContactAbstractRequest::State newState);
+    static void updateCollectionSaveRequest(QContactCollectionSaveRequest *request, const QList<QContactCollection> &result, QContactManager::Error error, const QMap<int, QContactManager::Error> &errorMap, QContactAbstractRequest::State newState);
 
     // Other protected area update functions
     static void setDetailAccessConstraints(QContactDetail *detail, QContactDetail::AccessConstraints constraints);

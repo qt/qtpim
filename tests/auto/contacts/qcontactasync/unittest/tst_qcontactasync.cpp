@@ -56,6 +56,13 @@ QTCONTACTS_USE_NAMESPACE
                                          fqcfr2.start(); \
                                          fqcfr3.start();
 
+/* Define an innocuous request (fetch ie doesn't mutate) to "fill up" any queues */
+#define FILL_QUEUE_WITH_FETCH_REQUESTS_WITH_MANAGER(manager) QContactFetchRequest fqifr1, fqifr2, fqifr3; \
+                                                fqifr1.setManager(manager); fqifr1.start(); \
+                                                fqifr2.setManager(manager); fqifr2.start(); \
+                                                fqifr3.setManager(manager); fqifr3.start();
+
+
 //TESTED_COMPONENT=src/contacts
 
 // Unfortunately the plumbing isn't in place to allow cancelling requests at arbitrary points
@@ -230,6 +237,13 @@ private slots:
     void relationshipSave();
     void relationshipSave_data() { addManagers(); }
 
+    void collectionFetch();
+    void collectionFetch_data() { addManagers(); }
+    void collectionRemove();
+    void collectionRemove_data() { addManagers(); }
+    void collectionSave();
+    void collectionSave_data() { addManagers(); }
+
     void maliciousManager(); // uses it's own custom data (manager)
 
     void testQuickDestruction();
@@ -245,6 +259,7 @@ private:
     bool compareContacts(QContact ca, QContact cb);
     bool containsIgnoringTimestamps(const QList<QContact>& list, const QContact& c);
     bool compareIgnoringTimestamps(const QContact& ca, const QContact& cb);
+    bool containsAllCollectionIds(const QList<QContactCollectionId>& target, const QList<QContactCollectionId>& ids);
     QContactManager* prepareModel(const QString& uri);
 
     Qt::HANDLE m_mainThreadId;
@@ -374,6 +389,18 @@ bool tst_QContactAsync::compareIgnoringTimestamps(const QContact& ca, const QCon
     if (a == b)
         return true;
     return false;
+}
+
+bool tst_QContactAsync::containsAllCollectionIds(const QList<QContactCollectionId> &target, const QList<QContactCollectionId> &ids)
+{
+    bool containsAllIds = true;
+    foreach (QContactCollectionId id, ids) {
+        if (!target.contains(id)) {
+            containsAllIds = false;
+            break;
+        }
+    }
+    return containsAllIds;
 }
 
 void tst_QContactAsync::testDestructor()
@@ -1316,6 +1343,9 @@ void tst_QContactAsync::contactSave()
     //QCOMPARE(result, expected);
     // XXX: really, we should use isSuperset() from tst_QContactManager, but this will do for now:
     QVERIFY(result.first().detail<QContactName>() == nameDetail);
+
+    // check if the contact was saved on default collection
+    QCOMPARE(result.first().collectionId().toString(), cm->defaultCollection().id().toString());
     QCOMPARE(cm->contactIds().size(), originalCount + 1);
 
     // update a previously saved contact
@@ -2413,6 +2443,443 @@ void tst_QContactAsync::relationshipSave()
     }
 }
 
+void tst_QContactAsync::collectionFetch()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(prepareModel(uri));
+
+    QContactCollectionFetchRequest cfr;
+    QVERIFY(cfr.type() == QContactAbstractRequest::CollectionFetchRequest);
+
+    // initial state - not started, no manager.
+    QVERIFY(!cfr.isActive());
+    QVERIFY(!cfr.isFinished());
+    QVERIFY(!cfr.start());
+    QVERIFY(!cfr.cancel());
+    QVERIFY(!cfr.waitForFinished());
+
+    // retrieve all collections.
+    cfr.setManager(cm.data());
+    QCOMPARE(cfr.manager(), cm.data());
+    QVERIFY(!cfr.isActive());
+    QVERIFY(!cfr.isFinished());
+    QVERIFY(!cfr.cancel());
+    QVERIFY(!cfr.waitForFinished());
+    qRegisterMetaType<QContactCollectionFetchRequest*>("QContactCollectionFetchRequest*");
+    QThreadSignalSpy spy(&cfr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
+    QVERIFY(!cfr.cancel()); // not started
+
+    QVERIFY(cfr.start());
+    //QVERIFY(cfr.isFinished() || !cfr.start());  // already started. // thread scheduling means this is untestable
+    QVERIFY((cfr.isActive() && cfr.state() == QContactAbstractRequest::ActiveState) || cfr.isFinished());
+    QVERIFY(cfr.waitForFinished());
+    QVERIFY(cfr.isFinished());
+
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+    QList<QContactCollection> syncCols = cm->collections();
+    QList<QContactCollection> cols = cfr.collections();
+    QCOMPARE(cols.size(), syncCols.size());
+    for (int i = 0; i < cols.size(); i++) {
+        QContactCollection curr = cols.at(i);
+        QVERIFY(syncCols.contains(curr));
+    }
+
+    // cancelling
+    int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
+    while (true) {
+        QVERIFY(!cfr.cancel()); // not started
+        FILL_QUEUE_WITH_FETCH_REQUESTS_WITH_MANAGER(cm.data());
+        QVERIFY(cfr.start());
+        if (!cfr.cancel()) {
+            // due to thread scheduling, async cancel might be attempted
+            // after the request has already finished.. so loop and try again.
+            spy.clear();
+            cfr.waitForFinished();
+            bailoutCount -= 1;
+            if (!bailoutCount) {
+//                qWarning("Unable to test cancelling due to thread scheduling!");
+                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
+                break;
+            }
+            continue;
+        }
+
+        // if we get here, then we are cancelling the request.
+        QVERIFY(cfr.waitForFinished());
+        QVERIFY(cfr.isCanceled());
+
+        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
+        spy.clear();
+        break;
+    }
+
+    // restart, and wait for progress after cancel.
+    while (true) {
+        QVERIFY(!cfr.cancel()); // not started
+        FILL_QUEUE_WITH_FETCH_REQUESTS_WITH_MANAGER(cm.data());
+        QVERIFY(cfr.start());
+        if (!cfr.cancel()) {
+            // due to thread scheduling, async cancel might be attempted
+            // after the request has already finished.. so loop and try again.
+            cfr.waitForFinished();
+            bailoutCount -= 1;
+            spy.clear();
+            if (!bailoutCount) {
+                //qWarning("Unable to test cancelling due to thread scheduling!");
+                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
+                break;
+            }
+            continue;
+        }
+        cfr.waitForFinished();
+        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
+        spy.clear();
+        QVERIFY(!cfr.isActive());
+        QVERIFY(cfr.state() == QContactAbstractRequest::CanceledState);
+        break;
+    }
+}
+
+void tst_QContactAsync::collectionRemove()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(prepareModel(uri));
+    QContactCollectionRemoveRequest crr;
+    QVERIFY(crr.type() == QContactAbstractRequest::CollectionRemoveRequest);
+
+    // initial state - not started, no manager.
+    QVERIFY(!crr.isActive());
+    QVERIFY(!crr.isFinished());
+    QVERIFY(!crr.start());
+    QVERIFY(!crr.cancel());
+    QVERIFY(!crr.waitForFinished());
+
+    // specific collection set
+    QContactCollectionId removeId = cm->collections().last().id();
+    if (cm->defaultCollection().id() == removeId)
+        removeId = cm->collections().first().id();
+    crr.setCollectionId(removeId);
+    QVERIFY(crr.collectionIds() == QList<QContactCollectionId>() << removeId);
+    int originalCount = cm->collections().size();
+    crr.setManager(cm.data());
+    QCOMPARE(crr.manager(), cm.data());
+    QVERIFY(!crr.isActive());
+    QVERIFY(!crr.isFinished());
+    QVERIFY(!crr.cancel());
+    QVERIFY(!crr.waitForFinished());
+    qRegisterMetaType<QContactCollectionRemoveRequest*>("QContactCollectionRemoveRequest*");
+    QThreadSignalSpy spy(&crr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
+    QVERIFY(!crr.cancel()); // not started
+    QVERIFY(crr.start());
+    QVERIFY((crr.isActive() &&crr.state() == QContactAbstractRequest::ActiveState) || crr.isFinished());
+    //QVERIFY(crr.isFinished() || !crr.start());  // already started. // thread scheduling means this is untestable
+    QVERIFY(crr.waitForFinished());
+    QVERIFY(crr.isFinished());
+
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+    QCOMPARE(cm->collections().size(), originalCount - 1); // should have removed that particular collection.
+    QVERIFY(crr.error() == QContactManager::NoError);
+    QVERIFY(crr.errorMap().isEmpty());
+
+    // remove all collections
+    QList<QContactCollectionId> allCollectionIds;
+    QList<QContactCollection> allCollections = cm->collections();
+    for (int i = 0; i < allCollections.size(); ++i)
+        allCollectionIds << allCollections.at(i).id();
+    crr.setCollectionIds(allCollectionIds);
+
+    QVERIFY(!crr.cancel()); // not started
+    QVERIFY(crr.start());
+
+    QVERIFY((crr.isActive() && crr.state() == QContactAbstractRequest::ActiveState) || crr.isFinished());
+    //QVERIFY(crr.isFinished() || !crr.start());  // already started. // thread scheduling means this is untestable
+    QVERIFY(crr.waitForFinished());
+    QVERIFY(crr.isFinished());
+
+    QVERIFY(cm->collections().size() >= 1); // at least one collection must be left, since default collection cannot be removed.
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+    // remove empty list
+    QList<QContactCollectionId> collectionIdList;
+    QContactCollectionRemoveRequest crr1;
+    crr1.setManager(cm.data());
+    crr1.setCollectionIds(collectionIdList);
+    crr1.start();
+    crr1.waitForFinished();
+    QVERIFY(crr1.isFinished());
+    QVERIFY(crr1.error() == QContactManager::NoError);
+
+    // cancelling
+    QContactCollection temp;
+    temp.setMetaData(QContactCollection::KeyDescription, "Should not be removed!");
+    cm->saveCollection(&temp);
+    crr.setCollectionId(temp.id());
+
+    int collectionCount = cm->collections().size();
+    int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
+    while (true) {
+        QVERIFY(!crr.cancel()); // not started
+        FILL_QUEUE_WITH_FETCH_REQUESTS_WITH_MANAGER(cm.data());
+        QVERIFY(spy.count() == 0);
+        QVERIFY(crr.start());
+        if (!crr.cancel()) {
+            // due to thread scheduling, async cancel might be attempted
+            // after the request has already finished.. so loop and try again.
+            crr.waitForFinished();
+            temp.setId(QContactCollectionId());
+            if (!cm->saveCollection(&temp)) {
+                QSKIP("Unable to save temporary item for remove request cancellation test!");
+            }
+            crr.setCollectionId(temp.id());
+            bailoutCount -= 1;
+            if (!bailoutCount) {
+//                qWarning("Unable to test cancelling due to thread scheduling!");
+                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
+                break;
+            }
+            spy.clear();
+            continue;
+        }
+
+        // if we get here, then we are cancelling the request.
+        QVERIFY(crr.waitForFinished());
+        QVERIFY(crr.isCanceled());
+        QCOMPARE(cm->collections().size(), collectionCount); // temp collection should not have been removed
+        QList<QContactCollectionId> removeCollectionIds;
+        QList<QContactCollection> removeCollections = cm->collections();
+        for (int i = 0; i < removeCollections.size(); ++i)
+            removeCollectionIds << removeCollections.at(i).id();
+        QVERIFY(containsAllCollectionIds(removeCollectionIds, crr.collectionIds()));
+        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
+        spy.clear();
+        break;
+    }
+
+    // restart, and wait for progress after cancel.
+    while (true) {
+        QVERIFY(!crr.cancel()); // not started
+        FILL_QUEUE_WITH_FETCH_REQUESTS_WITH_MANAGER(cm.data());
+        QVERIFY(crr.start());
+        if (!crr.cancel()) {
+            // due to thread scheduling, async cancel might be attempted
+            // after the request has already finished.. so loop and try again.
+            crr.waitForFinished();
+            temp.setId(QContactCollectionId());
+            if (!cm->saveCollection(&temp)) {
+                QSKIP("Unable to save temporary item for remove request cancellation test!");
+            }
+            crr.setCollectionId(temp.id());
+            bailoutCount -= 1;
+            if (!bailoutCount) {
+//                qWarning("Unable to test cancelling due to thread scheduling!");
+                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
+                break;
+            }
+            spy.clear();
+            continue;
+        }
+        crr.waitForFinished();
+        QVERIFY(crr.isCanceled());
+        QCOMPARE(cm->collections().size(), collectionCount); // temp collection should not have been removed
+        QList<QContactCollectionId> removeCollectionIds;
+        QList<QContactCollection> removeCollections = cm->collections();
+        for (int i = 0; i < removeCollections.size(); ++i)
+            removeCollectionIds << removeCollections.at(i).id();
+        QVERIFY(containsAllCollectionIds(removeCollectionIds, crr.collectionIds()));
+        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
+        spy.clear();
+        break;
+    }
+
+    // now clean up our temp collection.
+    cm->removeCollection(temp.id());
+
+}
+
+void tst_QContactAsync::collectionSave()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(prepareModel(uri));
+    QContactCollectionSaveRequest csr;
+    QVERIFY(csr.type() == QContactAbstractRequest::CollectionSaveRequest);
+
+    // initial state - not started, no manager.
+    QVERIFY(!csr.isActive());
+    QVERIFY(!csr.isFinished());
+    QVERIFY(!csr.start());
+    QVERIFY(!csr.cancel());
+    QVERIFY(!csr.waitForFinished());
+
+    // save a new item
+    int originalCount = cm->collections().size();
+    QContactCollection testCollection;
+    testCollection.setMetaData(QContactCollection::KeyDescription, "test description");
+    testCollection.setMetaData(QContactCollection::KeyName, "New collection");
+    QList<QContactCollection> saveList;
+    saveList << testCollection;
+    csr.setManager(cm.data());
+    QCOMPARE(csr.manager(), cm.data());
+    QVERIFY(!csr.isActive());
+    QVERIFY(!csr.isFinished());
+    QVERIFY(!csr.cancel());
+    QVERIFY(!csr.waitForFinished());
+    qRegisterMetaType<QContactCollectionSaveRequest*>("QContactCollectionSaveRequest*");
+    QThreadSignalSpy spy(&csr, SIGNAL(stateChanged(QContactAbstractRequest::State)));
+    csr.setCollection(testCollection);
+    QCOMPARE(csr.collections(), saveList);
+    QVERIFY(!csr.cancel()); // not started
+    QVERIFY(csr.start());
+
+    QVERIFY((csr.isActive() && csr.state() == QContactAbstractRequest::ActiveState) || csr.isFinished());
+    //QVERIFY(csr.isFinished() || !csr.start());  // already started. // thread scheduling means this is untestable
+    QVERIFY(csr.waitForFinished());
+    QVERIFY(csr.isFinished());
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+    QList<QContactCollection> expected = csr.collections();
+    QCOMPARE(expected.size(), 1);
+    QList<QContactCollection> result;
+    result << cm->collection(csr.collections().at(0).id());
+
+    // find the saved one, compare.
+    foreach (const QContactCollection &col, result)
+        QVERIFY(col.id() == expected.at(0).id());
+
+    // update a previously saved collection
+    QVERIFY(!result.isEmpty()); // make sure that we were able to retrieve the required collection.
+    testCollection = result.first();
+    testCollection.setMetaData(QContactCollection::KeyName, "test name");
+    saveList.clear();
+    saveList << testCollection;
+    csr.setCollections(saveList);
+    QCOMPARE(csr.collections(), saveList);
+    QVERIFY(!csr.cancel()); // not started
+    QVERIFY(csr.start());
+
+    QVERIFY((csr.isActive() && csr.state() == QContactAbstractRequest::ActiveState) || csr.isFinished());
+    //QVERIFY(csr.isFinished() || !csr.start());  // already started. // thread scheduling means this is untestable
+    QVERIFY(csr.waitForFinished());
+
+    QVERIFY(csr.isFinished());
+    QVERIFY(spy.count() >= 1); // active + finished progress signals
+    spy.clear();
+
+    expected = csr.collections();
+    result.clear();
+    result = cm->collections();
+    // find the saved one, compare.
+    foreach (const QContactCollection& col, result) {
+        if (col.id() == expected.at(0).id()) {
+            QVERIFY(col == expected.at(0)); // XXX TODO: if we change the semantic so that save merely updates the id...?
+        }
+    }
+    QCOMPARE(cm->collections().size(), originalCount + 1); // ie shouldn't have added an extra one (would be +2)
+    QVERIFY(csr.error() == QContactManager::NoError);
+    QVERIFY(csr.errorMap().isEmpty());
+
+    // save empty list
+    QList<QContactCollection> collectionList;
+    QContactCollectionSaveRequest csr1;
+    csr1.setManager(cm.data());
+    csr1.setCollections(collectionList);
+    csr1.start();
+    csr1.waitForFinished();
+    QVERIFY(csr1.isFinished());
+    QVERIFY(csr1.error() == QContactManager::NoError);
+
+    // cancelling
+    QContactCollection temp;
+    temp.setMetaData(testCollection.metaData());
+    temp.setExtendedMetaData("test", "shouldn't be saved");
+    saveList.clear();
+    saveList << temp;
+    csr.setCollections(saveList);
+
+    int bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT; // attempt to cancel 40 times.  If it doesn't work due to threading, bail out.
+    while (true) {
+        QVERIFY(!csr.cancel()); // not started
+        FILL_QUEUE_WITH_FETCH_REQUESTS_WITH_MANAGER(cm.data());
+        QVERIFY(csr.start());
+        if (!csr.cancel()) {
+            // due to thread scheduling, async cancel might be attempted
+            // after the request has already finished.. so loop and try again.
+            csr.waitForFinished();
+            saveList = csr.collections();
+            if (cm->collections().size() > (originalCount + 1) && !cm->removeCollection(saveList.at(0).id())) {
+                QSKIP("Unable to remove saved collection to test cancellation of collection save request");
+            }
+            saveList.clear();
+            saveList << temp;
+            csr.setCollections(saveList);
+            bailoutCount -= 1;
+            if (!bailoutCount) {
+//                qWarning("Unable to test cancelling due to thread scheduling!");
+                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
+                break;
+            }
+            spy.clear();
+            continue;
+        }
+
+        // if we get here, then we are cancelling the request.
+        QVERIFY(csr.waitForFinished());
+        QVERIFY(csr.isCanceled());
+        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
+        spy.clear();
+
+        // verify that the changes were not saved
+        expected.clear();
+        QList<QContactCollection> allCollections = cm->collections();
+        QVERIFY(!allCollections.contains(temp)); // should NOT contain it since it was cancelled.
+        QCOMPARE(allCollections.size(), originalCount + 1);
+        break;
+    }
+    // restart, and wait for progress after cancel.
+
+    while (true) {
+        QVERIFY(!csr.cancel()); // not started
+        FILL_QUEUE_WITH_FETCH_REQUESTS_WITH_MANAGER(cm.data());
+        QVERIFY(csr.start());
+        if (!csr.cancel()) {
+            // due to thread scheduling, async cancel might be attempted
+            // after the request has already finished.. so loop and try again.
+            csr.waitForFinished();
+            saveList = csr.collections();
+            if (cm->collections().size() > (originalCount + 1) && !cm->removeCollection(saveList.at(0).id())) {
+                QSKIP("Unable to remove saved item to test cancellation of item save request");
+            }
+            saveList.clear();
+            saveList << temp;
+            csr.setCollections(saveList);
+            bailoutCount -= 1;
+            if (!bailoutCount) {
+//                qWarning("Unable to test cancelling due to thread scheduling!");
+                bailoutCount = MAX_OPTIMISTIC_SCHEDULING_LIMIT;
+                break;
+            }
+            spy.clear();
+            continue;
+        }
+        csr.waitForFinished(); // now wait until finished (if it hasn't already).
+        QVERIFY(csr.isCanceled());
+        QVERIFY(spy.count() >= 1); // active + cancelled progress signals
+        spy.clear();
+
+        // verify that the changes were not saved
+        expected.clear();
+        QList<QContactCollection> allCollections = cm->collections();
+        QVERIFY(!allCollections.contains(temp));
+        QCOMPARE(cm->collections().size(), originalCount + 1);
+        break;
+    }
+}
+
 void tst_QContactAsync::maliciousManager()
 {
     // use the invalid manager: passes all requests through to base class
@@ -2654,6 +3121,11 @@ QContactManager* tst_QContactAsync::prepareModel(const QString& managerUri)
     crb.setSecond(b.id());
     crb.setRelationshipType(QContactRelationship::IsSameAs());
     cm->saveRelationship(&crb);
+
+    QContactCollection testCollection;
+    testCollection.setMetaData(QContactCollection::KeyName, "Test Collection");
+    testCollection.setMetaData(QContactCollection::KeyDescription, "test collection");
+    cm->saveCollection(&testCollection);
 
     return cm;
 

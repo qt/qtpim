@@ -19,6 +19,9 @@ PUBLIC_HEADERS += \
     qcontactactionfactory.h \
     qcontactactiontarget.h \
     qcontactchangeset.h \
+    qcontactcollection.h \
+    qcontactcollectionchangeset.h \
+    qcontactcollectionid.h \
     qcontactdetail.h \
     qcontactfetchhint.h \
     qcontactfilter.h \
@@ -39,6 +42,8 @@ PRIVATE_HEADERS += \
     qcontactactionmanager_p.h \
     qcontactactiontarget_p.h \
     qcontactchangeset_p.h \
+    qcontactcollection_p.h \
+    qcontactcollectionchangeset_p.h \
     qcontactdetail_p.h \
     qcontactfetchhint_p.h \
     qcontactfilter_p.h \
@@ -56,6 +61,9 @@ SOURCES += \
     qcontactactionmanager_p.cpp \
     qcontactactiontarget.cpp \
     qcontactchangeset.cpp \
+    qcontactcollection.cpp \
+    qcontactcollectionchangeset.cpp \
+    qcontactcollectionid.cpp \
     qcontactdetail.cpp \
     qcontactfetchhint.cpp \
     qcontactfilter.cpp \

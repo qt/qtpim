@@ -47,6 +47,7 @@
 
 #include "qdeclarativecontactactionfilter_p.h"
 #include "qdeclarativecontactchangelogfilter_p.h"
+#include "qdeclarativecontactcollectionfilter_p.h"
 #include "qdeclarativecontactdetailfilter_p.h"
 #include "qdeclarativecontactdetailrangefilter_p.h"
 #include "qdeclarativecontactidfilter_p.h"

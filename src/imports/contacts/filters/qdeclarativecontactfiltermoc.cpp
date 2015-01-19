@@ -45,6 +45,7 @@ QT_BEGIN_NAMESPACE
 
 #include "moc_qdeclarativecontactactionfilter_p.cpp"
 #include "moc_qdeclarativecontactchangelogfilter_p.cpp"
+#include "moc_qdeclarativecontactcollectionfilter_p.cpp"
 #include "moc_qdeclarativecontactdetailfilter_p.cpp"
 #include "moc_qdeclarativecontactdetailrangefilter_p.cpp"
 #include "moc_qdeclarativecontactintersectionfilter_p.cpp"

@@ -670,6 +670,16 @@ QList<QContactId> QContact::relatedContacts(const QString& relationshipType, QCo
     return retn;
 }
 
+QContactCollectionId QContact::collectionId() const
+{
+    return d->m_collectionId;
+}
+
+void QContact::setCollectionId(const QContactCollectionId &collectionId)
+{
+    d->m_collectionId = collectionId;
+}
+
 /*!
  * Return a list of descriptors for the actions available to be performed on this contact.
  *

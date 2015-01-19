@@ -179,7 +179,8 @@ public:
         m_error(QContactManager::NoError),
         m_autoUpdate(true),
         m_componentCompleted(false),
-        m_progressiveLoading(true)
+        m_progressiveLoading(true),
+        m_updatePendingFlag(QDeclarativeContactModelPrivate::NonePending)
     {
     }
     ~QDeclarativeContactModelPrivate()
@@ -187,6 +188,12 @@ public:
         if (m_manager)
             delete m_manager;
     }
+
+    enum UpdateTypePending {
+        NonePending = 0x0,
+        UpdatingContactsPending = 0x1,
+        UpdatingCollectionsPending = 0x2
+    };
 
     QList<QDeclarativeContact*> m_contacts;
     QMap<QContactId, QDeclarativeContact*> m_contactMap;
@@ -211,7 +218,9 @@ public:
     QHash<QContactAbstractRequest *, int> m_requestIdHash;
     QList<QContactFetchRequest*> m_pendingRequests;
     QList<QContact> m_pendingContacts;
+    QList<QDeclarativeContactCollection*> m_collections;
     bool m_progressiveLoading;
+    int m_updatePendingFlag;
 };
 
 QDeclarativeContactModel::QDeclarativeContactModel(QObject *parent) :
@@ -224,9 +233,9 @@ QDeclarativeContactModel::QDeclarativeContactModel(QObject *parent) :
     setRoleNames(roleNames);
 
     connect(this, SIGNAL(managerChanged()), SLOT(doUpdate()));
-    connect(this, SIGNAL(filterChanged()), SLOT(doUpdate()));
-    connect(this, SIGNAL(fetchHintChanged()), SLOT(doUpdate()));
-    connect(this, SIGNAL(sortOrdersChanged()), SLOT(doUpdate()));
+    connect(this, SIGNAL(filterChanged()), SLOT(doContactUpdate()));
+    connect(this, SIGNAL(fetchHintChanged()), SLOT(doContactUpdate()));
+    connect(this, SIGNAL(sortOrdersChanged()), SLOT(doContactUpdate()));
 
     //import vcard
     connect(&d->m_reader, SIGNAL(stateChanged(QVersitReader::State)), this, SLOT(startImport(QVersitReader::State)));
@@ -253,14 +262,21 @@ void QDeclarativeContactModel::setManager(const QString& managerName)
     if (d->m_manager && (managerName == d->m_manager->managerName() || managerName == d->m_manager->managerUri()))
         return;
 
-    if (d->m_manager)
+    if (d->m_manager) {
+        cancelUpdate();
         delete d->m_manager;
+    }
+
     d->m_manager = new QContactManager(managerName);
 
     connect(d->m_manager, SIGNAL(dataChanged()), this, SLOT(doUpdate()));
     connect(d->m_manager, SIGNAL(contactsAdded(QList<QContactId>)), this, SLOT(onContactsAdded(QList<QContactId>)));
     connect(d->m_manager, SIGNAL(contactsRemoved(QList<QContactId>)), this, SLOT(onContactsRemoved(QList<QContactId>)));
     connect(d->m_manager, SIGNAL(contactsChanged(QList<QContactId>,QList<QContactDetail::DetailType>)), this, SLOT(onContactsChanged(QList<QContactId>)));
+    connect(d->m_manager, SIGNAL(collectionsAdded(QList<QContactCollectionId>)), this, SLOT(fetchCollections()));
+    connect(d->m_manager, SIGNAL(collectionsChanged(QList<QContactCollectionId>)), this, SLOT(fetchCollections()));
+    connect(d->m_manager, SIGNAL(collectionsRemoved(QList<QContactCollectionId>)), this, SLOT(fetchCollections()));
+
 
     if (d->m_error != QContactManager::NoError) {
         d->m_error = QContactManager::NoError;
@@ -300,15 +316,71 @@ bool QDeclarativeContactModel::autoUpdate() const
 
 void QDeclarativeContactModel::update()
 {
-    if (!d->m_componentCompleted)
+    if (!d->m_componentCompleted || d->m_updatePendingFlag)
         return;
+    // Disallow possible duplicate request triggering
+    d->m_updatePendingFlag = (QDeclarativeContactModelPrivate::UpdatingContactsPending | QDeclarativeContactModelPrivate::UpdatingCollectionsPending);
+    QMetaObject::invokeMethod(this, "fetchCollections", Qt::QueuedConnection);
+}
+
+/*!
+  \qmlmethod ContactModel::updateContacts()
+
+  Manually update the contact model contacts.
+
+  \sa ContactModel::update
+  \sa ContactModel::updateCollections
+  \sa ContactModel::autoUpdate
+  */
+void QDeclarativeContactModel::updateContacts()
+{
+    if (!d->m_componentCompleted || d->m_updatePendingFlag)
+        return;
+    // Disallow possible duplicate request triggering
+    d->m_updatePendingFlag = QDeclarativeContactModelPrivate::UpdatingContactsPending;
     QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
 }
 
-void QDeclarativeContactModel::doUpdate()
+/*!
+  \qmlmethod ContactModel::updateCollections()
+
+  Manually update the contact model collections.
+
+  \sa ContactModel::update
+  \sa ContactModel::updateContacts
+  \sa ContactModel::autoUpdate
+  */
+void QDeclarativeContactModel::updateCollections()
+{
+    if (!d->m_componentCompleted || d->m_updatePendingFlag)
+        return;
+    // Disallow possible duplicate request triggering
+    d->m_updatePendingFlag = QDeclarativeContactModelPrivate::UpdatingCollectionsPending;
+    QMetaObject::invokeMethod(this, "fetchCollections", Qt::QueuedConnection);
+}
+
+/*!
+  \qmlmethod ContactModel::cancelUpdate()
+
+  Cancel the running contact model content update request.
+
+  \sa ContactModel::autoUpdate
+  \sa ContactModel::update
+  */
+void QDeclarativeContactModel::cancelUpdate()
+{
+    foreach (QContactFetchRequest *req, d->m_pendingRequests) {
+        req->cancel();
+        req->deleteLater();
+    }
+    d->m_pendingRequests.clear();;
+    d->m_updatePendingFlag = QDeclarativeContactModelPrivate::NonePending;
+}
+
+void QDeclarativeContactModel::doContactUpdate()
 {
     if (d->m_autoUpdate)
-        update();
+        updateContacts();
 }
 
 /*!
@@ -720,6 +792,66 @@ int QDeclarativeContactModel::fetchContacts(const QStringList &contactIds)
 }
 
 /*!
+  \qmlmethod ContactModel::removeCollection(string collectionId)
+  Removes asynchronously the contact collection with the given \a collectionId from the backend.
+  */
+void QDeclarativeContactModel::removeCollection(const QString &collectionId)
+{
+    QContactCollectionRemoveRequest* req = new QContactCollectionRemoveRequest(this);
+    req->setManager(d->m_manager);
+    req->setCollectionId(QContactCollectionId::fromString(collectionId));
+
+    connect(req, SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(onRequestStateChanged(QContactAbstractRequest::State)));
+
+    req->start();
+}
+
+/*!
+  \qmlmethod OContactModel::saveCollection(Collection collection)
+
+  Saves asynchronously the given \a collection into the contact backend.
+ */
+void QDeclarativeContactModel::saveCollection(QDeclarativeContactCollection *declColl)
+{
+    if (declColl) {
+        QContactCollection collection = declColl->collection();
+        QContactCollectionSaveRequest* req = new QContactCollectionSaveRequest(this);
+        req->setManager(d->m_manager);
+        req->setCollection(collection);
+
+        if (declColl->collection().id().isNull()) {
+            // if the collection id is empty this means that this is a new collection
+            // we need to keep trace of this declarative collection to update with the
+            // new Id as soon as this request finish
+            QPointer<QDeclarativeContactCollection> pCollection = declColl;
+            req->setProperty("DeclarativeCollection", QVariant::fromValue(pCollection));
+        }
+
+        connect(req, SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(onRequestStateChanged(QContactAbstractRequest::State)));
+        req->start();
+    }
+}
+
+/*!
+  \qmlmethod OContactModel::fetchCollections()
+  Fetch asynchronously a list of contact collections from the contact backend.
+*/
+void QDeclarativeContactModel::fetchCollections()
+{
+    // fetchCollections() is used for both direct calls and
+    // signals from model. For signal from model, check also the
+    // autoupdate-flag.
+    if (sender() == d->m_manager && !d->m_autoUpdate) {
+        return;
+    }
+
+    QContactCollectionFetchRequest* req = new QContactCollectionFetchRequest(this);
+    connect(req,SIGNAL(stateChanged(QContactAbstractRequest::State)), this, SLOT(collectionsFetched()));
+    req->setManager(d->m_manager);
+    req->start();
+}
+
+/*!
     \internal
  */
 void QDeclarativeContactModel::onFetchContactsRequestStateChanged(QContactAbstractRequest::State state)
@@ -762,6 +894,56 @@ void QDeclarativeContactModel::onFetchContactsRequestStateChanged(QContactAbstra
     }
     emit contactsFetched(requestId, list);
     request->deleteLater();
+}
+
+/*!
+    \internal
+ */
+void QDeclarativeContactModel::collectionsFetched()
+{
+    QContactCollectionFetchRequest* req = qobject_cast<QContactCollectionFetchRequest*>(QObject::sender());
+    Q_ASSERT(req);
+    if (req->isFinished() && QContactManager::NoError == req->error()) {
+        d->m_updatePendingFlag &= ~QDeclarativeContactModelPrivate::UpdatingCollectionsPending;
+        // prepare tables
+        QHash<QString, const QContactCollection*> collections;
+        foreach (const QContactCollection& collection, req->collections()) {
+            collections.insert(collection.id().toString(), &collection);
+        }
+        QHash<QString, QDeclarativeContactCollection*> declCollections;
+        foreach (QDeclarativeContactCollection* declCollection, d->m_collections) {
+            declCollections.insert(declCollection->collection().id().toString(), declCollection);
+        }
+        // go tables through
+        QHashIterator<QString, const QContactCollection*> collIterator(collections);
+        while (collIterator.hasNext()) {
+            collIterator.next();
+            if (declCollections.contains(collIterator.key())) {
+                // collection on both sides, update the declarative collection
+                declCollections.value(collIterator.key())->setCollection(*collections.value(collIterator.key()));
+            } else {
+                // new collection, add it to declarative collection list
+                QDeclarativeContactCollection* declCollection = new QDeclarativeContactCollection(this);
+                declCollection->setCollection(*collections.value(collIterator.key()));
+                d->m_collections.append(declCollection);
+            }
+        }
+        QHashIterator<QString, QDeclarativeContactCollection*> declCollIterator(declCollections);
+        while (declCollIterator.hasNext()) {
+            declCollIterator.next();
+            if (!collections.contains(declCollIterator.key())) {
+                // collection deleted on the backend side, delete from declarative collection list
+                QDeclarativeContactCollection* toBeDeletedColl = declCollections.value(declCollIterator.key());
+                d->m_collections.removeOne(toBeDeletedColl);
+                toBeDeletedColl->deleteLater();
+            }
+        }
+        emit collectionsChanged();
+        if (d->m_updatePendingFlag & QDeclarativeContactModelPrivate::UpdatingContactsPending)
+            QMetaObject::invokeMethod(this, "fetchAgain", Qt::QueuedConnection);
+        req->deleteLater();
+    }
+    checkError(req);
 }
 
 void QDeclarativeContactModel::clearContacts()
@@ -860,6 +1042,7 @@ void QDeclarativeContactModel::fetchRequestStateChanged(QContactAbstractRequest:
     if (newState != QContactAbstractRequest::FinishedState)
         return;
 
+    d->m_updatePendingFlag &= ~QDeclarativeContactModelPrivate::UpdatingContactsPending;
     QContactFetchRequest* req = qobject_cast<QContactFetchRequest*>(QObject::sender());
     Q_ASSERT(req);
     if (req) {
@@ -909,6 +1092,15 @@ void QDeclarativeContactModel::fetchRequestStateChanged(QContactAbstractRequest:
 }
 
 /*!
+    \internal
+ */
+void QDeclarativeContactModel::doUpdate()
+{
+    if (d->m_autoUpdate)
+        update();
+}
+
+/*!
   \qmlmethod ContactModel::saveContact(Contact contact)
 
   Save the given \a contact into the contacts backend.
@@ -944,18 +1136,40 @@ void QDeclarativeContactModel::onRequestStateChanged(QContactAbstractRequest::St
     QContactAbstractRequest *request = qobject_cast<QContactAbstractRequest *>(sender());
     Q_ASSERT(request);
 
-    if ((request->type() == QContactSaveRequest::ContactSaveRequest) &&
-        (request->error() == QContactManager::NoError)) {
-        QVariant vContact = request->property("DeclarativeContact");
-        if (vContact.isValid()) {
-            QPointer<QDeclarativeContact> pContact = vContact.value<QPointer<QDeclarativeContact> >();
-            // Update contact info.
-            // this is necessary to make sure that the declarative contact get the new contact ID otherwise
-            // the contact Id will be empty
-            QList<QContact> contacts = qobject_cast<QContactSaveRequest*>(request)->contacts();
-            if (pContact && contacts.length() == 1) {
-                pContact->setContact(contacts[0]);
+    if (request->error() == QContactManager::NoError) {
+        switch (request->type()) {
+        case QContactAbstractRequest::ContactSaveRequest:
+        {
+            QVariant vContact = request->property("DeclarativeContact");
+            if (vContact.isValid()) {
+                QPointer<QDeclarativeContact> pContact = vContact.value<QPointer<QDeclarativeContact> >();
+                // Update contact info.
+                // this is necessary to make sure that the declarative contact get the new contact ID otherwise
+                // the contact Id will be empty
+                QList<QContact> contacts = qobject_cast<QContactSaveRequest*>(request)->contacts();
+                if (pContact && contacts.length() == 1) {
+                    pContact->setContact(contacts[0]);
+                }
             }
+            break;
+        }
+        case QContactAbstractRequest::CollectionSaveRequest:
+        {
+            QVariant vCollection = request->property("DeclarativeCollection");
+            if (vCollection.isValid()) {
+                QPointer<QDeclarativeContactCollection> pCollection = vCollection.value<QPointer<QDeclarativeContactCollection> >();
+                // Update collection info.
+                // this is necessary to make sure that the declarative collection get the new collection ID otherwise
+                // the collection Id will be empty
+                QList<QContactCollection> collections = qobject_cast<QContactCollectionSaveRequest*>(request)->collections();
+                if (pCollection && collections.length() == 1) {
+                    pCollection->setCollection(collections[0]);
+                }
+            }
+            break;
+        }
+        default:
+            break;
         }
     }
     checkError(request);
@@ -1168,6 +1382,35 @@ void  QDeclarativeContactModel::sortOrder_clear(QQmlListProperty<QDeclarativeCon
         model->d->m_sortOrders.clear();
         emit model->sortOrdersChanged();
     }
+}
+
+/*!
+  \qmlproperty list<Collection> OContactModel::collections
+
+  This property holds a list of collections in the contact model.
+
+  \sa Collection
+  */
+QQmlListProperty<QDeclarativeContactCollection> QDeclarativeContactModel::collections()
+{
+    return QQmlListProperty<QDeclarativeContactCollection>(this, 0, collection_count, collection_at);
+}
+
+int QDeclarativeContactModel::collection_count(QQmlListProperty<QDeclarativeContactCollection> *p)
+{
+    QDeclarativeContactModel* model = qobject_cast<QDeclarativeContactModel*>(p->object);
+    return model ? model->d->m_collections.count() : 0;
+}
+
+QDeclarativeContactCollection *QDeclarativeContactModel::collection_at(QQmlListProperty<QDeclarativeContactCollection> *p, int idx)
+{
+    QDeclarativeContactModel* model = qobject_cast<QDeclarativeContactModel*>(p->object);
+    QDeclarativeContactCollection* collection = 0;
+    if (model) {
+        if (!model->d->m_collections.isEmpty() && idx >= 0 && idx < model->d->m_collections.count())
+            collection = model->d->m_collections.at(idx);
+    }
+    return collection;
 }
 /*!
     \internal

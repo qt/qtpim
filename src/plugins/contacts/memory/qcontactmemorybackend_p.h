@@ -104,7 +104,9 @@ public:
     QString m_id;                                  // the id parameter value
 
     QContactId m_selfContactId;               // the "MyCard" contact id
-    QList<QContact> m_contacts;                    // list of contacts
+    QList<QContact> m_contacts;               // list of contacts
+    QHash<QContactCollectionId, QContactId> m_contactsInCollections;   // hash of contacts for each collection
+    QHash<QContactCollectionId, QContactCollection> m_idToCollectionHash; // hash of id to the collection identified by that id
     QList<QContactId> m_contactIds;           // list of contact Id's
     QList<QContactRelationship> m_relationships;   // list of contact relationships
     QMap<QContactId, QList<QContactRelationship> > m_orderedRelationships; // map of ordered lists of contact relationships
@@ -117,6 +119,12 @@ public:
     void emitSharedSignals(QContactChangeSet *cs)
     {
         foreach(QContactManagerEngine* engine, m_sharedEngines)
+            cs->emitSignals(engine);
+    }
+
+    void emitSharedSignals(QContactCollectionChangeSet *cs)
+    {
+        foreach (QContactManagerEngine *engine, m_sharedEngines)
             cs->emitSignals(engine);
     }
 
@@ -156,6 +164,13 @@ public:
     virtual QList<QContactRelationship> relationships(const QString &relationshipType, const QContactId &participantId, QContactRelationship::Role role, QContactManager::Error *error) const;
     virtual bool saveRelationships(QList<QContactRelationship> *relationships, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error);
     virtual bool removeRelationships(const QList<QContactRelationship> &relationships, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error);
+
+    // collections
+    QContactCollection defaultCollection(QContactManager::Error* error);
+    QContactCollection collection(const QContactCollectionId &collectionId, QContactManager::Error *error);
+    QList<QContactCollection> collections(QContactManager::Error* error);
+    bool saveCollection(QContactCollection* collection, QContactManager::Error* error);
+    bool removeCollection(const QContactCollectionId& collectionId, QContactManager::Error* error);
 
     /*! \reimp */
     virtual bool validateContact(const QContact &contact, QContactManager::Error *error) const
@@ -201,6 +216,8 @@ private:
     void partiallySyncDetails(QContact *to, const QContact &from, const QList<QContactDetail::DetailType> &mask);
 
     void performAsynchronousOperation(QContactAbstractRequest *request);
+
+    QContactCollectionId defaultCollectionId() const;
 
     QContactMemoryEngineData *d;
     static QMap<QString, QContactMemoryEngineData*> engineDatas;

@@ -55,6 +55,11 @@
 #include <QtContacts/qcontactremoverequest.h>
 #include <QtContacts/qcontactsaverequest.h>
 
+#include <QtContacts/qcontactcollectionchangeset.h>
+#include <QtContacts/qcontactcollectionfetchrequest.h>
+#include <QtContacts/qcontactcollectionremoverequest.h>
+#include <QtContacts/qcontactcollectionsaverequest.h>
+
 QT_BEGIN_NAMESPACE_CONTACTS
 QT_END_NAMESPACE_CONTACTS
 

@@ -306,6 +306,92 @@ public:
     QMap<int, QContactManager::Error> m_errors;
 };
 
+class QContactCollectionFetchRequestPrivate : public QContactAbstractRequestPrivate
+{
+public:
+    QContactCollectionFetchRequestPrivate()
+        : QContactAbstractRequestPrivate(QContactAbstractRequest::CollectionFetchRequest)
+    {
+    }
+
+    ~QContactCollectionFetchRequestPrivate()
+    {
+    }
+
+#ifndef QT_NO_DEBUG_STREAM
+    QDebug& debugStreamOut(QDebug &dbg) const
+    {
+        dbg.nospace() << "QContactCollectionFetchRequestPrivate(";
+        dbg.nospace() << "collections=";
+        dbg.nospace() << m_collections;
+        dbg.nospace() << ")";
+        return dbg.maybeSpace();
+    }
+#endif
+
+    QList<QContactCollection> m_collections;
+};
+
+class QContactCollectionRemoveRequestPrivate : public QContactAbstractRequestPrivate
+{
+public:
+    QContactCollectionRemoveRequestPrivate()
+        : QContactAbstractRequestPrivate(QContactAbstractRequest::CollectionRemoveRequest)
+    {
+    }
+
+    ~QContactCollectionRemoveRequestPrivate()
+    {
+    }
+
+#ifndef QT_NO_DEBUG_STREAM
+    QDebug& debugStreamOut(QDebug &dbg) const
+    {
+        dbg.nospace() << "QContactCollectionRemoveRequestPrivate(";
+        dbg.nospace() << "collectionIds=";
+        dbg.nospace() << m_collectionIds;
+        dbg.nospace() << ",";
+        dbg.nospace() << "errorMap=";
+        dbg.nospace() << m_errors;
+        dbg.nospace() << ")";
+        return dbg.maybeSpace();
+    }
+#endif
+
+    QList<QContactCollectionId> m_collectionIds;
+    QMap<int, QContactManager::Error> m_errors;
+};
+
+class QContactCollectionSaveRequestPrivate : public QContactAbstractRequestPrivate
+{
+public:
+    QContactCollectionSaveRequestPrivate()
+        : QContactAbstractRequestPrivate(QContactAbstractRequest::CollectionSaveRequest)
+    {
+    }
+
+    ~QContactCollectionSaveRequestPrivate()
+    {
+    }
+
+#ifndef QT_NO_DEBUG_STREAM
+    QDebug& debugStreamOut(QDebug &dbg) const
+    {
+        dbg.nospace() << "QContactCollectionSaveRequestPrivate(";
+        dbg.nospace() << "collections=";
+        dbg.nospace() << m_collections;
+        dbg.nospace() << ",";
+        dbg.nospace() << "errorMap=";
+        dbg.nospace() << m_errors;
+        dbg.nospace() << ")";
+        return dbg.maybeSpace();
+    }
+#endif
+
+    QList<QContactCollection> m_collections;
+    QMap<int, QContactManager::Error> m_errors;
+};
+
 QT_END_NAMESPACE_CONTACTS
 
 #endif // QCONTACTREQUESTS_P_H

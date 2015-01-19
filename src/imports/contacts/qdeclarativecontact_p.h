@@ -46,6 +46,7 @@
 
 #include <QtContacts/qcontact.h>
 #include <QtContacts/qcontactid.h>
+#include <QtContacts/qcontactcollectionid.h>
 
 #include "qdeclarativecontactdetails_p.h"
 
@@ -98,6 +99,7 @@ class QDeclarativeContact : public QObject
     Q_PROPERTY (QQmlListProperty<QDeclarativeContactUrl> urls READ urls NOTIFY contactChanged)
     Q_PROPERTY (QDeclarativeContactVersion*  version READ version NOTIFY contactChanged)
     Q_PROPERTY (QVariantMap preferredDetails READ preferredDetails NOTIFY contactChanged)
+    Q_PROPERTY (QString collectionId READ collectionId WRITE setCollectionId NOTIFY contactChanged)
     Q_CLASSINFO("DefaultProperty", "contactDetails")
 
 public:
@@ -126,6 +128,9 @@ public:
     Q_INVOKABLE bool isPreferredDetail(const QString& actionName, QDeclarativeContactDetail* detail) const;
     Q_INVOKABLE QDeclarativeContactDetail* preferredDetail(const QString& actionName) const;
     QVariantMap preferredDetails() const;
+
+    QString collectionId() const;
+    void setCollectionId(const QString& collectionId);
 
     QDeclarativeContactAddress* address();
     QQmlListProperty<QDeclarativeContactAddress>  addresses();
@@ -164,6 +169,7 @@ public:
 protected:
     bool m_modified;
     QContactId m_id;
+    QContactCollectionId m_collectionId;
 
     // always create a copy of the detail for QML
     // however, seems the garbage collection can't delete all of them (QTBUG-20377)

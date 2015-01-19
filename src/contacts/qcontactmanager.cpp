@@ -812,6 +812,74 @@ QList<QContactDetail::DetailType> QContactManager::supportedContactDetailTypes()
 }
 
 /*!
+    Returns the default collection managed by this manager. There is always only one default collection
+    for each backend.
+ */
+QContactCollection QContactManager::defaultCollection()
+{
+    QContactManagerSyncOpErrorHolder h(this);
+    return d->m_engine->defaultCollection(&h.error);
+}
+
+/*!
+  Returns the collection identified by the given \a collectionId which is managed by this manager.
+ */
+QContactCollection QContactManager::collection(const QContactCollectionId& collectionId)
+{
+    QContactManagerSyncOpErrorHolder h(this);
+    return d->m_engine->collection(collectionId, &h.error);
+}
+
+/*!
+  Returns a list of all of the collections managed by this manager.
+ */
+QList<QContactCollection> QContactManager::collections()
+{
+    QContactManagerSyncOpErrorHolder h(this);
+    return d->m_engine->collections(&h.error);
+}
+
+/*!
+    Saves the given \a collection to the backend, and returns true on success or false otherwise.
+
+    Note that certain backends may not allow modification nor adding new collections, in such cases
+    the operation will fail and result a QContactManager::PermissionsError error.
+
+    A new collection will be created in the backend store if the collection ID of it is null.
+    Otherwise, an existing collection with the same ID will be updated. If the given collection ID
+    does not exist in the backend, it will result a QContactManager::DoesNotExistError error.
+
+    Note that upon successful saving, the backend may update the collection, e.g. collection ID for
+    newly saved collections.
+ */
+bool QContactManager::saveCollection(QContactCollection* collection)
+{
+    QContactManagerSyncOpErrorHolder h(this);
+    if (collection) {
+        return d->m_engine->saveCollection(collection, &h.error);
+    } else {
+        h.error = QContactManager::BadArgumentError;
+        return false;
+    }
+}
+
+/*!
+    Removes the collection identified by the given \a collectionId (and all items in the collection)
+    from the manager. Returns true on success, false on failure.
+
+    If the given \a collectionId does not exist, the operation will fail and QContactManager::DoesNotExistError
+    will be returned when calling error().
+
+    If the given \a collectionId refers to the default collection, the operation will fail and
+    QContactManager::PermissionsError will be returned when calling error().
+ */
+bool QContactManager::removeCollection(const QContactCollectionId &collectionId)
+{
+    QContactManagerSyncOpErrorHolder h(this);
+    return d->m_engine->removeCollection(collectionId, &h.error);
+}
+
+/*!
   Returns the engine backend implementation version number
  */
 int QContactManager::managerVersion() const

@@ -12,8 +12,10 @@ OTHER_FILES += \
     testcases/ContactsSavingTestCase.qml \
     testcases/ContactsSignalingTestCase.qml \
     testcases/ContactsTestHelper.qml \
+    testcases/tst_collection.qml \
     testcases/tst_contact_add_detail.qml \
     testcases/tst_contact_addresses.qml \
+    testcases/tst_contact_collection_filter.qml \
     testcases/tst_contact_detail_access.qml \
     testcases/tst_contactdetail.qml \
     testcases/tst_contact_emails.qml \

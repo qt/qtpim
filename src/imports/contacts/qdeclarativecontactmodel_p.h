@@ -53,6 +53,7 @@
 #include <QtVersit/qversitwriter.h>
 
 #include "qdeclarativecontact_p.h"
+#include "qdeclarativecontactcollection_p.h"
 #include "qdeclarativecontactfetchhint_p.h"
 #include "qdeclarativecontactfilter_p.h"
 #include "qdeclarativecontactsortorder_p.h"
@@ -73,6 +74,7 @@ class QDeclarativeContactModel : public QAbstractListModel, public QQmlParserSta
     Q_PROPERTY(QDeclarativeContactFilter* filter READ filter WRITE setFilter NOTIFY filterChanged)
     Q_PROPERTY(QDeclarativeContactFetchHint* fetchHint READ fetchHint WRITE setFetchHint NOTIFY fetchHintChanged)
     Q_PROPERTY(QQmlListProperty<QDeclarativeContact> contacts READ contacts NOTIFY contactsChanged)
+    Q_PROPERTY(QQmlListProperty<QDeclarativeContactCollection> collections READ collections NOTIFY collectionsChanged)
     Q_PROPERTY(QQmlListProperty<QDeclarativeContactSortOrder> sortOrders READ sortOrders NOTIFY sortOrdersChanged)
     Q_ENUMS(ExportError)
     Q_ENUMS(ImportError)
@@ -133,17 +135,24 @@ public:
     static QDeclarativeContact* contacts_at(QQmlListProperty<QDeclarativeContact>* prop, int index);
     static void contacts_clear(QQmlListProperty<QDeclarativeContact>* prop);
 
+    QQmlListProperty<QDeclarativeContactSortOrder> sortOrders();
     static void sortOrder_append(QQmlListProperty<QDeclarativeContactSortOrder> *p, QDeclarativeContactSortOrder *sortOrder);
     static int  sortOrder_count(QQmlListProperty<QDeclarativeContactSortOrder> *p);
     static QDeclarativeContactSortOrder * sortOrder_at(QQmlListProperty<QDeclarativeContactSortOrder> *p, int idx);
     static void  sortOrder_clear(QQmlListProperty<QDeclarativeContactSortOrder> *p);
 
-    QQmlListProperty<QDeclarativeContactSortOrder> sortOrders() ;
+    QQmlListProperty<QDeclarativeContactCollection> collections();
+    static int collection_count(QQmlListProperty<QDeclarativeContactCollection> *p);
+    static QDeclarativeContactCollection* collection_at(QQmlListProperty<QDeclarativeContactCollection> *p, int idx);
 
     Q_INVOKABLE void removeContact(QString id);
     Q_INVOKABLE void removeContacts(const QStringList& ids);
     Q_INVOKABLE void saveContact(QDeclarativeContact* dc);
     Q_INVOKABLE int fetchContacts(const QStringList& contactIds);
+    Q_INVOKABLE void removeCollection(const QString& collectionId);
+    Q_INVOKABLE void saveCollection(QDeclarativeContactCollection* collection);
+    // FIXME : Naming indicates fetch from database
+    Q_INVOKABLE void fetchCollections();
     Q_INVOKABLE void importContacts(const QUrl& url, const QStringList& profiles = QStringList());
     Q_INVOKABLE void exportContacts(const QUrl& url, const QStringList& profiles = QStringList(), const QVariantList &declarativeContacts = QVariantList());
 
@@ -153,6 +162,7 @@ signals:
     void errorChanged();
     void fetchHintChanged();
     void contactsChanged();
+    void collectionsChanged();
     void sortOrdersChanged();
     void autoUpdateChanged();
     void exportCompleted(ExportError error, QUrl url);
@@ -161,6 +171,9 @@ signals:
 
 public slots:
     void update();
+    void updateContacts();
+    void updateCollections();
+    void cancelUpdate();
 
 private slots:
     void clearContacts();
@@ -168,6 +181,7 @@ private slots:
     void requestUpdated();
     void fetchRequestStateChanged(QContactAbstractRequest::State newState);
     void doUpdate();
+    void doContactUpdate();
     void onRequestStateChanged(QContactAbstractRequest::State newState);
     void onContactsAdded(const QList<QContactId>& ids);
     void onContactsRemoved(const QList<QContactId>& ids);
@@ -184,6 +198,8 @@ private slots:
 
     // handle fetch request from fetchContacts()
     void onFetchContactsRequestStateChanged(QContactAbstractRequest::State state);
+
+    void collectionsFetched();
 
 private:
     QContactFetchRequest *createContactFetchRequest(const QList<QContactId> &ids);

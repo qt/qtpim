@@ -74,7 +74,8 @@ public:
         IntersectionFilter,
         UnionFilter,
         IdFilter,
-        DefaultFilter
+        DefaultFilter,
+        CollectionFilter
     };
 
     FilterType type() const;

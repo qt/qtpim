@@ -150,6 +150,10 @@ private slots:
     void contactType();
     void lateDeletion();
     void compareVariant();
+    void createCollection();
+    void modifyCollection();
+    void removeCollection();
+    void saveContactIntoCollections();
 
 #if defined(USE_VERSIT_PLZ)
     void partialSave();
@@ -190,6 +194,10 @@ private slots:
     void lateDeletion_data() {addManagers();}
     void testInterSectionOfIdFilters_data() {addManagers();}
     void testInterSectionOfIdAndDetailFilters_data() {addManagers();}
+    void createCollection_data() {addManagers();}
+    void modifyCollection_data() {addManagers();}
+    void removeCollection_data() {addManagers();}
+    void saveContactIntoCollections_data() {addManagers();}
 };
 
 // Helper class that connects to a signal on ctor, and disconnects on dtor
@@ -1474,15 +1482,23 @@ void tst_QContactManager::memoryManager()
     nc.setLastName("Civilian");
     c.saveDetail(&nc);
     m1.saveContact(&c);
+
+    // reset ids
     c.setId(QContactId());
+    c.setCollectionId(QContactCollectionId());
+
     QContact c2;
     QContactName nc2 = c2.detail(QContactName::Type);
     c2 = c;
     nc2.setMiddleName("Public");
     c2.saveDetail(&nc2);
+
     m2.saveContact(&c2);            // save c2 first; c will be given a higher id
     m2.saveContact(&c);             // save c to m2
+
+    // reset ids
     c.setId(QContactId());
+    c.setCollectionId(QContactCollectionId());
     nc.setSuffix("MD");
     c.saveDetail(&nc);
     m3.saveContact(&c);
@@ -1871,6 +1887,7 @@ void tst_QContactManager::signalEmission()
     qRegisterMetaType<QContactId>("QContactId");
     qRegisterMetaType<QList<QContactId> >("QList<QContactId>");
     qRegisterMetaType<QList<QContactDetail::DetailType> >("QList<QContactDetail::DetailType>");
+
     QSignalSpy spyCA(m1.data(), SIGNAL(contactsAdded(QList<QContactId>)));
     QSignalSpy spyCM(m1.data(), SIGNAL(contactsChanged(QList<QContactId>, QList<QContactDetail::DetailType>)));
     QSignalSpy spyCR(m1.data(), SIGNAL(contactsRemoved(QList<QContactId>)));
@@ -1879,8 +1896,10 @@ void tst_QContactManager::signalEmission()
     QTestSignalSink cmsink(m1.data(), SIGNAL(contactsChanged(QList<QContactId>, QList<QContactDetail::DetailType>)));
     QTestSignalSink crsink(m1.data(), SIGNAL(contactsRemoved(QList<QContactId>)));
 
+
     QList<QVariant> args;
     QList<QContactId> arg;
+    QList<QContactCollectionId> collectionIdList;
     QContact c;
     QList<QContact> batchAdd;
     QList<QContactId> batchRemove;
@@ -3207,6 +3226,153 @@ void tst_QContactManager::compareVariant()
 
     // The sign should be flipped now
     QVERIFY((comparison + expected) == 0);
+}
+
+void tst_QContactManager::createCollection()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+
+    qRegisterMetaType<QList<QContactCollectionId> >("QList<QContactCollectionId>");
+    QSignalSpy collectionsAddedSpy(cm.data(), SIGNAL(collectionsAdded(QList<QContactCollectionId>)));
+    QByteArray collectionName = QUuid::createUuid().toByteArray();
+
+    // create collection
+    {
+        QContactCollection col;
+        col.setMetaData(QContactCollection::KeyName, collectionName);
+        QVERIFY(cm->saveCollection(&col));
+    }
+
+    // check "collectionsAdded" signal
+    QCOMPARE(collectionsAddedSpy.count(), 1);
+    QList<QContactCollectionId> ids = collectionsAddedSpy.takeFirst().at(0).value<QList<QContactCollectionId> >();
+    QCOMPARE(ids.count(), 1);
+
+    // query for new collection
+    {
+        QContactCollection col = cm->collection(ids.at(0));
+        QVERIFY(!col.id().isNull());
+        QCOMPARE(col.id().toString(), ids.at(0).toString());
+        QCOMPARE(col.metaData(QContactCollection::KeyName).toByteArray(), collectionName);
+    }
+}
+
+void tst_QContactManager::modifyCollection()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+
+    qRegisterMetaType<QList<QContactCollectionId> >("QList<QContactCollectionId>");
+    QSignalSpy collectionsAddedSpy(cm.data(), SIGNAL(collectionsAdded(QList<QContactCollectionId>)));
+    QSignalSpy collectionsChangedSpy(cm.data(), SIGNAL(collectionsChanged(QList<QContactCollectionId>)));
+
+    QContactCollectionId colId;
+    QByteArray collectionName = QUuid::createUuid().toByteArray();
+
+    // save a new collection
+    {
+        QContactCollection col;
+        col.setMetaData(QContactCollection::KeyName, collectionName);
+        QVERIFY(cm->saveCollection(&col));
+        QTRY_COMPARE(collectionsAddedSpy.count(), 1);
+        colId = col.id();
+        QVERIFY(!colId.isNull());
+    }
+
+    // edit collection
+    {
+        QCOMPARE(collectionsChangedSpy.count(), 0);
+        QContactCollection col = cm->collection(colId);
+        QByteArray newCollectionName = QUuid::createUuid().toByteArray();
+        col.setMetaData(QContactCollection::KeyName, newCollectionName);
+        QVERIFY(cm->saveCollection(&col));
+
+        // check signal "collectionsChanged" fired contains the collection id
+        QTRY_COMPARE(collectionsChangedSpy.count(), 1);
+        QList<QContactCollectionId> ids = collectionsChangedSpy.takeFirst().at(0).value<QList<QContactCollectionId> >();
+        QCOMPARE(ids.at(0).toString(), colId.toString());
+
+        // check if the collection name was updated
+        QContactCollection col2 = cm->collection(colId);
+        QCOMPARE(col2.metaData(QContactCollection::KeyName).toByteArray(), newCollectionName);
+    }
+}
+
+void tst_QContactManager::removeCollection()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+
+    qRegisterMetaType<QList<QContactCollectionId> >("QList<QContactCollectionId>");
+    QSignalSpy collectionsAddedSpy(cm.data(), SIGNAL(collectionsAdded(QList<QContactCollectionId>)));
+    QSignalSpy collectionsRemovedSpy(cm.data(), SIGNAL(collectionsRemoved(QList<QContactCollectionId>)));
+
+    QContactCollectionId colId;
+
+    // save a new collection
+    {
+        QContactCollection col;
+        QByteArray collectionName = QUuid::createUuid().toByteArray();
+        col.setMetaData(QContactCollection::KeyName, collectionName);
+        QVERIFY(cm->saveCollection(&col));
+        QTRY_COMPARE(collectionsAddedSpy.count(), 1);
+        colId = col.id();
+    }
+    QList<QContactCollection> collections = cm->collections();
+
+    // remove collection
+    cm->removeCollection(colId);
+
+    // check "collectionsRemoved" signal
+    QTRY_COMPARE(collectionsRemovedSpy.count(), 1);
+    QList<QContactCollectionId> ids = collectionsRemovedSpy.takeFirst().at(0).value<QList<QContactCollectionId> >();
+    QCOMPARE(ids.at(0).toString(), colId.toString());
+
+
+    // check if the correct collection was removed
+    QList<QContactCollection> collectionsAfterRemoval = cm->collections();
+    QCOMPARE(collections.count() - 1, collectionsAfterRemoval.count());
+    Q_FOREACH (const QContactCollection &col, collectionsAfterRemoval) {
+        collections.removeAll(col);
+    }
+    QCOMPARE(collections.count(), 1);
+    QCOMPARE(collections.at(0).id().toString(), colId.toString());
+}
+
+void tst_QContactManager::saveContactIntoCollections()
+{
+    QFETCH(QString, uri);
+    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
+
+    qRegisterMetaType<QList<QContactCollectionId> >("QList<QContactCollectionId>");
+    QSignalSpy collectionsAddedSpy(cm.data(), SIGNAL(collectionsAdded(QList<QContactCollectionId>)));
+    QByteArray collectionName = QUuid::createUuid().toByteArray();
+    QContactCollectionId colId;
+    QContactId cId;
+
+    // create collection
+    {
+        QContactCollection col;
+        col.setMetaData(QContactCollection::KeyName, collectionName);
+        QVERIFY(cm->saveCollection(&col));
+        QTRY_COMPARE(collectionsAddedSpy.count(), 1);
+        colId = col.id();
+    }
+
+    // create contact
+    {
+        QContact c = createContact("Alice", "Last", "12345");
+        c.setCollectionId(colId);
+        cm->saveContact(&c);
+        cId = c.id();
+    }
+
+    // query new contact and check for collection
+    {
+        QContact c = cm->contact(cId);
+        QCOMPARE(c.collectionId().toString(), colId.toString());
+    }
 }
 
 void tst_QContactManager::compareVariant_data()

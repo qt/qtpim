@@ -5,6 +5,7 @@ include(filters/filters.pri)
 
 HEADERS += qdeclarativecontactmodel_p.h \
            qdeclarativecontact_p.h \
+           qdeclarativecontactcollection_p.h \
            qdeclarativecontactdetail_p.h \
            qdeclarativecontactfilter_p.h \
            qdeclarativecontactsortorder_p.h \
@@ -15,6 +16,7 @@ HEADERS += qdeclarativecontactmodel_p.h \
 SOURCES += plugin.cpp \
     qdeclarativecontactmodel.cpp \
     qdeclarativecontact.cpp \
+    qdeclarativecontactcollection.cpp \
     qdeclarativecontactdetail.cpp \
     qdeclarativecontactfilter.cpp \
     qdeclarativecontactsortorder.cpp \

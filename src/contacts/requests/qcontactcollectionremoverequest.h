@@ -1,9 +1,10 @@
 /****************************************************************************
 **
 ** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2015 Canonical Ltd
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the QtContacts module of the Qt Toolkit.
+** This file is part of the QtOrganizer module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,66 +40,41 @@
 **
 ****************************************************************************/
 
-#ifndef QCONTACT_P_H
-#define QCONTACT_P_H
-
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
+#ifndef QCONTACTCOLLECTIONREMOVEREQUEST_H
+#define QCONTACTCOLLECTIONREMOVEREQUEST_H
 
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
-#include <QtCore/qshareddata.h>
 
-#include <QtContacts/qcontact.h>
-#include <QtContacts/qcontactdetail.h>
-#include <QtContacts/qcontactid.h>
-#include <QtContacts/qcontactrelationship.h>
+#include <QtContacts/qcontactabstractrequest.h>
 #include <QtContacts/qcontactcollectionid.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
-class QContactData : public QSharedData
+class QContactCollectionRemoveRequestPrivate;
+
+/* Leaf class */
+
+class Q_CONTACTS_EXPORT QContactCollectionRemoveRequest : public QContactAbstractRequest
 {
+    Q_OBJECT
+
 public:
-    QContactData()
-        : QSharedData()
-    {
-    }
+    QContactCollectionRemoveRequest(QObject *parent = 0);
+    ~QContactCollectionRemoveRequest();
 
-    QContactData(const QContactData& other)
-        : QSharedData(other),
-        m_id(other.m_id),
-        m_collectionId(other.m_collectionId),
-        m_details(other.m_details),
-        m_relationshipsCache(other.m_relationshipsCache),
-        m_preferences(other.m_preferences)
-    {
-    }
+    void setCollectionId(const QContactCollectionId &collectionId);
+    void setCollectionIds(const QList<QContactCollectionId> &collectionIds);
+    QList<QContactCollectionId> collectionIds() const;
 
-    ~QContactData() {}
+    QMap<int, QContactManager::Error> errorMap() const;
 
-    QContactId m_id;
-    QContactCollectionId m_collectionId;
-    QList<QContactDetail> m_details;
-    QList<QContactRelationship> m_relationshipsCache;
-    QMap<QString, int> m_preferences;
-
-    // Helper function
-    void removeOnly(QContactDetail::DetailType type);
-    void removeOnly(const QSet<QContactDetail::DetailType>& types);
-
-    // Trampoline
-    static QSharedDataPointer<QContactData>& contactData(QContact& contact) {return contact.d;}
+private:
+    Q_DISABLE_COPY(QContactCollectionRemoveRequest)
+    friend class QOrganizerManagerEngine;
+    Q_DECLARE_PRIVATE_D(d_ptr, QContactCollectionRemoveRequest)
 };
 
 QT_END_NAMESPACE_CONTACTS
 
-#endif // QCONTACT_P_H
+#endif // QCONTACTCOLLECTIONREMOVEREQUEST_H

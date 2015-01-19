@@ -134,6 +134,16 @@ QContactMemoryEngine::QContactMemoryEngine(QContactMemoryEngineData *data)
     qRegisterMetaType<QContactId>("QContactId");
     d->m_managerUri = managerUri();
     d->m_sharedEngines.append(this);
+
+    // the default collection always exists.
+    if (d->m_idToCollectionHash.isEmpty()) {
+        d->m_managerUri = managerUri();
+        const QContactCollectionId defaultId = defaultCollectionId();
+        QContactCollection defaultCollection;
+        defaultCollection.setId(defaultId);
+        defaultCollection.setMetaData(QContactCollection::KeyName, QString(QStringLiteral("Default Collection")));
+        d->m_idToCollectionHash.insert(defaultId, defaultCollection);
+    }
 }
 
 /*! Frees any memory used by this engine */
@@ -511,6 +521,102 @@ bool QContactMemoryEngine::removeRelationships(const QList<QContactRelationship>
     return (*error == QContactManager::NoError);
 }
 
+QContactCollection QContactMemoryEngine::defaultCollection(QContactManager::Error *error)
+{
+    const QContactCollectionId defaultCollectionId = this->defaultCollectionId();
+    Q_ASSERT(d->m_idToCollectionHash.contains(defaultCollectionId));
+    *error = QContactManager::NoError;
+    return d->m_idToCollectionHash.value(defaultCollectionId);
+}
+
+QContactCollection QContactMemoryEngine::collection(const QContactCollectionId &collectionId, QContactManager::Error *error)
+{
+    if (d->m_idToCollectionHash.contains(collectionId)) {
+        *error = QContactManager::NoError;
+        return d->m_idToCollectionHash.value(collectionId);
+    }
+
+    *error = QContactManager::DoesNotExistError;
+    return QContactCollection();
+}
+
+QList<QContactCollection> QContactMemoryEngine::collections(QContactManager::Error *error)
+{
+    Q_ASSERT(!d->m_idToCollectionHash.isEmpty());
+    *error = QContactManager::NoError;
+    return d->m_idToCollectionHash.values();
+}
+
+bool QContactMemoryEngine::saveCollection(QContactCollection *collection, QContactManager::Error *error)
+{
+    QContactCollectionId collectionId = collection->id();
+
+    QContactCollectionChangeSet cs;
+    if (d->m_idToCollectionHash.contains(collectionId)) {
+        // this collection already exists.  update our internal list
+        // if the collection has been modified.
+        if (d->m_idToCollectionHash.value(collectionId) == *collection) {
+            *error = QContactManager::NoError;
+            return true;
+        }
+
+        cs.insertChangedCollection(collectionId);
+    } else {
+        // this must be a new collection.  check that the id is null.
+        if (!collectionId.isNull() && collectionId.managerUri() != d->m_managerUri) {
+            // nope, this collection belongs in another manager, or has been deleted.
+            *error = QContactManager::DoesNotExistError;
+            return false;
+        }
+
+        // this is a new collection with a null id; create a new id, add it to our list.
+        QUuid id = QUuid::createUuid();
+        collectionId = this->collectionId(id.toByteArray());
+        collection->setId(collectionId);
+        cs.insertAddedCollection(collectionId);
+    }
+
+    d->m_idToCollectionHash.insert(collectionId, *collection);
+    d->emitSharedSignals(&cs);
+    *error = QContactManager::NoError;
+    return true;
+}
+
+bool QContactMemoryEngine::removeCollection(const QContactCollectionId &collectionId, QContactManager::Error *error)
+{
+    if (collectionId == defaultCollectionId()) {
+        // attempting to remove the default collection.  this is not allowed in the memory engine.
+        *error = QContactManager::PermissionsError;
+        return false;
+    }
+
+    // try to find the collection to remove it (and the items it contains)
+    if (d->m_idToCollectionHash.contains(collectionId)) {
+        // found the collection to remove.  remove the items in the collection.
+        const QList<QContactId> contactsToRemove = d->m_contactsInCollections.values(collectionId);
+        if (!contactsToRemove.isEmpty()) {
+            QMap<int, QContactManager::Error> errorMap;
+            if (!removeContacts(contactsToRemove, &errorMap, error)) {
+                // without transaction support, we can't back out.  but the operation should fail.
+                return false;
+            }
+        }
+
+        // now remove the collection from our lists.
+        d->m_idToCollectionHash.remove(collectionId);
+        d->m_contactsInCollections.remove(collectionId);
+        QContactCollectionChangeSet cs;
+        cs.insertRemovedCollection(collectionId);
+        d->emitSharedSignals(&cs);
+        *error = QContactManager::NoError;
+        return true;
+    }
+
+    // the collection doesn't exist...
+    *error = QContactManager::DoesNotExistError;
+    return false;
+}
+
 /*! \reimp */
 void QContactMemoryEngine::requestDestroyed(QContactAbstractRequest *req)
 {
@@ -728,12 +834,77 @@ void QContactMemoryEngine::performAsynchronousOperation(QContactAbstractRequest 
         }
         break;
 
+        case QContactAbstractRequest::CollectionFetchRequest:
+        {
+            QContactCollectionFetchRequest* r = static_cast<QContactCollectionFetchRequest*>(currentRequest);
+            QContactManager::Error operationError = QContactManager::NoError;
+            QList<QContactCollection> requestedContactCollections = collections(&operationError);
+
+            // update the request with the results.
+            updateCollectionFetchRequest(r, requestedContactCollections, operationError, QContactAbstractRequest::FinishedState);
+        }
+        break;
+
+        case QContactAbstractRequest::CollectionSaveRequest:
+        {
+            QContactCollectionSaveRequest* r = static_cast<QContactCollectionSaveRequest*>(currentRequest);
+            QList<QContactCollection> collections = r->collections();
+            QList<QContactCollection> retn;
+
+            QContactManager::Error operationError = QContactManager::NoError;
+            QMap<int, QContactManager::Error> errorMap;
+            for (int i = 0; i < collections.size(); ++i) {
+                QContactManager::Error tempError = QContactManager::NoError;
+                QContactCollection curr = collections.at(i);
+                if (!saveCollection(&curr, &tempError)) {
+                    errorMap.insert(i, tempError);
+                    operationError = tempError;
+                }
+                retn.append(curr);
+            }
+
+            updateCollectionSaveRequest(r, retn, operationError, errorMap, QContactAbstractRequest::FinishedState);
+        }
+        break;
+
+        case QContactAbstractRequest::CollectionRemoveRequest:
+        {
+            // removes the collections identified in the list of ids.
+            QContactCollectionRemoveRequest* r = static_cast<QContactCollectionRemoveRequest*>(currentRequest);
+            QContactManager::Error operationError = QContactManager::NoError;
+            QList<QContactCollectionId> collectionsToRemove = r->collectionIds();
+            QMap<int, QContactManager::Error> errorMap;
+
+            for (int i = 0; i < collectionsToRemove.size(); i++) {
+                QContactManager::Error tempError = QContactManager::NoError;
+                removeCollection(collectionsToRemove.at(i), &tempError);
+
+                if (tempError != QContactManager::NoError) {
+                    errorMap.insert(i, tempError);
+                    operationError = tempError;
+                }
+            }
+
+            if (!errorMap.isEmpty() || operationError != QContactManager::NoError)
+                updateCollectionRemoveRequest(r, operationError, errorMap, QContactAbstractRequest::FinishedState);
+            else
+                updateRequestState(currentRequest, QContactAbstractRequest::FinishedState);
+        }
+        break;
+
+
         default: // unknown request type.
         break;
     }
 
     // now emit any signals we have to emit
     d->emitSharedSignals(&changeSet);
+}
+
+QContactCollectionId QContactMemoryEngine::defaultCollectionId() const
+{
+    static const QByteArray id("Personal");
+    return collectionId(id);
 }
 
 void QContactMemoryEngine::partiallySyncDetails(QContact *to, const QContact &from, const QList<QContactDetail::DetailType> &mask)
@@ -893,6 +1064,20 @@ bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &
             return false;
         }
 
+        // check the contact collection
+        QContactCollectionId collectionId = theContact->collectionId();
+        // if is null use default collection
+        if (collectionId.isNull()) {
+            collectionId = this->defaultCollectionId();
+            theContact->setCollectionId(collectionId);
+        } else {
+            // check if the collection exists
+            QContactCollection collection = this->collection(collectionId, error);
+            if (collection.id().isNull()) {
+                return false;
+            }
+        }
+
         // check if this is partial save
         if (!mask.isEmpty()) {
             QContact tempContact;
@@ -915,6 +1100,7 @@ bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &
         // finally, add the contact to our internal lists and return
         d->m_contacts.append(*theContact);                   // add contact to list
         d->m_contactIds.append(theContact->id());  // track the contact id.
+        d->m_contactsInCollections.insert(collectionId, newContactId); // link contact to collection
 
         changeSet.insertAddedContact(theContact->id());
     }

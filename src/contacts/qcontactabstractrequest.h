@@ -84,7 +84,10 @@ public:
         RelationshipFetchRequest,
         RelationshipRemoveRequest,
         RelationshipSaveRequest,
-        ContactFetchByIdRequest
+        ContactFetchByIdRequest,
+        CollectionFetchRequest,
+        CollectionRemoveRequest,
+        CollectionSaveRequest,
     };
 
     RequestType type() const;

@@ -47,6 +47,7 @@
 
 #include <QtContacts/qcontactactionfilter.h>
 #include <QtContacts/qcontactchangelogfilter.h>
+#include <QtContacts/qcontactcollectionfilter.h>
 #include <QtContacts/qcontactdetailfilter.h>
 #include <QtContacts/qcontactdetailrangefilter.h>
 #include <QtContacts/qcontactidfilter.h>

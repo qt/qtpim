@@ -48,7 +48,7 @@ QT_BEGIN_NAMESPACE
 /*!
     \qmltype Collection
     \instantiates QDeclarativeContactCollection
-    \brief The Collection element represents a collection of items in an organizer manager.
+    \brief The Collection element represents a collection of items in a contacts manager.
     \ingroup qml-contacts-main
     \inqmlmodule QtContacts
  */

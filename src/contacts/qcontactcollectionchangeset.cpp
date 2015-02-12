@@ -4,7 +4,7 @@
 ** Copyright (C) 2015 Canonical Ltd
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the QtOrganizer module of the Qt Toolkit.
+** This file is part of the QtContacts module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -223,7 +223,7 @@ void QContactCollectionChangeSet::clearRemovedCollections()
 }
 
 /*!
-    Returns the list of ids of organizer collections which have been added, changed or removed from
+    Returns the list of ids of contact collections which have been added, changed or removed from
     the database. The list includes information about which database operation was done. The ids and
     operations are ordered so that the first operation is first in the list.
  */
@@ -233,7 +233,7 @@ QList<QPair<QContactCollectionId, QContactManager::Operation> > QContactCollecti
 }
 
 /*!
-    Clears the list of ids of organizer collections which have been added, changed or removed from the database
+    Clears the list of ids of contact collections which have been added, changed or removed from the database
  */
 void QContactCollectionChangeSet::clearModifiedCollections()
 {

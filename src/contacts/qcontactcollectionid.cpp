@@ -4,7 +4,7 @@
 ** Copyright (C) 2015 Canonical Ltd
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the QtOrganizer module of the Qt Toolkit.
+** This file is part of the QtContacts module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -155,7 +155,7 @@ QT_BEGIN_NAMESPACE_CONTACTS
 
 /*!
     Serializes the collection ID to a string. The format of the string will be:
-    "qtorganizer:managerName:params:localId", where localId is encoded binary data
+    "qtcontacts:managerName:params:localId", where localId is encoded binary data
     formatted as hexadecimal to ensure it is in a printable form.
 
     \sa fromString(), toByteArray()

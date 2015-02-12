@@ -4,7 +4,7 @@
 ** Copyright (C) 2015 Canonical Ltd
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the QtOrganizer module of the Qt Toolkit.
+** This file is part of the QtContacts module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -278,7 +278,7 @@ QDataStream &operator<<(QDataStream &out, const QContactCollection &collection)
 
 /*!
     \relates QContactCollection
-    Reads an organizer collection from stream \a in into \a collection.
+    Reads a contact collection from stream \a in into \a collection.
  */
 QDataStream &operator>>(QDataStream &in, QContactCollection &collection)
 {

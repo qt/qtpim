@@ -253,13 +253,13 @@ void tst_QContactCollection::idStringFunctions()
     rebuiltid = QContactCollectionId::fromString(prebuiltidstring);
     QVERIFY(rebuiltid == QContactCollectionId()); // invalid so should be null.
 
-    // this string misses the prefix (qtorganizer)
-    prebuiltidstring = QString("notorganizer") + QString(":") + QString("a") + QString("::") + localId2.toHex();
+    // this string misses the prefix (qtcontacts)
+    prebuiltidstring = QString("notcontacts") + QString(":") + QString("a") + QString("::") + localId2.toHex();
     rebuiltid = QContactCollectionId::fromString(prebuiltidstring);
     QVERIFY(rebuiltid == QContactCollectionId()); // invalid so should be null.
 
     // this string misses the manager uri
-    prebuiltidstring = QString("notorganizer") + QString(":::") + localId2.toHex();
+    prebuiltidstring = QString("notcontacts") + QString(":::") + localId2.toHex();
     rebuiltid = QContactCollectionId::fromString(prebuiltidstring);
     QVERIFY(rebuiltid == QContactCollectionId()); // invalid so should be null.
 }

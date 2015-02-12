@@ -528,13 +528,11 @@ bool QOrganizerManagerEngine::removeItems(const QList<QOrganizerItem> *items, QM
 
 
 /*!
-    This function should be reimplemented to support synchronous calls to fetch the default collection.
-    Any errors encountered during this operation should be stored to \a error.
+    This function should be reimplemented to support synchronous calls to fetch the default collection id.
 */
-QOrganizerCollection QOrganizerManagerEngine::defaultCollection(QOrganizerManager::Error* error)
+QOrganizerCollectionId QOrganizerManagerEngine::defaultCollectionId() const
 {
-    *error = QOrganizerManager::NotSupportedError;
-    return QOrganizerCollection();
+    return QOrganizerCollectionId();
 }
 
 /*!

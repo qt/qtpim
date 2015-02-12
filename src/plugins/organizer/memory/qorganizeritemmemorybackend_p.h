@@ -122,9 +122,6 @@ public:
     QMap<QString, QString> managerParameters() const;
     QMap<QString, QString> idInterpretationParameters() const;
 
-    inline QOrganizerCollectionId defaultCollectionId() const
-    { const uint id(QOrganizerItemMemoryEngineData::DefaultCollectionLocalId); return collectionId(QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint))); }
-
     // items
     QList<QOrganizerItem> items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint,
                                 QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error);
@@ -157,7 +154,7 @@ public:
                      QOrganizerManager::Error* error);
 
     // collections
-    QOrganizerCollection defaultCollection(QOrganizerManager::Error* error);
+    QOrganizerCollectionId defaultCollectionId() const;
     QOrganizerCollection collection(const QOrganizerCollectionId &collectionId, QOrganizerManager::Error *error);
     QList<QOrganizerCollection> collections(QOrganizerManager::Error* error);
     bool saveCollection(QOrganizerCollection* collection, QOrganizerManager::Error* error);

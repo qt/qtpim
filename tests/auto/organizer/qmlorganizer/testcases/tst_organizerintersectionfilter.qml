@@ -159,7 +159,7 @@ Rectangle {
 
                 //Double filter 2
                 //Change collection filter id
-                collectionFilter.ids = [savedCollection.collectionId, model.defaultCollection().collectionId];
+                collectionFilter.ids = [savedCollection.collectionId, model.defaultCollectionId()];
                 model.filter.filters = [idFilter, collectionFilter]
                 utility.debug("Duoble filter 2", debugFlag);
                 utility.waitModelChange(1);
@@ -167,7 +167,7 @@ Rectangle {
 
                 //Double filter 3
                 //Change collection filter id
-                collectionFilter.ids = [savedCollection.collectionId, model.defaultCollection().collectionId];
+                collectionFilter.ids = [savedCollection.collectionId, model.defaultCollectionId()];
                 idFilter.ids = [idEventId, collectionEventId];
                 utility.debug("Duoble filter ~3", debugFlag);
                 model.filter.filters = [idFilter, collectionFilter]

@@ -312,7 +312,7 @@ void CalendarDemo::addEvents()
     QList<QOrganizerItem> items;
 
     // Create a large number of events asynchronously
-    QOrganizerCollectionId defaultCollectionId = m_manager->defaultCollection().id();
+    QOrganizerCollectionId defaultCollectionId = m_manager->defaultCollectionId();
     for(int index=0 ; index <  100 ; index++) {
         QOrganizerItem item;
         item.setType(QOrganizerItemType::TypeEvent);
@@ -494,7 +494,7 @@ void CalendarDemo::deleteAllEntries()
 void CalendarDemo::addCalendar()
 {
     // Get default collection
-    QOrganizerCollection defaultCollection = m_manager->defaultCollection();
+    QOrganizerCollection defaultCollection = m_manager->collection(m_manager->defaultCollectionId());
 
     QOrganizerCollection newCollection = defaultCollection;
     newCollection.setId(QOrganizerCollectionId()); // reset collection id

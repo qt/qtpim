@@ -380,7 +380,7 @@ TestCase {
         organizerChangedSpy.target = organizerModel;
         organizerChangedSpy.signalName = "modelChanged";
         organizerChangedSpy.wait();
-        organizerModel.removeCollection(organizerModel.defaultCollection().collectionId);
+        organizerModel.removeCollection(organizerModel.defaultCollectionId());
         wait(signalWaitTime);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(organizerModel.error, "PermissionsError");
     }
@@ -1087,7 +1087,7 @@ TestCase {
             + "}\n", modelTests);
         for (var i = 0; i < organizerModel.collections.length; ++i) {
             var collId = organizerModel.collections[i].collectionId;
-            if (collId != organizerModel.defaultCollection().collectionId) {
+            if (collId != organizerModel.defaultCollectionId()) {
                 event.collectionId = collId;
             }
         }

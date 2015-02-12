@@ -65,7 +65,7 @@ TestCase {
         }
         for (var i = 0; i < organizerModel.collections.length; ++i) {
             var collId = organizerModel.collections[i].collectionId;
-            if (collId != organizerModel.defaultCollection().collectionId) {
+            if (collId != organizerModel.defaultCollectionId()) {
                 organizerModel.removeCollection(collId);
             }
         }
@@ -303,11 +303,11 @@ TestCase {
         organizerModel.saveItem(event);
         modelChangedSpy.wait(spyWaitDelay);
         var savedEvent = organizerModel.items[organizerModel.items.length - 1];
-        compare(savedEvent.collectionId, organizerModel.defaultCollection().collectionId);//savedEvent sometimes undefined!?!?!?
+        compare(savedEvent.collectionId, organizerModel.defaultCollectionId());//savedEvent sometimes undefined!?!?!?
         spySettingCollectionId.target = savedEvent;
 
         // set different collection
-        verify(savedCollection.collectionId != organizerModel.defaultCollection().collectionId)
+        verify(savedCollection.collectionId != organizerModel.defaultCollectionId())
         savedEvent.collectionId = savedCollection.collectionId;
         spySettingCollectionId.wait(spyWaitDelay);
         compare(spySettingCollectionId.count, 1);
@@ -327,7 +327,7 @@ TestCase {
             savedEvent = organizerModel.items[organizerModel.items.length - 1];
             compare(organizerModel.error, "InvalidCollection");
             expectFailContinue("memory backend", "Model is updated even in error case.")
-            compare(savedEvent.collectionId, organizerModel.defaultCollection().collectionId);
+            compare(savedEvent.collectionId, organizerModel.defaultCollectionId());
         }
 
         // cleanup
@@ -368,7 +368,7 @@ TestCase {
         var originalAmountOfCollections = organizerModel.collections.length;
 
         // default collection exists always
-        var defCollection = organizerModel.defaultCollection();
+        var defCollection = organizerModel.collection(organizerModel.defaultCollectionId());
         verify(defCollection);
 
         // add/save collection
@@ -479,13 +479,13 @@ TestCase {
         compare(organizerModel.collections.length, amountBeforeDeletions - 2);
         compare(collectionsChangedSpy.count, 7);
         // - remove default collection
-        organizerModel.removeCollection(organizerModel.defaultCollection.collectionId);
+        organizerModel.removeCollection(organizerModel.defaultCollectionId());
         wait(noSpyWaitDelay);// how to utilise SignalSpy to check signal is _not_ emitted?
         compare(organizerModel.collections.length, amountBeforeDeletions - 2);
         compare(collectionsChangedSpy.count, 7);
 
         // after all the modifications to collections, default should still be the same
-        compare(defCollection.collectionId, organizerModel.defaultCollection().collectionId);
+        compare(defCollection.collectionId, organizerModel.defaultCollectionId());
 
         empty_calendar(organizerModel);
     }

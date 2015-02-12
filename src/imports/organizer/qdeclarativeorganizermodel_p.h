@@ -160,7 +160,7 @@ public:
     Q_INVOKABLE QVariantList itemsByTimePeriod(const QDateTime &start = QDateTime(), const QDateTime &end = QDateTime());
     Q_INVOKABLE QDeclarativeOrganizerItem* item(const QString& id);
     Q_INVOKABLE QStringList itemIds(const QDateTime &start = QDateTime(), const QDateTime &end = QDateTime());
-    Q_INVOKABLE QDeclarativeOrganizerCollection* defaultCollection();
+    Q_INVOKABLE QString defaultCollectionId() const;
     Q_INVOKABLE QDeclarativeOrganizerCollection* collection(const QString& collectionId);
 
     Q_INVOKABLE void importItems(const QUrl& url, const QStringList& profiles = QStringList());

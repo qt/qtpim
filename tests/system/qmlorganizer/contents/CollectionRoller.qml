@@ -62,7 +62,7 @@ RollerRow {
             }
         // item's collection id not found, use default one
         for (var i=0;i<organizer.collections.length;i++) {
-            if (organizer.collections[i].collectionId == organizer.defaultCollection().collectionId) {
+            if (organizer.collections[i].collectionId == organizer.defaultCollectionId()) {
                 return i;
                 }
             }

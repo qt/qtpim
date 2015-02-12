@@ -812,13 +812,12 @@ QList<QContactDetail::DetailType> QContactManager::supportedContactDetailTypes()
 }
 
 /*!
-    Returns the default collection managed by this manager. There is always only one default collection
-    for each backend.
+    Returns the id of a default collection managed by this manager.
+    There is always only one default collection for each backend.
  */
-QContactCollection QContactManager::defaultCollection()
+QContactCollectionId QContactManager::defaultCollectionId() const
 {
-    QContactManagerSyncOpErrorHolder h(this);
-    return d->m_engine->defaultCollection(&h.error);
+    return d->m_engine->defaultCollectionId();
 }
 
 /*!

@@ -886,7 +886,7 @@ void tst_QOrganizerManager::persistence()
 
     // Remove all non-default collections
     QList<QOrganizerCollection> collections(cm->collections());
-    QOrganizerCollectionId defaultCollectionId(cm->defaultCollection().id());
+    QOrganizerCollectionId defaultCollectionId(cm->defaultCollectionId());
     foreach (const QOrganizerCollection &col, collections) {
         QOrganizerCollectionId id(col.id());
         if (id != defaultCollectionId)
@@ -1821,7 +1821,7 @@ void tst_QOrganizerManager::invalidManager()
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError || manager.error() == QOrganizerManager::InvalidCollectionError);
     QVERIFY(!manager.removeCollection(testCollection.id()));
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError || manager.error() == QOrganizerManager::DoesNotExistError);
-    QVERIFY(manager.defaultCollection() == QOrganizerCollection());
+    QVERIFY(manager.collection(manager.defaultCollectionId()) == QOrganizerCollection());
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
     QVERIFY(manager.collections().isEmpty());
     QVERIFY(manager.error() == QOrganizerManager::NotSupportedError);
@@ -3816,7 +3816,7 @@ void tst_QOrganizerManager::idComparison()
     QList<QOrganizerCollection> allCollections = cm->collections();
     for (int i = 0; i < allCollections.size(); ++i) {
         QOrganizerCollectionId currentId = allCollections.at(i).id();
-        if (currentId != cm->defaultCollection().id()) {
+        if (currentId != cm->defaultCollectionId()) {
             cm->removeCollection(currentId);
         }
     }
@@ -4247,7 +4247,7 @@ void tst_QOrganizerManager::collections()
     QList<QOrganizerCollection> allCollections = oim->collections();
     for (int i = 0; i < allCollections.size(); ++i) {
         QOrganizerCollectionId currentId = allCollections.at(i).id();
-        if (currentId != oim->defaultCollection().id()) {
+        if (currentId != oim->defaultCollectionId()) {
             oim->removeCollection(currentId);
         }
     }
@@ -4274,14 +4274,14 @@ void tst_QOrganizerManager::collections()
     if (oim->managerName() != "memory") // modifying default collection is not allowed in memory engine
     {
         int initialCollectionCount = oim->collections().size();
-        QOrganizerCollection defaultCollection = oim->defaultCollection();
-        QOrganizerCollectionId defaultCollectionId = oim->defaultCollection().id();
+        QOrganizerCollectionId defaultCollectionId = oim->defaultCollectionId();
+        QOrganizerCollection defaultCollection = oim->collection(defaultCollectionId);
         defaultCollection.setMetaData(QOrganizerCollection::KeyName, "NewName");
         QCOMPARE(defaultCollection.id(), defaultCollectionId);
         QVERIFY(oim->saveCollection(&defaultCollection));
         int finalCollectionCount = oim->collections().size();
         QCOMPARE(finalCollectionCount, initialCollectionCount);
-        QCOMPARE(oim->defaultCollection().metaData(QOrganizerCollection::KeyName).toString(), QString("NewName"));
+        QCOMPARE(oim->collection(defaultCollectionId).metaData(QOrganizerCollection::KeyName).toString(), QString("NewName"));
         QCOMPARE(defaultCollection.id(), defaultCollectionId);
     }
 
@@ -4315,7 +4315,7 @@ void tst_QOrganizerManager::collections()
         QVERIFY(itemIndex >= 0);
         QVERIFY(oim->items(QDateTime(), QDateTime(), fil).contains(i1) || isSuperset(c1Items.at(itemIndex), i1));
 
-        fil.setCollectionId(oim->defaultCollection().id());
+        fil.setCollectionId(oim->defaultCollectionId());
         QVERIFY(!oim->items(QDateTime(), QDateTime(), fil).contains(i1)); // it should not be in the default collection.
     }
 

@@ -133,9 +133,9 @@ public:
     }
 
     // collections
-    QOrganizerCollection defaultCollection(QOrganizerManager::Error *error)
+    QOrganizerCollectionId defaultCollectionId() const
     {
-        return QOrganizerManagerEngine::defaultCollection(error);
+        return QOrganizerManagerEngine::defaultCollectionId();
     }
 
     QOrganizerCollection collection(const QOrganizerCollectionId &collectionId, QOrganizerManager::Error *error)

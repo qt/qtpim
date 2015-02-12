@@ -646,13 +646,12 @@ bool QOrganizerManager::removeItems(const QList<QOrganizerItem> *items)
 }
 
 /*!
-    Returns the default collection managed by this manager. There is always only one default collection
-    for each backend.
+    Returns the id of a default collection managed by this manager.
+    There is always only one default collection for each backend.
  */
-QOrganizerCollection QOrganizerManager::defaultCollection()
+QOrganizerCollectionId QOrganizerManager::defaultCollectionId() const
 {
-    QOrganizerManagerSyncOpErrorHolder h(this);
-    return d->m_engine->defaultCollection(&h.error);
+    return d->m_engine->defaultCollectionId();
 }
 
 /*!

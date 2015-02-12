@@ -108,7 +108,7 @@ public:
     virtual bool removeRelationships(const QList<QContactRelationship> &relationships, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error);
 
     // collections
-    virtual QContactCollection defaultCollection(QContactManager::Error *error);
+    virtual QContactCollectionId defaultCollectionId() const;
     virtual QContactCollection collection(const QContactCollectionId &collectionId, QContactManager::Error *error);
     virtual QList<QContactCollection> collections(QContactManager::Error *error);
     virtual bool saveCollection(QContactCollection *collection, QContactManager::Error *error);

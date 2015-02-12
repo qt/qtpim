@@ -110,7 +110,7 @@ public:
     virtual bool removeItems(const QList<QOrganizerItem> *items, QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error);
 
     // collections
-    virtual QOrganizerCollection defaultCollection(QOrganizerManager::Error *error);
+    virtual QOrganizerCollectionId defaultCollectionId() const;
     virtual QOrganizerCollection collection(const QOrganizerCollectionId &collectionId, QOrganizerManager::Error *error);
     virtual QList<QOrganizerCollection> collections(QOrganizerManager::Error *error);
     virtual bool saveCollection(QOrganizerCollection *collection, QOrganizerManager::Error *error);

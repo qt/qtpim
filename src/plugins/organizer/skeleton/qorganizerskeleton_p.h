@@ -142,7 +142,7 @@ public:
                      QOrganizerManager::Error *error);
 
     // collections
-    QOrganizerCollection defaultCollection(QOrganizerManager::Error* error);
+    QOrganizerCollectionId defaultCollectionId() const;
     QOrganizerCollection collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error);
     QList<QOrganizerCollection> collections(QOrganizerManager::Error* error);
     bool saveCollection(QOrganizerCollection* collection, QOrganizerManager::Error* error);

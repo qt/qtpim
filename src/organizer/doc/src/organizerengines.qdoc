@@ -90,7 +90,8 @@ All engines must implement the following functions:
   \li QOrganizerManagerEngine::itemIds()
   \li QOrganizerManagerEngine::items()
   \li QOrganizerManagerEngine::itemsForExport()
-  \li QOrganizerManagerEngine::defaultCollection()
+  \li QOrganizerManagerEngine::defaultCollectionId()
+  \li QOrganizerManagerEngine::collection()
   \li QOrganizerManagerEngine::collections()
 \endlist
 

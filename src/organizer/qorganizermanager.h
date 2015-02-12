@@ -150,7 +150,7 @@ public:
     bool removeItems(const QList<QOrganizerItem> *items);
 
     // collections
-    QOrganizerCollection defaultCollection();
+    QOrganizerCollectionId defaultCollectionId() const;
     QOrganizerCollection collection(const QOrganizerCollectionId& collectionId);
     QList<QOrganizerCollection> collections();
     bool saveCollection(QOrganizerCollection* collection);

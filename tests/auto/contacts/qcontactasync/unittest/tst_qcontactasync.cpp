@@ -1345,7 +1345,7 @@ void tst_QContactAsync::contactSave()
     QVERIFY(result.first().detail<QContactName>() == nameDetail);
 
     // check if the contact was saved on default collection
-    QCOMPARE(result.first().collectionId().toString(), cm->defaultCollection().id().toString());
+    QCOMPARE(result.first().collectionId().toString(), cm->defaultCollectionId().toString());
     QCOMPARE(cm->contactIds().size(), originalCount + 1);
 
     // update a previously saved contact
@@ -2558,7 +2558,7 @@ void tst_QContactAsync::collectionRemove()
 
     // specific collection set
     QContactCollectionId removeId = cm->collections().last().id();
-    if (cm->defaultCollection().id() == removeId)
+    if (cm->defaultCollectionId() == removeId)
         removeId = cm->collections().first().id();
     crr.setCollectionId(removeId);
     QVERIFY(crr.collectionIds() == QList<QContactCollectionId>() << removeId);

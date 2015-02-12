@@ -521,12 +521,10 @@ bool QContactMemoryEngine::removeRelationships(const QList<QContactRelationship>
     return (*error == QContactManager::NoError);
 }
 
-QContactCollection QContactMemoryEngine::defaultCollection(QContactManager::Error *error)
+QContactCollectionId QContactMemoryEngine::defaultCollectionId() const
 {
-    const QContactCollectionId defaultCollectionId = this->defaultCollectionId();
-    Q_ASSERT(d->m_idToCollectionHash.contains(defaultCollectionId));
-    *error = QContactManager::NoError;
-    return d->m_idToCollectionHash.value(defaultCollectionId);
+    static const QByteArray id("Personal");
+    return collectionId(id);
 }
 
 QContactCollection QContactMemoryEngine::collection(const QContactCollectionId &collectionId, QContactManager::Error *error)
@@ -899,12 +897,6 @@ void QContactMemoryEngine::performAsynchronousOperation(QContactAbstractRequest 
 
     // now emit any signals we have to emit
     d->emitSharedSignals(&changeSet);
-}
-
-QContactCollectionId QContactMemoryEngine::defaultCollectionId() const
-{
-    static const QByteArray id("Personal");
-    return collectionId(id);
 }
 
 void QContactMemoryEngine::partiallySyncDetails(QContact *to, const QContact &from, const QList<QContactDetail::DetailType> &mask)

@@ -238,7 +238,7 @@ TestCase {
             __model.autoUpdate = false;
             for (var i = 0; i < __model.collections.length; ++i) {
                 var collId = __model.collections[i].collectionId;
-                if (collId != __model.defaultCollection().collectionId) {
+                if (collId != __model.defaultCollectionId()) {
                     __model.removeCollection(collId);
                 }
             }

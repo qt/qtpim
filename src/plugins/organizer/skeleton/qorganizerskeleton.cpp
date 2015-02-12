@@ -251,7 +251,7 @@ bool QOrganizerItemSkeletonEngine::removeItems(const QList<QOrganizerItemId> &it
     return QOrganizerManagerEngine::removeItems(itemIds, errorMap, error);
 }
 
-QOrganizerCollection QOrganizerItemSkeletonEngine::defaultCollection(QOrganizerManager::Error* error)
+QOrganizerCollectionId QOrganizerItemSkeletonEngine::defaultCollectionId() const
 {
     /*
         TODO
@@ -263,7 +263,7 @@ QOrganizerCollection QOrganizerItemSkeletonEngine::defaultCollection(QOrganizerM
         There is always at least one collection in a manager, and all items are
         saved in exactly one collection.
      */
-    return QOrganizerManagerEngine::defaultCollection(error);
+    return QOrganizerManagerEngine::defaultCollectionId();
 }
 
 QOrganizerCollection QOrganizerItemSkeletonEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error)

@@ -93,7 +93,8 @@ by clients.  For in-depth information about collections, see
 
 The synchronous API offers the following functions to manipulate collections:
 \list
-  \li QOrganizerManager::defaultCollection() returns the default collection of the manager
+  \li QOrganizerManager::defaultCollectionId() returns the id of a default collection of the manager
+  \li QOrganizerManager::collection() returns an existing collection by its id
   \li QOrganizerManager::collections() returns all collections in the manager
   \li QOrganizerManager::saveCollection() updates an existing collection or adds a new collection
   \li QOrganizerManager::removeCollection() removes an existing collection (and deletes any items it contains)

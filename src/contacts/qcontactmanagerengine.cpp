@@ -452,13 +452,11 @@ bool QContactManagerEngine::removeRelationships(const QList<QContactRelationship
 }
 
 /*!
-    This function should be reimplemented to support synchronous calls to fetch the default collection.
-    Any errors encountered during this operation should be stored to \a error.
+    This function should be reimplemented to support synchronous calls to fetch the default collection id.
 */
-QContactCollection QContactManagerEngine::defaultCollection(QContactManager::Error* error)
+QContactCollectionId QContactManagerEngine::defaultCollectionId() const
 {
-    *error = QContactManager::NotSupportedError;
-    return QContactCollection();
+    return QContactCollectionId();
 }
 
 /*!

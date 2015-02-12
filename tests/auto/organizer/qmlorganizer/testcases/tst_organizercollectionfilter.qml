@@ -130,14 +130,14 @@ Rectangle {
                 compare(model.itemCount, 1)
 
                 //default collection
-                utility.debug("default collection id :" + model.defaultCollection().collectionId, debugFlag);
+                utility.debug("default collection id :" + model.defaultCollectionId(), debugFlag);
                 var modelCollectionFilter = model.filter;
-                modelCollectionFilter.ids = [model.defaultCollection().collectionId];
+                modelCollectionFilter.ids = [model.defaultCollectionId()];
                 utility.waitModelChange(0);
 
                 compare(model.itemCount, 0)
                 //save event to default collection
-                event.collectionId = model.defaultCollection().collectionId;
+                event.collectionId = model.defaultCollectionId();
                 model.saveItem(event);
                 utility.waitModelChange(1);
 
@@ -160,12 +160,12 @@ Rectangle {
 
                 //set more collection ids
                 modelCollectionFilter = model.filter
-                modelCollectionFilter.ids = [model.defaultCollection().collectionId, savedCollection.collectionId];
+                modelCollectionFilter.ids = [model.defaultCollectionId(), savedCollection.collectionId];
                 utility.waitModelChange(2);
                 compare(model.itemCount, 2);
 
                 //One invalid collection id
-                modelCollectionFilter.ids = [model.defaultCollection().collectionId, "12345666666",savedCollection.collectionId];
+                modelCollectionFilter.ids = [model.defaultCollectionId(), "12345666666",savedCollection.collectionId];
                 utility.waitModelChange(2);
                 compare(model.itemCount, 2);
 

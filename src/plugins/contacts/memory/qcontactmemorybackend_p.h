@@ -166,7 +166,7 @@ public:
     virtual bool removeRelationships(const QList<QContactRelationship> &relationships, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error);
 
     // collections
-    QContactCollection defaultCollection(QContactManager::Error* error);
+    QContactCollectionId defaultCollectionId() const;
     QContactCollection collection(const QContactCollectionId &collectionId, QContactManager::Error *error);
     QList<QContactCollection> collections(QContactManager::Error* error);
     bool saveCollection(QContactCollection* collection, QContactManager::Error* error);
@@ -216,8 +216,6 @@ private:
     void partiallySyncDetails(QContact *to, const QContact &from, const QList<QContactDetail::DetailType> &mask);
 
     void performAsynchronousOperation(QContactAbstractRequest *request);
-
-    QContactCollectionId defaultCollectionId() const;
 
     QContactMemoryEngineData *d;
     static QMap<QString, QContactMemoryEngineData*> engineDatas;

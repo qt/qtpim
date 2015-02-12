@@ -1047,12 +1047,10 @@ bool QOrganizerItemMemoryEngine::removeItems(const QList<QOrganizerItem> *items,
     return (*error == QOrganizerManager::NoError);
 }
 
-QOrganizerCollection QOrganizerItemMemoryEngine::defaultCollection(QOrganizerManager::Error* error)
+QOrganizerCollectionId QOrganizerItemMemoryEngine::defaultCollectionId() const
 {
-    const QOrganizerCollectionId defaultCollectionId = this->defaultCollectionId();
-    Q_ASSERT(d->m_idToCollectionHash.contains(defaultCollectionId));
-    *error = QOrganizerManager::NoError;
-    return d->m_idToCollectionHash.value(defaultCollectionId);
+    const uint id(QOrganizerItemMemoryEngineData::DefaultCollectionLocalId);
+    return collectionId(QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint)));
 }
 
 QOrganizerCollection QOrganizerItemMemoryEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error)

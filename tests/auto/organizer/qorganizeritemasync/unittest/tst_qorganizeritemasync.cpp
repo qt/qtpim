@@ -2270,7 +2270,7 @@ void tst_QOrganizerItemAsync::collectionRemove()
 
     // specific collection set
     QOrganizerCollectionId removeId = oim->collections().last().id();
-    if (oim->defaultCollection().id() == removeId)
+    if (oim->defaultCollectionId() == removeId)
         removeId = oim->collections().first().id();
     crr.setCollectionId(removeId);
     QVERIFY(crr.collectionIds() == QList<QOrganizerCollectionId>() << removeId);

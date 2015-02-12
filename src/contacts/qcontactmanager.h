@@ -158,7 +158,7 @@ public:
     QList<QContactDetail::DetailType> supportedContactDetailTypes() const;
 
     // collections
-    QContactCollection defaultCollection();
+    QContactCollectionId defaultCollectionId() const;
     QContactCollection collection(const QContactCollectionId& collectionId);
     QList<QContactCollection> collections();
     bool saveCollection(QContactCollection* collection);

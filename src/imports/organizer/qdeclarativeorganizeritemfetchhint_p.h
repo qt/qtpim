@@ -46,6 +46,7 @@ class QDeclarativeOrganizerItemFetchHint : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(QList<int> detailTypesHint READ detailTypesHint WRITE setDetailTypesHint NOTIFY fetchHintChanged )
     Q_PROPERTY(OptimizationHints optimizationHints READ optimizationHints WRITE setOptimizationHints NOTIFY fetchHintChanged)
 
     Q_ENUMS(OptimizationHint)
@@ -63,6 +64,9 @@ public:
 
     OptimizationHints optimizationHints() const;
     void setOptimizationHints(OptimizationHints hints);
+
+    QList<int> detailTypesHint() const;
+    void setDetailTypesHint(const QList<int> &detailTypes);
 
     QOrganizerItemFetchHint fetchHint() const;
     void setFetchHint(const QOrganizerItemFetchHint &fetchHint);

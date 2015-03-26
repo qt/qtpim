@@ -33,6 +33,8 @@
 
 #include "qdeclarativeorganizeritemfetchhint_p.h"
 
+#include <QtCore/qset.h>
+
 QTORGANIZER_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE
@@ -87,6 +89,33 @@ void QDeclarativeOrganizerItemFetchHint::setOptimizationHints(OptimizationHints 
         QOrganizerItemFetchHint::OptimizationHints newHints;
         newHints = ~newHints & (int)hints;
         d.setOptimizationHints(newHints);
+        emit fetchHintChanged();
+    }
+}
+
+/*!
+  \qmlproperty list<int> FetchHint::detailTypesHint
+
+  This property holds a list of organizer item detail types
+  the manager should (at a minimum) retrieve when fetching contacts.
+  */
+QList<int> QDeclarativeOrganizerItemFetchHint::detailTypesHint() const
+{
+    QList<int> savedList;
+    foreach (const QOrganizerItemDetail::DetailType &detailTypeHint, d.detailTypesHint())
+        savedList << static_cast<int>(detailTypeHint);
+
+    return savedList;
+}
+
+void QDeclarativeOrganizerItemFetchHint::setDetailTypesHint(const QList<int> &detailTypes)
+{
+    if (detailTypes.toSet() != detailTypesHint().toSet()) {
+        QList<QOrganizerItemDetail::DetailType> convertedDetailTypes;
+        foreach (const int detailType, detailTypes)
+            convertedDetailTypes << static_cast<QOrganizerItemDetail::DetailType>(detailType);
+
+        d.setDetailTypesHint(convertedDetailTypes);
         emit fetchHintChanged();
     }
 }

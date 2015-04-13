@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2015 The Qt Company Ltd and/or its subsidiary(-ies).
 ** Copyright (C) 2015 Canonical Ltd
-** Contact: http://www.qt-project.org/legal
+** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtContacts module of the Qt Toolkit.
 **

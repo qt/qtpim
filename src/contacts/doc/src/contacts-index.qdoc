@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2015 The Qt Company Ltd and/or its subsidiary(-ies).
+** Copyright (C) 2015 The Qt Company Ltd.
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -21,7 +21,6 @@
 ** this file. Please review the following information to ensure
 ** the GNU Free Documentation License version 1.3 requirements
 ** will be met: http://www.gnu.org/copyleft/fdl.html.
-**
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/

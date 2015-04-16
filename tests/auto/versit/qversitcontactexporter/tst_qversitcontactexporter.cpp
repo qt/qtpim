@@ -1508,10 +1508,19 @@ void tst_QVersitContactExporter::testEncodeExtendedDetail_data()
 
     {
         QVariantHash hash;
-        hash["key"] = QVariant(QString("string"));
-        QTest::newRow("data type not supported")
+        hash["key 1"] = QString("string 1");
+        hash["key 2"] = QString("string 2");
+        QTest::newRow("hash data")
                 << QString("name")
                 << QVariant(hash)
+                << QString("[\n    {\n        \"key 1\": \"string 1\",\n        \"key 2\": \"string 2\"\n    }\n]\n")
+                << true;
+    }
+
+    {
+        QTest::newRow("data type not supported")
+                << QString("name")
+                << QVariant(QSize(1, 1))
                 << QString()
                 << false;
     }

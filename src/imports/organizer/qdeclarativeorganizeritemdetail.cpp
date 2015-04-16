@@ -34,6 +34,7 @@
 #include "qdeclarativeorganizeritemdetail_p.h"
 
 #include <QtQml/qqmlinfo.h>
+#include <QtQml/QJSValue>
 
 #include <QtOrganizer/qorganizeritemdetails.h>
 #include <QtOrganizer/qorganizeritemid.h>
@@ -1863,8 +1864,13 @@ QString QDeclarativeOrganizerItemExtendedDetail::name() const
  */
 void QDeclarativeOrganizerItemExtendedDetail::setData(const QVariant &newData)
 {
-    if (newData != data()) {
-        setValue(QOrganizerItemExtendedDetail::FieldData, newData);
+    QVariant unboxedData(newData);
+    if (newData.userType() == qMetaTypeId<QJSValue>()) {
+        unboxedData = newData.value<QJSValue>().toVariant();
+    }
+
+    if (unboxedData != data()) {
+        setValue(QOrganizerItemExtendedDetail::FieldData, unboxedData);
         emit valueChanged();
     }
 }

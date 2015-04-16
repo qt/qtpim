@@ -94,7 +94,8 @@ QDeclarativeOrganizerRecurrenceRule::Frequency QDeclarativeOrganizerRecurrenceRu
  */
 void QDeclarativeOrganizerRecurrenceRule::setLimit(const QVariant &value)
 {
-    if (!value.isValid()) {
+    if (!value.isValid() ||
+        (static_cast<QMetaType::Type>(value.type()) == QMetaType::VoidStar && value.value<void *>() == 0)) {
         if (m_rule.limitType() != QOrganizerRecurrenceRule::NoLimit) {
             m_rule.clearLimit();
             emit recurrenceRuleChanged();

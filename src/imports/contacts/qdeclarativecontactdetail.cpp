@@ -36,6 +36,8 @@
 #include "qdeclarativecontactdetails_p.h"
 #include "qdeclarativecontact_p.h"
 
+#include <QtQml/QJSValue>
+
 QTCONTACTS_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE
@@ -544,6 +546,18 @@ QDeclarativeContactDetail *QDeclarativeContactDetailFactory::createContactDetail
     This property holds the data of the extended detail.
 */
 
+void QDeclarativeContactExtendedDetail::setData(const QVariant &newData)
+{
+    QVariant unboxedData(newData);
+    if (newData.userType() == qMetaTypeId<QJSValue>()) {
+        unboxedData = newData.value<QJSValue>().toVariant();
+    }
+
+    if (unboxedData != data() && !readOnly()) {
+        detail().setValue(QContactExtendedDetail::FieldData, unboxedData);
+        emit valueChanged();
+    }
+}
 
 /* ==================== QDeclarativeContactFamily ======================= */
 /*!

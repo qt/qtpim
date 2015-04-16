@@ -80,13 +80,7 @@ public:
         return detail().value(QContactExtendedDetail::FieldName).toString();
     }
 
-    void setData(const QVariant &newData)
-    {
-        if (newData != data() && !readOnly()) {
-            detail().setValue(QContactExtendedDetail::FieldData, newData);
-            emit valueChanged();
-        }
-    }
+    void setData(const QVariant &newData);
 
     QVariant data() const
     {

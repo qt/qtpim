@@ -60,11 +60,11 @@ public:
         SubTypeFavourite
     };
 
-    void setUrl(const QString& url) {setValue(FieldUrl, url);}
-    void setUrl(const QUrl& url) {setValue(FieldUrl, url.toString());}
+    void setUrl(const QString& _url) {setValue(FieldUrl, _url);}
+    void setUrl(const QUrl& _url) {setValue(FieldUrl, _url.toString());}
     QString url() const {return value(FieldUrl).toString();}
 
-    void setSubType(const QContactUrl::SubType &subType) {setValue(FieldSubType, static_cast<int>(subType));}
+    void setSubType(const QContactUrl::SubType &_subType) {setValue(FieldSubType, static_cast<int>(_subType));}
     QContactUrl::SubType subType() const {return static_cast<QContactUrl::SubType>(value<int>(FieldSubType));}
 };
 

@@ -52,7 +52,7 @@ public:
         FieldHobby = 0
     };
 
-    void setHobby(const QString& hobby) {setValue(FieldHobby, hobby);}
+    void setHobby(const QString& _hobby) {setValue(FieldHobby, _hobby);}
     QString hobby() const {return value(FieldHobby).toString();}
 };
 

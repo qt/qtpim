@@ -52,7 +52,7 @@ public:
         FieldSyncTarget = 0
     };
 
-    void setSyncTarget(const QString& syncTarget) {setValue(FieldSyncTarget, syncTarget);}
+    void setSyncTarget(const QString& _syncTarget) {setValue(FieldSyncTarget, _syncTarget);}
     QString syncTarget() const {return value(FieldSyncTarget).toString();}
 };
 

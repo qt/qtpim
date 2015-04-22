@@ -55,11 +55,11 @@ public:
         FieldCalendarId
     };
 
-    void setDate(const QDate& date) {setValue(FieldBirthday, date);}
+    void setDate(const QDate& _date) {setValue(FieldBirthday, _date);}
     QDate date() const {return value<QDate>(FieldBirthday);}
-    void setDateTime(const QDateTime& dateTime) {setValue(FieldBirthday, dateTime);}
+    void setDateTime(const QDateTime& _dateTime) {setValue(FieldBirthday, _dateTime);}
     QDateTime dateTime() const {return value<QDateTime>(FieldBirthday);}
-    void setCalendarId(const QString& calendarId) {setValue(FieldCalendarId, calendarId);}
+    void setCalendarId(const QString& _calendarId) {setValue(FieldCalendarId, _calendarId);}
     QString calendarId() const {return value(FieldCalendarId).toString();}
 };
 

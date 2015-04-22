@@ -70,12 +70,12 @@ public:
     void setOriginalDateTime(const QDateTime& dateTime) {setValue(FieldOriginalDate, dateTime);}
     QDateTime originalDateTime() const {return value<QDateTime>(FieldOriginalDate);}
 
-    void setCalendarId(const QString& calendarId) {setValue(FieldCalendarId, calendarId);}
+    void setCalendarId(const QString& _calendarId) {setValue(FieldCalendarId, _calendarId);}
     QString calendarId() const {return value(FieldCalendarId).toString();}
-    void setEvent(const QString& event) {setValue(FieldEvent, event);}
+    void setEvent(const QString& _event) {setValue(FieldEvent, _event);}
     QString event() const {return value(FieldEvent).toString();}
 
-    void setSubType(const QContactAnniversary::SubType &subType) {setValue(FieldSubType, static_cast<int>(subType));}
+    void setSubType(const QContactAnniversary::SubType &_subType) {setValue(FieldSubType, static_cast<int>(_subType));}
     QContactAnniversary::SubType subType() const {return static_cast<QContactAnniversary::SubType>(value<int>(FieldSubType));}
 };
 

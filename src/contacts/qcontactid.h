@@ -46,9 +46,9 @@ class Q_CONTACTS_EXPORT QContactId
 {
 public:
     inline QContactId() {}
-    inline QContactId(const QString &managerUri, const QByteArray &localId)
-        : m_managerUri(localId.isEmpty() ? QString() : managerUri),
-          m_localId(m_managerUri.isEmpty() ? QByteArray() : localId)
+    inline QContactId(const QString &_managerUri, const QByteArray &_localId)
+        : m_managerUri(_localId.isEmpty() ? QString() : _managerUri),
+          m_localId(m_managerUri.isEmpty() ? QByteArray() : _localId)
     {}
     // compiler-generated dtor and copy/move ctors/assignment operators are fine!
 

@@ -56,7 +56,7 @@ class Q_ORGANIZER_EXPORT QOrganizerManager : public QObject
     Q_OBJECT
 
 public:
-#if Q_QDOC // qdoc's parser fails to recognise the default map argument
+#ifdef Q_QDOC // qdoc's parser fails to recognize the default map argument
     explicit QOrganizerManager(const QString &managerName, const QMap<QString, QString> &parameters = 0, QObject *parent = 0);
 #else
     explicit QOrganizerManager(const QString &managerName, const QMap<QString, QString> &parameters = (QMap<QString, QString>()), QObject *parent = 0);

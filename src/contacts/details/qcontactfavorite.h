@@ -55,9 +55,9 @@ public:
         FieldIndex
     };
 
-    void setFavorite(bool isFavorite) {setValue(FieldFavorite, isFavorite);}
+    void setFavorite(bool _isFavorite) {setValue(FieldFavorite, _isFavorite);}
     bool isFavorite() const {return value(FieldFavorite).toBool();}
-    void setIndex(int index) {setValue(FieldIndex, index);}
+    void setIndex(int _index) {setValue(FieldIndex, _index);}
     int index() const {return value(FieldIndex).toInt();}
 
     // Convenience filter

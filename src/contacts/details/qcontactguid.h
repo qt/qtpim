@@ -52,7 +52,7 @@ public:
         FieldGuid = 0
     };
 
-    void setGuid(const QString& guid) {setValue(FieldGuid, guid);}
+    void setGuid(const QString& _guid) {setValue(FieldGuid, _guid);}
     QString guid() const {return value(FieldGuid).toString();}
 };
 

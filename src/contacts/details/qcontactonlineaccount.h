@@ -75,19 +75,19 @@ public:
         ProtocolYahoo
     };
 
-    void setAccountUri(const QString& accountUri) {setValue(FieldAccountUri, accountUri);}
+    void setAccountUri(const QString& _accountUri) {setValue(FieldAccountUri, _accountUri);}
     QString accountUri() const {return value(FieldAccountUri).toString();}
 
-    void setServiceProvider(const QString& serviceProvider) {setValue(FieldServiceProvider, serviceProvider);}
+    void setServiceProvider(const QString& _serviceProvider) {setValue(FieldServiceProvider, _serviceProvider);}
     QString serviceProvider() const {return value(FieldServiceProvider).toString();}
 
-    void setProtocol(Protocol protocol) {setValue(FieldProtocol, protocol);}
+    void setProtocol(Protocol _protocol) {setValue(FieldProtocol, _protocol);}
     Protocol protocol() const {return Protocol(value(FieldProtocol).toInt());}
 
-    void setCapabilities(const QStringList& capabilities) {setValue(FieldCapabilities, capabilities);}
+    void setCapabilities(const QStringList& _capabilities) {setValue(FieldCapabilities, _capabilities);}
     QStringList capabilities() const {return value<QStringList>(FieldCapabilities);}
 
-    void setSubTypes(const QList<int> &subTypes) {setValue(FieldSubTypes, QVariant::fromValue(subTypes));}
+    void setSubTypes(const QList<int> &_subTypes) {setValue(FieldSubTypes, QVariant::fromValue(_subTypes));}
     QList<int> subTypes() const {return value< QList<int> >(FieldSubTypes);}
 };
 

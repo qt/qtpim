@@ -63,23 +63,23 @@ public:
         FieldTimestamp
     };
 
-    void setLabel(const QString& label) {setValue(FieldLabel, label);}
+    void setLabel(const QString& _label) {setValue(FieldLabel, _label);}
     QString label() const {return value(FieldLabel).toString();}
-    void setLatitude(double latitude) {setValue(FieldLatitude, latitude);}
+    void setLatitude(double _latitude) {setValue(FieldLatitude, _latitude);}
     double latitude() const {return value(FieldLatitude).toDouble();}
-    void setLongitude(double longitude) {setValue(FieldLongitude, longitude);}
+    void setLongitude(double _longitude) {setValue(FieldLongitude, _longitude);}
     double longitude() const {return value(FieldLongitude).toDouble();}
-    void setAccuracy(double accuracy) {setValue(FieldAccuracy, accuracy);}
+    void setAccuracy(double _accuracy) {setValue(FieldAccuracy, _accuracy);}
     double accuracy() const {return value(FieldAccuracy).toDouble();}
-    void setAltitude(double altitude) {setValue(FieldAltitude, altitude);}
+    void setAltitude(double _altitude) {setValue(FieldAltitude, _altitude);}
     double altitude() const {return value(FieldAltitude).toDouble();}
-    void setAltitudeAccuracy(double altitudeAccuracy) {setValue(FieldAltitudeAccuracy, altitudeAccuracy);}
+    void setAltitudeAccuracy(double _altitudeAccuracy) {setValue(FieldAltitudeAccuracy, _altitudeAccuracy);}
     double altitudeAccuracy() const {return value(FieldAltitudeAccuracy).toDouble();}
-    void setHeading(double heading) {setValue(FieldHeading, heading);}
+    void setHeading(double _heading) {setValue(FieldHeading, _heading);}
     double heading() const {return value(FieldHeading).toDouble();}
-    void setSpeed(double speed) {setValue(FieldSpeed, speed);}
+    void setSpeed(double _speed) {setValue(FieldSpeed, _speed);}
     double speed() const {return value(FieldSpeed).toDouble();}
-    void setTimestamp(const QDateTime& timestamp) {setValue(FieldTimestamp, timestamp);}
+    void setTimestamp(const QDateTime& _timestamp) {setValue(FieldTimestamp, _timestamp);}
     QDateTime timestamp() const {return value(FieldTimestamp).toDateTime();}
 };
 

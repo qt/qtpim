@@ -97,7 +97,7 @@ protected:
     QOrganizerAbstractRequestPrivate *d_ptr;
 
 private:
-    QOrganizerAbstractRequest(QObject *parent = 0) : QObject(parent), d_ptr(0) {}
+    QOrganizerAbstractRequest(QObject *_parent = 0) : QObject(_parent), d_ptr(0) {}
     Q_DISABLE_COPY(QOrganizerAbstractRequest)
     friend class QOrganizerManagerEngine;
     friend class QOrganizerAbstractRequestPrivate;

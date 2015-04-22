@@ -55,10 +55,10 @@ public:
         FieldVideoUrl
     };
 
-    void setImageUrl(const QUrl& imageUrl) {setValue(FieldImageUrl, imageUrl);}
+    void setImageUrl(const QUrl& _imageUrl) {setValue(FieldImageUrl, _imageUrl);}
     QUrl imageUrl() const {return value<QUrl>(FieldImageUrl);}
 
-    void setVideoUrl(const QUrl& videoUrl) {setValue(FieldVideoUrl, videoUrl);}
+    void setVideoUrl(const QUrl& _videoUrl) {setValue(FieldVideoUrl, _videoUrl);}
     QUrl videoUrl() const {return value<QUrl>(FieldVideoUrl);}
 };
 

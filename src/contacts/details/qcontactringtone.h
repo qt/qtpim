@@ -56,13 +56,13 @@ public:
     FieldVibrationRingtoneUrl
     };
 
-    void setAudioRingtoneUrl(const QUrl& audioRingtoneUrl) {setValue(FieldAudioRingtoneUrl, audioRingtoneUrl);}
+    void setAudioRingtoneUrl(const QUrl& _audioRingtoneUrl) {setValue(FieldAudioRingtoneUrl, _audioRingtoneUrl);}
     QUrl audioRingtoneUrl() const {return value<QUrl>(FieldAudioRingtoneUrl);}
 
-    void setVideoRingtoneUrl(const QUrl& videoRingtoneUrl) {setValue(FieldVideoRingtoneUrl, videoRingtoneUrl);}
+    void setVideoRingtoneUrl(const QUrl& _videoRingtoneUrl) {setValue(FieldVideoRingtoneUrl, _videoRingtoneUrl);}
     QUrl videoRingtoneUrl() const {return value<QUrl>(FieldVideoRingtoneUrl);}
 
-    void setVibrationRingtoneUrl(const QUrl& vibrationRingtoneUrl) {setValue(FieldVibrationRingtoneUrl, vibrationRingtoneUrl);}
+    void setVibrationRingtoneUrl(const QUrl& _vibrationRingtoneUrl) {setValue(FieldVibrationRingtoneUrl, _vibrationRingtoneUrl);}
     QUrl vibrationRingtoneUrl() const {return value<QUrl>(FieldVibrationRingtoneUrl);}
 };
 

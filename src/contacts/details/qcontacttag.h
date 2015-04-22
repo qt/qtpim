@@ -54,7 +54,7 @@ public:
         FieldTag = 0
     };
 
-    void setTag(const QString& tag) {setValue(FieldTag, tag);}
+    void setTag(const QString& _tag) {setValue(FieldTag, _tag);}
     QString tag() const {return value(FieldTag).toString();}
 
     // Convenience filter

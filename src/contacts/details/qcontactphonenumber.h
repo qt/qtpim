@@ -72,10 +72,10 @@ public:
         SubTypeIsdn
     };
 
-    void setNumber(const QString& number) {setValue(FieldNumber, number);}
+    void setNumber(const QString& _number) {setValue(FieldNumber, _number);}
     QString number() const {return value(FieldNumber).toString();}
 
-    void setSubTypes(const QList<int> &subTypes) {setValue(FieldSubTypes, QVariant::fromValue(subTypes));}
+    void setSubTypes(const QList<int> &_subTypes) {setValue(FieldSubTypes, QVariant::fromValue(_subTypes));}
     QList<int> subTypes() const {return value< QList<int> >(FieldSubTypes);}
 
     // Convenience filter

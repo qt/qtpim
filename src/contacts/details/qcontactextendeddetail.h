@@ -53,9 +53,9 @@ public:
         FieldData
     };
 
-    void setName(const QString &name)
+    void setName(const QString &_name)
     {
-        setValue(FieldName, name);
+        setValue(FieldName, _name);
     }
 
     QString name() const
@@ -63,9 +63,9 @@ public:
         return value(FieldName).toString();
     }
 
-    void setData(const QVariant &data)
+    void setData(const QVariant &_data)
     {
-        setValue(FieldData, data);
+        setValue(FieldData, _data);
     }
 
     QVariant data() const

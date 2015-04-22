@@ -52,7 +52,7 @@ public:
         FieldNickname = 0
     };
 
-    void setNickname(const QString& nickname) {setValue(FieldNickname, nickname);}
+    void setNickname(const QString& _nickname) {setValue(FieldNickname, _nickname);}
     QString nickname() const {return value(FieldNickname).toString();}
 };
 

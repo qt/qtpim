@@ -63,17 +63,17 @@ public:
         FieldCustomMessage
     };
 
-    void setTimestamp(const QDateTime& timestamp) {setValue(FieldTimestamp, timestamp);}
+    void setTimestamp(const QDateTime& _timestamp) {setValue(FieldTimestamp, _timestamp);}
     QDateTime timestamp() const {return value<QDateTime>(FieldTimestamp);}
-    void setNickname(const QString& nickname) {setValue(FieldNickname, nickname);}
+    void setNickname(const QString& _nickname) {setValue(FieldNickname, _nickname);}
     QString nickname() const {return value(FieldNickname).toString();}
-    void setPresenceState(QContactPresence::PresenceState presenceState) {setValue(FieldPresenceState, static_cast<int>(presenceState));}
+    void setPresenceState(QContactPresence::PresenceState _presenceState) {setValue(FieldPresenceState, static_cast<int>(_presenceState));}
     QContactPresence::PresenceState presenceState() const {return static_cast<QContactPresence::PresenceState>(value<int>(FieldPresenceState));}
-    void setPresenceStateText(const QString& presenceStateText) {setValue(FieldPresenceStateText, presenceStateText);}
+    void setPresenceStateText(const QString& _presenceStateText) {setValue(FieldPresenceStateText, _presenceStateText);}
     QString presenceStateText() const {return value(FieldPresenceStateText).toString();}
-    void setPresenceStateImageUrl(const QUrl& presenceStateImageUrl) {setValue(FieldPresenceStateImageUrl, presenceStateImageUrl);}
+    void setPresenceStateImageUrl(const QUrl& _presenceStateImageUrl) {setValue(FieldPresenceStateImageUrl, _presenceStateImageUrl);}
     QUrl presenceStateImageUrl() const {return value<QUrl>(FieldPresenceStateImageUrl);}
-    void setCustomMessage(const QString& customMessage) {setValue(FieldCustomMessage, customMessage);}
+    void setCustomMessage(const QString& _customMessage) {setValue(FieldCustomMessage, _customMessage);}
     QString customMessage() const {return value(FieldCustomMessage).toString();}
 
     // convenience filtering functions

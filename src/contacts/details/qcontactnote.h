@@ -52,7 +52,7 @@ public:
         FieldNote = 0
     };
 
-    void setNote(const QString& note) {setValue(FieldNote, note);}
+    void setNote(const QString& _note) {setValue(FieldNote, _note);}
     QString note() const {return value(FieldNote).toString();}
 };
 

@@ -55,7 +55,7 @@ public:
         GenderUnspecified
     };
 
-    void setGender(const GenderField gender) {setValue(FieldGender, static_cast<int>(gender));}
+    void setGender(const GenderField _gender) {setValue(FieldGender, static_cast<int>(_gender));}
     GenderField gender() const {return static_cast<GenderField>(value<int>(FieldGender));}
 };
 

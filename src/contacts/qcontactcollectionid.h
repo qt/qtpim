@@ -47,9 +47,9 @@ class Q_CONTACTS_EXPORT QContactCollectionId
 {
 public:
     inline QContactCollectionId() {}
-    inline QContactCollectionId(const QString &managerUri, const QByteArray &localId)
-        : m_managerUri(localId.isEmpty() ? QString() : managerUri),
-          m_localId(m_managerUri.isEmpty() ? QByteArray() : localId)
+    inline QContactCollectionId(const QString &_managerUri, const QByteArray &_localId)
+        : m_managerUri(_localId.isEmpty() ? QString() : _managerUri),
+          m_localId(m_managerUri.isEmpty() ? QByteArray() : _localId)
     {}
     // compiler-generated dtor and copy/move ctors/assignment operators are fine!
 
@@ -96,5 +96,4 @@ Q_DECLARE_TYPEINFO(QTCONTACTS_PREPEND_NAMESPACE(QContactCollectionId), Q_MOVABLE
 QT_END_NAMESPACE
 
 Q_DECLARE_METATYPE(QTCONTACTS_PREPEND_NAMESPACE(QContactCollectionId))
-
 #endif // QCONTACTCOLLECTIONID_H

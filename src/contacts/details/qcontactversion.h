@@ -53,12 +53,12 @@ public:
         FieldExtendedVersion
     };
 
-    void setSequenceNumber(int sequenceNumber) {setValue(FieldSequenceNumber, sequenceNumber);};
+    void setSequenceNumber(int _sequenceNumber) {setValue(FieldSequenceNumber, _sequenceNumber);};
     int sequenceNumber() const {return value(FieldSequenceNumber).toInt();};
 
-    void setExtendedVersion(const QByteArray &extendedVersion)
+    void setExtendedVersion(const QByteArray &_extendedVersion)
     {
-        setValue(FieldExtendedVersion, extendedVersion);
+        setValue(FieldExtendedVersion, _extendedVersion);
     };
 
     QByteArray extendedVersion() const

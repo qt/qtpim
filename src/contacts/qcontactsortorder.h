@@ -53,7 +53,7 @@ public:
 
     enum BlankPolicy {
         BlanksFirst,
-        BlanksLast,
+        BlanksLast
     };
 
     /* Mutators */

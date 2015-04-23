@@ -60,7 +60,7 @@ public:
         Invalid, // no contact
         WholeContact, // no details
         SingleDetail, // a single detail
-        MultipleDetails,
+        MultipleDetails
     };
 
     Type type() const; // No setter

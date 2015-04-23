@@ -57,7 +57,7 @@ public:
         FieldLocation,
         FieldRole,
         FieldTitle,
-        FieldAssistantName,
+        FieldAssistantName
     };
 
     void setName(const QString& name) {setValue(FieldName, name);}

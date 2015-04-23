@@ -79,7 +79,7 @@ public:
         ContactFetchByIdRequest,
         CollectionFetchRequest,
         CollectionRemoveRequest,
-        CollectionSaveRequest,
+        CollectionSaveRequest
     };
 
     RequestType type() const;

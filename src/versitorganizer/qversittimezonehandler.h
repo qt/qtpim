@@ -34,6 +34,7 @@
 #ifndef QVERSITTIMEZONEHANDLER_H
 #define QVERSITTIMEZONEHANDLER_H
 
+#include <QtCore/qobject.h>
 #include <QtCore/qdatetime.h>
 
 #include <QtVersitOrganizer/qversitorganizerglobal.h>

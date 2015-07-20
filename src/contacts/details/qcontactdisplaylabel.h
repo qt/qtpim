@@ -54,8 +54,8 @@ public:
         FieldLabel = 0
     };
 
-    void setLabel(const QString& displayLabel) {setValue(FieldLabel, displayLabel);}
-    QString label() const {return value(FieldLabel).toString();}
+    void setLabel(const QString& displayLabel);
+    QString label() const;
 
     static QContactFilter match(const QString& label);
 };

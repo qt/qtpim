@@ -54,8 +54,8 @@ public:
         FieldEmailAddress = 0
     };
 
-    void setEmailAddress(const QString& _emailAddress) {setValue(FieldEmailAddress, _emailAddress);}
-    QString emailAddress() const {return value(FieldEmailAddress).toString();}
+    void setEmailAddress(const QString& _emailAddress);
+    QString emailAddress() const;
 
     // Convenience filter
     static QContactFilter match(const QString& emailAddress);

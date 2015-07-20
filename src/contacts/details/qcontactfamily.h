@@ -53,10 +53,10 @@ public:
         FieldChildren
     };
 
-    void setSpouse(const QString& spouseName) {setValue(FieldSpouse, spouseName);}
-    QString spouse() const {return value(FieldSpouse).toString();}
-    void setChildren(const QStringList& childrenNames) {setValue(FieldChildren, childrenNames);}
-    QStringList children() const {return value<QStringList>(FieldChildren);}
+    void setSpouse(const QString& spouseName);
+    QString spouse() const;
+    void setChildren(const QStringList& childrenNames);
+    QStringList children() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

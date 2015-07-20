@@ -60,20 +60,20 @@ public:
         FieldAssistantName
     };
 
-    void setName(const QString& _name) {setValue(FieldName, _name);}
-    QString name() const {return value(FieldName).toString();}
-    void setLogoUrl(const QUrl& logo) {setValue(FieldLogoUrl, logo);}
-    QUrl logoUrl() const {return value<QUrl>(FieldLogoUrl);}
-    void setDepartment(const QStringList& _department) {setValue(FieldDepartment, _department);}
-    QStringList department() const {return value<QStringList>(FieldDepartment);}
-    void setLocation(const QString& _location) {setValue(FieldLocation, _location);}
-    QString location() const {return value(FieldLocation).toString();}
-    void setRole(const QString& _role) {setValue(FieldRole, _role);}
-    QString role() const {return value(FieldRole).toString();}
-    void setTitle(const QString& _title) {setValue(FieldTitle, _title);}
-    QString title() const {return value(FieldTitle).toString();}
-    void setAssistantName(const QString& _assistantName) {setValue(FieldAssistantName, _assistantName);}
-    QString assistantName() const {return value(FieldAssistantName).toString();}
+    void setName(const QString& _name);
+    QString name() const;
+    void setLogoUrl(const QUrl& logo);
+    QUrl logoUrl() const;
+    void setDepartment(const QStringList& _department);
+    QStringList department() const;
+    void setLocation(const QString& _location);
+    QString location() const;
+    void setRole(const QString& _role);
+    QString role() const;
+    void setTitle(const QString& _title);
+    QString title() const;
+    void setAssistantName(const QString& _assistantName);
+    QString assistantName() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

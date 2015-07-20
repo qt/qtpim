@@ -609,7 +609,7 @@ void tst_QContact::hash()
     QContact contact1;
     contact1.setId(id);
     QContactDetail detail1(QContactDetail::TypeExtendedDetail);
-    detail1.setValue(QContactDetail::FieldContext, "value");
+    detail1.setValue(QContactExtendedDetail::FieldData, "value");
     contact1.saveDetail(&detail1);
     QContact contact2;
     contact2.setId(id);
@@ -617,7 +617,7 @@ void tst_QContact::hash()
     QContact contact3;
     contact3.setId(id);
     QContactDetail detail3(QContactDetail::TypeExtendedDetail);
-    detail3.setValue(QContactDetail::FieldContext, "another value");
+    detail3.setValue(QContactExtendedDetail::FieldData, "another value");
     contact3.saveDetail(&detail3);
     QContact contact4; // no details
     contact4.setId(id);

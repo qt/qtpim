@@ -55,10 +55,10 @@ public:
         FieldCreationTimestamp
     };
 
-    void setLastModified(const QDateTime& timestamp) {setValue(FieldModificationTimestamp, timestamp);}
-    QDateTime lastModified() const {return value<QDateTime>(FieldModificationTimestamp);}
-    void setCreated(const QDateTime& timestamp) {setValue(FieldCreationTimestamp, timestamp);}
-    QDateTime created() const {return value<QDateTime>(FieldCreationTimestamp);}
+    void setLastModified(const QDateTime& timestamp);
+    QDateTime lastModified() const;
+    void setCreated(const QDateTime& timestamp);
+    QDateTime created() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

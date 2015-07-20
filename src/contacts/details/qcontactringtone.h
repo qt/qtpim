@@ -51,19 +51,19 @@ public:
 #endif
 
     enum RingtoneField {
-    FieldAudioRingtoneUrl = 0,
-    FieldVideoRingtoneUrl,
-    FieldVibrationRingtoneUrl
+        FieldAudioRingtoneUrl = 0,
+        FieldVideoRingtoneUrl,
+        FieldVibrationRingtoneUrl
     };
 
-    void setAudioRingtoneUrl(const QUrl& _audioRingtoneUrl) {setValue(FieldAudioRingtoneUrl, _audioRingtoneUrl);}
-    QUrl audioRingtoneUrl() const {return value<QUrl>(FieldAudioRingtoneUrl);}
+    void setAudioRingtoneUrl(const QUrl& _audioRingtoneUrl);
+    QUrl audioRingtoneUrl() const;
 
-    void setVideoRingtoneUrl(const QUrl& _videoRingtoneUrl) {setValue(FieldVideoRingtoneUrl, _videoRingtoneUrl);}
-    QUrl videoRingtoneUrl() const {return value<QUrl>(FieldVideoRingtoneUrl);}
+    void setVideoRingtoneUrl(const QUrl& _videoRingtoneUrl);
+    QUrl videoRingtoneUrl() const;
 
-    void setVibrationRingtoneUrl(const QUrl& _vibrationRingtoneUrl) {setValue(FieldVibrationRingtoneUrl, _vibrationRingtoneUrl);}
-    QUrl vibrationRingtoneUrl() const {return value<QUrl>(FieldVibrationRingtoneUrl);}
+    void setVibrationRingtoneUrl(const QUrl& _vibrationRingtoneUrl);
+    QUrl vibrationRingtoneUrl() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

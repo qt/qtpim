@@ -55,8 +55,8 @@ public:
         GenderUnspecified
     };
 
-    void setGender(const GenderField _gender) {setValue(FieldGender, static_cast<int>(_gender));}
-    GenderField gender() const {return static_cast<GenderField>(value<int>(FieldGender));}
+    void setGender(const GenderField _gender);
+    GenderField gender() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

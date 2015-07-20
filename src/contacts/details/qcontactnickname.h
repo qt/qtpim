@@ -52,8 +52,8 @@ public:
         FieldNickname = 0
     };
 
-    void setNickname(const QString& _nickname) {setValue(FieldNickname, _nickname);}
-    QString nickname() const {return value(FieldNickname).toString();}
+    void setNickname(const QString& _nickname);
+    QString nickname() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

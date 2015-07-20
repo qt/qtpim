@@ -38,6 +38,7 @@
 #include "qcontactmanager.h"
 #include "qcontactfilter.h"
 #include "qcontacts.h"
+#include "qcontactdetail_p.h"
 
 /*
     When these conditions are satisfied, QStringLiteral is implemented by
@@ -53,6 +54,19 @@
 #endif
 
 QT_BEGIN_NAMESPACE_CONTACTS
+
+/* We use offsetof to determine the offset to member fields
+ * in each builtin detail type private class.
+ * This is technically undefined behavior according to the
+ * CPP98 spec, as the classes in question are non-POD.
+ * However, they do not have any virtual functions, nor any
+ * private or protected non-static data, nor do they use
+ * multiple inheritance or virtual inheritance otherwise.
+ * As such, all modern compilers do implement the class
+ * layouts as if they were POD, and the offsetof macro
+ * does indeed work in our case. */
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_GCC("-Winvalid-offsetof")
 
 
 /* template docs:
@@ -87,6 +101,21 @@ QT_BEGIN_NAMESPACE_CONTACTS
    \ingroup contacts-details
  */
 
+class QContactSyncTargetPrivate : public QContactDetailBuiltinPrivate<QContactSyncTargetPrivate>
+{
+public:
+    QString m_syncTarget;
+
+    enum { FieldCount = 1 };
+
+    QContactSyncTargetPrivate() : QContactDetailBuiltinPrivate<QContactSyncTargetPrivate>(QContactSyncTarget::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactSyncTargetPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactSyncTargetPrivate, m_syncTarget) },
+};
+
 /*!
     \variable QContactSyncTarget::Type
     The enum constant for the type identifier of QContactSyncTarget details.
@@ -106,6 +135,10 @@ const QContactDetail::DetailType QContactSyncTarget::Type(QContactDetail::TypeSy
    Returns the identifier of the backend store to which the contact
    containing this detail should be synchronized.
  */
+QString QContactSyncTarget::syncTarget() const
+{
+    return reinterpret_cast<const QContactSyncTargetPrivate*>(d.constData())->memberValue<QString>(QContactSyncTarget::FieldSyncTarget);
+}
 
 /*!
    \fn QContactSyncTarget::setSyncTarget(const QString& syncTarget)
@@ -113,6 +146,10 @@ const QContactDetail::DetailType QContactSyncTarget::Type(QContactDetail::TypeSy
    Sets the identifier of the backend store to which the contact
    containing this detail should be synchronized to \a syncTarget.
  */
+void QContactSyncTarget::setSyncTarget(const QString &_value)
+{
+    reinterpret_cast<QContactSyncTargetPrivate*>(d.data())->setMemberValue<QString>(QContactSyncTarget::FieldSyncTarget, _value);
+}
 
 /* ==================== QContactEmailAddress ======================= */
 
@@ -125,6 +162,21 @@ const QContactDetail::DetailType QContactSyncTarget::Type(QContactDetail::TypeSy
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactEmailAddressPrivate : public QContactDetailBuiltinPrivate<QContactEmailAddressPrivate>
+{
+public:
+    QString m_emailAddress;
+
+    enum { FieldCount = 1 };
+
+    QContactEmailAddressPrivate() : QContactDetailBuiltinPrivate<QContactEmailAddressPrivate>(QContactEmailAddress::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactEmailAddressPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactEmailAddressPrivate, m_emailAddress) },
+};
 
 /*!
    \variable QContactEmailAddress::Type
@@ -144,11 +196,19 @@ const QContactDetail::DetailType QContactEmailAddress::Type(QContactDetail::Type
    \fn QContactEmailAddress::emailAddress() const
    Returns the email address of the contact which is stored in this detail.
  */
+QString QContactEmailAddress::emailAddress() const
+{
+    return reinterpret_cast<const QContactEmailAddressPrivate*>(d.constData())->memberValue<QString>(QContactEmailAddress::FieldEmailAddress);
+}
 
 /*!
    \fn QContactEmailAddress::setEmailAddress(const QString& emailAddress)
    Sets the email address of the contact which is stored in this detail to \a emailAddress.
  */
+void QContactEmailAddress::setEmailAddress(const QString& _value)
+{
+    reinterpret_cast<QContactEmailAddressPrivate*>(d.data())->setMemberValue<QString>(QContactEmailAddress::FieldEmailAddress, _value);
+}
 
 /* ==================== QContactFamily ======================= */
 /*!
@@ -158,6 +218,23 @@ const QContactDetail::DetailType QContactEmailAddress::Type(QContactDetail::Type
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactFamilyPrivate : public QContactDetailBuiltinPrivate<QContactFamilyPrivate>
+{
+public:
+    QString m_spouse;
+    QStringList m_children;
+
+    enum { FieldCount = 2 };
+
+    QContactFamilyPrivate() : QContactDetailBuiltinPrivate<QContactFamilyPrivate>(QContactFamily::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactFamilyPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactFamilyPrivate, m_spouse) },
+    { QContactDetailBuiltinPrivateBase::StringList, offsetof(QContactFamilyPrivate, m_children) },
+};
 
 /*!
    \variable QContactFamily::Type
@@ -179,21 +256,37 @@ const QContactDetail::DetailType QContactFamily::Type(QContactDetail::TypeFamily
    \fn QContactFamily::spouse() const
    Returns the name of the spouse of the contact which is stored in this detail.
  */
+QString QContactFamily::spouse() const
+{
+    return reinterpret_cast<const QContactFamilyPrivate*>(d.constData())->memberValue<QString>(QContactFamily::FieldSpouse);
+}
 
 /*!
    \fn QContactFamily::setSpouse(const QString& spouseName)
    Sets the name of the spouse of the contact which is stored in this detail to \a spouseName.
  */
+void QContactFamily::setSpouse(const QString& _value)
+{
+    reinterpret_cast<QContactFamilyPrivate*>(d.data())->setMemberValue<QString>(QContactFamily::FieldSpouse, _value);
+}
 
 /*!
    \fn QContactFamily::children() const
    Returns the names of the children of the contact which is stored in this detail.
  */
+QStringList QContactFamily::children() const
+{
+    return reinterpret_cast<const QContactFamilyPrivate*>(d.constData())->memberValue<QStringList>(QContactFamily::FieldChildren);
+}
 
 /*!
    \fn QContactFamily::setChildren(const QStringList& childrenNames)
    Sets the names of the children of the contact which is stored in this detail to \a childrenNames.
  */
+void QContactFamily::setChildren(const QStringList &_value)
+{
+    reinterpret_cast<QContactFamilyPrivate*>(d.data())->setMemberValue<QStringList>(QContactFamily::FieldChildren, _value);
+}
 
 /* ==================== QContactFavorite ======================= */
 /*!
@@ -203,6 +296,23 @@ const QContactDetail::DetailType QContactFamily::Type(QContactDetail::TypeFamily
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactFavoritePrivate : public QContactDetailBuiltinPrivate<QContactFavoritePrivate>
+{
+public:
+    bool m_favorite;
+    int m_index;
+
+    enum { FieldCount = 2 };
+
+    QContactFavoritePrivate() : QContactDetailBuiltinPrivate<QContactFavoritePrivate>(QContactFavorite::Type), m_favorite(false), m_index(0) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactFavoritePrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::Bool, offsetof(QContactFavoritePrivate, m_favorite) },
+    { QContactDetailBuiltinPrivateBase::Int, offsetof(QContactFavoritePrivate, m_index) },
+};
 
 /*!
    \variable QContactFavorite::Type
@@ -225,21 +335,36 @@ const QContactDetail::DetailType QContactFavorite::Type(QContactDetail::TypeFavo
    \fn bool QContactFavorite::isFavorite() const
    Returns true if the contact is a favorite, false otherwise.
  */
-
+bool QContactFavorite::isFavorite() const
+{
+    return reinterpret_cast<const QContactFavoritePrivate*>(d.constData())->memberValue<bool>(QContactFavorite::FieldFavorite);
+}
 /*!
    \fn QContactFavorite::setFavorite(bool isFavorite)
    If \a isFavorite is true, marks the contact as a favorite.  Otherwise, marks the contact as not a favorite.
  */
+void QContactFavorite::setFavorite(bool _value)
+{
+    reinterpret_cast<QContactFavoritePrivate*>(d.data())->setMemberValue<bool>(QContactFavorite::FieldFavorite, _value);
+}
 
 /*!
    \fn int QContactFavorite::index() const
    Returns the index of the favorite contact.
  */
+int QContactFavorite::index() const
+{
+    return reinterpret_cast<const QContactFavoritePrivate*>(d.constData())->memberValue<int>(QContactFavorite::FieldIndex);
+}
 
 /*!
    \fn QContactFavorite::setIndex(int index)
    Sets the index of the favorite contact to \a index.
  */
+void QContactFavorite::setIndex(int _value)
+{
+    reinterpret_cast<QContactFavoritePrivate*>(d.data())->setMemberValue<int>(QContactFavorite::FieldIndex, _value);
+}
 
 /*!
     Returns a filter suitable for finding contacts which are marked
@@ -263,6 +388,27 @@ QContactFilter QContactFavorite::match()
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactAnniversaryPrivate : public QContactDetailBuiltinPrivate<QContactAnniversaryPrivate>
+{
+public:
+    QString m_calendarId;
+    QDateTime m_originalDate;
+    QString m_event;
+    int m_subType;
+
+    enum { FieldCount = 4 };
+
+    QContactAnniversaryPrivate() : QContactDetailBuiltinPrivate<QContactAnniversaryPrivate>(QContactAnniversary::Type), m_subType(0) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactAnniversaryPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactAnniversaryPrivate, m_calendarId) },
+    { QContactDetailBuiltinPrivateBase::DateTime, offsetof(QContactAnniversaryPrivate, m_originalDate) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactAnniversaryPrivate, m_event) },
+    { QContactDetailBuiltinPrivateBase::Int, offsetof(QContactAnniversaryPrivate, m_subType) },
+};
 
 /*!
    \variable QContactAnniversary::Type
@@ -305,11 +451,19 @@ const QContactDetail::DetailType QContactAnniversary::Type(QContactDetail::TypeA
    Returns the original date of the event stored in this detail.
    If the original event occurrence stored is a QDateTime, this returns the date portion.
  */
+QDate QContactAnniversary::originalDate() const
+{
+    return (reinterpret_cast<const QContactAnniversaryPrivate*>(d.constData()))->memberValue<QDateTime>(QContactAnniversary::FieldOriginalDate).date();
+}
 
 /*!
    \fn QContactAnniversary::setOriginalDate(const QDate& date)
    Sets the original date of the event stored in this detail to \a date.
  */
+void QContactAnniversary::setOriginalDate(const QDate& _value)
+{
+    reinterpret_cast<QContactAnniversaryPrivate*>(d.data())->setMemberValue<QDateTime>(QContactAnniversary::FieldOriginalDate, QDateTime(_value));
+}
 
 /*!
    \fn QContactAnniversary::originalDateTime() const
@@ -317,41 +471,73 @@ const QContactDetail::DetailType QContactAnniversary::Type(QContactDetail::TypeA
    If the original event occurrence stored is a QDate, this returns a QDateTime with the
    time set to midnight.
  */
+QDateTime QContactAnniversary::originalDateTime() const
+{
+    return reinterpret_cast<const QContactAnniversaryPrivate*>(d.constData())->memberValue<QDateTime>(QContactAnniversary::FieldOriginalDate);
+}
 
 /*!
    \fn QContactAnniversary::setOriginalDateTime(const QDateTime& dateTime)
    Sets the original date and time of the event stored in this detail to \a dateTime.
  */
+void QContactAnniversary::setOriginalDateTime(const QDateTime& _value)
+{
+    reinterpret_cast<QContactAnniversaryPrivate*>(d.data())->setMemberValue<QDateTime>(QContactAnniversary::FieldOriginalDate, _value);
+}
 
 /*!
    \fn QContactAnniversary::calendarId() const
  * Returns the identifier of the calendar entry associated with this anniversary.
  */
+QString QContactAnniversary::calendarId() const
+{
+    return reinterpret_cast<const QContactAnniversaryPrivate*>(d.constData())->memberValue<QString>(QContactAnniversary::FieldCalendarId);
+}
 
 /*!
    \fn QContactAnniversary::setCalendarId(const QString& calendarId)
    Sets the identifier of the calendar entry associated with this anniversary to \a calendarId.
  */
+void QContactAnniversary::setCalendarId(const QString& _value)
+{
+    reinterpret_cast<QContactAnniversaryPrivate*>(d.data())->setMemberValue<QString>(QContactAnniversary::FieldCalendarId, _value);
+}
 
 /*!
    \fn QContactAnniversary::event() const
    Returns the name of the event for which this detail contains information.
  */
+QString QContactAnniversary::event() const
+{
+    return reinterpret_cast<const QContactAnniversaryPrivate*>(d.constData())->memberValue<QString>(QContactAnniversary::FieldEvent);
+}
 
 /*!
    \fn QContactAnniversary::setEvent(const QString& event)
    Sets the name of the event for which this detail contains information to \a event.
  */
+void QContactAnniversary::setEvent(const QString& _value)
+{
+    reinterpret_cast<QContactAnniversaryPrivate*>(d.data())->setMemberValue<QString>(QContactAnniversary::FieldEvent, _value);
+}
 
 /*!
    \fn QContactAnniversary::setSubType(const QContactAnniversary::SubType &subType)
    Sets the subtype which this detail implements to be the given \a subType.
  */
+void QContactAnniversary::setSubType(QContactAnniversary::SubType _value)
+{
+    reinterpret_cast<QContactAnniversaryPrivate*>(d.data())->setMemberValue<int>(QContactAnniversary::FieldSubType, static_cast<int>(_value));
+}
 
 /*!
    \fn QContactAnniversary::subType() const
    Returns the subtype that this detail implements, if defined.
  */
+QContactAnniversary::SubType QContactAnniversary::subType() const
+{
+    return static_cast<QContactAnniversary::SubType>(reinterpret_cast<const QContactAnniversaryPrivate*>(d.constData())->memberValue<int>(QContactAnniversary::FieldSubType));
+}
 
 /* ==================== QContactAvatar ======================= */
 
@@ -372,8 +558,24 @@ const QContactDetail::DetailType QContactAnniversary::Type(QContactDetail::TypeA
    resource whose content may dynamically change. The content of a resource
    identified by a URL specified in a QContactAvatar detail is set by whoever
    owns the resource which the URL identifies.
-
  */
+
+class QContactAvatarPrivate : public QContactDetailBuiltinPrivate<QContactAvatarPrivate>
+{
+public:
+    QUrl m_imageUrl;
+    QUrl m_videoUrl;
+
+    enum { FieldCount = 2 };
+
+    QContactAvatarPrivate() : QContactDetailBuiltinPrivate<QContactAvatarPrivate>(QContactAvatar::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactAvatarPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::Url, offsetof(QContactAvatarPrivate, m_imageUrl) },
+    { QContactDetailBuiltinPrivateBase::Url, offsetof(QContactAvatarPrivate, m_videoUrl) },
+};
 
 /*!
    \variable QContactAvatar::Type
@@ -395,21 +597,37 @@ const QContactDetail::DetailType QContactAvatar::Type(QContactDetail::TypeAvatar
   \fn QContactAvatar::imageUrl() const
   Returns the url of an avatar image associated with the contact
  */
+QUrl QContactAvatar::imageUrl() const
+{
+    return reinterpret_cast<const QContactAvatarPrivate*>(d.constData())->memberValue<QUrl>(QContactAvatar::FieldImageUrl);
+}
 
 /*!
   \fn QContactAvatar::setImageUrl(const QUrl& imageUrl)
   Sets the url of an avatar image associated with the contact to \a imageUrl
  */
+void QContactAvatar::setImageUrl(const QUrl& _value)
+{
+    reinterpret_cast<QContactAvatarPrivate*>(d.data())->setMemberValue<QUrl>(QContactAvatar::FieldImageUrl, _value);
+}
 
 /*!
   \fn QContactAvatar::videoUrl() const
   Returns the url of an avatar video associated with the contact
  */
+QUrl QContactAvatar::videoUrl() const
+{
+    return reinterpret_cast<const QContactAvatarPrivate*>(d.constData())->memberValue<QUrl>(QContactAvatar::FieldVideoUrl);
+}
 
 /*!
   \fn QContactAvatar::setVideoUrl(const QUrl& videoUrl)
   Sets the url of an avatar video associated with the contact to \a videoUrl
  */
+void QContactAvatar::setVideoUrl(const QUrl& _value)
+{
+    reinterpret_cast<QContactAvatarPrivate*>(d.data())->setMemberValue<QUrl>(QContactAvatar::FieldVideoUrl, _value);
+}
 
 /* ==================== QContactAddress ======================= */
 
@@ -424,6 +642,33 @@ const QContactDetail::DetailType QContactAvatar::Type(QContactDetail::TypeAvatar
    of the ADR property of a Versit vCard file.
    Versit \reg is a trademark of the Internet Mail Consortium.
  */
+
+class QContactAddressPrivate : public QContactDetailBuiltinPrivate<QContactAddressPrivate>
+{
+public:
+    QString m_street;
+    QString m_locality;
+    QString m_region;
+    QString m_postcode;
+    QString m_country;
+    QList<int> m_subTypes;
+    QString m_pobox;
+
+    enum { FieldCount = 7 };
+
+    QContactAddressPrivate() : QContactDetailBuiltinPrivate<QContactAddressPrivate>(QContactAddress::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactAddressPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactAddressPrivate, m_street) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactAddressPrivate, m_locality) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactAddressPrivate, m_region) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactAddressPrivate, m_postcode) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactAddressPrivate, m_country) },
+    { QContactDetailBuiltinPrivateBase::IntList, offsetof(QContactAddressPrivate, m_subTypes) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactAddressPrivate, m_pobox) },
+};
 
 /*!
    \variable QContactAddress::Type
@@ -471,71 +716,128 @@ const QContactDetail::DetailType QContactAddress::Type(QContactDetail::TypeAddre
    \fn QContactAddress::postOfficeBox() const
    Returns the post office box segment of the address stored in this detail.
  */
+QString QContactAddress::postOfficeBox() const
+{
+    return reinterpret_cast<const QContactAddressPrivate*>(d.constData())->memberValue<QString>(QContactAddress::FieldPostOfficeBox);
+}
 
 /*!
    \fn QContactAddress::setPostOfficeBox(const QString& postOfficeBox)
    Sets the post office box segment of the address stored in this detail to \a postOfficeBox.
  */
+void QContactAddress::setPostOfficeBox(const QString& _value)
+{
+    reinterpret_cast<QContactAddressPrivate*>(d.data())->setMemberValue(QContactAddress::FieldPostOfficeBox, _value);
+}
 
 /*!
    \fn QContactAddress::street() const
    Returns the street segment of the address stored in this detail.
  */
+QString QContactAddress::street() const
+{
+    return reinterpret_cast<const QContactAddressPrivate*>(d.constData())->memberValue<QString>(QContactAddress::FieldStreet);
+}
 
 /*!
    \fn QContactAddress::setStreet(const QString& street)
    Sets the street segment of the address stored in this detail to \a street.
  */
+void QContactAddress::setStreet(const QString& _value)
+{
+    reinterpret_cast<QContactAddressPrivate*>(d.data())->setMemberValue(QContactAddress::FieldStreet, _value);
+}
 
 /*!
    \fn QContactAddress::locality() const
    Returns the locality segment of the address stored in this detail.
  */
+QString QContactAddress::locality() const
+{
+    return reinterpret_cast<const QContactAddressPrivate*>(d.constData())->memberValue<QString>(QContactAddress::FieldLocality);
+}
 
 /*!
    \fn QContactAddress::setLocality(const QString& locality)
    Sets the locality segment of the address stored in this detail to \a locality.
  */
+void QContactAddress::setLocality(const QString& _value)
+{
+    reinterpret_cast<QContactAddressPrivate*>(d.data())->setMemberValue(QContactAddress::FieldLocality, _value);
+}
 
 /*!
    \fn QContactAddress::region() const
    Returns the region segment of the address stored in this detail.
  */
+QString QContactAddress::region() const
+{
+    return reinterpret_cast<const QContactAddressPrivate*>(d.constData())->memberValue<QString>(QContactAddress::FieldRegion);
+}
 
 /*!
    \fn QContactAddress::setRegion(const QString& region)
    Sets the region segment of the address stored in this detail to \a region.
  */
+void QContactAddress::setRegion(const QString& _value)
+{
+    reinterpret_cast<QContactAddressPrivate*>(d.data())->setMemberValue(QContactAddress::FieldRegion, _value);
+}
 
 /*!
    \fn QContactAddress::postcode() const
    Returns the postcode segment of the address stored in this detail.
  */
+QString QContactAddress::postcode() const
+{
+    return reinterpret_cast<const QContactAddressPrivate*>(d.constData())->memberValue<QString>(QContactAddress::FieldPostcode);
+}
 
 /*!
    \fn QContactAddress::setPostcode(const QString& postcode)
    Sets the postcode segment of the address stored in this detail to \a postcode.
  */
+void QContactAddress::setPostcode(const QString& _value)
+{
+    reinterpret_cast<QContactAddressPrivate*>(d.data())->setMemberValue(QContactAddress::FieldPostcode, _value);
+}
 
 /*!
    \fn QContactAddress::country() const
    Returns the country segment of the address stored in this detail.
  */
+QString QContactAddress::country() const
+{
+    return reinterpret_cast<const QContactAddressPrivate*>(d.constData())->memberValue<QString>(QContactAddress::FieldCountry);
+}
 
 /*!
    \fn QContactAddress::setCountry(const QString& country)
    Sets the country segment of the address stored in this detail to \a country.
  */
+void QContactAddress::setCountry(const QString& _value)
+{
+    reinterpret_cast<QContactAddressPrivate*>(d.data())->setMemberValue(QContactAddress::FieldCountry, _value);
+}
 
 /*!
    \fn QContactAddress::setSubTypes(const QList<int> &subTypes)
    Sets the subtypes which this detail implements to be those contained in the list of given \a subTypes.
  */
+void QContactAddress::setSubTypes(const QList<int>& _value)
+{
+    reinterpret_cast<QContactAddressPrivate*>(d.data())->setMemberValue(QContactAddress::FieldSubTypes, _value);
+}
 
 /*!
    \fn QContactAddress::subTypes() const
    Returns the list of subtypes that this detail implements.
  */
+QList<int> QContactAddress::subTypes() const
+{
+    return reinterpret_cast<const QContactAddressPrivate*>(d.constData())->memberValue<QList<int> >(QContactAddress::FieldSubTypes);
+}
+
 
 /*!
     Returns a filter suitable for finding contacts with an address which
@@ -586,6 +888,23 @@ QContactFilter QContactAddress::match(const QString &subString)
     \inmodule QtContacts
  */
 
+class QContactUrlPrivate : public QContactDetailBuiltinPrivate<QContactUrlPrivate>
+{
+public:
+    QString m_url;
+    int m_subType;
+
+    enum { FieldCount = 2 };
+
+    QContactUrlPrivate() : QContactDetailBuiltinPrivate<QContactUrlPrivate>(QContactUrl::Type), m_subType(0) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactUrlPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactUrlPrivate, m_url) },
+    { QContactDetailBuiltinPrivateBase::Int, offsetof(QContactUrlPrivate, m_subType) },
+};
+
 /*!
    \variable QContactUrl::Type
    The enum constant for the type identifier of QContactUrl details.
@@ -614,30 +933,50 @@ const QContactDetail::DetailType QContactUrl::Type(QContactDetail::TypeUrl);
  */
 
 /*!
+   \fn QContactUrl::setUrl(const QUrl& url)
+   Sets the url stored in this detail to the string representation
+   of the given \a url.
+ */
+void QContactUrl::setUrl(const QUrl& _value)
+{
+    reinterpret_cast<QContactUrlPrivate*>(d.data())->setMemberValue<QString>(QContactUrl::FieldUrl, _value.toString());
+}
+
+/*!
    \fn QContactUrl::url() const
    Returns the url stored in this detail.
  */
+QString QContactUrl::url() const
+{
+    return reinterpret_cast<const QContactUrlPrivate*>(d.constData())->memberValue<QString>(QContactUrl::FieldUrl);
+}
 
 /*!
    \fn QContactUrl::setUrl(const QString& url)
    Sets the url stored in this detail to \a url.
  */
-
-/*!
-   \fn QContactUrl::setUrl(const QUrl& url)
-   Sets the url stored in this detail to the string representation
-   of the given \a url.
- */
+void QContactUrl::setUrl(const QString& _value)
+{
+    reinterpret_cast<QContactUrlPrivate*>(d.data())->setMemberValue<QString>(QContactUrl::FieldUrl, _value);
+}
 
 /*!
    \fn QContactUrl::setSubType(const QContactUrl::SubType& subType)
    Sets the subtype which this detail implements to be the given \a subType.
  */
+void QContactUrl::setSubType(QContactUrl::SubType _value)
+{
+    reinterpret_cast<QContactUrlPrivate*>(d.data())->setMemberValue<int>(QContactUrl::FieldSubType, static_cast<int>(_value));
+}
 
 /*!
    \fn QContactUrl::subType() const
    Returns the subtype that this detail implements, if defined.
  */
+QContactUrl::SubType QContactUrl::subType() const
+{
+    return static_cast<QContactUrl::SubType>(reinterpret_cast<const QContactUrlPrivate*>(d.constData())->memberValue<int>(QContactUrl::FieldSubType));
+}
 
 /* ==================== QContactPhonenumber ======================= */
 
@@ -648,6 +987,23 @@ const QContactDetail::DetailType QContactUrl::Type(QContactDetail::TypeUrl);
     \ingroup contacts-details
     \inmodule QtContacts
 */
+
+class QContactPhoneNumberPrivate : public QContactDetailBuiltinPrivate<QContactPhoneNumberPrivate>
+{
+public:
+    QString m_number;
+    QList<int> m_subTypes;
+
+    enum { FieldCount = 2 };
+
+    QContactPhoneNumberPrivate() : QContactDetailBuiltinPrivate<QContactPhoneNumberPrivate>(QContactPhoneNumber::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactPhoneNumberPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactPhoneNumberPrivate, m_number) },
+    { QContactDetailBuiltinPrivateBase::IntList, offsetof(QContactPhoneNumberPrivate, m_subTypes) },
+};
 
 
 /*!
@@ -690,21 +1046,37 @@ const QContactDetail::DetailType QContactPhoneNumber::Type(QContactDetail::TypeP
    \fn QContactPhoneNumber::number() const
    Returns the phone number stored in this detail.
  */
+QString QContactPhoneNumber::number() const
+{
+    return reinterpret_cast<const QContactPhoneNumberPrivate*>(d.constData())->memberValue<QString>(QContactPhoneNumber::FieldNumber);
+}
 
 /*!
    \fn QContactPhoneNumber::setNumber(const QString& number)
    Sets the phone number stored in this detail to \a number.
  */
+void QContactPhoneNumber::setNumber(const QString& _value)
+{
+    reinterpret_cast<QContactPhoneNumberPrivate*>(d.data())->setMemberValue<QString>(QContactPhoneNumber::FieldNumber, _value);
+}
 
 /*!
    \fn QContactPhoneNumber::setSubTypes(const QList<int>& subTypes)
    Sets the subtypes which this detail implements to be those contained in the list of given \a subTypes
  */
+void QContactPhoneNumber::setSubTypes(const QList<int>& _value)
+{
+    reinterpret_cast<QContactPhoneNumberPrivate*>(d.data())->setMemberValue<QList<int> >(QContactPhoneNumber::FieldSubTypes, _value);
+}
 
 /*!
    \fn QContactPhoneNumber::subTypes() const
    Returns the list of subtypes that this detail implements.
  */
+QList<int> QContactPhoneNumber::subTypes() const
+{
+    return reinterpret_cast<const QContactPhoneNumberPrivate*>(d.constData())->memberValue<QList<int> >(QContactPhoneNumber::FieldSubTypes);
+}
 
 /* ==================== QContactBirthday ======================= */
 
@@ -714,6 +1086,23 @@ const QContactDetail::DetailType QContactPhoneNumber::Type(QContactDetail::TypeP
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactBirthdayPrivate : public QContactDetailBuiltinPrivate<QContactBirthdayPrivate>
+{
+public:
+    QDateTime m_birthday;
+    QString m_calendarId;
+
+    enum { FieldCount = 2 };
+
+    QContactBirthdayPrivate() : QContactDetailBuiltinPrivate<QContactBirthdayPrivate>(QContactBirthday::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactBirthdayPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::DateTime, offsetof(QContactBirthdayPrivate, m_birthday) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactBirthdayPrivate, m_calendarId) },
+};
 
 /*!
    \variable QContactBirthday::Type
@@ -739,11 +1128,19 @@ const QContactDetail::DetailType QContactBirthday::Type(QContactDetail::TypeBirt
    Returns the date of the birthday which is stored in this detail.
    If the birthday stored is a QDateTime, this returns the date portion.
  */
+QDate QContactBirthday::date() const
+{
+    return reinterpret_cast<const QContactBirthdayPrivate*>(d.constData())->memberValue<QDateTime>(QContactBirthday::FieldBirthday).date();
+}
 
 /*!
    \fn QContactBirthday::setDate(const QDate& date)
    Sets the date of the birthday which is stored in this detail to \a date.
  */
+void QContactBirthday::setDate(const QDate& _value)
+{
+    reinterpret_cast<QContactBirthdayPrivate*>(d.data())->setMemberValue<QDateTime>(QContactBirthday::FieldBirthday, QDateTime(_value));
+}
 
 /*!
    \fn QContactBirthday::dateTime() const
@@ -751,22 +1148,38 @@ const QContactDetail::DetailType QContactBirthday::Type(QContactDetail::TypeBirt
    If the birthday stored is a QDate, this returns a QDateTime with the
    time set to midnight.
  */
+QDateTime QContactBirthday::dateTime() const
+{
+    return reinterpret_cast<const QContactBirthdayPrivate*>(d.constData())->memberValue<QDateTime>(QContactBirthday::FieldBirthday);
+}
 
 /*!
    \fn QContactBirthday::setDateTime(const QDateTime& dateTime)
    Sets the date and time of the birthday which is stored in this detail to \a dateTime.
  */
+void QContactBirthday::setDateTime(const QDateTime& _value)
+{
+    reinterpret_cast<QContactBirthdayPrivate*>(d.data())->setMemberValue<QDateTime>(QContactBirthday::FieldBirthday, _value);
+}
 
 
 /*!
    \fn QContactBirthday::calendarId() const
  * Returns the identifier of the calendar entry associated with this birthday.
  */
+QString QContactBirthday::calendarId() const
+{
+    return reinterpret_cast<const QContactBirthdayPrivate*>(d.constData())->memberValue<QString>(QContactBirthday::FieldCalendarId);
+}
 
 /*!
    \fn QContactBirthday::setCalendarId(const QString& calendarId)
    Sets the identifier of the calendar entry associated with this birthday to \a calendarId.
  */
+void QContactBirthday::setCalendarId(const QString& _value)
+{
+    reinterpret_cast<QContactBirthdayPrivate*>(d.data())->setMemberValue<QString>(QContactBirthday::FieldCalendarId, _value);
+}
 
 /* ==================== QContactDisplayLabel ======================= */
 
@@ -776,6 +1189,21 @@ const QContactDetail::DetailType QContactBirthday::Type(QContactDetail::TypeBirt
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactDisplayLabelPrivate : public QContactDetailBuiltinPrivate<QContactDisplayLabelPrivate>
+{
+public:
+    QString m_label;
+
+    enum { FieldCount = 1 };
+
+    QContactDisplayLabelPrivate() : QContactDetailBuiltinPrivate<QContactDisplayLabelPrivate>(QContactDisplayLabel::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactDisplayLabelPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactDisplayLabelPrivate, m_label) },
+};
 
 /*!
    \variable QContactDisplayLabel::Type
@@ -795,11 +1223,19 @@ const QContactDetail::DetailType QContactDisplayLabel::Type(QContactType::TypeDi
    Sets the displayLabel of the contact which is stored in this detail to \a displayLabel.
    displayLabel can be for example the first name of a contact.
  */
+void QContactDisplayLabel::setLabel(const QString& _value)
+{
+    reinterpret_cast<QContactDisplayLabelPrivate*>(d.data())->setMemberValue<QString>(QContactDisplayLabel::FieldLabel, _value);
+}
 
 /*!
    \fn QContactDisplayLabel::label() const
    Returns the displayLabel of the contact which is stored in this detail.
  */
+QString QContactDisplayLabel::label() const
+{
+    return reinterpret_cast<const QContactDisplayLabelPrivate*>(d.constData())->memberValue<QString>(QContactDisplayLabel::FieldLabel);
+}
 
 
 /* ==================== QContactGender ======================= */
@@ -810,6 +1246,21 @@ const QContactDetail::DetailType QContactDisplayLabel::Type(QContactType::TypeDi
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactGenderPrivate : public QContactDetailBuiltinPrivate<QContactGenderPrivate>
+{
+public:
+    int m_gender;
+
+    enum { FieldCount = 1 };
+
+    QContactGenderPrivate() : QContactDetailBuiltinPrivate<QContactGenderPrivate>(QContactGender::Type), m_gender(0) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactGenderPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::Int, offsetof(QContactGenderPrivate, m_gender) },
+};
 
 /*!
    \variable QContactGender::Type
@@ -834,6 +1285,10 @@ const QContactDetail::DetailType QContactGender::Type(QContactDetail::TypeGender
    possible values for the value stored are "Male", "Female" and
    "Unspecified".
  */
+QContactGender::GenderField QContactGender::gender() const
+{
+    return static_cast<QContactGender::GenderField>(reinterpret_cast<const QContactGenderPrivate*>(d.constData())->memberValue<int>(QContactGender::FieldGender));
+}
 
 /*!
    \fn QContactGender::setGender(const GenderField gender)
@@ -842,6 +1297,10 @@ const QContactDetail::DetailType QContactGender::Type(QContactDetail::TypeGender
    gender, if \a gender is either GenderMale or GenderFemale, otherwise sets
    it to GenderUnspecified.
  */
+void QContactGender::setGender(QContactGender::GenderField _value)
+{
+    reinterpret_cast<QContactGenderPrivate*>(d.data())->setMemberValue<int>(QContactGender::FieldGender, static_cast<int>(_value));
+}
 
 /* ==================== QContactGeolocation ======================= */
 
@@ -852,6 +1311,38 @@ const QContactDetail::DetailType QContactGender::Type(QContactDetail::TypeGender
    \ingroup contacts-details
     \inmodule QtContacts
 */
+
+class QContactGeoLocationPrivate : public QContactDetailBuiltinPrivate<QContactGeoLocationPrivate>
+{
+public:
+    QString m_label;
+    double m_latitude;
+    double m_longitude;
+    double m_accuracy;
+    double m_altitude;
+    double m_altitudeAccuracy;
+    double m_heading;
+    double m_speed;
+    QDateTime m_timestamp;
+
+    enum { FieldCount = 9 };
+
+    QContactGeoLocationPrivate() : QContactDetailBuiltinPrivate<QContactGeoLocationPrivate>(QContactGeoLocation::Type),
+        m_latitude(0.0), m_longitude(0.0), m_accuracy(0.0), m_altitude(0.0), m_altitudeAccuracy(0.0), m_heading(0.0), m_speed(0.0) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactGeoLocationPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactGeoLocationPrivate, m_label) },
+    { QContactDetailBuiltinPrivateBase::Double, offsetof(QContactGeoLocationPrivate, m_latitude) },
+    { QContactDetailBuiltinPrivateBase::Double, offsetof(QContactGeoLocationPrivate, m_longitude) },
+    { QContactDetailBuiltinPrivateBase::Double, offsetof(QContactGeoLocationPrivate, m_accuracy) },
+    { QContactDetailBuiltinPrivateBase::Double, offsetof(QContactGeoLocationPrivate, m_altitude) },
+    { QContactDetailBuiltinPrivateBase::Double, offsetof(QContactGeoLocationPrivate, m_altitudeAccuracy) },
+    { QContactDetailBuiltinPrivateBase::Double, offsetof(QContactGeoLocationPrivate, m_heading) },
+    { QContactDetailBuiltinPrivateBase::Double, offsetof(QContactGeoLocationPrivate, m_speed) },
+    { QContactDetailBuiltinPrivateBase::DateTime, offsetof(QContactGeoLocationPrivate, m_timestamp) },
+};
 
 /*!
    \variable QContactGeoLocation::Type
@@ -886,11 +1377,19 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    \fn QContactGeoLocation::setLabel(const QString& label)
    Sets the label of the location stored in the detail to \a label.
  */
+void QContactGeoLocation::setLabel(const QString& _value)
+{
+    reinterpret_cast<QContactGeoLocationPrivate*>(d.data())->setMemberValue<QString>(QContactGeoLocation::FieldLabel, _value);
+}
 
 /*!
    \fn QContactGeoLocation::label() const
    Returns the label of the location stored in the detail.
  */
+QString QContactGeoLocation::label() const
+{
+    return reinterpret_cast<const QContactGeoLocationPrivate*>(d.constData())->memberValue<QString>(QContactGeoLocation::FieldLabel);
+}
 
 /*!
    \fn QContactGeoLocation::setLatitude(double latitude)
@@ -898,6 +1397,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    Sets the latitude portion of the coordinate (in decimal degrees) of
    the location stored in the detail to \a latitude.
  */
+void QContactGeoLocation::setLatitude(double _value)
+{
+    reinterpret_cast<QContactGeoLocationPrivate*>(d.data())->setMemberValue<double>(QContactGeoLocation::FieldLatitude, _value);
+}
 
 /*!
    \fn QContactGeoLocation::latitude() const
@@ -905,6 +1408,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    Returns the latitude portion of the coordinate (specified in
    decimal degrees) of the location stored in the detail.
  */
+double QContactGeoLocation::latitude() const
+{
+    return reinterpret_cast<const QContactGeoLocationPrivate*>(d.constData())->memberValue<double>(QContactGeoLocation::FieldLatitude);
+}
 
 /*!
    \fn QContactGeoLocation::setLongitude(double longitude)
@@ -912,6 +1419,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    Sets the longitude portion of the coordinate (in decimal degrees)
    of the location stored in the detail to \a longitude.
  */
+void QContactGeoLocation::setLongitude(double _value)
+{
+    reinterpret_cast<QContactGeoLocationPrivate*>(d.data())->setMemberValue<double>(QContactGeoLocation::FieldLongitude, _value);
+}
 
 /*!
    \fn QContactGeoLocation::longitude() const
@@ -919,6 +1430,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    Returns the longitude portion of the coordinate (specified in
    decimal degrees) of the location stored in the detail.
  */
+double QContactGeoLocation::longitude() const
+{
+    return reinterpret_cast<const QContactGeoLocationPrivate*>(d.constData())->memberValue<double>(QContactGeoLocation::FieldLongitude);
+}
 
 /*!
    \fn QContactGeoLocation::setAccuracy(double accuracy)
@@ -926,6 +1441,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    Specifies that the latitude and longitude portions of the location
    stored in the detail are accurate to within \a accuracy metres.
  */
+void QContactGeoLocation::setAccuracy(double _value)
+{
+    reinterpret_cast<QContactGeoLocationPrivate*>(d.data())->setMemberValue<double>(QContactGeoLocation::FieldAccuracy, _value);
+}
 
 /*!
    \fn QContactGeoLocation::accuracy() const
@@ -933,6 +1452,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    Returns the accuracy (in metres) of the latitude and longitude of
    the location stored in the detail.
  */
+double QContactGeoLocation::accuracy() const
+{
+    return reinterpret_cast<const QContactGeoLocationPrivate*>(d.constData())->memberValue<double>(QContactGeoLocation::FieldAccuracy);
+}
 
 /*!
    \fn QContactGeoLocation::setAltitude(double altitude)
@@ -940,11 +1463,19 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    Sets the altitude portion of the coordinate (in metres above the
    ellipsoid) of the location stored in the detail to \a altitude.
  */
+void QContactGeoLocation::setAltitude(double _value)
+{
+    reinterpret_cast<QContactGeoLocationPrivate*>(d.data())->setMemberValue<double>(QContactGeoLocation::FieldAltitude, _value);
+}
 
 /*!
    \fn QContactGeoLocation::altitude() const
    Returns the altitude (in metres) of the location stored in the detail.
  */
+double QContactGeoLocation::altitude() const
+{
+    return reinterpret_cast<const QContactGeoLocationPrivate*>(d.constData())->memberValue<double>(QContactGeoLocation::FieldAltitude);
+}
 
 /*!
    \fn QContactGeoLocation::setAltitudeAccuracy(double altitudeAccuracy)
@@ -952,6 +1483,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    Sets the altitude-accuracy portion of the coordinate (in metres) of
    the location stored in the detail to \a altitudeAccuracy.
  */
+void QContactGeoLocation::setAltitudeAccuracy(double _value)
+{
+    reinterpret_cast<QContactGeoLocationPrivate*>(d.data())->setMemberValue<double>(QContactGeoLocation::FieldAltitudeAccuracy, _value);
+}
 
 /*!
    \fn QContactGeoLocation::altitudeAccuracy() const
@@ -959,6 +1494,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    Returns the accuracy of the altitude portion of the location stored
    in the detail.
  */
+double QContactGeoLocation::altitudeAccuracy() const
+{
+    return reinterpret_cast<const QContactGeoLocationPrivate*>(d.constData())->memberValue<double>(QContactGeoLocation::FieldAltitudeAccuracy);
+}
 
 /*!
    \fn QContactGeoLocation::setHeading(double heading)
@@ -967,6 +1506,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    clockwise relative to true north) of the location-aware device at
    the time of measurement to \a heading.
  */
+void QContactGeoLocation::setHeading(double _value)
+{
+    reinterpret_cast<QContactGeoLocationPrivate*>(d.data())->setMemberValue<double>(QContactGeoLocation::FieldHeading, _value);
+}
 
 /*!
    \fn QContactGeoLocation::heading() const
@@ -975,6 +1518,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    location-aware device that recorded (or was provided) the
    measurement.
  */
+double QContactGeoLocation::heading() const
+{
+    return reinterpret_cast<const QContactGeoLocationPrivate*>(d.constData())->memberValue<double>(QContactGeoLocation::FieldHeading);
+}
 
 /*!
    \fn QContactGeoLocation::setSpeed(double speed)
@@ -982,6 +1529,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    Sets the speed portion of the coordinate (in metres per second) of
    the location-aware device at the time of measurement to \a speed.
  */
+void QContactGeoLocation::setSpeed(double _value)
+{
+    reinterpret_cast<QContactGeoLocationPrivate*>(d.data())->setMemberValue<double>(QContactGeoLocation::FieldSpeed, _value);
+}
 
 /*!
    \fn QContactGeoLocation::speed() const
@@ -990,6 +1541,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    location-aware device that recorded (or was provided) the
    measurement.
  */
+double QContactGeoLocation::speed() const
+{
+    return reinterpret_cast<const QContactGeoLocationPrivate*>(d.constData())->memberValue<double>(QContactGeoLocation::FieldSpeed);
+}
 
 /*!
    \fn QContactGeoLocation::setTimestamp(const QDateTime& timestamp)
@@ -997,6 +1552,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    Sets the creation (or first-valid) timestamp of the location
    information to \a timestamp.
  */
+void QContactGeoLocation::setTimestamp(const QDateTime& _value)
+{
+    reinterpret_cast<QContactGeoLocationPrivate*>(d.data())->setMemberValue<QDateTime>(QContactGeoLocation::FieldTimestamp, _value);
+}
 
 /*!
    \fn QContactGeoLocation::timestamp() const
@@ -1004,6 +1563,10 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    Returns the timestamp associated with the location stored in the
    detail.
  */
+QDateTime QContactGeoLocation::timestamp() const
+{
+    return reinterpret_cast<const QContactGeoLocationPrivate*>(d.constData())->memberValue<QDateTime>(QContactGeoLocation::FieldTimestamp);
+}
 
 /* ==================== QContactGuid ======================= */
 
@@ -1014,6 +1577,21 @@ const QContactDetail::DetailType QContactGeoLocation::Type(QContactDetail::TypeG
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactGuidPrivate : public QContactDetailBuiltinPrivate<QContactGuidPrivate>
+{
+public:
+    QString m_guid;
+
+    enum { FieldCount = 1 };
+
+    QContactGuidPrivate() : QContactDetailBuiltinPrivate<QContactGuidPrivate>(QContactGuid::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactGuidPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactGuidPrivate, m_guid) },
+};
 
 /*!
    \variable QContactGuid::Type
@@ -1034,11 +1612,19 @@ const QContactDetail::DetailType QContactGuid::Type(QContactDetail::TypeGuid);
    Returns the globally unique identifier which is stored in this
    detail.
  */
+QString QContactGuid::guid() const
+{
+    return reinterpret_cast<const QContactGuidPrivate*>(d.constData())->memberValue<QString>(QContactGuid::FieldGuid);
+}
 
 /*!
    \fn QContactGuid::setGuid(const QString& guid)
    Sets the globally unique identifier which is stored in this detail to \a guid.
  */
+void QContactGuid::setGuid(const QString& _value)
+{
+    reinterpret_cast<QContactGuidPrivate*>(d.data())->setMemberValue<QString>(QContactGuid::FieldGuid, _value);
+}
 
 /* ==================== QContactHobby ======================= */
 
@@ -1051,6 +1637,21 @@ const QContactDetail::DetailType QContactGuid::Type(QContactDetail::TypeGuid);
    A contact may have one or more hobbies.  Each QContactHobby
    detail contains information about a single hobby of the contact.
  */
+
+class QContactHobbyPrivate : public QContactDetailBuiltinPrivate<QContactHobbyPrivate>
+{
+public:
+    QString m_hobby;
+
+    enum { FieldCount = 1 };
+
+    QContactHobbyPrivate() : QContactDetailBuiltinPrivate<QContactHobbyPrivate>(QContactHobby::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactHobbyPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactHobbyPrivate, m_hobby) },
+};
 
 /*!
    \variable QContactHobby::Type
@@ -1069,11 +1670,19 @@ const QContactDetail::DetailType QContactHobby::Type(QContactDetail::TypeHobby);
    \fn QContactHobby::setHobby(const QString& hobby)
    Sets the hobby associated with a contact which is stored in this detail to \a hobby.
  */
+void QContactHobby::setHobby(const QString& _value)
+{
+    reinterpret_cast<QContactHobbyPrivate*>(d.data())->setMemberValue<QString>(QContactHobby::FieldHobby, _value);
+}
 
 /*!
    \fn QContactHobby::hobby() const
    Returns the hobby associated with a contact which is stored in this detail.
  */
+QString QContactHobby::hobby() const
+{
+    return reinterpret_cast<const QContactHobbyPrivate*>(d.constData())->memberValue<QString>(QContactHobby::FieldHobby);
+}
 
 
 /* ==================== QContactName ======================= */
@@ -1084,6 +1693,29 @@ const QContactDetail::DetailType QContactHobby::Type(QContactDetail::TypeHobby);
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactNamePrivate : public QContactDetailBuiltinPrivate<QContactNamePrivate>
+{
+public:
+    QString m_prefix;
+    QString m_firstName;
+    QString m_middleName;
+    QString m_lastName;
+    QString m_suffix;
+
+    enum { FieldCount = 5 };
+
+    QContactNamePrivate() : QContactDetailBuiltinPrivate<QContactNamePrivate>(QContactName::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactNamePrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactNamePrivate, m_prefix) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactNamePrivate, m_firstName) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactNamePrivate, m_middleName) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactNamePrivate, m_lastName) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactNamePrivate, m_suffix) },
+};
 
 /*!
    \variable QContactName::Type
@@ -1110,21 +1742,37 @@ const QContactDetail::DetailType QContactName::Type(QContactDetail::TypeName);
    \fn QContactName::prefix() const
    Returns the prefix segment of the name stored in this detail.
  */
+QString QContactName::prefix() const
+{
+    return reinterpret_cast<const QContactNamePrivate*>(d.constData())->memberValue<QString>(QContactName::FieldPrefix);
+}
 
 /*!
    \fn QContactName::setPrefix(const QString& prefix)
    Sets the prefix segment of the name stored in this detail to \a prefix.
  */
+void QContactName::setPrefix(const QString& _value)
+{
+    reinterpret_cast<QContactNamePrivate*>(d.data())->setMemberValue<QString>(QContactName::FieldPrefix, _value);
+}
 
 /*!
    \fn QContactName::firstName() const
    Returns the first (given) name segment of the name stored in this detail.
  */
+QString QContactName::firstName() const
+{
+    return reinterpret_cast<const QContactNamePrivate*>(d.constData())->memberValue<QString>(QContactName::FieldFirstName);
+}
 
 /*!
    \fn QContactName::setFirstName(const QString& firstName)
    Sets the first name segment of the name stored in this detail to \a firstName.
  */
+void QContactName::setFirstName(const QString& _value)
+{
+    reinterpret_cast<QContactNamePrivate*>(d.data())->setMemberValue<QString>(QContactName::FieldFirstName, _value);
+}
 
 /*!
    \fn QContactName::middleName() const
@@ -1132,11 +1780,19 @@ const QContactDetail::DetailType QContactName::Type(QContactDetail::TypeName);
    Returns the middle (additional, or other) name segment of the name
    stored in this detail.
  */
+QString QContactName::middleName() const
+{
+    return reinterpret_cast<const QContactNamePrivate*>(d.constData())->memberValue<QString>(QContactName::FieldMiddleName);
+}
 
 /*!
    \fn QContactName::setMiddleName(const QString& middleName)
    Sets the middle name segment of the name stored in this detail to \a middleName.
  */
+void QContactName::setMiddleName(const QString& _value)
+{
+    reinterpret_cast<QContactNamePrivate*>(d.data())->setMemberValue<QString>(QContactName::FieldMiddleName, _value);
+}
 
 /*!
    \fn QContactName::lastName() const
@@ -1144,21 +1800,37 @@ const QContactDetail::DetailType QContactName::Type(QContactDetail::TypeName);
    Returns the last (family, or surname) name segment of the name
    stored in this detail.
  */
+QString QContactName::lastName() const
+{
+    return reinterpret_cast<const QContactNamePrivate*>(d.constData())->memberValue<QString>(QContactName::FieldLastName);
+}
 
 /*!
    \fn QContactName::setLastName(const QString& lastName)
    Sets the last name segment of the name stored in this detail to \a lastName.
  */
+void QContactName::setLastName(const QString& _value)
+{
+    reinterpret_cast<QContactNamePrivate*>(d.data())->setMemberValue<QString>(QContactName::FieldLastName, _value);
+}
 
 /*!
    \fn QContactName::suffix() const
    Returns the suffix segment of the name stored in this detail.
  */
+QString QContactName::suffix() const
+{
+    return reinterpret_cast<const QContactNamePrivate*>(d.constData())->memberValue<QString>(QContactName::FieldSuffix);
+}
 
 /*!
    \fn QContactName::setSuffix(const QString& suffix)
    Sets the suffix segment of the name stored in this detail to \a suffix.
  */
+void QContactName::setSuffix(const QString& _value)
+{
+    reinterpret_cast<QContactNamePrivate*>(d.data())->setMemberValue<QString>(QContactName::FieldSuffix, _value);
+}
 
 /* ==================== QContactNickname ======================= */
 
@@ -1168,6 +1840,21 @@ const QContactDetail::DetailType QContactName::Type(QContactDetail::TypeName);
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactNicknamePrivate : public QContactDetailBuiltinPrivate<QContactNicknamePrivate>
+{
+public:
+    QString m_nickname;
+
+    enum { FieldCount = 1 };
+
+    QContactNicknamePrivate() : QContactDetailBuiltinPrivate<QContactNicknamePrivate>(QContactNickname::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactNicknamePrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactNicknamePrivate, m_nickname) },
+};
 
 /*!
    \variable QContactNickname::Type
@@ -1186,11 +1873,19 @@ const QContactDetail::DetailType QContactNickname::Type(QContactType::TypeNickna
    \fn QContactNickname::setNickname(const QString& nickname)
    Sets the nickname of the contact which is stored in this detail to \a nickname.
  */
+void QContactNickname::setNickname(const QString& _value)
+{
+    reinterpret_cast<QContactNicknamePrivate*>(d.data())->setMemberValue<QString>(QContactNickname::FieldNickname, _value);
+}
 
 /*!
    \fn QContactNickname::nickname() const
    Returns the nickname of the contact which is stored in this detail.
  */
+QString QContactNickname::nickname() const
+{
+    return reinterpret_cast<const QContactNicknamePrivate*>(d.constData())->memberValue<QString>(QContactNickname::FieldNickname);
+}
 
 /* ==================== QContactNote ======================= */
 
@@ -1201,6 +1896,21 @@ const QContactDetail::DetailType QContactNickname::Type(QContactType::TypeNickna
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactNotePrivate : public QContactDetailBuiltinPrivate<QContactNotePrivate>
+{
+public:
+    QString m_note;
+
+    enum { FieldCount = 1 };
+
+    QContactNotePrivate() : QContactDetailBuiltinPrivate<QContactNotePrivate>(QContactNote::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactNotePrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactNotePrivate, m_note) },
+};
 
 /*!
    \variable QContactNote::Type
@@ -1219,11 +1929,19 @@ const QContactDetail::DetailType QContactNote::Type(QContactDetail::TypeNote);
    \fn QContactNote::setNote(const QString& note)
    Sets a note associated with a contact to \a note.
  */
+void QContactNote::setNote(const QString& _value)
+{
+    reinterpret_cast<QContactNotePrivate*>(d.data())->setMemberValue<QString>(QContactNote::FieldNote, _value);
+}
 
 /*!
    \fn QContactNote::note() const
    Returns a string for a note associated with a contact.
  */
+QString QContactNote::note() const
+{
+    return reinterpret_cast<const QContactNotePrivate*>(d.constData())->memberValue<QString>(QContactNote::FieldNote);
+}
 
 /* ==================== QContactTag ======================= */
 
@@ -1245,6 +1963,21 @@ const QContactDetail::DetailType QContactNote::Type(QContactDetail::TypeNote);
    \snippet qtcontactsdocsample/qtcontactsdocsample.cpp Checking for a specific tag
  */
 
+class QContactTagPrivate : public QContactDetailBuiltinPrivate<QContactTagPrivate>
+{
+public:
+    QString m_tag;
+
+    enum { FieldCount = 1 };
+
+    QContactTagPrivate() : QContactDetailBuiltinPrivate<QContactTagPrivate>(QContactTag::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactTagPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactTagPrivate, m_tag) },
+};
+
 /*!
    \variable QContactTag::Type
    The enum constant for the type identifier of QContactTag details.
@@ -1262,11 +1995,19 @@ const QContactDetail::DetailType QContactTag::Type(QContactDetail::TypeTag);
    \fn QContactTag::setTag(const QString& tag)
    Sets the tag associated with a contact which is stored in this detail to \a tag.
  */
+void QContactTag::setTag(const QString& _value)
+{
+    reinterpret_cast<QContactTagPrivate*>(d.data())->setMemberValue<QString>(QContactTag::FieldTag, _value);
+}
 
 /*!
    \fn QContactTag::tag() const
    Returns the tag associated with a contact which is stored in this detail.
  */
+QString QContactTag::tag() const
+{
+    return reinterpret_cast<const QContactTagPrivate*>(d.constData())->memberValue<QString>(QContactTag::FieldTag);
+}
 
 /*!
     Returns a filter suitable for finding contacts which have a tag which
@@ -1292,6 +2033,23 @@ QContactFilter QContactTag::match(const QString &subString)
     \inmodule QtContacts
  */
 
+class QContactTimestampPrivate : public QContactDetailBuiltinPrivate<QContactTimestampPrivate>
+{
+public:
+    QDateTime m_modificationTimestamp;
+    QDateTime m_creationTimestamp;
+
+    enum { FieldCount = 2 };
+
+    QContactTimestampPrivate() : QContactDetailBuiltinPrivate<QContactTimestampPrivate>(QContactTimestamp::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactTimestampPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::DateTime, offsetof(QContactTimestampPrivate, m_modificationTimestamp) },
+    { QContactDetailBuiltinPrivateBase::DateTime, offsetof(QContactTimestampPrivate, m_creationTimestamp) },
+};
+
 /*!
    \variable QContactTimestamp::Type
    The enum constant for the type identifier of QContactTimestamp details.
@@ -1308,24 +2066,41 @@ const QContactDetail::DetailType QContactTimestamp::Type(QContactDetail::TypeTim
  */
 
 /*!
-   \fn QContactTimestamp::created() const
-   Returns the creation timestamp saved in this detail.
- */
-
-/*!
-   \fn QContactTimestamp::lastModified() const
-   Returns the last-modified timestamp saved in this detail.
- */
-
-/*!
    \fn QContactTimestamp::setCreated(const QDateTime& dateTime)
    Sets the creation timestamp saved in this detail to \a dateTime.
  */
+void QContactTimestamp::setCreated(const QDateTime& _value)
+{
+    reinterpret_cast<QContactTimestampPrivate*>(d.data())->setMemberValue<QDateTime>(QContactTimestamp::FieldCreationTimestamp, _value);
+}
+
+/*!
+   \fn QContactTimestamp::created() const
+   Returns the creation timestamp saved in this detail.
+ */
+QDateTime QContactTimestamp::created() const
+{
+    return reinterpret_cast<const QContactTimestampPrivate*>(d.constData())->memberValue<QDateTime>(QContactTimestamp::FieldCreationTimestamp);
+}
 
 /*!
    \fn QContactTimestamp::setLastModified(const QDateTime& dateTime)
    Sets the last-modified timestamp saved in this detail to \a dateTime.
  */
+void QContactTimestamp::setLastModified(const QDateTime& _value)
+{
+    reinterpret_cast<QContactTimestampPrivate*>(d.data())->setMemberValue<QDateTime>(QContactTimestamp::FieldModificationTimestamp, _value);
+}
+
+/*!
+   \fn QContactTimestamp::lastModified() const
+   Returns the last-modified timestamp saved in this detail.
+ */
+QDateTime QContactTimestamp::lastModified() const
+{
+    return reinterpret_cast<const QContactTimestampPrivate*>(d.constData())->memberValue<QDateTime>(QContactTimestamp::FieldModificationTimestamp);
+}
+
 
 /* ==================== QContactType ======================= */
 
@@ -1335,6 +2110,21 @@ const QContactDetail::DetailType QContactTimestamp::Type(QContactDetail::TypeTim
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactTypePrivate : public QContactDetailBuiltinPrivate<QContactTypePrivate>
+{
+public:
+    int m_contactType;
+
+    enum { FieldCount = 1 };
+
+    QContactTypePrivate() : QContactDetailBuiltinPrivate<QContactTypePrivate>(QContactType::Type), m_contactType(0) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactTypePrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::Int, offsetof(QContactTypePrivate, m_contactType) },
+};
 
 /*!
    \variable QContactType::Type
@@ -1387,12 +2177,19 @@ const QContactDetail::DetailType QContactType::Type(QContactDetail::TypeType);
    \fn QContactType::type() const
    Returns the contact type value stored in this detail.
  */
+QContactType::TypeValues QContactType::type() const
+{
+    return static_cast<QContactType::TypeValues>(reinterpret_cast<const QContactTypePrivate*>(d.constData())->memberValue<int>(QContactType::FieldType));
+}
 
 /*!
-   \fn QContactType::setType(const TypeValues type)
+   \fn QContactType::setType(TypeValues type)
    Sets the type of the contact to be the give \a type.
  */
-
+void QContactType::setType(QContactType::TypeValues _value)
+{
+    reinterpret_cast<QContactTypePrivate*>(d.data())->setMemberValue<int>(QContactType::FieldType, static_cast<int>(_value));
+}
 
 /* ==================== QContactOnlineAccount ======================= */
 
@@ -1417,6 +2214,29 @@ const QContactDetail::DetailType QContactType::Type(QContactDetail::TypeType);
 
    \ingroup contacts-details
  */
+
+class QContactOnlineAccountPrivate : public QContactDetailBuiltinPrivate<QContactOnlineAccountPrivate>
+{
+public:
+    QString m_accountUri;
+    QString m_serviceProvider;
+    int m_protocol;
+    QStringList m_capabilities;
+    QList<int> m_subTypes;
+
+    enum { FieldCount = 5 };
+
+    QContactOnlineAccountPrivate() : QContactDetailBuiltinPrivate<QContactOnlineAccountPrivate>(QContactOnlineAccount::Type), m_protocol(0) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactOnlineAccountPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactOnlineAccountPrivate, m_accountUri) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactOnlineAccountPrivate, m_serviceProvider) },
+    { QContactDetailBuiltinPrivateBase::Int, offsetof(QContactOnlineAccountPrivate, m_protocol) },
+    { QContactDetailBuiltinPrivateBase::StringList, offsetof(QContactOnlineAccountPrivate, m_capabilities) },
+    { QContactDetailBuiltinPrivateBase::IntList, offsetof(QContactOnlineAccountPrivate, m_subTypes) },
+};
 
 /*!
    \variable QContactOnlineAccount::Type
@@ -1474,6 +2294,10 @@ const QContactDetail::DetailType QContactOnlineAccount::Type(QContactDetail::Typ
    Sets the universal resource identifier of the contact's online
    account to \a accountUri.
  */
+void QContactOnlineAccount::setAccountUri(const QString& _value)
+{
+    reinterpret_cast<QContactOnlineAccountPrivate*>(d.data())->setMemberValue<QString>(QContactOnlineAccount::FieldAccountUri, _value);
+}
 
 /*!
    \fn QContactOnlineAccount::accountUri() const
@@ -1481,6 +2305,10 @@ const QContactDetail::DetailType QContactOnlineAccount::Type(QContactDetail::Typ
    Returns the universal resource identifier of the online account of
    the contact.
  */
+QString QContactOnlineAccount::accountUri() const
+{
+    return reinterpret_cast<const QContactOnlineAccountPrivate*>(d.constData())->memberValue<QString>(QContactOnlineAccount::FieldAccountUri);
+}
 
 /*!
    \fn QContactOnlineAccount::setServiceProvider(const QString& serviceProvider)
@@ -1488,21 +2316,37 @@ const QContactDetail::DetailType QContactOnlineAccount::Type(QContactDetail::Typ
    Sets the service provider of the contact's online account to \a
    serviceProvider.
  */
+void QContactOnlineAccount::setServiceProvider(const QString& _value)
+{
+    reinterpret_cast<QContactOnlineAccountPrivate*>(d.data())->setMemberValue<QString>(QContactOnlineAccount::FieldServiceProvider, _value);
+}
 
 /*!
    \fn QContactOnlineAccount::serviceProvider() const
    Returns the service provider of the online account of the contact.
  */
+QString QContactOnlineAccount::serviceProvider() const
+{
+    return reinterpret_cast<const QContactOnlineAccountPrivate*>(d.constData())->memberValue<QString>(QContactOnlineAccount::FieldServiceProvider);
+}
 
 /*!
     \fn QContactOnlineAccount::protocol() const
     Returns the protocol value.
  */
+QContactOnlineAccount::Protocol QContactOnlineAccount::protocol() const
+{
+    return static_cast<QContactOnlineAccount::Protocol>(reinterpret_cast<const QContactOnlineAccountPrivate*>(d.constData())->memberValue<int>(QContactOnlineAccount::FieldProtocol));
+}
 
 /*!
     \fn QContactOnlineAccount::setProtocol(Protocol protocol)
     Set the protocol to \a protocol.
  */
+void QContactOnlineAccount::setProtocol(QContactOnlineAccount::Protocol _value)
+{
+    reinterpret_cast<QContactOnlineAccountPrivate*>(d.data())->setMemberValue<int>(QContactOnlineAccount::FieldProtocol, static_cast<int>(_value));
+}
 
 /*!
    \fn QContactOnlineAccount::setSubTypes(const QList<int>& subTypes)
@@ -1510,11 +2354,19 @@ const QContactDetail::DetailType QContactOnlineAccount::Type(QContactDetail::Typ
    Sets the subtypes which this detail implements to be those
    contained in the list of given \a subTypes.
  */
+void QContactOnlineAccount::setSubTypes(const QList<int>& _value)
+{
+    reinterpret_cast<QContactOnlineAccountPrivate*>(d.data())->setMemberValue<QList<int> >(QContactOnlineAccount::FieldSubTypes, _value);
+}
 
 /*!
    \fn QContactOnlineAccount::subTypes() const
    Returns the list of subtypes that this detail implements.
  */
+QList<int> QContactOnlineAccount::subTypes() const
+{
+    return reinterpret_cast<const QContactOnlineAccountPrivate*>(d.constData())->memberValue<QList<int> >(QContactOnlineAccount::FieldSubTypes);
+}
 
 /*!
    \fn QContactOnlineAccount::setCapabilities(const QStringList& capabilities)
@@ -1524,6 +2376,10 @@ const QContactDetail::DetailType QContactOnlineAccount::Type(QContactDetail::Typ
    list of service-provider specified strings which together identify the
    types of communication which may be possible.
  */
+void QContactOnlineAccount::setCapabilities(const QStringList& _value)
+{
+    reinterpret_cast<QContactOnlineAccountPrivate*>(d.data())->setMemberValue<QStringList>(QContactOnlineAccount::FieldCapabilities, _value);
+}
 
 /*!
    \fn QContactOnlineAccount::capabilities() const
@@ -1531,6 +2387,10 @@ const QContactDetail::DetailType QContactOnlineAccount::Type(QContactDetail::Typ
    Returns the capabilities of the online account about which this detail stores
    presence information.
  */
+QStringList QContactOnlineAccount::capabilities() const
+{
+    return reinterpret_cast<const QContactOnlineAccountPrivate*>(d.constData())->memberValue<QStringList>(QContactOnlineAccount::FieldCapabilities);
+}
 
 /* ==================== QContactOrganization ======================= */
 
@@ -1541,6 +2401,33 @@ const QContactDetail::DetailType QContactOnlineAccount::Type(QContactDetail::Typ
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactOrganizationPrivate : public QContactDetailBuiltinPrivate<QContactOrganizationPrivate>
+{
+public:
+    QString m_name;
+    QUrl m_logoUrl;
+    QStringList m_department;
+    QString m_location;
+    QString m_role;
+    QString m_title;
+    QString m_assistantName;
+
+    enum { FieldCount = 7 };
+
+    QContactOrganizationPrivate() : QContactDetailBuiltinPrivate<QContactOrganizationPrivate>(QContactOrganization::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactOrganizationPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactOrganizationPrivate, m_name) },
+    { QContactDetailBuiltinPrivateBase::Url, offsetof(QContactOrganizationPrivate, m_logoUrl) },
+    { QContactDetailBuiltinPrivateBase::StringList, offsetof(QContactOrganizationPrivate, m_department) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactOrganizationPrivate, m_location) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactOrganizationPrivate, m_role) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactOrganizationPrivate, m_title) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactOrganizationPrivate, m_assistantName) },
+};
 
 /*!
    \variable QContactOrganization::Type
@@ -1572,21 +2459,37 @@ const QContactDetail::DetailType QContactOrganization::Type(QContactDetail::Type
    \fn QContactOrganization::setName(const QString& name)
    Sets the name of the organization stored in this detail to \a name.
  */
+void QContactOrganization::setName(const QString& _value)
+{
+    reinterpret_cast<QContactOrganizationPrivate*>(d.data())->setMemberValue<QString>(QContactOrganization::FieldName, _value);
+}
 
 /*!
    \fn QContactOrganization::name() const
    Returns the name of the organization stored in this detail.
  */
+QString QContactOrganization::name() const
+{
+    return reinterpret_cast<const QContactOrganizationPrivate*>(d.constData())->memberValue<QString>(QContactOrganization::FieldName);
+}
 
 /*!
    \fn QContactOrganization::setLogoUrl(const QUrl& logo)
    Sets the url of the logo of the organization stored in this detail to \a logo.
  */
+void QContactOrganization::setLogoUrl(const QUrl& _value)
+{
+    reinterpret_cast<QContactOrganizationPrivate*>(d.data())->setMemberValue<QUrl>(QContactOrganization::FieldLogoUrl, _value);
+}
 
 /*!
    \fn QContactOrganization::logoUrl() const
    Returns the url of the logo of the organization stored in this detail.
  */
+QUrl QContactOrganization::logoUrl() const
+{
+    return reinterpret_cast<const QContactOrganizationPrivate*>(d.constData())->memberValue<QUrl>(QContactOrganization::FieldLogoUrl);
+}
 
 
 /*!
@@ -1596,12 +2499,19 @@ const QContactDetail::DetailType QContactOrganization::Type(QContactDetail::Type
    detail to \a department.  The department is a list of progressively
    finer-grained information.
  */
+void QContactOrganization::setDepartment(const QStringList& _value)
+{
+    reinterpret_cast<QContactOrganizationPrivate*>(d.data())->setMemberValue<QStringList>(QContactOrganization::FieldDepartment, _value);
+}
 
 /*!
    \fn QContactOrganization::department() const
    Returns the contact's department stored in this detail.
  */
-
+QStringList QContactOrganization::department() const
+{
+    return reinterpret_cast<const QContactOrganizationPrivate*>(d.constData())->memberValue<QStringList>(QContactOrganization::FieldDepartment);
+}
 
 /*!
    \fn QContactOrganization::setLocation(const QString& location)
@@ -1609,33 +2519,56 @@ const QContactDetail::DetailType QContactOrganization::Type(QContactDetail::Type
    Sets the location (e.g. city or suburb) of the organization stored
    in this detail to \a location.
  */
+void QContactOrganization::setLocation(const QString& _value)
+{
+    reinterpret_cast<QContactOrganizationPrivate*>(d.data())->setMemberValue<QString>(QContactOrganization::FieldLocation, _value);
+}
 
 /*!
    \fn QContactOrganization::location() const
    Returns the location of the organization stored in this detail.
  */
+QString QContactOrganization::location() const
+{
+    return reinterpret_cast<const QContactOrganizationPrivate*>(d.constData())->memberValue<QString>(QContactOrganization::FieldLocation);
+}
 
 
 /*!
    \fn QContactOrganization::setRole(const QString& role)
    Sets the contact's role within the organization stored in this detail to \a role.
  */
+void QContactOrganization::setRole(const QString& _value)
+{
+    reinterpret_cast<QContactOrganizationPrivate*>(d.data())->setMemberValue<QString>(QContactOrganization::FieldRole, _value);
+}
 
 /*!
    \fn QContactOrganization::role() const
    Returns the contact's role within the organization stored in this detail.
  */
-
+QString QContactOrganization::role() const
+{
+    return reinterpret_cast<const QContactOrganizationPrivate*>(d.constData())->memberValue<QString>(QContactOrganization::FieldRole);
+}
 
 /*!
    \fn QContactOrganization::setTitle(const QString& title)
    Sets the contact's title within the organization stored in this detail to \a title.
  */
+void QContactOrganization::setTitle(const QString& _value)
+{
+    reinterpret_cast<QContactOrganizationPrivate*>(d.data())->setMemberValue<QString>(QContactOrganization::FieldTitle, _value);
+}
 
 /*!
    \fn QContactOrganization::title() const
    Returns the contact's title within the organization stored in this detail.
  */
+QString QContactOrganization::title() const
+{
+    return reinterpret_cast<const QContactOrganizationPrivate*>(d.constData())->memberValue<QString>(QContactOrganization::FieldTitle);
+}
 
 /*!
    \fn QContactOrganization::setAssistantName(const QString& assistantName)
@@ -1643,6 +2576,10 @@ const QContactDetail::DetailType QContactOrganization::Type(QContactDetail::Type
    Sets the name of the default assistant of contacts belonging to
    this organization to \a assistantName.
  */
+void QContactOrganization::setAssistantName(const QString& _value)
+{
+    reinterpret_cast<QContactOrganizationPrivate*>(d.data())->setMemberValue<QString>(QContactOrganization::FieldAssistantName, _value);
+}
 
 /*!
    \fn QContactOrganization::assistantName() const
@@ -1650,6 +2587,11 @@ const QContactDetail::DetailType QContactOrganization::Type(QContactDetail::Type
    Returns the name of the default assistant of contacts belonging to
    this organization.
  */
+QString QContactOrganization::assistantName() const
+{
+    return reinterpret_cast<const QContactOrganizationPrivate*>(d.constData())->memberValue<QString>(QContactOrganization::FieldAssistantName);
+}
+
 
 /* ==================== QContactRingtone ======================= */
 
@@ -1660,6 +2602,25 @@ const QContactDetail::DetailType QContactOrganization::Type(QContactDetail::Type
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactRingtonePrivate : public QContactDetailBuiltinPrivate<QContactRingtonePrivate>
+{
+public:
+    QUrl m_audioRingtoneUrl;
+    QUrl m_videoRingtoneUrl;
+    QUrl m_vibrationRingtoneUrl;
+
+    enum { FieldCount = 3 };
+
+    QContactRingtonePrivate() : QContactDetailBuiltinPrivate<QContactRingtonePrivate>(QContactRingtone::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactRingtonePrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::Url, offsetof(QContactRingtonePrivate, m_audioRingtoneUrl) },
+    { QContactDetailBuiltinPrivateBase::Url, offsetof(QContactRingtonePrivate, m_videoRingtoneUrl) },
+    { QContactDetailBuiltinPrivateBase::Url, offsetof(QContactRingtonePrivate, m_vibrationRingtoneUrl) },
+};
 
 /*!
    \variable QContactRingtone::Type
@@ -1682,6 +2643,10 @@ const QContactDetail::DetailType QContactRingtone::Type(QContactDetail::TypeRing
 
   Returns the uri of the audio ringtone stored in the ringtone detail.
  */
+QUrl QContactRingtone::audioRingtoneUrl() const
+{
+    return reinterpret_cast<const QContactRingtonePrivate*>(d.constData())->memberValue<QUrl>(QContactRingtone::FieldAudioRingtoneUrl);
+}
 
 /*!
   \fn QContactRingtone::setAudioRingtoneUrl(const QUrl& audioRingtoneUrl)
@@ -1689,12 +2654,20 @@ const QContactDetail::DetailType QContactRingtone::Type(QContactDetail::TypeRing
   Sets the uri of the audio ringtone stored in the ringtone detail
   to \a audioRingtoneUrl.
  */
+void QContactRingtone::setAudioRingtoneUrl(const QUrl& _value)
+{
+    reinterpret_cast<QContactRingtonePrivate*>(d.data())->setMemberValue<QUrl>(QContactRingtone::FieldAudioRingtoneUrl, _value);
+}
 
 /*!
   \fn QContactRingtone::videoRingtoneUrl() const
 
   Returns the uri of the video ringtone stored in the ringtone detail.
  */
+QUrl QContactRingtone::videoRingtoneUrl() const
+{
+    return reinterpret_cast<const QContactRingtonePrivate*>(d.constData())->memberValue<QUrl>(QContactRingtone::FieldVideoRingtoneUrl);
+}
 
 /*!
   \fn QContactRingtone::setVideoRingtoneUrl(const QUrl& videoRingtoneUrl)
@@ -1702,21 +2675,31 @@ const QContactDetail::DetailType QContactRingtone::Type(QContactDetail::TypeRing
   Sets the uri of the video ringtone stored in the ringtone detail
   to \a videoRingtoneUrl.
  */
+void QContactRingtone::setVideoRingtoneUrl(const QUrl& _value)
+{
+    reinterpret_cast<QContactRingtonePrivate*>(d.data())->setMemberValue<QUrl>(QContactRingtone::FieldVideoRingtoneUrl, _value);
+}
 
 /*!
   \fn QContactRingtone::vibrationRingtoneUrl() const
-  \internal
 
   Returns the uri of the vibration ringtone stored in the ringtone detail.
  */
+QUrl QContactRingtone::vibrationRingtoneUrl() const
+{
+    return reinterpret_cast<const QContactRingtonePrivate*>(d.constData())->memberValue<QUrl>(QContactRingtone::FieldVibrationRingtoneUrl);
+}
 
 /*!
   \fn QContactRingtone::setVibrationRingtoneUrl(const QUrl& vibrationRingtoneUrl)
-  \internal
 
   Sets the uri of the vibration ringtone stored in the ringtone detail
   to \a vibrationRingtoneUrl.
  */
+void QContactRingtone::setVibrationRingtoneUrl(const QUrl& _value)
+{
+    reinterpret_cast<QContactRingtonePrivate*>(d.data())->setMemberValue<QUrl>(QContactRingtone::FieldVibrationRingtoneUrl, _value);
+}
 
 /* ==================== QContactPresence ======================= */
 
@@ -1740,6 +2723,31 @@ const QContactDetail::DetailType QContactRingtone::Type(QContactDetail::TypeRing
 
    \ingroup contacts-details
  */
+
+class QContactPresencePrivate : public QContactDetailBuiltinPrivate<QContactPresencePrivate>
+{
+public:
+    QDateTime m_timestamp;
+    QString m_nickname;
+    int m_presenceState;
+    QString m_presenceStateText;
+    QUrl m_presenceStateImageUrl;
+    QString m_customMessage;
+
+    enum { FieldCount = 6 };
+
+    QContactPresencePrivate() : QContactDetailBuiltinPrivate<QContactPresencePrivate>(QContactPresence::Type), m_presenceState(0) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactPresencePrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::DateTime, offsetof(QContactPresencePrivate, m_timestamp) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactPresencePrivate, m_nickname) },
+    { QContactDetailBuiltinPrivateBase::Int, offsetof(QContactPresencePrivate, m_presenceState) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactPresencePrivate, m_presenceStateText) },
+    { QContactDetailBuiltinPrivateBase::Url, offsetof(QContactPresencePrivate, m_presenceStateImageUrl) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactPresencePrivate, m_customMessage) },
+};
 
 /*!
    \variable QContactPresence::Type
@@ -1770,12 +2778,20 @@ const QContactDetail::DetailType QContactPresence::Type(QContactDetail::TypePres
    Sets the timestamp for the last update of the presence detail to be
    \a updateTimestamp.
  */
+void QContactPresence::setTimestamp(const QDateTime& _value)
+{
+    reinterpret_cast<QContactPresencePrivate*>(d.data())->setMemberValue<QDateTime>(QContactPresence::FieldTimestamp, _value);
+}
 
 /*!
    \fn QContactPresence::timestamp() const
 
     Returns the timestamp at which the data in the presence detail was valid.
  */
+QDateTime QContactPresence::timestamp() const
+{
+    return reinterpret_cast<const QContactPresencePrivate*>(d.constData())->memberValue<QDateTime>(QContactPresence::FieldTimestamp);
+}
 
 /*!
    \fn QContactPresence::setNickname(const QString& nickname)
@@ -1784,6 +2800,10 @@ const QContactDetail::DetailType QContactPresence::Type(QContactDetail::TypePres
    communications via the online account about which this detail
    stores presence information to \a nickname.
  */
+void QContactPresence::setNickname(const QString& _value)
+{
+    reinterpret_cast<QContactPresencePrivate*>(d.data())->setMemberValue<QString>(QContactPresence::FieldNickname, _value);
+}
 
 /*!
    \fn QContactPresence::nickname() const
@@ -1791,6 +2811,10 @@ const QContactDetail::DetailType QContactPresence::Type(QContactDetail::TypePres
    Returns the last-known nickname used by the contact during
    communications via the online account.
  */
+QString QContactPresence::nickname() const
+{
+    return reinterpret_cast<const QContactPresencePrivate*>(d.constData())->memberValue<QString>(QContactPresence::FieldNickname);
+}
 
 /*!
   \enum QContactPresence::PresenceState
@@ -1806,13 +2830,16 @@ const QContactDetail::DetailType QContactPresence::Type(QContactDetail::TypePres
   \value PresenceExtendedAway Signifies that the contact is away for an extended period of time
   \value PresenceOffline Signifies that the contact is offline
  */
-
 /*!
    \fn QContactPresence::setPresenceState(QContactPresence::PresenceState presenceState)
 
    Sets the presence state of the online account according to the presence
    information provider to the given \a presenceState.
  */
+void QContactPresence::setPresenceState(QContactPresence::PresenceState _value)
+{
+    reinterpret_cast<QContactPresencePrivate*>(d.data())->setMemberValue<int>(QContactPresence::FieldPresenceState, static_cast<int>(_value));
+}
 
 /*!
    \fn QContactPresence::presenceState() const
@@ -1820,6 +2847,10 @@ const QContactDetail::DetailType QContactPresence::Type(QContactDetail::TypePres
    Returns the presence state of the online account according to the
    presence provider.
  */
+QContactPresence::PresenceState QContactPresence::presenceState() const
+{
+    return static_cast<QContactPresence::PresenceState>(reinterpret_cast<const QContactPresencePrivate*>(d.constData())->memberValue<int>(QContactPresence::FieldPresenceState));
+}
 
 /*!
    \fn QContactPresence::setPresenceStateText(const QString& presenceStateText)
@@ -1829,12 +2860,20 @@ const QContactDetail::DetailType QContactPresence::Type(QContactDetail::TypePres
    naming of states, or to allow finer grained state reporting than is
    provided by the presence state API.
  */
+void QContactPresence::setPresenceStateText(const QString& _value)
+{
+    reinterpret_cast<QContactPresencePrivate*>(d.data())->setMemberValue<QString>(QContactPresence::FieldPresenceStateText, _value);
+}
 
 /*!
    \fn QContactPresence::presenceStateText() const
 
    Returns the text corresponding to the current presence state.
  */
+QString QContactPresence::presenceStateText() const
+{
+    return reinterpret_cast<const QContactPresencePrivate*>(d.constData())->memberValue<QString>(QContactPresence::FieldPresenceStateText);
+}
 
 /*!
   \fn QContactPresence::setCustomMessage(const QString& customMessage)
@@ -1844,6 +2883,10 @@ const QContactDetail::DetailType QContactPresence::Type(QContactDetail::TypePres
    This custom message would have been set by the contact,
    and does not necessarily correspond to a particular presence state.
  */
+void QContactPresence::setCustomMessage(const QString& _value)
+{
+    reinterpret_cast<QContactPresencePrivate*>(d.data())->setMemberValue<QString>(QContactPresence::FieldCustomMessage, _value);
+}
 
 /*!
    \fn QContactPresence::customMessage() const
@@ -1851,6 +2894,10 @@ const QContactDetail::DetailType QContactPresence::Type(QContactDetail::TypePres
    Returns the custom status message from the contact for the online account
    about which this detail stores presence information.
  */
+QString QContactPresence::customMessage() const
+{
+    return reinterpret_cast<const QContactPresencePrivate*>(d.constData())->memberValue<QString>(QContactPresence::FieldCustomMessage);
+}
 
 /*!
    \fn QContactPresence::setPresenceStateImageUrl(const QUrl& presenceStateImageUrl)
@@ -1858,6 +2905,10 @@ const QContactDetail::DetailType QContactPresence::Type(QContactDetail::TypePres
    Sets the last-known status image url of the contact for the online account
    about which this detail stores presence information, to \a presenceStateImageUrl.
  */
+void QContactPresence::setPresenceStateImageUrl(const QUrl& _value)
+{
+    reinterpret_cast<QContactPresencePrivate*>(d.data())->setMemberValue<QUrl>(QContactPresence::FieldPresenceStateImageUrl, _value);
+}
 
 /*!
    \fn QContactPresence::presenceStateImageUrl() const
@@ -1865,6 +2916,10 @@ const QContactDetail::DetailType QContactPresence::Type(QContactDetail::TypePres
    Returns the last-known status image url of the contact for the online account
    about which this detail stores presence information.
  */
+QUrl QContactPresence::presenceStateImageUrl() const
+{
+    return reinterpret_cast<const QContactPresencePrivate*>(d.constData())->memberValue<QUrl>(QContactPresence::FieldPresenceStateImageUrl);
+}
 
 /* ==================== QContactGlobalPresence ======================= */
 
@@ -1875,6 +2930,31 @@ const QContactDetail::DetailType QContactPresence::Type(QContactDetail::TypePres
    \ingroup contacts-details
     \inmodule QtContacts
  */
+
+class QContactGlobalPresencePrivate : public QContactDetailBuiltinPrivate<QContactGlobalPresencePrivate>
+{
+public:
+    QDateTime m_timestamp;
+    QString m_nickname;
+    int m_presenceState;
+    QString m_presenceStateText;
+    QUrl m_presenceStateImageUrl;
+    QString m_customMessage;
+
+    enum { FieldCount = 6 };
+
+    QContactGlobalPresencePrivate() : QContactDetailBuiltinPrivate<QContactGlobalPresencePrivate>(QContactGlobalPresence::Type), m_presenceState(0) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactGlobalPresencePrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::DateTime, offsetof(QContactGlobalPresencePrivate, m_timestamp) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactGlobalPresencePrivate, m_nickname) },
+    { QContactDetailBuiltinPrivateBase::Int, offsetof(QContactGlobalPresencePrivate, m_presenceState) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactGlobalPresencePrivate, m_presenceStateText) },
+    { QContactDetailBuiltinPrivateBase::Url, offsetof(QContactGlobalPresencePrivate, m_presenceStateImageUrl) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactGlobalPresencePrivate, m_customMessage) },
+};
 
 /*!
    \variable QContactGlobalPresence::Type
@@ -1905,12 +2985,20 @@ const QContactDetail::DetailType QContactGlobalPresence::Type(QContactDetail::Ty
    Sets the update timestamp of the global presence detail to be
    \a updateTimestamp.
  */
+void QContactGlobalPresence::setTimestamp(const QDateTime& _value)
+{
+    reinterpret_cast<QContactGlobalPresencePrivate*>(d.data())->setMemberValue<QDateTime>(QContactGlobalPresence::FieldTimestamp, _value);
+}
 
 /*!
    \fn QContactGlobalPresence::timestamp() const
 
     Returns the timestamp at which the data in the global presence detail was valid.
  */
+QDateTime QContactGlobalPresence::timestamp() const
+{
+    return reinterpret_cast<const QContactGlobalPresencePrivate*>(d.constData())->memberValue<QDateTime>(QContactGlobalPresence::FieldTimestamp);
+}
 
 /*!
    \fn QContactGlobalPresence::setNickname(const QString& nickname)
@@ -1919,6 +3007,10 @@ const QContactDetail::DetailType QContactGlobalPresence::Type(QContactDetail::Ty
    communications via any online account about which this detail
    aggregates presence information to \a nickname.
  */
+void QContactGlobalPresence::setNickname(const QString& _value)
+{
+    reinterpret_cast<QContactGlobalPresencePrivate*>(d.data())->setMemberValue<QString>(QContactGlobalPresence::FieldNickname, _value);
+}
 
 /*!
    \fn QContactGlobalPresence::nickname() const
@@ -1927,6 +3019,10 @@ const QContactDetail::DetailType QContactGlobalPresence::Type(QContactDetail::Ty
    communications via any online account about which this detail
    aggregates presence information.
  */
+QString QContactGlobalPresence::nickname() const
+{
+    return reinterpret_cast<const QContactGlobalPresencePrivate*>(d.constData())->memberValue<QString>(QContactGlobalPresence::FieldNickname);
+}
 
 /*!
    \fn QContactGlobalPresence::setPresenceState(QContactPresence::PresenceState presenceState)
@@ -1935,6 +3031,10 @@ const QContactDetail::DetailType QContactGlobalPresence::Type(QContactDetail::Ty
    information available from the presence providers which this detail aggregates
    to the given \a presenceState.
  */
+void QContactGlobalPresence::setPresenceState(QContactPresence::PresenceState _value)
+{
+    reinterpret_cast<QContactGlobalPresencePrivate*>(d.data())->setMemberValue<int>(QContactGlobalPresence::FieldPresenceState, static_cast<int>(_value));
+}
 
 /*!
    \fn QContactGlobalPresence::presenceState() const
@@ -1942,6 +3042,10 @@ const QContactDetail::DetailType QContactGlobalPresence::Type(QContactDetail::Ty
    Returns the aggregate presence state of any online accounts about which this detail
    aggregates presence information.
  */
+QContactPresence::PresenceState QContactGlobalPresence::presenceState() const
+{
+    return static_cast<QContactPresence::PresenceState>(reinterpret_cast<const QContactGlobalPresencePrivate*>(d.constData())->memberValue<int>(QContactGlobalPresence::FieldPresenceState));
+}
 
 /*!
    \fn QContactGlobalPresence::setPresenceStateText(const QString& presenceStateText)
@@ -1951,12 +3055,20 @@ const QContactDetail::DetailType QContactGlobalPresence::Type(QContactDetail::Ty
    naming of states, or to allow finer grained state reporting than is
    provided by the presence state API.
  */
+void QContactGlobalPresence::setPresenceStateText(const QString& _value)
+{
+    reinterpret_cast<QContactGlobalPresencePrivate*>(d.data())->setMemberValue<QString>(QContactGlobalPresence::FieldPresenceStateText, _value);
+}
 
 /*!
    \fn QContactGlobalPresence::presenceStateText() const
 
    Returns the text corresponding to the current presence state.
  */
+QString QContactGlobalPresence::presenceStateText() const
+{
+    return reinterpret_cast<const QContactGlobalPresencePrivate*>(d.constData())->memberValue<QString>(QContactGlobalPresence::FieldPresenceStateText);
+}
 
 /*!
   \fn QContactGlobalPresence::setCustomMessage(const QString& customMessage)
@@ -1964,6 +3076,11 @@ const QContactDetail::DetailType QContactGlobalPresence::Type(QContactDetail::Ty
    Sets the custom status message from the contact for the aggregate presence
    detail, to \a customMessage.
  */
+void QContactGlobalPresence::setCustomMessage(const QString& _value)
+{
+    reinterpret_cast<QContactGlobalPresencePrivate*>(d.data())->setMemberValue<QString>(QContactGlobalPresence::FieldCustomMessage, _value);
+}
+
 
 /*!
    \fn QContactGlobalPresence::customMessage() const
@@ -1971,18 +3088,30 @@ const QContactDetail::DetailType QContactGlobalPresence::Type(QContactDetail::Ty
    Returns the custom status message from the contact for the aggregate presence
    detail.
  */
+QString QContactGlobalPresence::customMessage() const
+{
+    return reinterpret_cast<const QContactGlobalPresencePrivate*>(d.constData())->memberValue<QString>(QContactGlobalPresence::FieldCustomMessage);
+}
 
 /*!
    \fn QContactGlobalPresence::setPresenceStateImageUrl(const QUrl& presenceStateImageUrl)
 
    Sets the last-known status image url of the contact to \a presenceStateImageUrl.
  */
+void QContactGlobalPresence::setPresenceStateImageUrl(const QUrl& _value)
+{
+    reinterpret_cast<QContactGlobalPresencePrivate*>(d.data())->setMemberValue<QUrl>(QContactGlobalPresence::FieldPresenceStateImageUrl, _value);
+}
 
 /*!
    \fn QContactGlobalPresence::presenceStateImageUrl() const
 
    Returns the last-known status image url of the contact.
  */
+QUrl QContactGlobalPresence::presenceStateImageUrl() const
+{
+    return reinterpret_cast<const QContactGlobalPresencePrivate*>(d.constData())->memberValue<QUrl>(QContactGlobalPresence::FieldPresenceStateImageUrl);
+}
 
 /*!
   Returns a filter which matches any contact whose global presence state
@@ -2011,6 +3140,23 @@ QContactFilter QContactGlobalPresence::match(QContactPresence::PresenceState sta
     the data to another type that the engine supports.
  */
 
+class QContactExtendedDetailPrivate : public QContactDetailBuiltinPrivate<QContactExtendedDetailPrivate>
+{
+public:
+    QString m_name;
+    QVariant m_data;
+
+    enum { FieldCount = 2 };
+
+    QContactExtendedDetailPrivate() : QContactDetailBuiltinPrivate<QContactExtendedDetailPrivate>(QContactExtendedDetail::Type) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactExtendedDetailPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactExtendedDetailPrivate, m_name) },
+    { QContactDetailBuiltinPrivateBase::Variant, offsetof(QContactExtendedDetailPrivate, m_data) },
+};
+
 /*!
     \variable QContactExtendedDetail::Type
 
@@ -2030,24 +3176,41 @@ const QContactDetail::DetailType QContactExtendedDetail::Type(QContactDetail::Ty
 
     Sets the \a name of this extended detail.
  */
+void QContactExtendedDetail::setName(const QString& _value)
+{
+    reinterpret_cast<QContactExtendedDetailPrivate*>(d.data())->setMemberValue<QString>(QContactExtendedDetail::FieldName, _value);
+}
 
 /*!
     \fn QString QContactExtendedDetail::name() const
 
     Gets the name of this extended detail.
  */
+QString QContactExtendedDetail::name() const
+{
+    return reinterpret_cast<const QContactExtendedDetailPrivate*>(d.constData())->memberValue<QString>(QContactExtendedDetail::FieldName);
+}
 
 /*!
     \fn void QContactExtendedDetail::setData(const QVariant &data)
 
     Sets the \a data of the extended detail.
  */
+void QContactExtendedDetail::setData(const QVariant& _value)
+{
+    reinterpret_cast<QContactExtendedDetailPrivate*>(d.data())->setMemberValue(QContactExtendedDetail::FieldData, _value);
+}
 
 /*!
     \fn QVariant QContactExtendedDetail::data() const
 
     Gets the data of this extended detail.
  */
+QVariant QContactExtendedDetail::data() const
+{
+    return reinterpret_cast<const QContactExtendedDetailPrivate*>(d.constData())->memberValue<QVariant>(QContactExtendedDetail::FieldData);
+}
+
 
 /* ==================== QContactVersion ======================= */
 /*!
@@ -2056,6 +3219,23 @@ const QContactDetail::DetailType QContactExtendedDetail::Type(QContactDetail::Ty
     \inmodule QtContacts
     \ingroup contacts-details
  */
+
+class QContactVersionPrivate : public QContactDetailBuiltinPrivate<QContactVersionPrivate>
+{
+public:
+    int m_sequenceNumber;
+    QByteArray m_extendedVersion;
+
+    enum { FieldCount = 2 };
+
+    QContactVersionPrivate() : QContactDetailBuiltinPrivate<QContactVersionPrivate>(QContactVersion::Type), m_sequenceNumber(0) {}
+};
+
+template<>
+const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactVersionPrivate>::s_members[] = {
+    { QContactDetailBuiltinPrivateBase::Int, offsetof(QContactVersionPrivate, m_sequenceNumber) },
+    { QContactDetailBuiltinPrivateBase::ByteArray, offsetof(QContactVersionPrivate, m_extendedVersion) },
+};
 
 /*!
     \variable QContactVersion::Type
@@ -2077,24 +3257,41 @@ const QContactDetail::DetailType QContactVersion::Type(QContactDetail::TypeVersi
 
     Sets the integer \a sequenceNumber.
  */
+void QContactVersion::setSequenceNumber(int _value)
+{
+    reinterpret_cast<QContactVersionPrivate*>(d.data())->setMemberValue<int>(QContactVersion::FieldSequenceNumber, _value);
+}
 
 /*!
     \fn int QContactVersion::sequenceNumber() const
 
     Gets the integer sequenceNumber.
  */
+int QContactVersion::sequenceNumber() const
+{
+    return reinterpret_cast<const QContactVersionPrivate*>(d.constData())->memberValue<int>(QContactVersion::FieldSequenceNumber);
+}
 
 /*!
     \fn void QContactVersion::setExtendedVersion(const QByteArray &extendedVersion)
 
     Sets the \a extendedVersion.
  */
+void QContactVersion::setExtendedVersion(const QByteArray& _value)
+{
+    reinterpret_cast<QContactVersionPrivate*>(d.data())->setMemberValue<QByteArray>(QContactVersion::FieldExtendedVersion, _value);
+}
 
 /*!
     \fn QByteArray QContactVersion::extendedVersion() const
 
     Gets the extendedVersion.
  */
+QByteArray QContactVersion::extendedVersion() const
+{
+    return reinterpret_cast<const QContactVersionPrivate*>(d.constData())->memberValue<QByteArray>(QContactVersion::FieldExtendedVersion);
+}
+
 
 /* ==================== Convenience Filters ======================= */
 
@@ -2209,5 +3406,91 @@ QContactFilter QContactPhoneNumber::match(const QString &number)
     return l;
 }
 
+/*
+    Adding a new builtin-detail-type requires extending this function!
+*/
+QContactDetailPrivate *QContactDetailPrivate::construct(QContactDetail::DetailType detailType)
+{
+    switch (detailType) {
+        case QContactDetail::TypeAddress:       return new QContactAddressPrivate;
+        case QContactDetail::TypeAnniversary:   return new QContactAnniversaryPrivate;
+        case QContactDetail::TypeAvatar:        return new QContactAvatarPrivate;
+        case QContactDetail::TypeBirthday:      return new QContactBirthdayPrivate;
+        case QContactDetail::TypeDisplayLabel:  return new QContactDisplayLabelPrivate;
+        case QContactDetail::TypeEmailAddress:  return new QContactEmailAddressPrivate;
+        case QContactDetail::TypeExtendedDetail:return new QContactExtendedDetailPrivate;
+        case QContactDetail::TypeFamily:        return new QContactFamilyPrivate;
+        case QContactDetail::TypeFavorite:      return new QContactFavoritePrivate;
+        case QContactDetail::TypeGender:        return new QContactGenderPrivate;
+        case QContactDetail::TypeGeoLocation:   return new QContactGeoLocationPrivate;
+        case QContactDetail::TypeGlobalPresence:return new QContactGlobalPresencePrivate;
+        case QContactDetail::TypeGuid:          return new QContactGuidPrivate;
+        case QContactDetail::TypeHobby:         return new QContactHobbyPrivate;
+        case QContactDetail::TypeName:          return new QContactNamePrivate;
+        case QContactDetail::TypeNickname:      return new QContactNicknamePrivate;
+        case QContactDetail::TypeNote:          return new QContactNotePrivate;
+        case QContactDetail::TypeOnlineAccount: return new QContactOnlineAccountPrivate;
+        case QContactDetail::TypeOrganization:  return new QContactOrganizationPrivate;
+        case QContactDetail::TypePhoneNumber:   return new QContactPhoneNumberPrivate;
+        case QContactDetail::TypePresence:      return new QContactPresencePrivate;
+        case QContactDetail::TypeRingtone:      return new QContactRingtonePrivate;
+        case QContactDetail::TypeSyncTarget:    return new QContactSyncTargetPrivate;
+        case QContactDetail::TypeTag:           return new QContactTagPrivate;
+        case QContactDetail::TypeTimestamp:     return new QContactTimestampPrivate;
+        case QContactDetail::TypeType:          return new QContactTypePrivate;
+        case QContactDetail::TypeUrl:           return new QContactUrlPrivate;
+        case QContactDetail::TypeVersion:       return new QContactVersionPrivate;
+        default:                                return new QContactDetailPrivate(detailType);
+    }
+}
+
+
+/*!
+    \fn QContactDetail::QContactDetail(QContactDetail::DetailType type)
+    Constructs a new, empty detail of the type identified by \a type.
+ */
+QContactDetail::QContactDetail(QContactDetail::DetailType type)
+    : d(QContactDetailPrivate::construct(type))
+{
+}
+
+/*!
+    \internal
+    \fn QContactDetail::QContactDetail(const QContactDetail& other, DetailType expectedType)
+
+    Constructs a detail that is a copy of \a other if \a other is of the expected type
+    identified by \a expectedType, else constructs a new, empty detail of the
+    type identified by the \a expectedType
+*/
+QContactDetail::QContactDetail(const QContactDetail& other, DetailType expectedType)
+{
+    if (other.d.constData()->m_type == expectedType) {
+        d = other.d;
+    } else {
+        d = QContactDetailPrivate::construct(expectedType);
+    }
+}
+
+/*!
+    \internal
+    \fn QContactDetail& QContactDetail::assign(const QContactDetail& other, DetailType expectedType)
+
+    Assigns this detail to \a other if the type of \a other is that identified
+    by the given \a expectedType, else assigns this detail to be a new, empty
+    detail of the type identified by the given \a expectedType
+*/
+QContactDetail& QContactDetail::assign(const QContactDetail& other, DetailType expectedType)
+{
+    if (this != &other) {
+        if (other.d.constData()->m_type == expectedType) {
+            d = other.d;
+        } else {
+            d = QContactDetailPrivate::construct(expectedType);
+        }
+    }
+    return *this;
+}
+
+QT_WARNING_POP /* -Winvalid-offsetof */
 
 QT_END_NAMESPACE_CONTACTS

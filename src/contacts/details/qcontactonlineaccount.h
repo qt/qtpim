@@ -75,20 +75,20 @@ public:
         ProtocolYahoo
     };
 
-    void setAccountUri(const QString& _accountUri) {setValue(FieldAccountUri, _accountUri);}
-    QString accountUri() const {return value(FieldAccountUri).toString();}
+    void setAccountUri(const QString& _accountUri);
+    QString accountUri() const;
 
-    void setServiceProvider(const QString& _serviceProvider) {setValue(FieldServiceProvider, _serviceProvider);}
-    QString serviceProvider() const {return value(FieldServiceProvider).toString();}
+    void setServiceProvider(const QString& _serviceProvider);
+    QString serviceProvider() const;
 
-    void setProtocol(Protocol _protocol) {setValue(FieldProtocol, _protocol);}
-    Protocol protocol() const {return Protocol(value(FieldProtocol).toInt());}
+    void setProtocol(Protocol _protocol);
+    Protocol protocol() const;
 
-    void setCapabilities(const QStringList& _capabilities) {setValue(FieldCapabilities, _capabilities);}
-    QStringList capabilities() const {return value<QStringList>(FieldCapabilities);}
+    void setCapabilities(const QStringList& _capabilities);
+    QStringList capabilities() const;
 
-    void setSubTypes(const QList<int> &_subTypes) {setValue(FieldSubTypes, QVariant::fromValue(_subTypes));}
-    QList<int> subTypes() const {return value< QList<int> >(FieldSubTypes);}
+    void setSubTypes(const QList<int> &_subTypes);
+    QList<int> subTypes() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

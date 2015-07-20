@@ -70,18 +70,18 @@ public:
         PresenceOffline
     };
 
-    void setTimestamp(const QDateTime& _timestamp) {setValue(FieldTimestamp, _timestamp);}
-    QDateTime timestamp() const {return value<QDateTime>(FieldTimestamp);}
-    void setNickname(const QString& _nickname) {setValue(FieldNickname, _nickname);}
-    QString nickname() const {return value(FieldNickname).toString();}
-    void setPresenceState(PresenceState presence) {setValue(FieldPresenceState, static_cast<int>(presence));}
-    PresenceState presenceState() const {return static_cast<PresenceState>(value<int>(FieldPresenceState));}
-    void setPresenceStateText(const QString& _presenceStateText) {setValue(FieldPresenceStateText, _presenceStateText);}
-    QString presenceStateText() const {return value(FieldPresenceStateText).toString();}
-    void setPresenceStateImageUrl(const QUrl& _presenceStateImageUrl) {setValue(FieldPresenceStateImageUrl, _presenceStateImageUrl);}
-    QUrl presenceStateImageUrl() const {return value<QUrl>(FieldPresenceStateImageUrl);}
-    void setCustomMessage(const QString& _customMessage) {setValue(FieldCustomMessage, _customMessage);}
-    QString customMessage() const {return value(FieldCustomMessage).toString();}
+    void setTimestamp(const QDateTime& _timestamp);
+    QDateTime timestamp() const;
+    void setNickname(const QString& _nickname);
+    QString nickname() const;
+    void setPresenceState(PresenceState presence);
+    PresenceState presenceState() const;
+    void setPresenceStateText(const QString& _presenceStateText);
+    QString presenceStateText() const;
+    void setPresenceStateImageUrl(const QUrl& _presenceStateImageUrl);
+    QUrl presenceStateImageUrl() const;
+    void setCustomMessage(const QString& _customMessage);
+    QString customMessage() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

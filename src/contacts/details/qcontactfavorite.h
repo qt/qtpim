@@ -55,10 +55,10 @@ public:
         FieldIndex
     };
 
-    void setFavorite(bool _isFavorite) {setValue(FieldFavorite, _isFavorite);}
-    bool isFavorite() const {return value(FieldFavorite).toBool();}
-    void setIndex(int _index) {setValue(FieldIndex, _index);}
-    int index() const {return value(FieldIndex).toInt();}
+    void setFavorite(bool _isFavorite);
+    bool isFavorite() const;
+    void setIndex(int _index);
+    int index() const;
 
     // Convenience filter
     static QContactFilter match();

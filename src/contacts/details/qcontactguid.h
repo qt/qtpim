@@ -52,8 +52,8 @@ public:
         FieldGuid = 0
     };
 
-    void setGuid(const QString& _guid) {setValue(FieldGuid, _guid);}
-    QString guid() const {return value(FieldGuid).toString();}
+    void setGuid(const QString& _guid);
+    QString guid() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

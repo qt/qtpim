@@ -54,8 +54,8 @@ public:
         FieldTag = 0
     };
 
-    void setTag(const QString& _tag) {setValue(FieldTag, _tag);}
-    QString tag() const {return value(FieldTag).toString();}
+    void setTag(const QString& _tag);
+    QString tag() const;
 
     // Convenience filter
     static QContactFilter match(const QString& subString);

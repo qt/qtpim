@@ -57,8 +57,8 @@ public:
         TypeFacet
     };
 
-    void setType(const TypeValues newType) {setValue(FieldType, newType);}
-    TypeValues type() const {return static_cast<TypeValues>(value<int>(FieldType));}
+    void setType(TypeValues newType);
+    TypeValues type() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

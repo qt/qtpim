@@ -53,18 +53,11 @@ public:
         FieldExtendedVersion
     };
 
-    void setSequenceNumber(int _sequenceNumber) {setValue(FieldSequenceNumber, _sequenceNumber);};
-    int sequenceNumber() const {return value(FieldSequenceNumber).toInt();};
+    void setSequenceNumber(int _sequenceNumber);
+    int sequenceNumber() const;
 
-    void setExtendedVersion(const QByteArray &_extendedVersion)
-    {
-        setValue(FieldExtendedVersion, _extendedVersion);
-    };
-
-    QByteArray extendedVersion() const
-    {
-        return value(FieldExtendedVersion).toByteArray();
-    };
+    void setExtendedVersion(const QByteArray& _extendedVersion);
+    QByteArray extendedVersion() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

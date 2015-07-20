@@ -72,14 +72,14 @@ public:
         SubTypeIsdn
     };
 
-    void setNumber(const QString& _number) {setValue(FieldNumber, _number);}
-    QString number() const {return value(FieldNumber).toString();}
+    void setNumber(const QString &_number);
+    QString number() const;
 
-    void setSubTypes(const QList<int> &_subTypes) {setValue(FieldSubTypes, QVariant::fromValue(_subTypes));}
-    QList<int> subTypes() const {return value< QList<int> >(FieldSubTypes);}
+    void setSubTypes(const QList<int> &_subTypes);
+    QList<int> subTypes() const;
 
     // Convenience filter
-    static QContactFilter match(const QString& number);
+    static QContactFilter match(const QString& _number);
 };
 //! [0]
 

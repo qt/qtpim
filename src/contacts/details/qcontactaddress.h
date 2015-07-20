@@ -67,21 +67,21 @@ public:
         SubTypeInternational
     };
 
-    void setStreet(const QString& _street) {setValue(FieldStreet, _street);}
-    QString street() const {return value(FieldStreet).toString();}
-    void setLocality(const QString& _locality) {setValue(FieldLocality, _locality);}
-    QString locality() const {return value(FieldLocality).toString();}
-    void setRegion(const QString& _region) {setValue(FieldRegion, _region);}
-    QString region() const {return value(FieldRegion).toString();}
-    void setPostcode(const QString& _postcode) {setValue(FieldPostcode, _postcode);}
-    QString postcode() const {return value(FieldPostcode).toString();}
-    void setCountry(const QString& _country) {setValue(FieldCountry, _country);}
-    QString country() const {return value(FieldCountry).toString();}
-    void setPostOfficeBox(const QString& _postOfficeBox) {setValue(FieldPostOfficeBox, _postOfficeBox);}
-    QString postOfficeBox() const {return value(FieldPostOfficeBox).toString();}
+    void setStreet(const QString& _street);
+    QString street() const;
+    void setLocality(const QString& _locality);
+    QString locality() const;
+    void setRegion(const QString& _region);
+    QString region() const;
+    void setPostcode(const QString& _postcode);
+    QString postcode() const;
+    void setCountry(const QString& _country);
+    QString country() const;
+    void setPostOfficeBox(const QString& _postOfficeBox);
+    QString postOfficeBox() const;
 
-    void setSubTypes(const QList<int> &_subTypes) {setValue(FieldSubTypes, QVariant::fromValue(_subTypes));}
-    QList<int> subTypes() const {return value< QList<int> >(FieldSubTypes);}
+    void setSubTypes(const QList<int> &_subTypes);
+    QList<int> subTypes() const;
 
     // Convenience filter
     static QContactFilter match(const QString& subString);

@@ -33,6 +33,7 @@
 
 #include "qcontactdetail.h"
 #include "qcontactdetail_p.h"
+#include "qcontactdetails.h"
 
 #ifndef QT_NO_DATASTREAM
 #include <QtCore/qdatastream.h>
@@ -153,13 +154,39 @@ QAtomicInt QContactDetailPrivate::lastDetailKey(1);
   you should use this macro when declaring your class to ensure that
   it interoperates with other contact functionality.
 
-  Here is an example of a class (\l QContactPhoneNumber) using this macro.
+  Here is an example of a custom extension class using this macro.
   Note that the class provides some predefined constants
   and some convenience methods that return values associated with schema
   fields.
 
-  \snippet qcontactphonenumber.h 0
- */
+  \code
+  #include <QContactDetail>
+  class ContactVehicle : public QContactDetail
+  {
+  public:
+      Q_DECLARE_CUSTOM_CONTACT_DETAIL(ContactVehicle)
+
+      enum VehicleField {
+        FieldRegistration = 0,
+        FieldMake,
+        FieldModel,
+        FieldColor
+      };
+
+      QString registration() const { return value(FieldRegistration).toString(); }
+      void setRegistration(const QString& _registration) { setValue(FieldRegistration, _registration);
+
+      QString make() const { return value(FieldMake).toString(); }
+      void setMake(const QString& _make) { setValue(FieldMake, _make); }
+
+      QString model() const { return value(FieldModel).toString(); }
+      void setModel(const QString& _model) { setValue(FieldModel, _model); }
+
+      QString color() const { return value(FieldColor).toString(); }
+      void setColor(const QString &_color) { setValue(FieldColor, _color); }
+  };
+  \endcode
+*/
 
 /*!
    \enum QContactDetail::DetailType
@@ -209,67 +236,22 @@ QAtomicInt QContactDetailPrivate::lastDetailKey(1);
 QContactDetail::QContactDetail()
     : d(new QContactDetailPrivate)
 {
-    d->m_type = QContactDetail::TypeUndefined;
-}
-
-/*!
-    Constructs a new, empty detail of the type identified by \a type.
- */
-QContactDetail::QContactDetail(QContactDetail::DetailType type)
-    : d(new QContactDetailPrivate)
-{
-    d->m_type = type;
 }
 
 /*! Constructs a detail that is a copy of \a other
-*/
+ */
 QContactDetail::QContactDetail(const QContactDetail& other)
     : d(other.d)
 {
 }
 
 /*!
-    \internal
-
-    Constructs a detail that is a copy of \a other if \a other is of the expected type
-    identified by \a expectedType, else constructs a new, empty detail of the
-    type identified by the \a expectedType
-*/
-QContactDetail::QContactDetail(const QContactDetail& other, DetailType expectedType)
-{
-    if (other.d.constData()->m_type == expectedType) {
-        d = other.d;
-    } else {
-        d = new QContactDetailPrivate;
-        d->m_type = expectedType;
-    }
-}
-
-/*! Assigns this detail to \a other */
+ * Assigns this detail to \a other
+ */
 QContactDetail& QContactDetail::operator=(const QContactDetail& other)
 {
     if (this != &other)
         d = other.d;
-    return *this;
-}
-
-/*!
-    \internal
-
-    Assigns this detail to \a other if the type of \a other is that identified
-    by the given \a expectedType, else assigns this detail to be a new, empty
-    detail of the type identified by the given \a expectedType
-*/
-QContactDetail& QContactDetail::assign(const QContactDetail& other, DetailType expectedType)
-{
-    if (this != &other) {
-        if (other.d.constData()->m_type == expectedType) {
-            d = other.d;
-        } else {
-            d = new QContactDetailPrivate;
-            d->m_type = expectedType;
-        }
-    }
     return *this;
 }
 
@@ -283,7 +265,7 @@ QContactDetail::~QContactDetail()
  */
 QContactDetail::DetailType QContactDetail::type() const
 {
-    return d.constData()->m_type;
+    return static_cast<QContactDetail::DetailType>(d.constData()->m_type);
 }
 
 /*!
@@ -299,14 +281,21 @@ bool QContactDetail::operator==(const QContactDetail& other) const
     if (d.constData()->m_access != other.d.constData()->m_access)
         return false;
 
-    if (d.constData()->m_values.size() != other.d.constData()->m_values.size())
+    QMap<int, QVariant> thisValues = values(), otherValues = other.values();
+    if (thisValues.size() != otherValues.size())
         return false;
-    foreach (const QVariant &value, d.constData()->m_values.values()) {
-        if (value.canConvert< QList<int> >()) {
-                if (other.d.constData()->m_values.value(d.constData()->m_values.key(value)).value< QList<int> >() != value.value< QList<int> >()) {
-                    return false;
-                }
-        } else if (!other.d.constData()->m_values.values().contains(value)) {
+
+    QMap<int, QVariant>::const_iterator it = thisValues.constBegin(), end = thisValues.constEnd();
+    for ( ; it != end; ++it) {
+        if (!otherValues.contains(it.key())) {
+            return false;
+        }
+        const QVariant &otherV(otherValues.value(it.key()));
+        if (it.value().canConvert<QList<int> >()) {
+            if (otherV.value<QList<int> >() != it.value().value<QList<int> >()) {
+                return false;
+            }
+        } else if (it.value() != otherV) {
             return false;
         }
     }
@@ -317,14 +306,13 @@ bool QContactDetail::operator==(const QContactDetail& other) const
 */
 uint qHash(const QContactDetail &key)
 {
-    const QContactDetailPrivate* dptr= QContactDetailPrivate::detailPrivate(key);
-    uint hash = qHash(QString().setNum(dptr->m_type))
-                + QT_PREPEND_NAMESPACE(qHash)(dptr->m_access);
-    QMap<int, QVariant>::const_iterator it = dptr->m_values.constBegin();
-    while(it != dptr->m_values.constEnd()) {
+    uint hash = qHash(QString().setNum(key.type()))
+                + QT_PREPEND_NAMESPACE(qHash)(key.accessConstraints());
+    QMap<int, QVariant> values = key.values();
+    QMap<int, QVariant>::const_iterator it = values.constBegin(), end = values.constEnd();
+    for ( ; it != end; ++it) {
         hash += QT_PREPEND_NAMESPACE(qHash)(it.key())
-                + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());
-        ++it;
+              + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());
     }
     return hash;
 }
@@ -395,7 +383,7 @@ QDataStream& operator>>(QDataStream& in, QContactDetail& detail)
  */
 bool QContactDetail::isEmpty() const
 {
-    return d.constData()->m_values.isEmpty();
+    return d->isEmpty();
 }
 
 /*!
@@ -410,18 +398,18 @@ bool QContactDetail::isEmpty() const
  */
 int QContactDetail::key() const
 {
-    return d.constData()->m_id;
+    return d.constData()->m_detailId;
 }
 
-/*! Causes the implicitly-shared detail to be detached from any other copies, and generates a new key for it.
+/*!
+ *  Generates a new key (detail id) for the detail.
  *  This ensures that calling QContact::saveDetail() will result in a new detail being saved, rather than
  *  another detail being updated.
  */
 void QContactDetail::resetKey()
 {
-    d->m_id = QContactDetailPrivate::lastDetailKey.fetchAndAddOrdered(1);
+    d->m_detailId = QContactDetailPrivate::lastDetailKey.fetchAndAddOrdered(1);
 }
-
 
 /*!
  *  Returns the value stored in this detail for the given \a field. An invalid QVariant is returned if
@@ -429,7 +417,9 @@ void QContactDetail::resetKey()
  */
 QVariant QContactDetail::value(int field) const
 {
-    return d.constData()->m_values.value(field);
+    if (!hasValue(field))
+        return QVariant();
+    return d->value(field);
 }
 
 /*!
@@ -437,9 +427,8 @@ QVariant QContactDetail::value(int field) const
  */
 bool QContactDetail::hasValue(int field) const
 {
-    return d.constData()->m_values.contains(field);
+    return d->hasValue(field);
 }
-
 
 /*!
     Inserts \a value into the detail for the given \a field if \a value is valid.  If \a value is invalid,
@@ -447,13 +436,19 @@ bool QContactDetail::hasValue(int field) const
     for the \a field (if the \a value was valid), or if the given \a field was removed from detail (if the
     \a value was invalid), and returns false if the field could not be removed (and the \a value was invalid)
 */
-bool QContactDetail::setValue(int field, const QVariant& value)
+bool QContactDetail::setValue(int field, const QVariant& _value)
 {
-    if (!value.isValid())
+    if (!_value.isValid())
         return removeValue(field);
+    return d->setValue(field, _value);
+}
 
-    d->m_values.insert(field, value);
-    return true;
+void QContactDetail::setValues(const QMap<int, QVariant> &newValues)
+{
+    QMap<int, QVariant>::const_iterator it = newValues.constBegin(), end = newValues.constEnd();
+    for ( ; it != end; ++it) {
+        setValue(it.key(), it.value());
+    }
 }
 
 /*!
@@ -462,9 +457,7 @@ bool QContactDetail::setValue(int field, const QVariant& value)
 */
 bool QContactDetail::removeValue(int field)
 {
-    if (d->m_values.remove(field))
-        return true;
-    return false;
+    return d->removeValue(field);
 }
 
 /*!
@@ -472,7 +465,7 @@ bool QContactDetail::removeValue(int field)
  */
 QMap<int, QVariant> QContactDetail::values() const
 {
-    return d.constData()->m_values;
+    return d->values();
 }
 
 /*!
@@ -631,5 +624,6 @@ QContactDetail::AccessConstraints QContactDetail::accessConstraints() const
 
   \sa value()
  */
+
 
 QT_END_NAMESPACE_CONTACTS

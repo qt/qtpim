@@ -65,18 +65,18 @@ public:
         SubTypeMemorial
     };
 
-    void setOriginalDate(const QDate& date) {setValue(FieldOriginalDate, date);}
-    QDate originalDate() const {return value<QDate>(FieldOriginalDate);}
-    void setOriginalDateTime(const QDateTime& dateTime) {setValue(FieldOriginalDate, dateTime);}
-    QDateTime originalDateTime() const {return value<QDateTime>(FieldOriginalDate);}
+    void setOriginalDate(const QDate& date);
+    QDate originalDate() const;
+    void setOriginalDateTime(const QDateTime& dateTime);
+    QDateTime originalDateTime() const;
 
-    void setCalendarId(const QString& _calendarId) {setValue(FieldCalendarId, _calendarId);}
-    QString calendarId() const {return value(FieldCalendarId).toString();}
-    void setEvent(const QString& _event) {setValue(FieldEvent, _event);}
-    QString event() const {return value(FieldEvent).toString();}
+    void setCalendarId(const QString& _calendarId);
+    QString calendarId() const;
+    void setEvent(const QString& _event);
+    QString event() const;
 
-    void setSubType(const QContactAnniversary::SubType &_subType) {setValue(FieldSubType, static_cast<int>(_subType));}
-    QContactAnniversary::SubType subType() const {return static_cast<QContactAnniversary::SubType>(value<int>(FieldSubType));}
+    void setSubType(QContactAnniversary::SubType _subType);
+    QContactAnniversary::SubType subType() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

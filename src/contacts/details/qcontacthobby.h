@@ -52,8 +52,8 @@ public:
         FieldHobby = 0
     };
 
-    void setHobby(const QString& _hobby) {setValue(FieldHobby, _hobby);}
-    QString hobby() const {return value(FieldHobby).toString();}
+    void setHobby(const QString& _hobby);
+    QString hobby() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

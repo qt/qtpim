@@ -60,12 +60,12 @@ public:
         SubTypeFavourite
     };
 
-    void setUrl(const QString& _url) {setValue(FieldUrl, _url);}
-    void setUrl(const QUrl& _url) {setValue(FieldUrl, _url.toString());}
-    QString url() const {return value(FieldUrl).toString();}
+    void setUrl(const QUrl& _url);
+    void setUrl(const QString& _url);
+    QString url() const;
 
-    void setSubType(const QContactUrl::SubType &_subType) {setValue(FieldSubType, static_cast<int>(_subType));}
-    QContactUrl::SubType subType() const {return static_cast<QContactUrl::SubType>(value<int>(FieldSubType));}
+    void setSubType(QContactUrl::SubType _subType);
+    QContactUrl::SubType subType() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

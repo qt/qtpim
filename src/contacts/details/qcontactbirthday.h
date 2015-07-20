@@ -55,12 +55,12 @@ public:
         FieldCalendarId
     };
 
-    void setDate(const QDate& _date) {setValue(FieldBirthday, _date);}
-    QDate date() const {return value<QDate>(FieldBirthday);}
-    void setDateTime(const QDateTime& _dateTime) {setValue(FieldBirthday, _dateTime);}
-    QDateTime dateTime() const {return value<QDateTime>(FieldBirthday);}
-    void setCalendarId(const QString& _calendarId) {setValue(FieldCalendarId, _calendarId);}
-    QString calendarId() const {return value(FieldCalendarId).toString();}
+    void setDate(const QDate& _date);
+    QDate date() const;
+    void setDateTime(const QDateTime& _dateTime);
+    QDateTime dateTime() const;
+    void setCalendarId(const QString& _calendarId);
+    QString calendarId() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

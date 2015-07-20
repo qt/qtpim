@@ -52,8 +52,8 @@ public:
         FieldNote = 0
     };
 
-    void setNote(const QString& _note) {setValue(FieldNote, _note);}
-    QString note() const {return value(FieldNote).toString();}
+    void setNote(const QString& _note);
+    QString note() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

@@ -53,25 +53,11 @@ public:
         FieldData
     };
 
-    void setName(const QString &_name)
-    {
-        setValue(FieldName, _name);
-    }
+    void setName(const QString &_name);
+    QString name() const;
 
-    QString name() const
-    {
-        return value(FieldName).toString();
-    }
-
-    void setData(const QVariant &_data)
-    {
-        setValue(FieldData, _data);
-    }
-
-    QVariant data() const
-    {
-        return value(FieldData);
-    }
+    void setData(const QVariant &_data);
+    QVariant data() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

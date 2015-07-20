@@ -63,24 +63,24 @@ public:
         FieldTimestamp
     };
 
-    void setLabel(const QString& _label) {setValue(FieldLabel, _label);}
-    QString label() const {return value(FieldLabel).toString();}
-    void setLatitude(double _latitude) {setValue(FieldLatitude, _latitude);}
-    double latitude() const {return value(FieldLatitude).toDouble();}
-    void setLongitude(double _longitude) {setValue(FieldLongitude, _longitude);}
-    double longitude() const {return value(FieldLongitude).toDouble();}
-    void setAccuracy(double _accuracy) {setValue(FieldAccuracy, _accuracy);}
-    double accuracy() const {return value(FieldAccuracy).toDouble();}
-    void setAltitude(double _altitude) {setValue(FieldAltitude, _altitude);}
-    double altitude() const {return value(FieldAltitude).toDouble();}
-    void setAltitudeAccuracy(double _altitudeAccuracy) {setValue(FieldAltitudeAccuracy, _altitudeAccuracy);}
-    double altitudeAccuracy() const {return value(FieldAltitudeAccuracy).toDouble();}
-    void setHeading(double _heading) {setValue(FieldHeading, _heading);}
-    double heading() const {return value(FieldHeading).toDouble();}
-    void setSpeed(double _speed) {setValue(FieldSpeed, _speed);}
-    double speed() const {return value(FieldSpeed).toDouble();}
-    void setTimestamp(const QDateTime& _timestamp) {setValue(FieldTimestamp, _timestamp);}
-    QDateTime timestamp() const {return value(FieldTimestamp).toDateTime();}
+    void setLabel(const QString& _label);
+    QString label() const;
+    void setLatitude(double _latitude);
+    double latitude() const;
+    void setLongitude(double _longitude);
+    double longitude() const;
+    void setAccuracy(double _accuracy);
+    double accuracy() const;
+    void setAltitude(double _altitude);
+    double altitude() const;
+    void setAltitudeAccuracy(double _altitudeAccuracy);
+    double altitudeAccuracy() const;
+    void setHeading(double _heading);
+    double heading() const;
+    void setSpeed(double _speed);
+    double speed() const;
+    void setTimestamp(const QDateTime& _timestamp);
+    QDateTime timestamp() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

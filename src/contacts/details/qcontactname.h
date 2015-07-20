@@ -58,17 +58,17 @@ public:
         FieldSuffix
     };
 
-    QString prefix() const {return value(FieldPrefix).toString();}
-    QString firstName() const {return value(FieldFirstName).toString();}
-    QString middleName() const {return value(FieldMiddleName).toString();}
-    QString lastName() const {return value(FieldLastName).toString();}
-    QString suffix() const {return value(FieldSuffix).toString();}
+    QString prefix() const;
+    QString firstName() const;
+    QString middleName() const;
+    QString lastName() const;
+    QString suffix() const;
 
-    void setPrefix(const QString& _prefix) {setValue(FieldPrefix, _prefix);}
-    void setFirstName(const QString& _firstName) {setValue(FieldFirstName, _firstName);}
-    void setMiddleName(const QString& _middleName) {setValue(FieldMiddleName, _middleName);}
-    void setLastName(const QString& _lastName) {setValue(FieldLastName, _lastName);}
-    void setSuffix(const QString& _suffix) {setValue(FieldSuffix, _suffix);}
+    void setPrefix(const QString& _prefix);
+    void setFirstName(const QString& _firstName);
+    void setMiddleName(const QString& _middleName);
+    void setLastName(const QString& _lastName);
+    void setSuffix(const QString& _suffix);
 
     // Convenience filter
     static QContactFilter match(const QString& name);

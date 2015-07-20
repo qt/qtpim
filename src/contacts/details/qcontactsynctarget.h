@@ -52,8 +52,8 @@ public:
         FieldSyncTarget = 0
     };
 
-    void setSyncTarget(const QString& _syncTarget) {setValue(FieldSyncTarget, _syncTarget);}
-    QString syncTarget() const {return value(FieldSyncTarget).toString();}
+    void setSyncTarget(const QString& _syncTarget);
+    QString syncTarget() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

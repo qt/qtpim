@@ -45,7 +45,6 @@ QT_BEGIN_NAMESPACE_CONTACTS
 
 class QContact;
 class QContactActionDescriptor;
-
 class QContactDetailPrivate;
 class Q_CONTACTS_EXPORT QContactDetail
 {
@@ -82,22 +81,6 @@ public:
         TypeVersion
     };
 
-    QContactDetail();
-    explicit QContactDetail(DetailType type);
-    ~QContactDetail();
-
-    QContactDetail(const QContactDetail& other);
-    QContactDetail& operator=(const QContactDetail& other);
-
-    enum AccessConstraint {
-        NoConstraint = 0,
-        ReadOnly = 0x01,
-        Irremovable = 0x02
-    };
-    Q_DECLARE_FLAGS(AccessConstraints, AccessConstraint)
-
-    AccessConstraints accessConstraints() const;
-
     enum DetailContext {
         ContextHome = 0,
         ContextWork,
@@ -107,26 +90,46 @@ public:
     enum DetailField {
         FieldContext = 5000, //to avoid clashing with other detail field values from leaf classes
         FieldDetailUri,
-        FieldLinkedDetailUris
+        FieldLinkedDetailUris,
+        FieldMaximumUserVisible = 10000 // keys above this will not be reported to clients via values() etc accessors.
     };
 
+    enum AccessConstraint {
+        NoConstraint = 0,
+        ReadOnly = 0x01,
+        Irremovable = 0x02
+    };
+    Q_DECLARE_FLAGS(AccessConstraints, AccessConstraint)
+
+protected:
+    QSharedDataPointer<QContactDetailPrivate> d;
+
+public:
+    QContactDetail();
+    explicit QContactDetail(DetailType _type);
+    QContactDetail(const QContactDetail &other);
+    ~QContactDetail();
+    QContactDetail& operator=(const QContactDetail& other);
+
     bool operator==(const QContactDetail& other) const;
-    bool operator!=(const QContactDetail& other) const {return !(other == *this);}
+    bool operator!=(const QContactDetail& other) const { return !(other == *this); }
 
     DetailType type() const;
-    bool isEmpty() const;
 
     int key() const;
     void resetKey();
 
+    AccessConstraints accessConstraints() const;
+
+    bool isEmpty() const;
     bool setValue(int field, const QVariant& value);
     bool removeValue(int field);
     bool hasValue(int field) const;
 
+    void setValues(const QMap<int, QVariant> &newValues);
     QMap<int, QVariant> values() const;
     QVariant value(int field) const;
-    template <typename T> T value(int field) const
-    {
+    template <typename T> T value(int field) const {
         return value(field).value<T>();
     }
 
@@ -177,12 +180,12 @@ protected:
     QContactDetail& assign(const QContactDetail &other, DetailType expectedType);
 
 private:
-    friend class QContact;
     friend class QContactDetailPrivate;
+    friend class QContact;
+    friend class QContactManagerEngine;
 #ifndef QT_NO_DATASTREAM
     Q_CONTACTS_EXPORT friend QDataStream& operator>>(QDataStream& in, QContactDetail& detail);
 #endif
-    QSharedDataPointer<QContactDetailPrivate> d;
 };
 
 Q_CONTACTS_EXPORT uint qHash(const QContactDetail& key);

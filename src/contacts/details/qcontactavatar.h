@@ -55,11 +55,11 @@ public:
         FieldVideoUrl
     };
 
-    void setImageUrl(const QUrl& _imageUrl) {setValue(FieldImageUrl, _imageUrl);}
-    QUrl imageUrl() const {return value<QUrl>(FieldImageUrl);}
+    void setImageUrl(const QUrl& _imageUrl);
+    QUrl imageUrl() const;
 
-    void setVideoUrl(const QUrl& _videoUrl) {setValue(FieldVideoUrl, _videoUrl);}
-    QUrl videoUrl() const {return value<QUrl>(FieldVideoUrl);}
+    void setVideoUrl(const QUrl& _videoUrl);
+    QUrl videoUrl() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

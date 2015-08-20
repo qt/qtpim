@@ -181,6 +181,29 @@ private slots:
 
     void fetchHint_data();
     void fetchHint();
+
+private:
+    enum CollationSemantics {
+        UpperFirst = 0,             // XYxy
+        LowerFirst = 1,             // xyXY
+        InterleavedUpperFirst = 2,  // XxYy
+        InterleavedLowerFirst = 3,  // xXyY
+        FirstPassInterleavedUpperFirst = 4, // xxy < Xxz even though xxy > Xxy
+        FirstPassInterleavedLowerFirst = 5, // XXY < Xxz even though XXY > Xxy
+        UnknownCollation = 6
+    };
+    QHash<QContactManager *, int> m_collation;
+    QString expectedSorting(QContactManager *m, const QString &ufs, const QString &lfs, const QString &iufs, const QString &ilfs, const QString &fpiufs, const QString &fpilfs) {
+        switch (m_collation[m]) {
+            case UpperFirst: return ufs;
+            case LowerFirst: return lfs;
+            case InterleavedUpperFirst: return iufs;
+            case InterleavedLowerFirst: return ilfs;
+            case FirstPassInterleavedUpperFirst: return fpiufs;
+            case FirstPassInterleavedLowerFirst: return fpilfs;
+            default: return QLatin1String("unknowncollation");
+        }
+    }
 };
 
 tst_QContactManagerFiltering::tst_QContactManagerFiltering()
@@ -244,6 +267,100 @@ void tst_QContactManagerFiltering::initTestCase()
             qDebug() << "contactsAdded are:    " << contactsAddedToManagers.values(cm);
             qFatal("returned list different from saved contacts list!");
         }
+
+        // Also determine the string collation / sorting semantics.
+        // Case sensitivity is handled differently with/without ICU
+        // (in one case, the char sequence is 'A-Za-z', in the other it
+        // is 'AaBb..Zz') - the results are therefore highly divergent.
+        // To do so, we need to add some extra contacts.
+        QContact contactxxy, contactXxy, contactXXY, contactXxz;
+        QContactName xxn;
+        xxn.setFirstName("xxy");
+        contactxxy.saveDetail(&xxn);
+        xxn.setFirstName("Xxy");
+        contactXxy.saveDetail(&xxn);
+        xxn.setFirstName("XXY");
+        contactXXY.saveDetail(&xxn);
+        xxn.setFirstName("Xxz");
+        contactXxz.saveDetail(&xxn);
+        Q_FATAL_VERIFY(cm->saveContact(&contactxxy));
+        Q_FATAL_VERIFY(cm->saveContact(&contactXxy));
+        Q_FATAL_VERIFY(cm->saveContact(&contactXXY));
+        Q_FATAL_VERIFY(cm->saveContact(&contactXxz));
+
+        // Now fetch sorted contacts to determine sorting semantics.
+        QContactSortOrder s;
+        s.setDetailType(QContactName::Type, QContactName::FieldFirstName);
+        s.setDirection(Qt::AscendingOrder);
+        QList<QContact> sortedContacts = cm->contacts(s);
+        int xanderIndex = -1, XanderIndex = -1, yarrowIndex = -1, YarrowIndex = -1;
+        int xxyIndex = -1, XxyIndex = -1, XXYIndex = -1, XxzIndex = -1;
+        for (int i = 0; i < sortedContacts.size(); ++i) {
+            if (sortedContacts[i].detail<QContactName>().firstName() == QStringLiteral("xander")) {
+                xanderIndex = i;
+            } else if (sortedContacts[i].detail<QContactName>().firstName() == QStringLiteral("Xander")) {
+                XanderIndex = i;
+            } else if (sortedContacts[i].detail<QContactName>().firstName() == QStringLiteral("yarrow")) {
+                yarrowIndex = i;
+            } else if (sortedContacts[i].detail<QContactName>().firstName() == QStringLiteral("Yarrow")) {
+                YarrowIndex = i;
+            } else if (sortedContacts[i].detail<QContactName>().firstName() == QStringLiteral("xxy")) {
+                xxyIndex = i;
+            } else if (sortedContacts[i].detail<QContactName>().firstName() == QStringLiteral("Xxy")) {
+                XxyIndex = i;
+            } else if (sortedContacts[i].detail<QContactName>().firstName() == QStringLiteral("XXY")) {
+                XXYIndex = i;
+            } else if (sortedContacts[i].detail<QContactName>().firstName() == QStringLiteral("Xxz")) {
+                XxzIndex = i;
+            }
+        }
+
+        if (XanderIndex < YarrowIndex && YarrowIndex < xanderIndex && xanderIndex < yarrowIndex &&
+                    XXYIndex < XxyIndex && XxyIndex < XxzIndex && XxzIndex < xxyIndex) {
+            //qDebug() << "XYxy, and XXY<Xxy<Xxz<xxy :. upper first sorting:"
+            //         << "x:" << xanderIndex << "X:" << XanderIndex << "y:" << yarrowIndex << "Y:" << YarrowIndex
+            //         << "xxy:" << xxyIndex << "Xxy:" << XxyIndex << "XXY:" << XXYIndex << "Xxz:" << XxzIndex;
+            m_collation[cm] = UpperFirst;
+        } else if (xanderIndex < yarrowIndex && yarrowIndex < XanderIndex && XanderIndex < YarrowIndex &&
+                   xxyIndex < XxyIndex && XxyIndex < XxzIndex && XxzIndex < XXYIndex) {
+            //qDebug() << "xyXY, and xxy<Xxy<Xxz<XXY :. lower first sorting:"
+            //         << "x:" << xanderIndex << "X:" << XanderIndex << "y:" << yarrowIndex << "Y:" << YarrowIndex
+            //         << "xxy:" << xxyIndex << "Xxy:" << XxyIndex << "XXY:" << XXYIndex << "Xxz:" << XxzIndex;
+            m_collation[cm] = LowerFirst;
+        } else if (XanderIndex < xanderIndex && xanderIndex < YarrowIndex && YarrowIndex < yarrowIndex &&
+                   XXYIndex < XxyIndex && XxyIndex < XxzIndex && XxzIndex < xxyIndex) {
+            //qDebug() << "XxYy, and XXY<Xxy<Xxz<xxy :. interleaved upper first sorting without first-pass case-insensitive characterwise comparison:"
+            //         << "x:" << xanderIndex << "X:" << XanderIndex << "y:" << yarrowIndex << "Y:" << YarrowIndex
+            //         << "xxy:" << xxyIndex << "Xxy:" << XxyIndex << "XXY:" << XXYIndex << "Xxz:" << XxzIndex;
+            m_collation[cm] = InterleavedUpperFirst;
+        } else if (xanderIndex < XanderIndex && XanderIndex < yarrowIndex && yarrowIndex < YarrowIndex &&
+                   xxyIndex < XxyIndex && XxyIndex < XxzIndex && XxzIndex < XXYIndex) {
+            //qDebug() << "xXyY, and xxy<Xxy<Xxz<XXY :. interleaved lower first sorting without first-pass case-insensitive characterwise comparison:"
+            //         << "x:" << xanderIndex << "X:" << XanderIndex << "y:" << yarrowIndex << "Y:" << YarrowIndex
+            //         << "xxy:" << xxyIndex << "Xxy:" << XxyIndex << "XXY:" << XXYIndex << "Xxz:" << XxzIndex;
+            m_collation[cm] = InterleavedLowerFirst;
+        } else if (XanderIndex < xanderIndex && xanderIndex < YarrowIndex && YarrowIndex < yarrowIndex &&
+                   XXYIndex < XxyIndex && XxyIndex < xxyIndex && xxyIndex < XxzIndex) {
+            //qDebug() << "XxYy, and XXY<Xxy<xxy<Xxz :. interleaved upper first sorting without first-pass case-insensitive characterwise comparison:"
+            //         << "x:" << xanderIndex << "X:" << XanderIndex << "y:" << yarrowIndex << "Y:" << YarrowIndex
+            //         << "xxy:" << xxyIndex << "Xxy:" << XxyIndex << "XXY:" << XXYIndex << "Xxz:" << XxzIndex;
+            m_collation[cm] = FirstPassInterleavedUpperFirst;
+        } else if (xanderIndex < XanderIndex && XanderIndex < yarrowIndex && yarrowIndex < YarrowIndex &&
+                   xxyIndex < XxyIndex && XxyIndex < XXYIndex && XXYIndex < XxzIndex) {
+            //qDebug() << "xXyY, and xxy<Xxy<XXY<Xxz :. interleaved lower first sorting with first-pass case-insensitive characterwise comparison:"
+            //         << "x:" << xanderIndex << "X:" << XanderIndex << "y:" << yarrowIndex << "Y:" << YarrowIndex
+            //         << "xxy:" << xxyIndex << "Xxy:" << XxyIndex << "XXY:" << XXYIndex << "Xxz:" << XxzIndex;
+            m_collation[cm] = FirstPassInterleavedLowerFirst;
+        } else {
+            qDebug() << "unknown sorting:"
+                     << "x:" << xanderIndex << "X:" << XanderIndex << "y:" << yarrowIndex << "Y:" << YarrowIndex
+                     << "xxy:" << xxyIndex << "Xxy:" << XxyIndex << "XXY:" << XXYIndex << "Xxz:" << XxzIndex;
+            m_collation[cm] = UnknownCollation;
+        }
+
+        QList<QContactId> cleanup;
+        cleanup << contactxxy.id() << contactXxy.id() << contactXXY.id() << contactXxz.id();
+        Q_FATAL_VERIFY(cm->removeContacts(cleanup));
     }
 
 #ifdef INCLUDE_TESTACTIONS
@@ -896,25 +1013,13 @@ void tst_QContactManagerFiltering::rangeFiltering_data()
 #ifdef Q_OS_SYMBIAN
         qWarning() << "Test case \"no max, cs, badcase, some results\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
-        newMRow("no max, cs, badcase, some results", manager) << manager << nameType << firstname << QVariant("bob") << QVariant() << false << 0 << true << csflag
-#ifdef QT_USE_ICU
-                                                              // Case sensitivity is handled differently with/without ICU (in one case, the char sequence is
-                                                              // 'A-Za-z', in the other it is 'AaBb..Zz') - the results are therefore highly divergent
-                                                              << "bcdefghijk";
-#else
-                                                              << "hj";
-#endif
+        newMRow("no max, cs, badcase, some results", manager) << manager << nameType << firstname << QVariant("bob") << QVariant() << false << 0 << true << csflag << expectedSorting(manager, "hj", "abcdefghijk", "defghijk", "bcdefghijk", "cdefghijk", "bcdefghijk");
         newMRow("no max, cs, badcase, no results", manager) << manager << nameType << firstname << QVariant("XAMBEZI") << QVariant() << false << 0 << true << csflag << "hijk";
         newMRow("no min, cs, badcase, all results", manager) << manager << nameType << firstname << QVariant() << QVariant("XAMBEZI") << false << 0 << true << csflag << "abcdefg";
 #ifdef Q_OS_SYMBIAN
         qWarning() << "Test case \"no min, cs, badcase, some results\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
-        newMRow("no min, cs, badcase, some results", manager) << manager << nameType << firstname << QVariant() << QVariant("BOB") << false << 0 << true << csflag
-#ifdef QT_USE_ICU
-                                                              << "ab";
-#else
-                                                              << "a";
-#endif
+        newMRow("no min, cs, badcase, some results", manager) << manager << nameType << firstname << QVariant() << QVariant("BOB") << false << 0 << true << csflag << expectedSorting(manager, "a", "abchj", "a", "abc", "a", "ab");
         newMRow("no min, cs, badcase, no results", manager) << manager << nameType << firstname << QVariant() << QVariant("AARDVARK") << false << 0 << true << csflag << es;
 
         /* 'a' has phone number ("5551212") */
@@ -2109,25 +2214,11 @@ void tst_QContactManagerFiltering::sorting_data()
 #ifdef Q_OS_SYMBIAN
         qWarning() << "Test case \"first ascending\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
-        newMRow("first ascending", manager) << manager << nameType << firstname << asc << false << 0 << cs
-#ifdef QT_USE_ICU
-                                            // Case sensitivity is handled differently with/without ICU (in one case, the char sequence is
-                                            // 'A-Za-z', in the other it is 'AaBb..Zz') - the results are therefore divergent
-                                            << "abcdefghjik"
-#else
-                                            << "abcdefgikjh"
-#endif
-                                            << "efg";  // efg have the same first name
+        newMRow("first ascending", manager) << manager << nameType << firstname << asc << false << 0 << cs << expectedSorting(manager, "abcdefgikhj", "hjabcdefgik", "abcdefgihkj", "abcdefghijk", "abcdefgihkj", "abcdefghijk") << "efg";  // efg have the same first name
 #ifdef Q_OS_SYMBIAN
         qWarning() << "Test case \"first descending\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
 #endif
-        newMRow("first descending", manager) << manager << nameType << firstname << desc << false << 0 << cs
-#ifdef QT_USE_ICU
-                                             << "kijhefgdcba"
-#else
-                                             << "hjkiefgdcba"
-#endif
-                                             << "efg";// efg have the same first name
+        newMRow("first descending", manager) << manager << nameType << firstname << desc << false << 0 << cs << expectedSorting(manager, "jhkigfedcba", "kigfedcbajh", "jkhigfedcba", "kjihgfedcba", "jkhigfedcba", "kjihgfedcba") << "efg";// efg have the same first name
         newMRow("last ascending", manager) << manager << nameType << lastname << asc << false << 0 << cs << "bacdefghijk" << "hijk";       // all have a well defined, sortable last name except hijk
 #ifdef Q_OS_SYMBIAN
         qWarning() << "Test case \"last descending\" will fail on symbian platform because of QString::localeAwareCompare is not actually locale aware";
@@ -3218,7 +3309,7 @@ QList<QContactId> tst_QContactManagerFiltering::prepareModel(QContactManager *cm
     contactH.saveDetail(&n2);
     n2.setFirstName("Xander");
     contactI.saveDetail(&n2);
-    n2.setFirstName("xAnder");
+    n2.setFirstName("yarrow");
     contactJ.saveDetail(&n2);
     n2.setFirstName("Yarrow");
     contactK.saveDetail(&n2);

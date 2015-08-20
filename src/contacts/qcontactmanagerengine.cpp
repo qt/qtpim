@@ -961,6 +961,130 @@ static inline int compareStrings(const QString& left, const QString& right, Qt::
     } else {
         return left.toCaseFolded().localeAwareCompare(right.toCaseFolded());
     }
+/*
+    // manual implementation of string comparison.
+    // should not be necessary / used, as locale aware compare should be sensible.
+    // this code exists here for testing / result comparison purposes.
+    int retn = -50;
+    for (int i = 0; i < left.size(); ++i) {
+        if (i >= right.size()) { retn = 1; break; } // right is a substring of left
+        const QChar &lc(left[i]);
+        const QChar &rc(right[i]);
+        const QChar lowerLC = lc.toLower();
+        const QChar lowerRC = rc.toLower();
+#if 0
+        // upper first (ascii-collation)
+        if (lc == rc) continue; // characters are identical.
+        if (sensitivity == Qt::CaseInsensitive && lowerLC == lowerRC) continue; // lowercase characters are identical.
+        if (lc.isLower() && rc.isUpper()) { retn = 1; break; } // left is greater than right
+        if (lc.isUpper() && rc.isLower()) { retn = -1; break; } // left is less than right
+        retn = (lc < rc ? -1 : 1); break; // both lower, or both upper.  return relative less-than-ism.
+#elif 0
+        // lower-first
+        if (lc == rc) continue; // characters are identical.
+        if (sensitivity == Qt::CaseInsensitive && lowerLC == lowerRC) continue; // lowercase characters are identical.
+        if (lc.isLower() && rc.isUpper()) { retn = -1; break; } // left is less than right
+        if (lc.isUpper() && rc.isLower()) { retn = 1; break; } // left is greater than right
+        retn = (lc < rc ? -1 : 1); break; // both lower, or both upper.  return relative less-than-ism.
+#elif 0
+        // interleaved-upper-first
+        if (lc == rc) continue; // characters are identical.
+        if (sensitivity == Qt::CaseInsensitive && lowerLC == lowerRC) continue; // lowercase characters are identical.
+        if (lowerLC == lowerRC) {
+            // we know that lc.isLower() != rc.isLower() otherwise the original lc==rc check would have been true.
+            if (lc.isLower()) { retn = 1; break; } // same letter, but left is lowercase :. greater than right.
+            else { retn = -1; break; } // same letter, but left is uppercase :. less than right
+        } else if (lowerLC < lowerRC) {
+            retn = -1; break;
+        } else {
+            retn = 1; break;
+        }
+#elif 0
+        // interleaved-lower-first
+        if (lc == rc) continue; // characters are identical.
+        if (sensitivity == Qt::CaseInsensitive && lowerLC == lowerRC) continue; // lowercase characters are identical.
+        if (lowerLC == lowerRC) {
+            // we know that lc.isLower() != rc.isLower() otherwise the original lc==rc check would have been true.
+            if (lc.isLower()) { retn = -1; break; } // same letter, but left is lowercase :. less than right.
+            else { retn = 1; break; }// same letter, but left is uppercase :. greater than right
+        } else if (lowerLC < lowerRC) {
+            retn = -1; break;
+        } else {
+            retn = 1; break;
+        }
+#elif 0
+        // interleaved-upper-first with first-pass case-insensitive comparison
+        if (i == 0) {
+            bool firstPassResult = false;
+            for (int j = 0; j < qMin(left.size(), right.size()); ++j) {
+                 QChar firstpassLLC = left[j].toLower();
+                 QChar firstpassLRC = right[j].toLower();
+                 if (firstpassLLC < firstpassLRC) { retn = -1; firstPassResult = true; break; }     // e.g. x < Y
+                 else if (firstpassLLC > firstpassLRC) { retn = 1; firstPassResult = true; break; } // e.g. x > P
+                 else { continue; } // e.g. x == X
+            }
+            if (firstPassResult) {
+                break; // case-insensitive first pass already found result
+            } else if (left.size() < right.size()) {
+                retn = -1; break; // no difference in case-insensitive comparison, but left is a (case-insensitive) substring of right.
+            } else if (left.size() > right.size()) {
+                retn = 1; break;  // no difference in case-insensitive comparison, but right is a (case-insensitive) substring of left.
+            } else {
+            }
+        }
+        // if we get here, the strings are the same length and differ
+        // only by case.  We use the upper-first semantic to resolve.
+        if (lc == rc) continue; // characters are identical.
+        if (sensitivity == Qt::CaseInsensitive && lowerLC == lowerRC) continue; // lowercase characters are identical.
+        if (lc.isUpper() && rc.isLower()) {
+            retn = -1; break;
+        } else if (lc.isLower() && rc.isUpper()) {
+            retn = 1; break;
+        } else {
+            // characters are equal in case, doesn't help us resolve ordering.
+        }
+#elif 0
+        // interleaved-lower-first with first-pass case-insensitive comparison
+        if (i == 0) {
+            bool firstPassResult = false;
+            for (int j = 0; j < qMin(left.size(), right.size()); ++j) {
+                 QChar firstpassLLC = left[j].toLower();
+                 QChar firstpassLRC = right[j].toLower();
+                 if (firstpassLLC < firstpassLRC) { retn = -1; firstPassResult = true; break; }     // e.g. x < Y
+                 else if (firstpassLLC > firstpassLRC) { retn = 1; firstPassResult = true; break; } // e.g. x > P
+                 else { continue; } // e.g. x == X
+            }
+            if (firstPassResult) {
+                break; // case-insensitive first pass already found result
+            } else if (left.size() < right.size()) {
+                retn = -1; break; // no difference in case-insensitive comparison, but left is a (case-insensitive) substring of right.
+            } else if (left.size() > right.size()) {
+                retn = 1; break;  // no difference in case-insensitive comparison, but right is a (case-insensitive) substring of left.
+            } else {
+            }
+        }
+        // if we get here, the strings are the same length and differ
+        // only by case.  We use the lower-first semantic to resolve.
+        if (lc == rc) continue; // characters are identical.
+        if (sensitivity == Qt::CaseInsensitive && lowerLC == lowerRC) continue; // lowercase characters are identical.
+        if (lc.isUpper() && rc.isLower()) {
+            retn = 1; break;
+        } else if (lc.isLower() && rc.isUpper()) {
+            retn = -1; break;
+        } else {
+            // characters are equal in case, doesn't help us resolve ordering.
+        }
+#endif
+    }
+    if (retn == -50) {
+        if (left.size() == right.size()) {
+            retn = 0; // strings are the same
+        } else {
+            retn = -1; // left is a substr of right, therefore less.
+        }
+    }
+    return retn;
+*/
 }
 
 /*!

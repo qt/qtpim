@@ -52,11 +52,21 @@ class tst_QVersitContactPlugins : public QObject
 {
     Q_OBJECT
 
+public slots:
+    void init();
+
 private slots:
     void testDefaultFactory();
     void testImporterPlugins();
     void testExporterPlugins();
 };
+
+void tst_QVersitContactPlugins::init() {
+    // on windows, depending on how the unit test is invoked, we need these
+    QCoreApplication::addLibraryPath("./debug/plugins/");
+    QCoreApplication::addLibraryPath("./release/plugins/");
+    QCoreApplication::addLibraryPath("./plugins/");
+}
 
 void tst_QVersitContactPlugins::testDefaultFactory() {
     TestFactory1 factory;

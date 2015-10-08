@@ -1065,10 +1065,13 @@ void QDeclarativeContactModel::fetchRequestStateChanged(QContactAbstractRequest:
                 } else {
                     QDeclarativeContact *contact = d->m_contactMap[c.id()];
 
-                    int pos = d->m_contacts.indexOf(contact);
-                    if (pos != i) {
-                        beginMoveRows(QModelIndex(), pos, pos, QModelIndex(), i);
-                        d->m_contacts.move(pos, i);
+                    // If there are duplicates in the pending contacts list, then the current index
+                    // can be outside this contact lists range and we need to adjust it to avoid crashing.
+                    const int oldIdx = d->m_contacts.indexOf(contact);
+                    const int newIdx = i < d->m_contacts.size() ? i : d->m_contacts.size() - 1;
+                    if (oldIdx != newIdx) {
+                        beginMoveRows(QModelIndex(), oldIdx, oldIdx, QModelIndex(), newIdx);
+                        d->m_contacts.move(oldIdx, newIdx);
                         endMoveRows();
                     }
                 }

@@ -662,7 +662,16 @@ bool QDeclarativeOrganizerItemParent::setValue(int field, const QVariant &value)
 void QDeclarativeOrganizerItemParent::setOriginalDate(const QDateTime &date)
 {
     if (date != originalDate()) {
-        m_detail.setValue(QOrganizerItemParent::FieldOriginalDate, date.date());
+        // If the value was likely set as a QDate, then assume that the time info can be ignored.
+        // This is to ensure that dates like "2002-01-01" don't get interpretted as being
+        // "2002-01-01T00:00:00+10:00" if the local timezone is GMT+10, and then being converted
+        // to "2001-31-12T14:00:00Z" in UTC before having the (different) date "2001-31-12"
+        // extracted for insertion into the FieldResponseDeadline value.
+        if (date.timeSpec() == Qt::LocalTime && date.time() == QTime(0,0,0,0)) {
+            m_detail.setValue(QOrganizerItemParent::FieldOriginalDate, date.date());
+        } else {
+            m_detail.setValue(QOrganizerItemParent::FieldOriginalDate, date.toUTC().date());
+        }
         emit valueChanged();
     }
 }
@@ -908,9 +917,20 @@ void QDeclarativeOrganizerItemRecurrence::setRecurrenceDates(const QVariantList 
     if (dates != recurrenceDates()) {
         QSet<QDate> dateSet;
         QVariant dateSetVariant;
-        foreach (QVariant date, dates) {
-            if (date.canConvert(QVariant::DateTime))
-                dateSet.insert(date.toDateTime().toUTC().date());
+        Q_FOREACH (const QVariant &date, dates) {
+            if (date.canConvert(QVariant::DateTime)) {
+                QDateTime dt = date.toDateTime();
+                // If the value was likely set as a QDate, then assume that the time info can be ignored.
+                // This is to ensure that dates like "2002-01-01" don't get interpretted as being
+                // "2002-01-01T00:00:00+10:00" if the local timezone is GMT+10, and then being converted
+                // to "2001-31-12T14:00:00Z" in UTC before having the (different) date "2001-31-12"
+                // extracted for insertion into the dateSet.
+                if (dt.timeSpec() == Qt::LocalTime && dt.time() == QTime(0,0,0,0)) {
+                    dateSet.insert(dt.date());
+                } else {
+                    dateSet.insert(dt.toUTC().date());
+                }
+            }
         }
         dateSetVariant.setValue(dateSet);
         m_detail.setValue(QOrganizerItemRecurrence::FieldRecurrenceDates, dateSetVariant);
@@ -940,9 +960,20 @@ void QDeclarativeOrganizerItemRecurrence::setExceptionDates(const QVariantList& 
     if (dates != exceptionDates()) {
         QSet<QDate> dateSet;
         QVariant dateSetVariant;
-        foreach (QVariant date, dates) {
-            if (date.canConvert(QVariant::DateTime))
-                dateSet.insert(date.toDateTime().toUTC().date());
+        Q_FOREACH (const QVariant &date, dates) {
+            if (date.canConvert(QVariant::DateTime)) {
+                QDateTime dt = date.toDateTime();
+                // If the value was likely set as a QDate, then assume that the time info can be ignored.
+                // This is to ensure that dates like "2002-01-01" don't get interpretted as being
+                // "2002-01-01T00:00:00+10:00" if the local timezone is GMT+10, and then being converted
+                // to "2001-31-12T14:00:00Z" in UTC before having the (different) date "2001-31-12"
+                // extracted for insertion into the dateSet.
+                if (dt.timeSpec() == Qt::LocalTime && dt.time() == QTime(0,0,0,0)) {
+                    dateSet.insert(dt.date());
+                } else {
+                    dateSet.insert(dt.toUTC().date());
+                }
+            }
         }
         dateSetVariant.setValue(dateSet);
         m_detail.setValue(QOrganizerItemRecurrence::FieldExceptionDates, dateSetVariant);
@@ -2188,7 +2219,16 @@ QDeclarativeOrganizerEventRsvp::ResponseRequirement QDeclarativeOrganizerEventRs
 void QDeclarativeOrganizerEventRsvp::setResponseDeadline(const QDateTime &date)
 {
     if (responseDeadline() != date) {
-        m_detail.setValue(QOrganizerEventRsvp::FieldResponseDeadline, date.toUTC().date());
+        // If the value was likely set as a QDate, then assume that the time info can be ignored.
+        // This is to ensure that dates like "2002-01-01" don't get interpretted as being
+        // "2002-01-01T00:00:00+10:00" if the local timezone is GMT+10, and then being converted
+        // to "2001-31-12T14:00:00Z" in UTC before having the (different) date "2001-31-12"
+        // extracted for insertion into the FieldResponseDeadline value.
+        if (date.timeSpec() == Qt::LocalTime && date.time() == QTime(0,0,0,0)) {
+            m_detail.setValue(QOrganizerEventRsvp::FieldResponseDeadline, date.date());
+        } else {
+            m_detail.setValue(QOrganizerEventRsvp::FieldResponseDeadline, date.toUTC().date());
+        }
         emit valueChanged();
      }
 }
@@ -2207,7 +2247,16 @@ QDateTime QDeclarativeOrganizerEventRsvp::responseDeadline() const
 void QDeclarativeOrganizerEventRsvp::setResponseDate(const QDateTime &date)
 {
     if (responseDate() != date) {
-        m_detail.setValue(QOrganizerEventRsvp::FieldResponseDate, date.toUTC().date());
+        // If the value was likely set as a QDate, then assume that the time info can be ignored.
+        // This is to ensure that dates like "2002-01-01" don't get interpretted as being
+        // "2002-01-01T00:00:00+10:00" if the local timezone is GMT+10, and then being converted
+        // to "2001-31-12T14:00:00Z" in UTC before having the (different) date "2001-31-12"
+        // extracted for insertion into the FieldResponseDate value.
+        if (date.timeSpec() == Qt::LocalTime && date.time() == QTime(0,0,0,0)) {
+            m_detail.setValue(QOrganizerEventRsvp::FieldResponseDate, date.date());
+        } else {
+            m_detail.setValue(QOrganizerEventRsvp::FieldResponseDate, date.toUTC().date());
+        }
         emit valueChanged();
      }
 }

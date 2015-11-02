@@ -178,16 +178,19 @@ TestCase {
     function test_recurrenceDateArrays_data() {
         return [
             {tag: "basic date object", testValue: [new Date(2012, 2, 16, 11, 00, 00)]},
-            {tag: "date object from string", testValue: [new Date("January 1, 1986")]},
+            {tag: "date object from string", testValue: [new Date("January 1, 1986")], expectedValue: ['1986-01-01']},
             {tag: "date object from ISO date", testValue: [new Date('2014-01-01')]},
             {tag: "datetime object from string", testValue: [new Date("October 13, 1975 11:13:00")]},
-            // {tag: "date string", testValue: ['2013-01-01']}, // TODO fix conversion to UTC from string
-            // {tag: "datetime string", testValue: ['2013-10-23T23:55:00']},  // TODO fix conversion to UTC from string
+            {tag: "date string at year boundary lower", testValue: ['2013-01-01']},
+            {tag: "date string at year boundary upper", testValue: ['2013-12-31']},
+            {tag: "datetime string", testValue: ['2013-10-23T23:55:00']},
             {tag: "datetime string ISO 8601   Z", testValue: ['1997-07-16T19:20:30.45Z']},
             {tag: "datetime string ISO 8601 +01", testValue: ['1997-07-16T19:20:30.45+01:00']},
             {tag: "datetime string ISO 8601 +10", testValue: ['1997-07-16T19:20:30.45+10:00']},
             {tag: "datetime string ISO 8601 -01", testValue: ['1997-07-16T19:20:30.45-01:00']},
-            {tag: "datetime string ISO 8601 -10", testValue: ['1997-07-16T19:20:30.45-10:00']}
+            {tag: "datetime string ISO 8601 -10", testValue: ['1997-07-16T19:20:30.45-10:00']},
+            {tag: "datetime string ISO 8601 +10 at boundary", testValue: ['1997-01-01T00:00:01.45+10:00']},
+            {tag: "datetime string ISO 8601 -10 at boundary", testValue: ['1997-12-31T23:59:59.45-10:00']}
         ]
     }
     function test_recurrenceDateArrays(data) {
@@ -199,7 +202,8 @@ TestCase {
         detailChangedSpy.signalName = "detailChanged"
 
         var testDate = (typeof data.testValue[0] == 'string') ? new Date(data.testValue[0]) : data.testValue[0];
-        var testDateUTCMidnight = utility.toUTCMidnight(testDate);;
+        var expectedDate = (data.hasOwnProperty('expectedValue') && typeof data.expectedValue[0] == 'string') ? new Date(data.expectedValue[0]) : testDate;
+        var testDateUTCMidnight = utility.toUTCMidnight(expectedDate);
 
         if (isNaN(testDate.getTime())) {
             warn("test \"" + data.tag + "\" contains incorrect date");
@@ -457,8 +461,6 @@ TestCase {
     function test_parent() {
         compare(parent.type, Detail.Parent)
 
-        skip('TODO should be fixed conversion between local time and UTC to avoid a double conversion')
-
         compare(parent.value(Parent.FieldOriginalDate), undefined)
         var originalDate = new Date("2008-12-28")
         parent.originalDate = originalDate
@@ -472,6 +474,11 @@ TestCase {
         compare(parent.value(Parent.FieldOriginalDate), originalDate2UTC)
 
         parent.setValue(Parent.FieldOriginalDate, "2008-01-01")
+        compare(parent.originalDate, originalDate2UTC)
+        compare(parent.value(Parent.FieldOriginalDate), originalDate2UTC)
+
+        var originalDate3 = new Date("January 1, 2008")
+        parent.setValue(Parent.FieldOriginalDate, originalDate3)
         compare(parent.originalDate, originalDate2UTC)
         compare(parent.value(Parent.FieldOriginalDate), originalDate2UTC)
     }
@@ -662,16 +669,19 @@ TestCase {
     function test_rsvpDateProperties_data() {
         return [
             {tag: "basic date object", testValue: new Date(2012, 2, 16, 11, 00, 00)},
-            {tag: "date object from string", testValue: new Date("January 1, 1986")},
+            {tag: "date object from string", testValue: new Date("January 1, 1986"), expectedValue: '1986-01-01'},
             {tag: "date object from ISO date", testValue: new Date('2014-01-01')},
             {tag: "datetime object from string", testValue: new Date("October 13, 1975 11:13:00")},
-            // {tag: "date string", testValue: '2013-01-01'}, // TODO test fails for TZ=EET
-            // {tag: "datetime string", testValue: '2013-10-23T23:55:00'}, // TODO test fails for TZ=HST
+            {tag: "date string at year boundary lower", testValue: '2013-01-01'},
+            {tag: "date string at year boundary upper", testValue: '2013-12-31'},
+            {tag: "datetime string", testValue: '2013-10-23T23:55:00'},
             {tag: "datetime string ISO 8601   Z", testValue: '1997-07-16T19:20:30.45Z'},
             {tag: "datetime string ISO 8601 +01", testValue: '1997-07-16T19:20:30.45+01:00'},
             {tag: "datetime string ISO 8601 +10", testValue: '1997-07-16T19:20:30.45+10:00'},
             {tag: "datetime string ISO 8601 -01", testValue: '1997-07-16T19:20:30.45-01:00'},
-            {tag: "datetime string ISO 8601 -10", testValue: '1997-07-16T19:20:30.45-10:00'}
+            {tag: "datetime string ISO 8601 -10", testValue: '1997-07-16T19:20:30.45-10:00'},
+            {tag: "datetime string ISO 8601 +10 at boundary", testValue: '1997-01-01T00:00:01.45+10:00'},
+            {tag: "datetime string ISO 8601 -10 at boundary", testValue: '1997-12-31T23:59:59.45-10:00'}
         ]
     }
     function test_rsvpDateProperties(data) {
@@ -684,7 +694,8 @@ TestCase {
         detailChangedSpy.signalName = "detailChanged"
 
         var testDate = (typeof data.testValue == 'string') ? new Date(data.testValue) : data.testValue;
-        var testDateUTCMidnight = utility.toUTCMidnight(testDate);
+        var expectedDate = (data.hasOwnProperty('expectedValue') && typeof data.expectedValue == 'string') ? new Date(data.expectedValue) : testDate;
+        var testDateUTCMidnight = utility.toUTCMidnight(expectedDate);
 
         if (isNaN(testDate.getTime())) {
             warn("test \"" + data.tag + "\" contains incorrect date");

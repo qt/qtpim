@@ -55,7 +55,8 @@ public:
         FieldFirstName,
         FieldMiddleName,
         FieldLastName,
-        FieldSuffix
+        FieldSuffix,
+        FieldCustomLabel
     };
 
     QString prefix() const;
@@ -63,12 +64,14 @@ public:
     QString middleName() const;
     QString lastName() const;
     QString suffix() const;
+    QString customLabel() const;
 
     void setPrefix(const QString& _prefix);
     void setFirstName(const QString& _firstName);
     void setMiddleName(const QString& _middleName);
     void setLastName(const QString& _lastName);
     void setSuffix(const QString& _suffix);
+    void setCustomLabel(const QString& _customLabel);
 
     // Convenience filter
     static QContactFilter match(const QString& name);

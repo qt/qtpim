@@ -52,7 +52,8 @@ public:
 
     enum AvatarField {
         FieldImageUrl = 0,
-        FieldVideoUrl
+        FieldVideoUrl,
+        FieldMetaData
     };
 
     void setImageUrl(const QUrl& _imageUrl);
@@ -60,6 +61,9 @@ public:
 
     void setVideoUrl(const QUrl& _videoUrl);
     QUrl videoUrl() const;
+
+    void setMetaData(const QString& _metaData);
+    QString metaData() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

@@ -565,8 +565,9 @@ class QContactAvatarPrivate : public QContactDetailBuiltinPrivate<QContactAvatar
 public:
     QUrl m_imageUrl;
     QUrl m_videoUrl;
+    QString m_metaData;
 
-    enum { FieldCount = 2 };
+    enum { FieldCount = 3 };
 
     QContactAvatarPrivate() : QContactDetailBuiltinPrivate<QContactAvatarPrivate>(QContactAvatar::Type) {}
 };
@@ -575,6 +576,7 @@ template<>
 const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactAvatarPrivate>::s_members[] = {
     { QContactDetailBuiltinPrivateBase::Url, offsetof(QContactAvatarPrivate, m_imageUrl) },
     { QContactDetailBuiltinPrivateBase::Url, offsetof(QContactAvatarPrivate, m_videoUrl) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactAvatarPrivate, m_metaData) },
 };
 
 /*!
@@ -627,6 +629,24 @@ QUrl QContactAvatar::videoUrl() const
 void QContactAvatar::setVideoUrl(const QUrl& _value)
 {
     reinterpret_cast<QContactAvatarPrivate*>(d.data())->setMemberValue<QUrl>(QContactAvatar::FieldVideoUrl, _value);
+}
+
+/*!
+   \fn QContactAvatar::metaData() const
+   Returns the meta data associated with the avatar url.
+ */
+QString QContactAvatar::metaData() const
+{
+    return reinterpret_cast<const QContactAvatarPrivate*>(d.constData())->memberValue<QString>(QContactAvatar::FieldMetaData);
+}
+
+/*!
+   \fn QContactAvatar::setMetaData(const QString& metaData)
+   Sets the meta data associated with the avatar url to \a metaData.
+ */
+void QContactAvatar::setMetaData(const QString& _value)
+{
+    reinterpret_cast<QContactAvatarPrivate*>(d.data())->setMemberValue<QString>(QContactAvatar::FieldMetaData, _value);
 }
 
 /* ==================== QContactAddress ======================= */
@@ -992,9 +1012,10 @@ class QContactPhoneNumberPrivate : public QContactDetailBuiltinPrivate<QContactP
 {
 public:
     QString m_number;
+    QString m_normalizedNumber;
     QList<int> m_subTypes;
 
-    enum { FieldCount = 2 };
+    enum { FieldCount = 3 };
 
     QContactPhoneNumberPrivate() : QContactDetailBuiltinPrivate<QContactPhoneNumberPrivate>(QContactPhoneNumber::Type) {}
 };
@@ -1002,6 +1023,7 @@ public:
 template<>
 const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactPhoneNumberPrivate>::s_members[] = {
     { QContactDetailBuiltinPrivateBase::String, offsetof(QContactPhoneNumberPrivate, m_number) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactPhoneNumberPrivate, m_normalizedNumber) },
     { QContactDetailBuiltinPrivateBase::IntList, offsetof(QContactPhoneNumberPrivate, m_subTypes) },
 };
 
@@ -1058,6 +1080,25 @@ QString QContactPhoneNumber::number() const
 void QContactPhoneNumber::setNumber(const QString& _value)
 {
     reinterpret_cast<QContactPhoneNumberPrivate*>(d.data())->setMemberValue<QString>(QContactPhoneNumber::FieldNumber, _value);
+}
+
+/*!
+   \fn QContactPhoneNumber::normalizedNumber() const
+   Returns the normalized version of the phone number stored in this detail.
+   This value may be backend-generated, and may not be exportable.
+ */
+QString QContactPhoneNumber::normalizedNumber() const
+{
+    return reinterpret_cast<const QContactPhoneNumberPrivate*>(d.constData())->memberValue<QString>(QContactPhoneNumber::FieldNormalizedNumber);
+}
+
+/*!
+   \fn QContactPhoneNumber::setNormalizedNumber(const QString& normalizedNumber)
+   Sets the normalized version of the phone number stored in this detail to \a normalizedNumber.
+ */
+void QContactPhoneNumber::setNormalizedNumber(const QString& _value)
+{
+    reinterpret_cast<QContactPhoneNumberPrivate*>(d.data())->setMemberValue<QString>(QContactPhoneNumber::FieldNormalizedNumber, _value);
 }
 
 /*!
@@ -1272,9 +1313,15 @@ const QContactDetail::DetailType QContactGender::Type(QContactDetail::TypeGender
    \enum QContactGender::GenderField
    This enumeration defines the fields supported by QContactGender.
    \value FieldGender The value stored in this field contains the gender.
+   \sa gender(), setGender()
+ */
+
+/*!
+   \enum QContactGender::GenderType
+   This enumeration defines built-in gender values
+   \value GenderUnspecified The value that identifies this contact as being of unspecified gender.
    \value GenderMale The value that identifies this contact as being male.
    \value GenderFemale The value that identifies this contact as being female.
-   \value GenderUnspecified The value that identifies this contact as being of unspecified gender.
    \sa gender(), setGender()
  */
 
@@ -1285,19 +1332,19 @@ const QContactDetail::DetailType QContactGender::Type(QContactDetail::TypeGender
    possible values for the value stored are "Male", "Female" and
    "Unspecified".
  */
-QContactGender::GenderField QContactGender::gender() const
+QContactGender::GenderType QContactGender::gender() const
 {
-    return static_cast<QContactGender::GenderField>(reinterpret_cast<const QContactGenderPrivate*>(d.constData())->memberValue<int>(QContactGender::FieldGender));
+    return static_cast<QContactGender::GenderType>(reinterpret_cast<const QContactGenderPrivate*>(d.constData())->memberValue<int>(QContactGender::FieldGender));
 }
 
 /*!
-   \fn QContactGender::setGender(const GenderField gender)
+   \fn QContactGender::setGender(GenderType gender)
 
    Sets the gender of the contact (as stored in this detail) to \a
    gender, if \a gender is either GenderMale or GenderFemale, otherwise sets
    it to GenderUnspecified.
  */
-void QContactGender::setGender(QContactGender::GenderField _value)
+void QContactGender::setGender(QContactGender::GenderType _value)
 {
     reinterpret_cast<QContactGenderPrivate*>(d.data())->setMemberValue<int>(QContactGender::FieldGender, static_cast<int>(_value));
 }
@@ -1702,8 +1749,9 @@ public:
     QString m_middleName;
     QString m_lastName;
     QString m_suffix;
+    QString m_customLabel;
 
-    enum { FieldCount = 5 };
+    enum { FieldCount = 6 };
 
     QContactNamePrivate() : QContactDetailBuiltinPrivate<QContactNamePrivate>(QContactName::Type) {}
 };
@@ -1715,6 +1763,7 @@ const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QCon
     { QContactDetailBuiltinPrivateBase::String, offsetof(QContactNamePrivate, m_middleName) },
     { QContactDetailBuiltinPrivateBase::String, offsetof(QContactNamePrivate, m_lastName) },
     { QContactDetailBuiltinPrivateBase::String, offsetof(QContactNamePrivate, m_suffix) },
+    { QContactDetailBuiltinPrivateBase::String, offsetof(QContactNamePrivate, m_customLabel) },
 };
 
 /*!
@@ -1830,6 +1879,24 @@ QString QContactName::suffix() const
 void QContactName::setSuffix(const QString& _value)
 {
     reinterpret_cast<QContactNamePrivate*>(d.data())->setMemberValue<QString>(QContactName::FieldSuffix, _value);
+}
+
+/*!
+   \fn QContactName::customLabel() const
+   Returns the custom label data for the name stored in this detail.
+ */
+QString QContactName::customLabel() const
+{
+    return reinterpret_cast<const QContactNamePrivate*>(d.constData())->memberValue<QString>(QContactName::FieldCustomLabel);
+}
+
+/*!
+   \fn QContactName::setCustomLabel(const QString& customLabel)
+   Sets the custom label of the name stored in this detail to \a customLabel.
+ */
+void QContactName::setCustomLabel(const QString& _value)
+{
+    reinterpret_cast<QContactNamePrivate*>(d.data())->setMemberValue<QString>(QContactName::FieldCustomLabel, _value);
 }
 
 /* ==================== QContactNickname ======================= */
@@ -2038,8 +2105,9 @@ class QContactTimestampPrivate : public QContactDetailBuiltinPrivate<QContactTim
 public:
     QDateTime m_modificationTimestamp;
     QDateTime m_creationTimestamp;
+    QDateTime m_deletionTimestamp;
 
-    enum { FieldCount = 2 };
+    enum { FieldCount = 3 };
 
     QContactTimestampPrivate() : QContactDetailBuiltinPrivate<QContactTimestampPrivate>(QContactTimestamp::Type) {}
 };
@@ -2048,6 +2116,7 @@ template<>
 const QContactDetailBuiltinPrivateBase::Member QContactDetailBuiltinPrivate<QContactTimestampPrivate>::s_members[] = {
     { QContactDetailBuiltinPrivateBase::DateTime, offsetof(QContactTimestampPrivate, m_modificationTimestamp) },
     { QContactDetailBuiltinPrivateBase::DateTime, offsetof(QContactTimestampPrivate, m_creationTimestamp) },
+    { QContactDetailBuiltinPrivateBase::DateTime, offsetof(QContactTimestampPrivate, m_deletionTimestamp) },
 };
 
 /*!
@@ -2099,6 +2168,24 @@ void QContactTimestamp::setLastModified(const QDateTime& _value)
 QDateTime QContactTimestamp::lastModified() const
 {
     return reinterpret_cast<const QContactTimestampPrivate*>(d.constData())->memberValue<QDateTime>(QContactTimestamp::FieldModificationTimestamp);
+}
+
+/*!
+   \fn QContactTimestamp::setDeleted(const QDateTime& dateTime)
+   Sets the deletion timestamp saved in this detail to \a dateTime.
+ */
+void QContactTimestamp::setDeleted(const QDateTime& _value)
+{
+    reinterpret_cast<QContactTimestampPrivate*>(d.data())->setMemberValue<QDateTime>(QContactTimestamp::FieldDeletionTimestamp, _value);
+}
+
+/*!
+   \fn QContactTimestamp::deleted() const
+   Returns the deletion timestamp saved in this detail.
+ */
+QDateTime QContactTimestamp::deleted() const
+{
+    return reinterpret_cast<const QContactTimestampPrivate*>(d.constData())->memberValue<QDateTime>(QContactTimestamp::FieldDeletionTimestamp);
 }
 
 

@@ -493,6 +493,22 @@ QContactDetail::AccessConstraints QContactDetail::accessConstraints() const
     return d.constData()->m_access;
 }
 
+
+/*!
+  \fn QString QContactDetail::provenance() const
+
+  This is a convenience function to return the \c Provenance field of this detail.
+  Any detail in an aggregate contact which originally comes from a \c Facet contact
+  should have provenance information.
+
+  It is equivalent to the following code:
+  \code
+  value(QContactDetail::FieldProvenance);
+  \endcode
+
+  \sa value()
+ */
+
 /*!
   \enum QContactDetail::DetailContext
 
@@ -552,9 +568,11 @@ QContactDetail::AccessConstraints QContactDetail::accessConstraints() const
   \value FieldContext The field containing the contexts of a detail.
   \value FieldDetailUri The field containing the detail URI of a detail.
   \value FieldLinkedDetailUris The field containing the URIs of other details linked to a detail.
+  \value FieldProvenance The field containing the provenance information for the detail.
   \sa setContexts(), contexts()
   \sa setDetailUri(), detailUri()
   \sa setLinkedDetailUris(), linkedDetailUris()
+  \sa provenance()
  */
 
 /*!

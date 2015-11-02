@@ -67,6 +67,7 @@ public:
     QList<int> m_contexts;
 
     // detail metadata
+    QString m_provenance;
     QContactDetail::DetailType m_type;
     QContactDetail::AccessConstraints m_access;
     int m_detailId;
@@ -88,6 +89,7 @@ public:
     QContactDetailPrivate(const QContactDetailPrivate& other)
         : QSharedData(other)
         , m_contexts(other.m_contexts)
+        , m_provenance(other.m_provenance)
         , m_type(other.m_type)
         , m_access(other.m_access)
         , m_detailId(other.m_detailId)
@@ -102,7 +104,7 @@ public:
         return new QContactDetailPrivate(*this);
     }
 
-    virtual bool operator==(const QContactDetailPrivate& other) const { // doesn't check detailId
+    virtual bool operator==(const QContactDetailPrivate& other) const { // doesn't check detailId or provenance
         if (m_type != other.m_type
                 || m_hasValueBitfield != other.m_hasValueBitfield
                 || m_contexts != other.m_contexts
@@ -131,6 +133,11 @@ public:
     static void setAccessConstraints(QContactDetail *d, QContactDetail::AccessConstraints constraint)
     {
         d->d->m_access = constraint;
+    }
+
+    static void setProvenance(QContactDetail *d, const QString &newProvenance)
+    {
+        d->d->m_provenance = newProvenance;
     }
 
     static const QContactDetailPrivate* detailPrivate(const QContactDetail& detail)
@@ -170,6 +177,11 @@ public:
                 setHasValueBitfieldBit(true, FieldContextBit);
                 return true;
             }
+            case QContactDetail::FieldProvenance: {
+                m_provenance = _value.toString();
+                setHasValueBitfieldBit(!m_provenance.isEmpty(), FieldProvenanceBit);
+                return true;
+            }
             default: {
                 // add the data as an extraData field
                 m_extraData.insert(field, _value);
@@ -186,6 +198,11 @@ public:
                 setHasValueBitfieldBit(false, FieldContextBit);
                 return true;
             }
+            case QContactDetail::FieldProvenance: {
+                m_provenance = QString();
+                setHasValueBitfieldBit(false, FieldProvenanceBit);
+                return true;
+            }
             default: {
                 return m_extraData.remove(field);
                 // don't need to clear hasValueBitfield bit for fields stored in extra data.
@@ -196,6 +213,7 @@ public:
     virtual bool hasValue(int field) const {
         switch (field) {
             case QContactDetail::FieldContext: return hasValueBitfieldBitSet(FieldContextBit);
+            case QContactDetail::FieldProvenance: return hasValueBitfieldBitSet(FieldProvenanceBit);
             default: return m_extraData.contains(field);
         }
     }
@@ -209,6 +227,9 @@ public:
         if (hasValueBitfieldBitSet(FieldContextBit)) {
             retn.insert(QContactDetail::FieldContext, QVariant::fromValue<QList<int> >(m_contexts));
         }
+        if (hasValueBitfieldBitSet(FieldProvenanceBit)) {
+            retn.insert(QContactDetail::FieldProvenance, QVariant::fromValue<QString>(m_provenance));
+        }
         QMap<int, QVariant>::const_iterator it = m_extraData.constBegin(), end = m_extraData.constEnd();
         for ( ; it != end; ++it) {
             if (it.key() <= QContactDetail::FieldMaximumUserVisible) {
@@ -221,6 +242,7 @@ public:
     virtual QVariant value(int field) const {
         switch (field) {
             case QContactDetail::FieldContext:          return QVariant::fromValue<QList<int> >(m_contexts);
+            case QContactDetail::FieldProvenance:       return QVariant::fromValue<QString>(m_provenance);
             default:                                    return m_extraData.value(field);
         }
     }

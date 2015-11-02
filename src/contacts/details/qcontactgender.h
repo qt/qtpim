@@ -49,14 +49,17 @@ public:
 #endif
 
     enum GenderField {
-        FieldGender = 0,
-        GenderMale,
-        GenderFemale,
-        GenderUnspecified
+        FieldGender = 0
     };
 
-    void setGender(const GenderField _gender);
-    GenderField gender() const;
+    enum GenderType {
+        GenderUnspecified = 0,
+        GenderMale,
+        GenderFemale
+    };
+
+    void setGender(GenderType _gender);
+    GenderType gender() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

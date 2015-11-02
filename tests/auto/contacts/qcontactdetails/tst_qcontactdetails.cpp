@@ -247,10 +247,13 @@ void tst_QContactDetails::avatar()
     QCOMPARE(a1.value<QUrl>(QContactAvatar::FieldImageUrl), QUrl("1234"));
     a2.setVideoUrl(QUrl("videoUrl"));
     a2.setImageUrl(QUrl("imageUrl"));
+    a2.setMetaData(QString("1234"));
     QCOMPARE(a2.videoUrl(), QUrl("videoUrl"));
     QCOMPARE(a2.value<QUrl>(QContactAvatar::FieldVideoUrl), QUrl("videoUrl"));
     QCOMPARE(a2.imageUrl(), QUrl("imageUrl"));
     QCOMPARE(a2.value<QUrl>(QContactAvatar::FieldImageUrl), QUrl("imageUrl"));
+    QCOMPARE(a2.metaData(), QString("1234"));
+    QCOMPARE(a2.value<QString>(QContactAvatar::FieldMetaData), QString("1234"));
 
     // test property add
     QVERIFY(c.saveDetail(&a1));
@@ -750,11 +753,13 @@ void tst_QContactDetails::name()
     n1.setMiddleName("William Preston");
     n1.setLastName("Gumboots");
     n1.setSuffix("Esquire");
+    n1.setCustomLabel("Frederick The Example");
     QCOMPARE(n1.prefix(), QString("Dr"));
     QCOMPARE(n1.firstName(), QString("Freddy"));
     QCOMPARE(n1.middleName(), QString("William Preston"));
     QCOMPARE(n1.lastName(), QString("Gumboots"));
     QCOMPARE(n1.suffix(), QString("Esquire"));
+    QCOMPARE(n1.customLabel(), QString("Frederick The Example"));
 
     // Values based (QString)
     QCOMPARE(n1.value(QContactName::FieldPrefix).toString(), QString("Dr"));
@@ -762,6 +767,7 @@ void tst_QContactDetails::name()
     QCOMPARE(n1.value(QContactName::FieldMiddleName).toString(), QString("William Preston"));
     QCOMPARE(n1.value(QContactName::FieldLastName).toString(), QString("Gumboots"));
     QCOMPARE(n1.value(QContactName::FieldSuffix).toString(), QString("Esquire"));
+    QCOMPARE(n1.value(QContactName::FieldCustomLabel).toString(), QString("Frederick The Example"));
 
     // test property add
     QVERIFY(c.saveDetail(&n1));
@@ -983,6 +989,11 @@ void tst_QContactDetails::phoneNumber()
     QCOMPARE(p1.number(), QString("1234"));
     QCOMPARE(p1.value(QContactPhoneNumber::FieldNumber).toString(), QString("1234"));
 
+    // normalized number
+    p1.setNormalizedNumber("123");
+    QCOMPARE(p1.normalizedNumber(), QString("123"));
+    QCOMPARE(p1.value(QContactPhoneNumber::FieldNormalizedNumber).toString(), QString("123"));
+
     // Sub types
     p1.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeCar);
     QCOMPARE(p1.subTypes(), QList<int>() << QContactPhoneNumber::SubTypeCar);
@@ -1192,16 +1203,21 @@ void tst_QContactDetails::timestamp()
     QContactTimestamp t1, t2;
     QDateTime modified = QDateTime::currentDateTime();
     QDateTime created = modified.addSecs(-43);
+    QDateTime deleted = modified.addSecs(20);
 
     // test property set
     t1.setCreated(created);
+    t1.setDeleted(deleted);
     QCOMPARE(t1.created(), created);
     QCOMPARE(t1.value(QContactTimestamp::FieldCreationTimestamp).toDateTime(), created);
+    QCOMPARE(t1.deleted(), deleted);
+    QCOMPARE(t1.value(QContactTimestamp::FieldDeletionTimestamp).toDateTime(), deleted);
 
     // test property add
     QVERIFY(c.saveDetail(&t1));
     QCOMPARE(c.details(QContactTimestamp::Type).count(), 1);
     QCOMPARE(QContactTimestamp(c.details(QContactTimestamp::Type).value(0)).created(), t1.created());
+    QCOMPARE(QContactTimestamp(c.details(QContactTimestamp::Type).value(0)).deleted(), t1.deleted());
 
     // test property update
     t1.setValue(QContactTimestamp::FieldContext, QContactDetail::ContextWork);
@@ -1210,6 +1226,7 @@ void tst_QContactDetails::timestamp()
     QCOMPARE(c.details(QContactTimestamp::Type).value(0).value(QContactTimestamp::FieldContext).value<QList<int> >(), QList<int>() << QContactDetail::ContextWork);
     QCOMPARE(c.details(QContactTimestamp::Type).value(0).value(QContactTimestamp::FieldCreationTimestamp).toDateTime(), created);
     QCOMPARE(c.details(QContactTimestamp::Type).value(0).value(QContactTimestamp::FieldModificationTimestamp).toDateTime(), modified);
+    QCOMPARE(c.details(QContactTimestamp::Type).value(0).value(QContactTimestamp::FieldDeletionTimestamp).toDateTime(), deleted);
 
     // test property remove
     QVERIFY(c.removeDetail(&t1));

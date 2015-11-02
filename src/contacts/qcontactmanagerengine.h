@@ -156,6 +156,7 @@ public:
     // Other protected area update functions
     static void setDetailAccessConstraints(QContactDetail *detail, QContactDetail::AccessConstraints constraints);
     static void setContactRelationships(QContact *contact, const QList<QContactRelationship> &relationships);
+    static void setDetailProvenance(QContactDetail *detail, const QString &provenance);
 
     /* Helper functions */
     static int compareContact(const QContact &a, const QContact &b, const QList<QContactSortOrder> &sortOrders);

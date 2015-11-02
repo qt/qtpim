@@ -53,6 +53,7 @@ public:
 
     enum PhoneNumberField {
         FieldNumber = 0,
+        FieldNormalizedNumber,
         FieldSubTypes
     };
 
@@ -74,6 +75,9 @@ public:
 
     void setNumber(const QString &_number);
     QString number() const;
+
+    void setNormalizedNumber(const QString &_normalizedNumber);
+    QString normalizedNumber() const;
 
     void setSubTypes(const QList<int> &_subTypes);
     QList<int> subTypes() const;

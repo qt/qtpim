@@ -224,6 +224,13 @@ void tst_QContactDetail::assignment()
     p1 = p2;
     QVERIFY(p1 == p2);
 
+    QContactManagerEngine::setDetailProvenance(&p2, QStringLiteral("test-provenance"));
+    QCOMPARE(p2.provenance(), QStringLiteral("test-provenance"));
+    QCOMPARE(p1.provenance(), QString());
+    QVERIFY(p1 == p2); // provenance shouldn't affect comparison
+    p1 = p2;           // but should be copied on copy/assignment
+    QCOMPARE(p2.provenance(), p1.provenance());
+
     QContactEmailAddress e1;
     e1.setEmailAddress("test@nokia.com");
     QVERIFY(e1 != p1);

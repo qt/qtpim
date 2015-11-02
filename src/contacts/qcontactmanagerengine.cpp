@@ -820,6 +820,27 @@ void QContactManagerEngine::setDetailAccessConstraints(QContactDetail *detail, Q
     }
 }
 
+/*!
+  Sets the provenance of \a detail to the supplied \a provenance.
+
+  This function is provided to allow engine implementations to report the
+  provenance of retrieved details, without generally allowing the
+  provenance metadata to be modified after retrieval.
+
+  The provenance of a detail in an aggregate Contact should include the
+  id of the Facet contact and the detail id of the particular detail in
+  that Facet contact from which the aggregate Contact's detail was promoted.
+
+  Application code should not call this function, since validation of the
+  detail will happen in the engine in any case.
+ */
+void QContactManagerEngine::setDetailProvenance(QContactDetail *detail, const QString &provenance)
+{
+    if (detail) {
+        QContactDetailPrivate::setProvenance(detail, provenance);
+    }
+}
+
 
 /*!
   Adds the given \a contact to the database if \a contact has a

@@ -91,6 +91,7 @@ public:
         FieldContext = 5000, //to avoid clashing with other detail field values from leaf classes
         FieldDetailUri,
         FieldLinkedDetailUris,
+        FieldProvenance,
         FieldMaximumUserVisible = 10000 // keys above this will not be reported to clients via values() etc accessors.
     };
 
@@ -173,6 +174,11 @@ public:
     QStringList linkedDetailUris() const
     {
         return value<QStringList>(FieldLinkedDetailUris);
+    }
+
+    QString provenance() const
+    {
+        return value(FieldProvenance).toString();
     }
 
 protected:

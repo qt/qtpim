@@ -52,13 +52,16 @@ public:
 
     enum TimestampField {
         FieldModificationTimestamp = 0,
-        FieldCreationTimestamp
+        FieldCreationTimestamp,
+        FieldDeletionTimestamp
     };
 
     void setLastModified(const QDateTime& timestamp);
     QDateTime lastModified() const;
     void setCreated(const QDateTime& timestamp);
     QDateTime created() const;
+    void setDeleted(const QDateTime& timestamp);
+    QDateTime deleted() const;
 };
 
 QT_END_NAMESPACE_CONTACTS

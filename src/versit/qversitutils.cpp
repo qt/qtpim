@@ -49,15 +49,14 @@ QT_BEGIN_NAMESPACE_VERSIT
 QTextCodec* VersitUtils::m_previousCodec = 0;
 QList<QByteArrayMatcher>* VersitUtils::m_newlineList = 0;
 QByteArray VersitUtils::m_encodingMap[256];
+QBasicMutex VersitUtils::m_staticLock;
 
 /*!
  * Encode \a ch with \a codec, without adding an byte-order mark
  */
 QByteArray VersitUtils::encode(char ch, QTextCodec* codec)
 {
-    if (codec != m_previousCodec) {
-        changeCodec(codec);
-    }
+    changeCodec(codec);
     return m_encodingMap[(int)ch];
 }
 
@@ -75,9 +74,6 @@ QByteArray VersitUtils::encode(const QByteArray& ba, QTextCodec* codec)
  */
 QList<QByteArrayMatcher>* VersitUtils::newlineList(QTextCodec* codec)
 {
-    if (m_newlineList != 0 && codec == m_previousCodec) {
-        return m_newlineList;
-    }
     changeCodec(codec);
     return m_newlineList;
 }
@@ -86,6 +82,11 @@ QList<QByteArrayMatcher>* VersitUtils::newlineList(QTextCodec* codec)
  * Update the cached tables of pregenerated encoded text with \a codec.
  */
 void VersitUtils::changeCodec(QTextCodec* codec) {
+    QMutexLocker readWriterLocker(&VersitUtils::m_staticLock);
+
+    if (VersitUtils::m_newlineList != 0 && codec == VersitUtils::m_previousCodec)
+        return;
+
     // Build m_encodingMap
     QChar qch;
     QTextCodec::ConverterState state(QTextCodec::IgnoreHeader);

@@ -48,6 +48,7 @@
 #include <QtCore/qbytearray.h>
 #include <QtCore/qbytearraymatcher.h>
 #include <QtCore/qlist.h>
+#include <QtCore/QMutex>
 
 #include <QtVersit/qversitproperty.h>
 
@@ -81,6 +82,7 @@ private:
     static QByteArray m_encodingMap[256];
     // List of different newline delimeters, encoded with m_previousCodec
     static QList<QByteArrayMatcher>* m_newlineList;
+    static QBasicMutex m_staticLock;
 };
 
 QT_END_NAMESPACE_VERSIT

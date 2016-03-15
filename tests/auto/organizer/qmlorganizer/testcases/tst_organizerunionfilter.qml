@@ -114,12 +114,23 @@ Rectangle {
                 model.saveItem(event);
                 utility.waitModelChange(1);
                 compare(model.itemCount, 1)
+                event.destroy()
 
                 //event with new collection id
+                event = Qt.createQmlObject(
+                                        "import QtOrganizer 5.0;"
+                                        + "Event { "
+                                        + "   id:event;"
+                                        + "   displayLabel: \"organizer union filter test event\"; "
+                                        + "   description: \"organizer union filter test event\"; "
+                                        + "   startDateTime: '2010-12-12'; "
+                                        + "   endDateTime: '2010-12-13'; }"
+                                        , test);
                 event.collectionId = savedCollection.collectionId;
                 model.saveItem(event);
                 utility.waitModelChange(2);
                 compare(model.itemCount, 2)
+                event.destroy()
 
                 var fetchlist = model.items;
                 var idEventId;

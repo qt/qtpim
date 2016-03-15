@@ -36,6 +36,7 @@
 #include <QtCore/qfile.h>
 #include <QtCore/qmath.h>
 #include <QtCore/qurl.h>
+#include <QtCore/qpointer.h>
 
 #include <QtQml/qqmlinfo.h>
 
@@ -77,6 +78,7 @@ static QString urlToLocalFileName(const QUrl& url)
 
 }
 
+static const char ITEM_TO_SAVE_PROPERTY[] = {"ITEM_TO_SAVE_PROPERTY"};
 
 class QDeclarativeOrganizerModelPrivate
 {
@@ -1247,6 +1249,14 @@ void QDeclarativeOrganizerModel::saveItem(QDeclarativeOrganizerItem* di)
         req->setManager(d->m_manager);
         req->setItem(item);
 
+        if (di->itemId().isEmpty()) {
+            // if the item id is empty this means that this item is a new event
+            // we need to keep trace of this declarative item to update with the
+            // new Id as soon as this request finish
+            QPointer<QDeclarativeOrganizerItem> pItem = di;
+            req->setProperty(ITEM_TO_SAVE_PROPERTY, QVariant::fromValue(pItem));
+        }
+
         connect(req, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(onRequestStateChanged(QOrganizerAbstractRequest::State)));
 
         req->start();
@@ -1340,6 +1350,18 @@ void QDeclarativeOrganizerModel::onRequestStateChanged(QOrganizerAbstractRequest
 
     QOrganizerAbstractRequest *request = qobject_cast<QOrganizerAbstractRequest *>(sender());
     Q_ASSERT(request);
+
+    if (request->error() == QOrganizerManager::NoError &&
+        request->type() == QOrganizerAbstractRequest::ItemSaveRequest) {
+        QVariant vItem = request->property(ITEM_TO_SAVE_PROPERTY);
+        if (vItem.isValid()) {
+            QPointer<QDeclarativeOrganizerItem> pItem = vItem.value<QPointer<QDeclarativeOrganizerItem> >();
+            // Fill declarative item id
+            QOrganizerItemSaveRequest *sr = static_cast<QOrganizerItemSaveRequest *>(request);
+            if (pItem && sr->items().length() == 1)
+                pItem->setItem(sr->items()[0]);
+        }
+    }
 
     checkError(request);
     request->deleteLater();

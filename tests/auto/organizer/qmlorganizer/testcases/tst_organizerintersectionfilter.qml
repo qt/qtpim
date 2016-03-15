@@ -116,7 +116,16 @@ Rectangle {
                 utility.waitModelChange(1);
                 compare(model.itemCount, 1)
 
-                //event with new collection id
+                //new event with new collection id
+                event = Qt.createQmlObject(
+                            "import QtOrganizer 5.0;"
+                            + "Event { "
+                            + "   id:event;"
+                            + "   displayLabel: \"organizer intersection filter test event\"; "
+                            + "   description: \"organizer intersection filter test event\"; "
+                            + "   startDateTime: '2010-12-12'; "
+                            + "   endDateTime: '2010-12-13'; }"
+                            , test);
                 event.collectionId = savedCollection.collectionId;
                 model.saveItem(event);
                 utility.waitModelChange(2);

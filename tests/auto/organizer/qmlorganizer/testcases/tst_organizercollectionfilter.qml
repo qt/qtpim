@@ -128,7 +128,15 @@ Rectangle {
                 utility.waitModelChange(0);
 
                 compare(model.itemCount, 0)
-                //save event to default collection
+                //save a new event to default collection
+                event = Qt.createQmlObject(
+                            "import QtOrganizer 5.0;"
+                            + "Event { "
+                            + "   displayLabel: \"organizer collection filter test event\"; "
+                            + "   description: \"organizer collection filter test event\"; "
+                            + "   startDateTime: '2010-12-12'; "
+                            + "   endDateTime: '2010-12-13'; }"
+                            , test);
                 event.collectionId = model.defaultCollectionId();
                 model.saveItem(event);
                 utility.waitModelChange(1);

@@ -505,10 +505,12 @@ public:
 
 QT_END_NAMESPACE_CONTACTS
 
+QT_BEGIN_NAMESPACE
 // allow shared data / detach for specific detail types
 template <> inline QTCONTACTS_PREPEND_NAMESPACE(QContactDetailPrivate) *QSharedDataPointer<QTCONTACTS_PREPEND_NAMESPACE(QContactDetailPrivate)>::clone()
 {
     return d->clone();
 }
+QT_END_NAMESPACE
 
 #endif // QCONTACTDETAIL_P_H

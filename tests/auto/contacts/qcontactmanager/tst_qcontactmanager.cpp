@@ -1549,47 +1549,6 @@ void tst_QContactManager::overrideManager()
     qputenv("QTCONTACTS_MANAGER_OVERRIDE", overrideManager.toLatin1());
 }
 
-#if defined(SYMBIAN_BACKEND_S60_VERSION_31) || defined(SYMBIAN_BACKEND_S60_VERSION_32) || defined(SYMBIAN_BACKEND_S60_VERSION_50)
-/* Some symbian-specific unit tests. */
-void tst_QContactManager::symbianManager()
-{
-    QFETCH(QString, uri);
-    QString managerName;
-    QMap<QString, QString> managerParameters;
-    QContactManager::parseUri(uri, &managerName, &managerParameters);
-    if (managerName != QString("symbian"))
-        return;
-
-    /* Firstly, a test for invalid storage type crash - QTMOBILITY-470 */
-    // open the contact database, and create a new contact
-    CContactDatabase* cntdb = CContactDatabase::OpenL();
-    CleanupStack::PushL(cntdb);
-    CContactItem* testItem = CContactCard::NewLC();
-
-    // create a new thumbnail field with (invalid) storage type KStorageTypeText instead of KStorageTypeStore
-    CContactItemField* thumbnailField;
-    thumbnailField = CContactItemField::NewLC(KStorageTypeText, KUidContactFieldPicture);
-    thumbnailField->SetMapping(KUidContactFieldVCardMapPHOTO);
-    thumbnailField->AddFieldTypeL(KUidContactFieldVCardMapBMP);
-    thumbnailField->ResetStore();
-
-    // set the thumbnail data in the thumbnail field, and add it to the contact
-    _LIT8(KThumbnailDataString, "Dummy Thumbnail Data String");
-    thumbnailField->StoreStorage()->SetThingL(KThumbnailDataString);
-    testItem->AddFieldL(*thumbnailField);
-    CleanupStack::Pop(thumbnailField);
-
-    // save the updated contact.
-    cntdb->CommitContactL(*testItem);
-    cntdb->CloseContactL(testItem->Id());
-    CleanupStack::PopAndDestroy(2); // testItem, cntdb
-
-    // force database to read thumbnail with invalid storage type.  crash if not handled properly.
-    QScopedPointer<QContactManager> cm(QContactManager::fromUri(uri));
-    QList<QContact> allContacts = cm->contacts();
-}
-#endif
-
 void tst_QContactManager::nameSynthesis_data()
 {
     QTest::addColumn<QString>("expected");
@@ -2070,21 +2029,6 @@ void tst_QContactManager::signalEmission()
     QTRY_COMPARE(spyCM.count(), 0);
 
     QScopedPointer<QContactManager> m2(QContactManager::fromUri(uri));
-
-    // During construction SIM backend (m2) will try writing contacts with
-    // nickname, email and additional number to find out if the SIM card
-    // will support these fields. The other backend (m1) will then receive
-    // signals about that. These need to be caught so they don't interfere
-    // with the tests. (This trial and error method is used because existing
-    // API for checking the availability of these fields is not public.)
-    // NOTE: This applies only to pre 10.1 platforms (S60 3.1, 3.2, ect.)
-    if (uri.contains("symbiansim")) {
-        QTest::qWait(0);
-        spyCA.clear();
-        spyCM.clear();
-        spyCR.clear();
-    }
-
 }
 
 void tst_QContactManager::errorStayingPut()

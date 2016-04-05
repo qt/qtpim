@@ -50,11 +50,6 @@
 #include "qdeclarativecontactrelationship_p.h"
 #include "qdeclarativecontactrelationshipmodel_p.h"
 
-#ifdef Q_OS_SYMBIAN
-// In Symbian OS test data is located in applications private dir
-#define SRCDIR "."
-#endif
-
 QTCONTACTS_USE_NAMESPACE
 
 class tst_QDeclarativeContact : public QObject
@@ -117,11 +112,11 @@ void tst_QDeclarativeContact::construction()
 
     if (shouldSucceed) {
         if (obj == 0) {
-            qWarning("--------- ------------- ------------- ---------------------- ------------ ");
-            qWarning("--------- could not instantiate components from contact   -------------- ");
-            qWarning("--------- declarative plugin. make sure it is built and found ------------");
-            qWarning(" ---------under {QTDIR}/imports, or c:/sys/bin on Symbian     ----------- ");
-            qWarning("--------- ------------- ------------- ---------------------- ------------ ");
+            qWarning("--------- ------------- ------------- ----------------- ------------ ");
+            qWarning("--------- could not instantiate components from contact ------------ ");
+            qWarning("--------- declarative plugin. make sure it is built and ------------ ");
+            qWarning("--------- found under {QTDIR}/imports.                  ------------ ");
+            qWarning("--------- ------------- ------------- ----------------- ------------ ");
         }
         QVERIFY(obj != 0);
         QCOMPARE(obj->metaObject()->className(), expectedClassName.toLatin1().constData());

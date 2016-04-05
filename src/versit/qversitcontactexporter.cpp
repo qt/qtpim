@@ -186,7 +186,7 @@ QT_BEGIN_NAMESPACE_VERSIT
 
   \section1 Other implementation notes
 
-  Some Symbian and Android devices do not properly handle the \c FN vCard property.  If a
+  Some Android devices do not properly handle the \c FN vCard property.  If a
   DisplayLabel is set on a contact and this class is used to generate a vCard, the receiving device
   might display this label in an unexpected field (eg. Last Name).
   The vCard specification requires the \c FN property to be present.  However, because of this

@@ -1916,10 +1916,6 @@ void tst_QContactAsync::relationshipFetch()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(prepareModel(uri));
 
-    if (cm->managerName() == "symbian") {
-        QSKIP("This contact manager does not support the required relationship types for this test to pass!");
-    }
-
     QContactRelationshipFetchRequest rfr;
     QVERIFY(rfr.type() == QContactAbstractRequest::RelationshipFetchRequest);
 
@@ -2119,10 +2115,6 @@ void tst_QContactAsync::relationshipRemove()
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(prepareModel(uri));
 
-    if (cm->managerName() == "symbian") {
-        QSKIP("This contact manager does not support the required relationship types for this test to pass!");
-    }
-
     QContactRelationshipRemoveRequest rrr;
     QVERIFY(rrr.type() == QContactAbstractRequest::RelationshipRemoveRequest);
 
@@ -2271,10 +2263,6 @@ void tst_QContactAsync::relationshipSave()
 {
     QFETCH(QString, uri);
     QScopedPointer<QContactManager> cm(prepareModel(uri));
-
-    if (cm->managerName() == "symbian") {
-        QSKIP("This contact manager does not support the required relationship types for this test to pass!");
-    }
 
     QContactRelationshipSaveRequest rsr;
     QVERIFY(rsr.type() == QContactAbstractRequest::RelationshipSaveRequest);
@@ -3022,8 +3010,6 @@ void tst_QContactAsync::addManagers(QStringList stringlist)
         managers.removeAll("maliciousplugin");
     if (!stringlist.contains("testdummy"))
         managers.removeAll("testdummy");
-    if (!stringlist.contains("symbiansim"))
-        managers.removeAll("symbiansim"); // SIM backend does not support all the required details for tests to pass.
     if (!stringlist.contains("social"))
         managers.removeAll("social");
     if (!stringlist.contains("simcard"))

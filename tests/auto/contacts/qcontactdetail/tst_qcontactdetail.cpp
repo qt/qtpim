@@ -91,6 +91,7 @@ void tst_QContactDetail::classHierarchy()
 
     QContactPhoneNumber p1;
     p1.setNumber("123456");
+    p1.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeFax << QContactPhoneNumber::SubTypeDtmfMenu);
     QVERIFY(!p1.isEmpty());
     QVERIFY(p1.type() == QContactPhoneNumber::Type);
 
@@ -132,6 +133,7 @@ void tst_QContactDetail::classHierarchy()
     QVERIFY(p1 == f2);
     QCOMPARE(p2.number(), p1.number());
     QCOMPARE(p2.number(), QString("123456"));
+    QCOMPARE(p2.subTypes(), QList<int>() << QContactPhoneNumber::SubTypeFax << QContactPhoneNumber::SubTypeDtmfMenu);
 
     p2 = p1; // phone number to phone number
     QVERIFY(p1 == p2);
@@ -145,6 +147,13 @@ void tst_QContactDetail::classHierarchy()
     QVERIFY(p2 != f2);
     QCOMPARE(p2.number(), QString("5678"));
     QCOMPARE(p1.number(), QString("123456"));
+
+    p2.setNumber(QString("123456"));
+    QVERIFY(p1 == p2);
+    p2.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeLandline);
+    QVERIFY(p1 != p2);
+    p1.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeLandline);
+    QVERIFY(p1 == p2);
 
     /* Bad assignment */
     p2 = m1; // assign a name to a phone number
@@ -165,6 +174,7 @@ void tst_QContactDetail::classHierarchy()
     /* Check contexts are considered for equality */
     p2 = QContactPhoneNumber(); // new id / detach
     p2.setNumber(p1.number());
+    p2.setSubTypes(p1.subTypes());
     p2.setContexts(QContactDetail::ContextHome);
     QVERIFY(p1 != p2);
     p2.removeValue(QContactDetail::FieldContext); // note, context is a value.

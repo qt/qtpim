@@ -106,24 +106,35 @@ public:
 
     virtual bool operator==(const QContactDetailPrivate& other) const { // doesn't check detailId or provenance
         if (m_type != other.m_type
-                || m_hasValueBitfield != other.m_hasValueBitfield
+                || !bitfieldsEqual(m_hasValueBitfield, other.m_hasValueBitfield, FieldProvenanceBit)
                 || m_contexts != other.m_contexts
                 || m_access != other.m_access
                 || m_extraData.size() != other.m_extraData.size()) {
             return false;
         }
-        QMap<int, QVariant>::const_iterator it = m_extraData.constBegin(), end = m_extraData.constEnd();
+
+        const QMap<int, QVariant> &thisValues(values());
+        const QMap<int, QVariant> &otherValues(other.values());
+        int thisSize = thisValues.contains(QContactDetail::FieldProvenance) ? thisValues.size() - 1 : thisValues.size();
+        int otherSize = otherValues.contains(QContactDetail::FieldProvenance) ? otherValues.size() - 1 : otherValues.size();
+        if (thisSize != otherSize)
+            return false;
+
+        QMap<int, QVariant>::const_iterator it = thisValues.constBegin(), end = thisValues.constEnd();
+        QMap<int, QVariant>::const_iterator otherIt;
         for ( ; it != end; ++it) {
+            if (it.key() == QContactDetail::FieldProvenance)
+                continue;
+            otherIt = otherValues.constFind(it.key());
+            if (otherIt == otherValues.constEnd())
+                return false;
             if (it.value().canConvert<QList<int> >()) {
                 // QList<int> values must be compared as QList<int> not as QVariant<QList<int> >...
-                if (other.m_extraData.value(it.key()).value< QList<int> >() != it.value().value< QList<int> >()) {
+                if (it.value().value<QList<int> >() != otherIt.value().value<QList<int> >())
                     return false;
-                }
-            } else {
+            } else if (it.value() != otherIt.value()) {
                 // Everything else can be compared directly by value.
-                if (it.value() != other.m_extraData.value(it.key())) {
-                    return false;
-                }
+                return false;
             }
         }
         return true;
@@ -138,6 +149,7 @@ public:
     static void setProvenance(QContactDetail *d, const QString &newProvenance)
     {
         d->d->m_provenance = newProvenance;
+        d->d->setHasValueBitfieldBit(!newProvenance.isEmpty(), FieldProvenanceBit);
     }
 
     static const QContactDetailPrivate* detailPrivate(const QContactDetail& detail)
@@ -164,6 +176,10 @@ public:
         } else {
             m_hasValueBitfield &= ~mask; // clear
         }
+    }
+    static inline bool bitfieldsEqual(int first, int second, unsigned int ignore) {
+        unsigned int mask = 1 << ignore;
+        return (first & ~mask) == (second & ~mask); // clear the ignored bit in both
     }
 
     virtual bool setValue(int field, const QVariant &_value) {

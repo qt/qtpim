@@ -180,6 +180,35 @@ void tst_QContactDetails::address()
     QCOMPARE(a3.subTypes(), QList<int>() << QContactAddress::SubTypeDomestic);
     a3.setSubTypes(QList<int>() << QContactAddress::SubTypeInternational << QContactAddress::SubTypePostal);
     QCOMPARE(a3.subTypes(), QList<int>() << QContactAddress::SubTypeInternational << QContactAddress::SubTypePostal);
+
+    // test comparison of two addresses
+    QContactAddress a4;
+    a4.setStreet("test");
+    a4.setLocality("test");
+    a4.setRegion("test");
+    a4.setCountry("test");
+    a4.setSubTypes(QList<int>() << QContactAddress::SubTypeInternational << QContactAddress::SubTypePostal);
+    QContactAddress a5;
+    a5.setStreet("test");
+    a5.setLocality("test");
+    a5.setRegion("test");
+    a5.setCountry("test");
+    a5.setSubTypes(QList<int>() << QContactAddress::SubTypeInternational << QContactAddress::SubTypePostal);
+    QVERIFY(a4 == a5);
+    a4.setCountry("");
+    QVERIFY(a4 != a5);
+    a4.setCountry("test");
+    QVERIFY(a4 == a5);
+    a5.setPostcode("test");
+    QVERIFY(a4 != a5);
+    a4.setPostcode("test");
+    QVERIFY(a4 == a5);
+    a4.setSubTypes(QList<int>() << QContactAddress::SubTypeDomestic);
+    QVERIFY(a4 != a5);
+    a5.setSubTypes(QList<int>() << QContactAddress::SubTypePostal);
+    QVERIFY(a4 != a5);
+    a5.setSubTypes(QList<int>() << QContactAddress::SubTypeDomestic);
+    QVERIFY(a4 == a5);
 }
 
 void tst_QContactDetails::anniversary()
@@ -1032,6 +1061,29 @@ void tst_QContactDetails::phoneNumber()
     QCOMPARE(c.details(QContactPhoneNumber::Type).count(), 0);
     QVERIFY(c.removeDetail(&p2) == false);
     QCOMPARE(c.details(QContactPhoneNumber::Type).count(), 0);
+
+    // test comparison of two phone numbers
+    QContactPhoneNumber p3;
+    p3.setNumber("1234");
+    p3.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeModem << QContactPhoneNumber::SubTypeFax);
+    QContactPhoneNumber p4;
+    p4.setNumber("1234");
+    p4.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeModem << QContactPhoneNumber::SubTypeFax);
+    QVERIFY(p3 == p4);
+    p3.setNumber("");
+    QVERIFY(p3 != p4);
+    p3.setNumber("1234");
+    QVERIFY(p3 == p4);
+    p4.setNormalizedNumber("1234");
+    QVERIFY(p3 != p4);
+    p3.setNormalizedNumber("1234");
+    QVERIFY(p3 == p4);
+    p3.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeModem);
+    QVERIFY(p3 != p4);
+    p4.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeDtmfMenu);
+    QVERIFY(p3 != p4);
+    p3.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeDtmfMenu);
+    QVERIFY(p3 == p4);
 }
 
 void tst_QContactDetails::presence()

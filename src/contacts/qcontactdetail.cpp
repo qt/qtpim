@@ -275,31 +275,7 @@ QContactDetail::DetailType QContactDetail::type() const
  */
 bool QContactDetail::operator==(const QContactDetail& other) const
 {
-    if (! (d.constData()->m_type == other.d.constData()->m_type))
-        return false;
-
-    if (d.constData()->m_access != other.d.constData()->m_access)
-        return false;
-
-    QMap<int, QVariant> thisValues = values(), otherValues = other.values();
-    if (thisValues.size() != otherValues.size())
-        return false;
-
-    QMap<int, QVariant>::const_iterator it = thisValues.constBegin(), end = thisValues.constEnd();
-    for ( ; it != end; ++it) {
-        if (!otherValues.contains(it.key())) {
-            return false;
-        }
-        const QVariant &otherV(otherValues.value(it.key()));
-        if (it.value().canConvert<QList<int> >()) {
-            if (otherV.value<QList<int> >() != it.value().value<QList<int> >()) {
-                return false;
-            }
-        } else if (it.value() != otherV) {
-            return false;
-        }
-    }
-    return true;
+    return (*d == *other.d);
 }
 
 /*! Returns the hash value for \a key.

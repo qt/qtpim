@@ -80,14 +80,13 @@ public:
     void setExtendedVersion(const QString &newExtendedVersion)
     {
         if (extendedVersion() != newExtendedVersion) {
-            detail().setValue(QContactVersion::FieldExtendedVersion, newExtendedVersion);
+            detail().setValue(QContactVersion::FieldExtendedVersion, newExtendedVersion.toUtf8());
             emit valueChanged();
         }
     }
     QString extendedVersion() const
     {
-        QByteArray version = detail().value(QContactVersion::FieldExtendedVersion).toByteArray();
-        return QString::fromLatin1(version.constData(), version.length());
+        return QString::fromUtf8(detail().value(QContactVersion::FieldExtendedVersion).toByteArray());
     }
 signals:
     void valueChanged();

@@ -37,6 +37,7 @@
 #include <QtCore/qmath.h>
 #include <QtCore/qurl.h>
 #include <QtCore/qpointer.h>
+#include <QtCore/qtimer.h>
 
 #include <QtQml/qqmlinfo.h>
 
@@ -79,6 +80,7 @@ static QString urlToLocalFileName(const QUrl& url)
 }
 
 static const char ITEM_TO_SAVE_PROPERTY[] = {"ITEM_TO_SAVE_PROPERTY"};
+static const char MANUALLY_TRIGGERED_PROPERTY[] = {"MANUALLY_TRIGGERED"};
 
 class QDeclarativeOrganizerModelPrivate
 {
@@ -126,6 +128,11 @@ public:
     QDateTime m_startPeriod;
     QDateTime m_endPeriod;
     QList<QDeclarativeOrganizerCollection*> m_collections;
+
+    QTimer m_updateTimer;
+    QTimer m_updateItemsTimer;
+    QTimer m_fetchCollectionsTimer;
+    QTimer m_modelChangedTimer;
 
     QOrganizerManager::Error m_error;
 
@@ -190,12 +197,24 @@ QDeclarativeOrganizerModel::QDeclarativeOrganizerModel(QObject *parent) :
     roleNames.insert(OrganizerItemRole, "item");
     setRoleNames(roleNames);
 
-    connect(this, SIGNAL(managerChanged()), SLOT(doUpdate()));
-    connect(this, SIGNAL(filterChanged()), SLOT(doUpdateItems()));
-    connect(this, SIGNAL(fetchHintChanged()), SLOT(doUpdateItems()));
-    connect(this, SIGNAL(sortOrdersChanged()), SLOT(doUpdateItems()));
-    connect(this, SIGNAL(startPeriodChanged()), SLOT(doUpdateItems()));
-    connect(this, SIGNAL(endPeriodChanged()), SLOT(doUpdateItems()));
+    d_ptr->m_updateTimer.setSingleShot(true);
+    d_ptr->m_updateItemsTimer.setSingleShot(true);
+    d_ptr->m_fetchCollectionsTimer.setSingleShot(true);
+    d_ptr->m_modelChangedTimer.setSingleShot(true);
+    d_ptr->m_updateTimer.setInterval(1);
+    d_ptr->m_updateItemsTimer.setInterval(1);
+    d_ptr->m_fetchCollectionsTimer.setInterval(1);
+    d_ptr->m_modelChangedTimer.setInterval(1);
+    connect(&d_ptr->m_updateTimer, &QTimer::timeout, this, &QDeclarativeOrganizerModel::doUpdate);
+    connect(&d_ptr->m_updateItemsTimer, &QTimer::timeout, this, &QDeclarativeOrganizerModel::doUpdateItems);
+    connect(&d_ptr->m_fetchCollectionsTimer, &QTimer::timeout, this, &QDeclarativeOrganizerModel::fetchCollections);
+    connect(&d_ptr->m_modelChangedTimer, &QTimer::timeout, this, &QDeclarativeOrganizerModel::modelChanged);
+
+    connect(this, &QDeclarativeOrganizerModel::filterChanged, &d_ptr->m_updateItemsTimer, static_cast<void (QTimer::*)(void)>(&QTimer::start));
+    connect(this, &QDeclarativeOrganizerModel::fetchHintChanged, &d_ptr->m_updateItemsTimer, static_cast<void (QTimer::*)(void)>(&QTimer::start));
+    connect(this, &QDeclarativeOrganizerModel::sortOrdersChanged, &d_ptr->m_updateItemsTimer, static_cast<void (QTimer::*)(void)>(&QTimer::start));
+    connect(this, &QDeclarativeOrganizerModel::startPeriodChanged, &d_ptr->m_updateItemsTimer, static_cast<void (QTimer::*)(void)>(&QTimer::start));
+    connect(this, &QDeclarativeOrganizerModel::endPeriodChanged, &d_ptr->m_updateItemsTimer, static_cast<void (QTimer::*)(void)>(&QTimer::start));
 }
 
 QDeclarativeOrganizerModel::~QDeclarativeOrganizerModel()
@@ -297,9 +316,11 @@ void QDeclarativeOrganizerModel::update()
     Q_D(QDeclarativeOrganizerModel);
     if (!d->m_componentCompleted || d->m_updatePendingFlag)
         return;
+
     // Disallow possible duplicate request triggering
     d->m_updatePendingFlag = (QDeclarativeOrganizerModelPrivate::UpdatingItemsPending | QDeclarativeOrganizerModelPrivate::UpdatingCollectionsPending);
-    QMetaObject::invokeMethod(this, "fetchCollections", Qt::QueuedConnection);
+    d->m_fetchCollectionsTimer.setProperty(MANUALLY_TRIGGERED_PROPERTY, QVariant::fromValue<bool>(true));
+    d->m_fetchCollectionsTimer.start();
 }
 
 void QDeclarativeOrganizerModel::doUpdate()
@@ -349,7 +370,8 @@ void QDeclarativeOrganizerModel::updateCollections()
     if (!d->m_componentCompleted || d->m_updatePendingFlag)
         return;
     d->m_updatePendingFlag = QDeclarativeOrganizerModelPrivate::UpdatingCollectionsPending;// Disallow possible duplicate request triggering
-    QMetaObject::invokeMethod(this, "fetchCollections", Qt::QueuedConnection);
+    d->m_fetchCollectionsTimer.setProperty(MANUALLY_TRIGGERED_PROPERTY, QVariant::fromValue<bool>(true));
+    d->m_fetchCollectionsTimer.start();
 }
 
 /*!
@@ -561,11 +583,11 @@ void QDeclarativeOrganizerModel::setManager(const QString& managerName)
         d->m_manager = new QOrganizerManager(managerName, QMap<QString, QString>(), this);
     }
 
-    connect(d->m_manager, SIGNAL(dataChanged()), this, SLOT(doUpdate()));
+    connect(d->m_manager, &QOrganizerManager::collectionsAdded, &d->m_fetchCollectionsTimer, static_cast<void (QTimer::*)(void)>(&QTimer::start));
+    connect(d->m_manager, &QOrganizerManager::collectionsChanged, &d->m_fetchCollectionsTimer, static_cast<void (QTimer::*)(void)>(&QTimer::start));
+    connect(d->m_manager, &QOrganizerManager::collectionsRemoved, &d->m_fetchCollectionsTimer, static_cast<void (QTimer::*)(void)>(&QTimer::start));
+    connect(d->m_manager, &QOrganizerManager::dataChanged, &d->m_updateTimer, static_cast<void (QTimer::*)(void)>(&QTimer::start));
     connect(d->m_manager, SIGNAL(itemsModified(QList<QPair<QOrganizerItemId,QOrganizerManager::Operation> >)), this, SLOT(onItemsModified(QList<QPair<QOrganizerItemId,QOrganizerManager::Operation> >)));
-    connect(d->m_manager, SIGNAL(collectionsAdded(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
-    connect(d->m_manager, SIGNAL(collectionsChanged(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
-    connect(d->m_manager, SIGNAL(collectionsRemoved(QList<QOrganizerCollectionId>)), this, SLOT(fetchCollections()));
 
     const QOrganizerManager::Error managerError = d->m_manager->error();
     if (QOrganizerManager::NoError != managerError && d->m_error != managerError) {
@@ -1231,7 +1253,7 @@ void QDeclarativeOrganizerModel::requestUpdated()
         endResetModel();
 
         d->m_itemIdHash = newItemIdHash;
-        emit modelChanged();
+        d->m_modelChangedTimer.start();
     }
 }
 
@@ -1399,7 +1421,7 @@ void QDeclarativeOrganizerModel::removeItemsFromModel(const QList<QString> &item
         }
     }
     if (emitSignal)
-        emit modelChanged();
+        d->m_modelChangedTimer.start();
 }
 
 
@@ -1413,6 +1435,7 @@ void QDeclarativeOrganizerModel::onItemsModified(const QList<QPair<QOrganizerIte
     Q_D(QDeclarativeOrganizerModel);
     if (!d->m_autoUpdate)
         return;
+
     QSet<QOrganizerItemId> addedAndChangedItems;
     QList<QString> removedItems;
     for (int i = itemIds.size() - 1; i >= 0; i--) {
@@ -1597,7 +1620,7 @@ void QDeclarativeOrganizerModel::onItemsModifiedFetchRequestStateChanged(QOrgani
         }
 
         if (emitSignal)
-            emit modelChanged();
+            d->m_modelChangedTimer.start();
     }
     d->m_notifiedItems.remove(request);
     request->deleteLater();
@@ -1613,8 +1636,11 @@ void QDeclarativeOrganizerModel::fetchCollections()
     // fetchCollections() is used for both direct calls and
     // signals from model. For signal from model, check also the
     // autoupdate-flag.
-    if (sender() == d->m_manager && !d->m_autoUpdate) {
-        return;
+    if (qobject_cast<QTimer*>(sender()) == &d->m_fetchCollectionsTimer) {
+        if (!d->m_fetchCollectionsTimer.property(MANUALLY_TRIGGERED_PROPERTY).toBool() && !d->m_autoUpdate)
+            return; // it was automatically triggered, but autoUpdate is false, so don't update the model data.
+        // reset the state of the manually triggered properly, for next time.
+        d->m_fetchCollectionsTimer.setProperty(MANUALLY_TRIGGERED_PROPERTY, QVariant::fromValue<bool>(false));
     }
 
     QOrganizerCollectionFetchRequest* req = new QOrganizerCollectionFetchRequest(this);

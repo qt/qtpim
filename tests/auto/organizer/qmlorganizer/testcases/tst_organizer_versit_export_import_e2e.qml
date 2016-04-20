@@ -140,7 +140,6 @@ TestCase {
     function test_organizerImportExportSignaling(data) {
 
         organizerModel.manager = data.managerToBeTested
-        modelChangedSpy.wait()
 
         // Save test Event.
         saveTestEvent()

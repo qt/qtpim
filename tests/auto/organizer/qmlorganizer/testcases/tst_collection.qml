@@ -297,15 +297,17 @@ TestCase {
         var savedEvent = organizerModel.items[organizerModel.items.length - 1];
         compare(savedEvent.collectionId, organizerModel.defaultCollectionId());//savedEvent sometimes undefined!?!?!?
         spySettingCollectionId.target = savedEvent;
+        spySettingCollectionId.wait(spyWaitDelay);
+        compare(spySettingCollectionId.count, 1);
 
         // set different collection
         verify(savedCollection.collectionId != organizerModel.defaultCollectionId())
         savedEvent.collectionId = savedCollection.collectionId;
         spySettingCollectionId.wait(spyWaitDelay);
-        compare(spySettingCollectionId.count, 1);
-        // set same collection again
+        compare(spySettingCollectionId.count, 2);
+        // set same collection again, shouldn't cause signal emission
         savedEvent.collectionId = savedCollection.collectionId;
-        compare(spySettingCollectionId.count, 1);
+        compare(spySettingCollectionId.count, 2);
 
         // check the changed collection is saved
         var errorsChangedSpy = create_testobject("import QtTest 1.0 \nSignalSpy {}");

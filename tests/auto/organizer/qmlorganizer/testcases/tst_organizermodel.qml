@@ -952,13 +952,12 @@ TestCase {
             collectionsChangedSpy.target = organizerModel
             collectionsChangedSpy.signalName = "collectionsChanged"
 
-            organizerModel.autoUpdate = false;
-
             // starting point
             compare(organizerModel.items.length, 0);
             compare(organizerModel.collections.length, 1);
 
-            // updateItems() - should update only items
+            // autoUpdate is false, so these operations should not cause signal emission
+            organizerModel.autoUpdate = false;
             organizerModel.saveItem(event1);
             organizerModel.saveCollection(collection1);
             wait(signalWaitTime)
@@ -966,6 +965,8 @@ TestCase {
             compare(collectionsChangedSpy.count, 0)
             compare(organizerModel.items.length, 0)
             compare(organizerModel.collections.length, 1)
+
+            // updateItems() - should update only items count
             organizerModel.updateItems();
             modelChangedSpy.wait(signalWaitTime)
             compare(modelChangedSpy.count, 1)

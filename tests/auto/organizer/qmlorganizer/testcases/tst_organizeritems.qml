@@ -117,7 +117,7 @@ Rectangle {
                 model.saveItem(newEvent2);
                 utility.waitModelChange(1);
                 model.saveItem(newEvent1);
-                utility.waitModelChange(2);
+                utility.waitModelChange(1);
                 var deletList = model.itemIds();
                 model.removeItems(deletList);
                 utility.waitModelChange(0);

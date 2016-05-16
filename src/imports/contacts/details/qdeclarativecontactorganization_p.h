@@ -66,7 +66,7 @@ public:
         AssistantName = QContactOrganization::FieldAssistantName
     };
 
-    QDeclarativeContactOrganization(QObject* parent = 0)
+    QDeclarativeContactOrganization(QObject* parent = Q_NULLPTR)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactOrganization());

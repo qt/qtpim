@@ -101,11 +101,11 @@ Q_SIGNALS:
     void resultsAvailable();
 
 protected:
-    QContactAbstractRequest(QContactAbstractRequestPrivate* otherd, QObject* parent = 0);
+    QContactAbstractRequest(QContactAbstractRequestPrivate* otherd, QObject* parent = Q_NULLPTR);
     QContactAbstractRequestPrivate* d_ptr;
 
 private:
-    QContactAbstractRequest(QObject* parent_ = 0) : QObject(parent_), d_ptr(0) {}
+    QContactAbstractRequest(QObject* parent_ = Q_NULLPTR) : QObject(parent_), d_ptr(Q_NULLPTR) {}
     Q_DISABLE_COPY(QContactAbstractRequest)
     friend class QContactManagerEngine;
     friend class QContactAbstractRequestPrivate;

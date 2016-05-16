@@ -64,7 +64,7 @@ class QDeclarativeOrganizerItem : public QObject
     Q_CLASSINFO("DefaultProperty", "itemDetails")
 
 public:
-    explicit QDeclarativeOrganizerItem(QObject *parent = 0);
+    explicit QDeclarativeOrganizerItem(QObject *parent = Q_NULLPTR);
     ~QDeclarativeOrganizerItem();
 
     // basic information
@@ -150,7 +150,7 @@ class QDeclarativeOrganizerEvent : public QDeclarativeOrganizerItem
     Q_PROPERTY(QQmlListProperty<QDeclarativeOrganizerEventAttendee> attendees READ attendees NOTIFY valueChanged)
 
 public:
-    explicit QDeclarativeOrganizerEvent(QObject *parent = 0);
+    explicit QDeclarativeOrganizerEvent(QObject *parent = Q_NULLPTR);
 
     QQmlListProperty<QDeclarativeOrganizerEventAttendee> attendees();
 
@@ -200,7 +200,7 @@ class QDeclarativeOrganizerEventOccurrence : public QDeclarativeOrganizerItem
     Q_PROPERTY(QString parentId READ parentId WRITE setParentId NOTIFY valueChanged)
 
 public:
-    explicit QDeclarativeOrganizerEventOccurrence(QObject *parent = 0);
+    explicit QDeclarativeOrganizerEventOccurrence(QObject *parent = Q_NULLPTR);
 
     void setAllDay(bool isAllDay);
     bool isAllDay() const;
@@ -235,7 +235,7 @@ class QDeclarativeOrganizerJournal : public QDeclarativeOrganizerItem
     Q_PROPERTY(QDateTime dateTime READ dateTime WRITE setDateTime NOTIFY valueChanged)
 
 public:
-    explicit QDeclarativeOrganizerJournal(QObject *parent = 0);
+    explicit QDeclarativeOrganizerJournal(QObject *parent = Q_NULLPTR);
 
     void setDateTime(const QDateTime &dateTime);
     QDateTime dateTime() const;
@@ -250,7 +250,7 @@ class QDeclarativeOrganizerNote : public QDeclarativeOrganizerItem
     Q_OBJECT
 
 public:
-    explicit QDeclarativeOrganizerNote(QObject *parent = 0);
+    explicit QDeclarativeOrganizerNote(QObject *parent = Q_NULLPTR);
 
 Q_SIGNALS:
     void valueChanged();
@@ -271,7 +271,7 @@ class QDeclarativeOrganizerTodo : public QDeclarativeOrganizerItem
     Q_PROPERTY(QDeclarativeOrganizerItemRecurrence* recurrence READ recurrence NOTIFY valueChanged)
 
 public:
-    explicit QDeclarativeOrganizerTodo(QObject *parent = 0);
+    explicit QDeclarativeOrganizerTodo(QObject *parent = Q_NULLPTR);
 
     void setAllDay(bool isAllDay);
     bool isAllDay() const;
@@ -316,7 +316,7 @@ class QDeclarativeOrganizerTodoOccurrence : public QDeclarativeOrganizerItem
     Q_PROPERTY(QString parentId READ parentId WRITE setParentId NOTIFY valueChanged)
 
 public:
-    explicit QDeclarativeOrganizerTodoOccurrence(QObject *parent = 0);
+    explicit QDeclarativeOrganizerTodoOccurrence(QObject *parent = Q_NULLPTR);
 
     void setAllDay(bool isAllDay);
     bool isAllDay() const;

@@ -55,7 +55,7 @@ public:
         EventChanged = QContactChangeLogFilter::EventChanged,
         EventRemoved = QContactChangeLogFilter::EventRemoved
     };
-    QDeclarativeContactChangeLogFilter(QObject* parent = 0)
+    QDeclarativeContactChangeLogFilter(QObject* parent = Q_NULLPTR)
         :QDeclarativeContactFilter(parent)
     {
         connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));

@@ -59,7 +59,7 @@ QTCONTACTS_USE_NAMESPACE
 class DummyAction : public QContactAction
 {
 public:
-    DummyAction(QObject* parent = 0) { Q_UNUSED(parent) }
+    DummyAction(QObject* parent = Q_NULLPTR) { Q_UNUSED(parent) }
 
     bool invokeAction(const QContactActionTarget&, const QVariantMap&)
     {
@@ -90,7 +90,7 @@ class QBooleanAction : public DummyAction
     Q_OBJECT
 
 public:
-    QBooleanAction(QObject *parent = 0) : DummyAction(parent) {}
+    QBooleanAction(QObject *parent = Q_NULLPTR) : DummyAction(parent) {}
     ~QBooleanAction() {}
 };
 
@@ -99,7 +99,7 @@ class QBooleanActionFactory : public QContactActionFactory
     Q_OBJECT
 
 public:
-    QBooleanActionFactory(QObject* parent = 0) : QContactActionFactory(parent)
+    QBooleanActionFactory(QObject* parent = Q_NULLPTR) : QContactActionFactory(parent)
     {
         m_actionDescriptor = createDescriptor("BooleanAction", "tst_qcontactmanagerfiltering:booleanaction", "booleanaction", 1);
     }

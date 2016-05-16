@@ -52,7 +52,7 @@ class Q_CONTACTS_EXPORT QContactCollectionSaveRequest : public QContactAbstractR
     Q_OBJECT
 
 public:
-    QContactCollectionSaveRequest(QObject *parent = 0);
+    QContactCollectionSaveRequest(QObject *parent = Q_NULLPTR);
     ~QContactCollectionSaveRequest();
 
     void setCollection(const QContactCollection &collection);

@@ -50,7 +50,7 @@ class Q_ORGANIZER_EXPORT QOrganizerCollectionFetchRequest : public QOrganizerAbs
     Q_OBJECT
 
 public:
-    QOrganizerCollectionFetchRequest(QObject *parent = 0);
+    QOrganizerCollectionFetchRequest(QObject *parent = Q_NULLPTR);
     ~QOrganizerCollectionFetchRequest();
 
     QList<QOrganizerCollection> collections() const;

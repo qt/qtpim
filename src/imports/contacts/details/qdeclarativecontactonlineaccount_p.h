@@ -83,7 +83,7 @@ public:
         Yahoo = QContactOnlineAccount::ProtocolYahoo
     };
 
-    QDeclarativeContactOnlineAccount(QObject* parent = 0)
+    QDeclarativeContactOnlineAccount(QObject* parent = Q_NULLPTR)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactOnlineAccount());

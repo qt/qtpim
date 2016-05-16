@@ -52,7 +52,7 @@ public:
     enum FieldType {
         Birthday = QContactBirthday::FieldBirthday
     };
-    QDeclarativeContactBirthday(QObject* parent = 0)
+    QDeclarativeContactBirthday(QObject* parent = Q_NULLPTR)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactBirthday());

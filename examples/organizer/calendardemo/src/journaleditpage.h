@@ -66,7 +66,7 @@ class JournalEditPage : public QWidget
     Q_OBJECT
 
 public:
-    JournalEditPage(QWidget *parent = 0);
+    JournalEditPage(QWidget *parent = Q_NULLPTR);
     ~JournalEditPage();
 
 public Q_SLOTS:

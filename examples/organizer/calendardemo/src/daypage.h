@@ -66,7 +66,7 @@ class DayPage : public QWidget
     Q_OBJECT
 
 public:
-    DayPage(QWidget *parent = 0);
+    DayPage(QWidget *parent = Q_NULLPTR);
     ~DayPage();
 
 public Q_SLOTS:

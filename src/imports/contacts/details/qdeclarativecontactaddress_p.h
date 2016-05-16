@@ -73,7 +73,7 @@ public:
         International = QContactAddress::SubTypeInternational
     };
 
-    QDeclarativeContactAddress(QObject* parent = 0)
+    QDeclarativeContactAddress(QObject* parent = Q_NULLPTR)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactAddress());

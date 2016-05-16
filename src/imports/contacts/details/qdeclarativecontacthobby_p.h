@@ -52,7 +52,7 @@ public:
     enum FieldType {
         Hobby = QContactHobby::FieldHobby
     };
-    QDeclarativeContactHobby(QObject* parent = 0)
+    QDeclarativeContactHobby(QObject* parent = Q_NULLPTR)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactHobby());

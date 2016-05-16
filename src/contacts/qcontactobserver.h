@@ -48,7 +48,7 @@ class Q_CONTACTS_EXPORT QContactObserver : public QObject
 {
     Q_OBJECT
 public:
-    QContactObserver(QContactManager* manager, QContactId contactId, QObject* parent = 0);
+    QContactObserver(QContactManager* manager, QContactId contactId, QObject* parent = Q_NULLPTR);
     ~QContactObserver();
     QContactId contactId() const;
 Q_SIGNALS:

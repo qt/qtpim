@@ -52,7 +52,7 @@ class Q_CONTACTS_EXPORT QContactCollectionRemoveRequest : public QContactAbstrac
     Q_OBJECT
 
 public:
-    QContactCollectionRemoveRequest(QObject *parent = 0);
+    QContactCollectionRemoveRequest(QObject *parent = Q_NULLPTR);
     ~QContactCollectionRemoveRequest();
 
     void setCollectionId(const QContactCollectionId &collectionId);

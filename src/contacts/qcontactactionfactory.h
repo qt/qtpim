@@ -54,7 +54,7 @@ class Q_CONTACTS_EXPORT QContactActionFactory : public QObject
     Q_OBJECT
 
 public:
-    QContactActionFactory(QObject *parent_ = 0) : QObject(parent_) {}
+    QContactActionFactory(QObject *parent_ = Q_NULLPTR) : QObject(parent_) {}
     virtual ~QContactActionFactory();
     virtual QList<QContactActionDescriptor> actionDescriptors() const = 0;
     virtual QContactAction* create(const QContactActionDescriptor& which) const = 0;

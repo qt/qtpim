@@ -63,7 +63,7 @@ class AddCalendarPage : public QWidget
     Q_OBJECT
 
 public:
-    AddCalendarPage(QWidget *parent = 0);
+    AddCalendarPage(QWidget *parent = Q_NULLPTR);
     ~AddCalendarPage();
 
 public Q_SLOTS:

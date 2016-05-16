@@ -54,7 +54,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemOccurrenceFetchRequest : public QOrganize
     Q_OBJECT
 
 public:
-    QOrganizerItemOccurrenceFetchRequest(QObject *parent = 0);
+    QOrganizerItemOccurrenceFetchRequest(QObject *parent = Q_NULLPTR);
     ~QOrganizerItemOccurrenceFetchRequest();
 
     void setParentItem(const QOrganizerItem &item);

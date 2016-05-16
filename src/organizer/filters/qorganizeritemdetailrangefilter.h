@@ -64,7 +64,7 @@ public:
     void setMatchFlags(QOrganizerItemFilter::MatchFlags flags);
     QOrganizerItemFilter::MatchFlags matchFlags() const;
 
-    void setRange(const QVariant &min, const QVariant &max, RangeFlags flags = 0);
+    void setRange(const QVariant &min, const QVariant &max, RangeFlags flags = RangeFlags());
     QVariant minValue() const;
     QVariant maxValue() const;
     RangeFlags rangeFlags() const;

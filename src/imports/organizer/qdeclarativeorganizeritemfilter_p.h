@@ -53,7 +53,7 @@ class QDeclarativeOrganizerItemFilter : public QObject
     Q_PROPERTY(FilterType type READ type NOTIFY filterChanged)
 
 public:
-    QDeclarativeOrganizerItemFilter(QObject *parent = 0);
+    QDeclarativeOrganizerItemFilter(QObject *parent = Q_NULLPTR);
 
     enum FilterType {
         DefaultFilter = QOrganizerItemFilter::DefaultFilter,
@@ -92,7 +92,7 @@ class QDeclarativeOrganizerItemInvalidFilter : public QDeclarativeOrganizerItemF
     Q_OBJECT
 
 public:
-    QDeclarativeOrganizerItemInvalidFilter(QObject *parent = 0);
+    QDeclarativeOrganizerItemInvalidFilter(QObject *parent = Q_NULLPTR);
 
     // used by model
     QOrganizerItemFilter filter() const;
@@ -106,7 +106,7 @@ class QDeclarativeOrganizerItemCompoundFilter : public QDeclarativeOrganizerItem
     Q_CLASSINFO("DefaultProperty", "filters")
 
 public:
-    explicit QDeclarativeOrganizerItemCompoundFilter(QObject *parent = 0);
+    explicit QDeclarativeOrganizerItemCompoundFilter(QObject *parent = Q_NULLPTR);
     virtual ~QDeclarativeOrganizerItemCompoundFilter();
 
     QQmlListProperty<QDeclarativeOrganizerItemFilter> filters();
@@ -129,7 +129,7 @@ class QDeclarativeOrganizerItemIntersectionFilter : public QDeclarativeOrganizer
     Q_OBJECT
 
 public:
-    QDeclarativeOrganizerItemIntersectionFilter(QObject *parent = 0);
+    QDeclarativeOrganizerItemIntersectionFilter(QObject *parent = Q_NULLPTR);
 
     // used by model
     QOrganizerItemFilter filter() const;
@@ -140,7 +140,7 @@ class QDeclarativeOrganizerItemUnionFilter : public QDeclarativeOrganizerItemCom
 {
     Q_OBJECT
 public:
-    QDeclarativeOrganizerItemUnionFilter(QObject *parent = 0);
+    QDeclarativeOrganizerItemUnionFilter(QObject *parent = Q_NULLPTR);
 
     // used by model
     QOrganizerItemFilter filter() const;
@@ -153,7 +153,7 @@ class QDeclarativeOrganizerItemCollectionFilter : public QDeclarativeOrganizerIt
     Q_PROPERTY(QStringList ids READ ids WRITE setIds NOTIFY valueChanged)
 
 public:
-    QDeclarativeOrganizerItemCollectionFilter(QObject *parent = 0);
+    QDeclarativeOrganizerItemCollectionFilter(QObject *parent = Q_NULLPTR);
 
     QStringList ids() const;
     void setIds(const QStringList &ids);
@@ -175,7 +175,7 @@ class QDeclarativeOrganizerItemDetailFilter : public QDeclarativeOrganizerItemFi
     Q_PROPERTY(QDeclarativeOrganizerItemDetail *detail READ detail WRITE setDetail NOTIFY valueChanged)
 
 public:
-    QDeclarativeOrganizerItemDetailFilter(QObject *parent = 0);
+    QDeclarativeOrganizerItemDetailFilter(QObject *parent = Q_NULLPTR);
 
     QDeclarativeOrganizerItemDetail *detail() const;
     void setDetail(QDeclarativeOrganizerItemDetail *detail);
@@ -201,7 +201,7 @@ class QDeclarativeOrganizerItemDetailFieldFilter : public QDeclarativeOrganizerI
     Q_PROPERTY(QDeclarativeOrganizerItemDetail::DetailType detail READ detail WRITE setDetail NOTIFY valueChanged)
 
 public:
-    QDeclarativeOrganizerItemDetailFieldFilter(QObject *parent = 0);
+    QDeclarativeOrganizerItemDetailFieldFilter(QObject *parent = Q_NULLPTR);
 
     QDeclarativeOrganizerItemDetail::DetailType detail() const;
     void setDetail(QDeclarativeOrganizerItemDetail::DetailType detail);
@@ -246,7 +246,7 @@ public:
     };
     Q_DECLARE_FLAGS(RangeFlags, RangeFlag)
 
-    QDeclarativeOrganizerItemDetailRangeFilter(QObject *parent = 0);
+    QDeclarativeOrganizerItemDetailRangeFilter(QObject *parent = Q_NULLPTR);
 
     QDeclarativeOrganizerItemDetail::DetailType detail() const;
     void setDetail(QDeclarativeOrganizerItemDetail::DetailType detail);
@@ -284,7 +284,7 @@ class QDeclarativeOrganizerItemIdFilter : public QDeclarativeOrganizerItemFilter
     Q_PROPERTY(QStringList ids READ ids WRITE setIds NOTIFY valueChanged)
 
 public:
-    QDeclarativeOrganizerItemIdFilter(QObject *parent = 0);
+    QDeclarativeOrganizerItemIdFilter(QObject *parent = Q_NULLPTR);
 
     QStringList ids() const;
     void setIds(const QStringList &ids);

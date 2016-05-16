@@ -52,7 +52,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemSaveRequest : public QOrganizerAbstractRe
     Q_OBJECT
 
 public:
-    QOrganizerItemSaveRequest(QObject *parent = 0);
+    QOrganizerItemSaveRequest(QObject *parent = Q_NULLPTR);
     ~QOrganizerItemSaveRequest();
 
     void setItem(const QOrganizerItem &item);

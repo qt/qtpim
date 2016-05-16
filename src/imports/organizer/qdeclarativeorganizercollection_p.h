@@ -68,7 +68,7 @@ public:
         KeyExtended = QOrganizerCollection::KeyExtended
     };
 
-    QDeclarativeOrganizerCollection(QObject *parent = 0);
+    QDeclarativeOrganizerCollection(QObject *parent = Q_NULLPTR);
 
     QString id() const;
     void setId(const QString &id);

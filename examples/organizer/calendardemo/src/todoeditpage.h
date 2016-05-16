@@ -65,7 +65,7 @@ class TodoEditPage : public QWidget
     Q_OBJECT
 
 public:
-    TodoEditPage(QWidget *parent = 0);
+    TodoEditPage(QWidget *parent = Q_NULLPTR);
     ~TodoEditPage();
 
 public Q_SLOTS:

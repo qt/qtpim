@@ -54,7 +54,7 @@ public:
         Tag = QContactTag::FieldTag
     };
 
-    QDeclarativeContactTag(QObject* parent = 0)
+    QDeclarativeContactTag(QObject* parent = Q_NULLPTR)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactTag());

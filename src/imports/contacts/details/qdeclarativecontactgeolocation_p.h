@@ -70,7 +70,7 @@ public:
         Timestamp = QContactGeoLocation::FieldTimestamp
     };
 
-    QDeclarativeContactGeoLocation(QObject* parent = 0)
+    QDeclarativeContactGeoLocation(QObject* parent = Q_NULLPTR)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactGeoLocation());

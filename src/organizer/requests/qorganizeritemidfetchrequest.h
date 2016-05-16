@@ -55,7 +55,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemIdFetchRequest : public QOrganizerAbstrac
     Q_OBJECT
 
 public:
-    QOrganizerItemIdFetchRequest(QObject *parent = 0);
+    QOrganizerItemIdFetchRequest(QObject *parent = Q_NULLPTR);
     ~QOrganizerItemIdFetchRequest();
 
     void setFilter(const QOrganizerItemFilter &filter);

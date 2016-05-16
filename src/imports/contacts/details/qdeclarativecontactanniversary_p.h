@@ -69,7 +69,7 @@ public:
         Memorial = QContactAnniversary::SubTypeMemorial
     };
 
-    QDeclarativeContactAnniversary(QObject* parent = 0)
+    QDeclarativeContactAnniversary(QObject* parent = Q_NULLPTR)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactAnniversary());

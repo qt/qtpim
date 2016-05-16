@@ -61,7 +61,7 @@ public:
     void setMatchFlags(QContactFilter::MatchFlags flags);
 
     /* Filter Criterion */
-    void setRange(const QVariant& min, const QVariant& max, RangeFlags flags = 0);
+    void setRange(const QVariant& min, const QVariant& max, RangeFlags flags = RangeFlags());
 
     /* Accessors */
     QContactDetail::DetailType detailType() const;

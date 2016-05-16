@@ -60,7 +60,7 @@ public:
         BlanksLast = QOrganizerItemSortOrder::BlanksLast
     };
 
-    QDeclarativeOrganizerItemSortOrder(QObject *parent = 0);
+    QDeclarativeOrganizerItemSortOrder(QObject *parent = Q_NULLPTR);
 
     void setDetail(QDeclarativeOrganizerItemDetail::DetailType detail);
     QDeclarativeOrganizerItemDetail::DetailType detail() const;

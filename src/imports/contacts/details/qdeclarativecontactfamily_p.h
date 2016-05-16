@@ -53,7 +53,7 @@ public:
         Spouse = QContactFamily::FieldSpouse,
         Children = QContactFamily::FieldChildren
     };
-    QDeclarativeContactFamily(QObject* parent = 0)
+    QDeclarativeContactFamily(QObject* parent = Q_NULLPTR)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactFamily());

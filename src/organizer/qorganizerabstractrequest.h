@@ -93,11 +93,11 @@ Q_SIGNALS:
     void resultsAvailable();
 
 protected:
-    QOrganizerAbstractRequest(QOrganizerAbstractRequestPrivate *other, QObject *parent = 0);
+    QOrganizerAbstractRequest(QOrganizerAbstractRequestPrivate *other, QObject *parent = Q_NULLPTR);
     QOrganizerAbstractRequestPrivate *d_ptr;
 
 private:
-    QOrganizerAbstractRequest(QObject *_parent = 0) : QObject(_parent), d_ptr(0) {}
+    QOrganizerAbstractRequest(QObject *_parent = Q_NULLPTR) : QObject(_parent), d_ptr(Q_NULLPTR) {}
     Q_DISABLE_COPY(QOrganizerAbstractRequest)
     friend class QOrganizerManagerEngine;
     friend class QOrganizerAbstractRequestPrivate;

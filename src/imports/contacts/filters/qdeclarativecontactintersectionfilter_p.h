@@ -47,7 +47,7 @@ class QDeclarativeContactIntersectionFilter : public QDeclarativeContactCompound
     Q_OBJECT
 
 public:
-    QDeclarativeContactIntersectionFilter(QObject* parent = 0)
+    QDeclarativeContactIntersectionFilter(QObject* parent = Q_NULLPTR)
         :QDeclarativeContactCompoundFilter(parent)
     {
     }

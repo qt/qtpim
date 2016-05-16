@@ -70,7 +70,7 @@ class EventEditPage : public QWidget
     Q_OBJECT
 
 public:
-    EventEditPage(QWidget *parent = 0);
+    EventEditPage(QWidget *parent = Q_NULLPTR);
     ~EventEditPage();
 
 public Q_SLOTS:

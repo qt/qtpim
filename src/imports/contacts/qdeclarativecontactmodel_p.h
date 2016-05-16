@@ -73,7 +73,7 @@ class QDeclarativeContactModel : public QAbstractListModel, public QQmlParserSta
     Q_INTERFACES(QQmlParserStatus)
 
 public:
-    explicit QDeclarativeContactModel(QObject *parent = 0);
+    explicit QDeclarativeContactModel(QObject *parent = Q_NULLPTR);
     ~QDeclarativeContactModel();
 
     enum {

@@ -671,9 +671,6 @@ void QVersitContactExporterPrivate::encodeGender(
     QSet<int>* processedFields)
 {
     const QContactGender &gender = static_cast<const QContactGender &>(detail);
-    if (!gender.gender())
-        return;
-
     QVersitProperty property;
     property.setName(mPropertyMappings.value(detail.type()).second);
     switch (gender.gender()) {

@@ -988,14 +988,16 @@ void tst_QVersitContactExporter::testEncodeGender()
 {
     QContact contact(createContactWithName(QStringLiteral("asdf")));
 
-    // Check that empty gender detail is not encoded.
+    // Check that empty gender detail is encoded as Unspecified
     QContactGender gender;
     contact.saveDetail(&gender);
     QVERIFY(mExporter->exportContacts(QList<QContact>() << contact, QVersitDocument::VCard30Type));
     QVersitDocument document = mExporter->documents().first();
-    QCOMPARE(countProperties(document), 0);
+    QCOMPARE(countProperties(document), 1);
     QVersitProperty property = findPropertyByName(document, QStringLiteral("X-GENDER"));
-    QVERIFY(property.isEmpty());
+    QVERIFY(!property.isEmpty());
+    QCOMPARE(property.parameters().count(), 0);
+    QCOMPARE(property.value(), QStringLiteral("Unspecified"));
 
     // Check that all valid values are encoded properly.
     gender.setGender(QContactGender::GenderMale);

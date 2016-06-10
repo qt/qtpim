@@ -23,3 +23,6 @@ HEADERS += src/calendardemo.h \
            src/eventoccurrenceeditpage.h \
            src/addcalendarpage.h \
            src/editcalendarspage.h
+
+target.path  = $$[QT_INSTALL_EXAMPLES]/organizer/calendardemo
+INSTALLS    += target

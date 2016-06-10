@@ -192,6 +192,29 @@ const QString TEST_AUDIO_FILE(QStringLiteral("versitTest001.wav"));
     QCOMPARE(value.type(), QVariant::StringList); \
     QCOMPARE(value.toStringList(), expectedValue); \
 }
+#define CHECK_FLOATING_POINT_VALUE(property, expectedValueType, expectedValue, isDouble) {\
+    QCOMPARE(property.valueType(), expectedValueType); \
+    QVariant value = property.variantValue(); \
+    QCOMPARE(value.type(), QVariant::StringList); \
+    QVERIFY(value.toStringList().size() == 2); \
+    QVERIFY(expectedValue.size() == 2); \
+    QString actualString = value.toStringList().at(1); \
+    actualString.replace('[',"").replace(']',"").replace('\n', ""); \
+    QString expectedString = expectedValue.at(1); \
+    expectedString.replace('[',"").replace(']',"").replace('\n', ""); \
+    if (isDouble) { \
+        double actualD = actualString.toDouble(); \
+        double expectedD = expectedString.toDouble(); \
+        QCOMPARE(value.toStringList().first(), expectedValue.first()); /* name  */ \
+        QCOMPARE(actualD, expectedD); /* value */ \
+    } else { \
+        float actualF = actualString.toFloat(); \
+        float expectedF = expectedString.toFloat(); \
+        QCOMPARE(value.toStringList().first(), expectedValue.first()); /* name  */ \
+        QCOMPARE(actualF, expectedF); /* value */ \
+    } \
+}
+
 
 void tst_QVersitContactExporter::init()
 {
@@ -1371,8 +1394,14 @@ void tst_QVersitContactExporter::testEncodeExtendedDetail()
     QVersitProperty property = findPropertyByName(document, QStringLiteral("X-QTPROJECT-EXTENDED-DETAIL"));
     QVERIFY(!property.isEmpty());
     QCOMPARE(property.parameters().count(), 0);
-    CHECK_VALUE(property, QVersitProperty::CompoundType,
-                QStringList() << extendedDetailName << extendedDetailDataInProperty);
+    QStringList expectedValue = QStringList() << extendedDetailName << extendedDetailDataInProperty;
+    if (static_cast<QMetaType::Type>(extendedDetailData.type()) == QMetaType::Double) {
+        CHECK_FLOATING_POINT_VALUE(property, QVersitProperty::CompoundType, expectedValue, true);
+    } else if (static_cast<QMetaType::Type>(extendedDetailData.type()) == QMetaType::Float) {
+        CHECK_FLOATING_POINT_VALUE(property, QVersitProperty::CompoundType, expectedValue, false);
+    } else {
+        CHECK_VALUE(property, QVersitProperty::CompoundType, expectedValue);
+    }
 }
 
 void tst_QVersitContactExporter::testEncodeExtendedDetail_data()
@@ -1415,7 +1444,7 @@ void tst_QVersitContactExporter::testEncodeExtendedDetail_data()
                 << true;
         QTest::newRow("double data, multiple digits")
                 << QString("name")
-                << QVariant((double)10.199999999999999)
+                << QVariant::fromValue<double>(10.199999999999999)
                 << jsonArrayWith.arg("10.199999999999999")
                 << true;
     }

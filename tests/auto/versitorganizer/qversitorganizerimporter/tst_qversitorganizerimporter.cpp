@@ -1683,10 +1683,28 @@ void tst_QVersitOrganizerImporter::testExtendedDetail()
         QCOMPARE(actualDetails.size(), 0);
     } else {
         QCOMPARE(actualDetails.size(), 1);
-        if (!actualDetails.contains(expectedDetail)) {
-        qDebug() << "Actual:" << actualDetails;
-        qDebug() << "Expected to find:" << expectedDetail;
-        QVERIFY(false);
+        if (static_cast<QMetaType::Type>(extendedDetailData.type()) == QMetaType::Double
+                || static_cast<QMetaType::Type>(extendedDetailData.type()) == QMetaType::Float) {
+            QCOMPARE(actualDetails.first().values().keys(), expectedDetail.values().keys());
+            QCOMPARE(actualDetails.first().values().keys().size(), 2); // name + value
+            int nameKey = actualDetails.first().values().keys().at(0);
+            int valueKey = actualDetails.first().values().keys().at(1);
+            QCOMPARE(actualDetails.first().value(nameKey), expectedDetail.value(nameKey));
+            QVariant actualValue = actualDetails.first().value(valueKey);
+            QVariant expectedValue = expectedDetail.value(valueKey);
+            if (static_cast<QMetaType::Type>(extendedDetailData.type()) == QMetaType::Float) {
+                float actualF = actualValue.value<float>();
+                float expectedF = expectedValue.value<float>();
+                QCOMPARE(actualF, expectedF);
+            } else {
+                double actualD = actualValue.value<double>();
+                double expectedD = expectedValue.value<double>();
+                QCOMPARE(actualD, expectedD);
+            }
+        } else if (!actualDetails.contains(expectedDetail)) {
+            qDebug() << "Actual:" << actualDetails;
+            qDebug() << "Expected to find:" << expectedDetail;
+            QVERIFY(false);
         }
     }
 }

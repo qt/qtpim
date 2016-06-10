@@ -1443,10 +1443,32 @@ void tst_QVersitOrganizerExporter::testExtendedDetail()
         QCOMPARE(actualProperties.size(), 0);
     } else {
         QCOMPARE(actualProperties.size(), 1);
-        if (!actualProperties.contains(expectedProperty)) {
-        qDebug() << "Actual:" << actualProperties;
-        qDebug() << "Expected to find:" << expectedProperty;
-        QVERIFY(false);
+        if (static_cast<QMetaType::Type>(extendedDetailData.type()) == QMetaType::Double
+                || static_cast<QMetaType::Type>(extendedDetailData.type()) == QMetaType::Float) {
+            QCOMPARE(actualProperties.first().name(), expectedProperty.name());
+            QStringList actualStringList = actualProperties.first().variantValue().toStringList();
+            QCOMPARE(actualStringList.size(), 2);
+            QString actualString = actualStringList.at(1);
+            actualString.replace('[',"").replace(']',"").replace('\n', "");
+            QStringList expectedStringList = expectedProperty.variantValue().toStringList();
+            QCOMPARE(expectedStringList.size(), 2);
+            QString expectedString = expectedStringList.at(1);
+            expectedString.replace('[',"").replace(']',"").replace('\n', "");
+            if (static_cast<QMetaType::Type>(extendedDetailData.type()) == QMetaType::Float) {
+                float actualF = actualString.toFloat();
+                float expectedF = expectedString.toFloat();
+                QCOMPARE(actualStringList.first(), expectedStringList.first()); // "name"
+                QCOMPARE(actualF, expectedF); // "value"
+            } else {
+                double actualD = actualString.toDouble();
+                double expectedD = expectedString.toDouble();
+                QCOMPARE(actualStringList.first(), expectedStringList.first()); // "name"
+                QCOMPARE(actualD, expectedD); // "value"
+            }
+        } else if (!actualProperties.contains(expectedProperty)) {
+            qDebug() << "Actual:" << actualProperties;
+            qDebug() << "Expected to find:" << expectedProperty;
+            QVERIFY(false);
         }
     }
 }
@@ -1491,7 +1513,7 @@ void tst_QVersitOrganizerExporter::testExtendedDetail_data()
                 << true;
         QTest::newRow("double data, multiple digits")
                 << QString("name")
-                << QVariant((double)10.199999999999999)
+                << QVariant::fromValue<double>(10.199999999999999)
                 << jsonArrayWith.arg("10.199999999999999")
                 << true;
     }

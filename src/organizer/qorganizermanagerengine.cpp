@@ -1099,7 +1099,7 @@ QDateTime getDateForSorting(const QOrganizerItem& item)
             if (retn.isValid() && detail.isAllDay()) {
                 // set it to a millisecond before the given date to have it sorted correctly
                 retn.setTime(QTime(23, 59, 59, 999));
-                retn.addDays(-1);
+                retn = retn.addDays(-1);
             }
             return retn;
         }
@@ -1113,7 +1113,7 @@ QDateTime getDateForSorting(const QOrganizerItem& item)
             if (retn.isValid() && detail.isAllDay()) {
                 // set it to a millisecond before the given date to have it sorted correctly
                 retn.setTime(QTime(23, 59, 59, 999));
-                retn.addDays(-1);
+                retn = retn.addDays(-1);
             }
             return retn;
         }

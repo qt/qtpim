@@ -66,6 +66,7 @@ QT_BEGIN_NAMESPACE_CONTACTS
  * layouts as if they were POD, and the offsetof macro
  * does indeed work in our case. */
 QT_WARNING_PUSH
+QT_WARNING_DISABLE_CLANG("-Winvalid-offsetof")
 QT_WARNING_DISABLE_GCC("-Winvalid-offsetof")
 
 

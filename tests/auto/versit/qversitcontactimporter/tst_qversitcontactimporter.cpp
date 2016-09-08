@@ -1572,7 +1572,11 @@ void tst_QVersitContactImporter::testExtendedDetail_data()
     {
         QTest::newRow("null denoting an empty variant")
                 << QString("name")
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+                << QVariant(static_cast<QVariant::Type>(QMetaType::Nullptr))
+#else
                 << QVariant()
+#endif
                 << jsonArrayWith.arg("null")
                 << true;
         QTest::newRow("compact json with extra whitespace removed")

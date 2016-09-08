@@ -36,6 +36,10 @@
 #include "tst_qversitorganizerimporter.h"
 #include <QtTest/QtTest>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+#include <cstddef>
+#endif
+
 QTORGANIZER_USE_NAMESPACE
 QTVERSITORGANIZER_USE_NAMESPACE
 
@@ -1815,7 +1819,11 @@ void tst_QVersitOrganizerImporter::testExtendedDetail_data()
     {
         QTest::newRow("null denoting an empty variant")
                 << QString("name")
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+                << QVariant::fromValue<std::nullptr_t>(nullptr)
+#else
                 << QVariant()
+#endif
                 << jsonArrayWith.arg("null")
                 << true;
         QTest::newRow("compact json with extra whitespace removed")

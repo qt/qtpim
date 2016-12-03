@@ -262,9 +262,15 @@ QDebug operator<<(QDebug dbg, const QOrganizerCollection& collection)
 QDataStream &operator<<(QDataStream &out, const QOrganizerCollection &collection)
 {
     quint8 formatVersion = 1;
+    QMap<int, QVariant> values;
+    auto i = collection.metaData().constBegin();
+    auto end = collection.metaData().constEnd();
+    for ( ; i != end; ++i)
+        values.insert(i.key(), i.value());
+
     return out << formatVersion
                << collection.id().toString()
-               << collection.metaData();
+               << values;
 }
 
 /*!

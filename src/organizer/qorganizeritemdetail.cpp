@@ -286,7 +286,7 @@ Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerIte
 {
     quint8 formatVersion = 1; // Version of QDataStream format for QOrganizerItemDetail
     return out << formatVersion
-               << detail.type()
+               << static_cast<quint32>(detail.type())
                << detail.values();
 }
 

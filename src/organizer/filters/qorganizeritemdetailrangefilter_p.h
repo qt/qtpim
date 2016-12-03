@@ -79,7 +79,8 @@ public:
     QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
     {
         if (formatVersion == 1) {
-            stream << m_detailType << m_detailField << m_minValue << m_maxValue
+            stream << static_cast<quint32>(m_detailType)
+                   << m_detailField << m_minValue << m_maxValue
                    << static_cast<quint32>(m_flags)
                    << static_cast<quint32>(m_rangeflags);
         }

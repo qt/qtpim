@@ -78,7 +78,7 @@ public:
     QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
     {
         if (formatVersion == 1)
-            stream << m_detailType << m_detailField << m_exactValue << static_cast<quint32>(m_flags);
+            stream << quint32(m_detailType) << m_detailField << m_exactValue << static_cast<quint32>(m_flags);
         return stream;
     }
 

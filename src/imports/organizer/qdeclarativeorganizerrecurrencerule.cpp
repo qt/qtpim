@@ -123,7 +123,7 @@ void QDeclarativeOrganizerRecurrenceRule::setLimit(const QVariant &value)
         }
     } else {
         // TODO throw an error event
-        qmlInfo(this) << tr("Invalid recurrence rule limit; value ,") <<  value << tr(", did not match one of the types: date, integer or double");
+        qmlWarning(this) << tr("Invalid recurrence rule limit; value ,") <<  value << tr(", did not match one of the types: date, integer or double");
     }
 }
 

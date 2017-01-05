@@ -1326,7 +1326,7 @@ void QDeclarativeOrganizerModel::removeItems(const QStringList& ids)
     // FIXME: no special format for occurrence ids
     foreach (const QString& id, ids) {
         if (id.startsWith(QString("qtorganizer:occurrence"))) {
-            qmlInfo(this) << tr("Can't remove an occurrence item, please modify the parent item's recurrence rule instead!");
+            qmlWarning(this) << tr("Can't remove an occurrence item, please modify the parent item's recurrence rule instead!");
             continue;
         }
         QOrganizerItemId itemId = QOrganizerItemId::fromString(id);

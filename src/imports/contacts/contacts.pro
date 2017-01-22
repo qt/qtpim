@@ -26,8 +26,6 @@ SOURCES += plugin.cpp \
 
 RESOURCES += contacts.qrc
 
-OTHER_FILES += contacts.json
-
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
 
 load(qml_plugin)

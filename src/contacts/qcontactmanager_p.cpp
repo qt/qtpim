@@ -65,9 +65,7 @@ QList<QJsonObject> QContactManagerData::m_metaData;
 QStringList QContactManagerData::m_managerNames;
 
 
-#ifndef QT_NO_LIBRARY
 Q_GLOBAL_STATIC_WITH_ARGS(QFactoryLoader, loader, (QT_CONTACT_MANAGER_ENGINE_INTERFACE, QLatin1String("/contacts")))
-#endif
 
 static void qContactsCleanEngines()
 {

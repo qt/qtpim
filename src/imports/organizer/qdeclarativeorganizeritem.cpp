@@ -176,7 +176,7 @@ QString QDeclarativeOrganizerItem::description() const
         if (QDeclarativeOrganizerItemDetail::Description == detail->type())
             return static_cast<QDeclarativeOrganizerItemDescription *>(detail)->description();
     }
-    return QString::null;
+    return QString();
 }
 
 void QDeclarativeOrganizerItem::setDescription(const QString &description)
@@ -211,7 +211,7 @@ QString QDeclarativeOrganizerItem::displayLabel() const
         if (QDeclarativeOrganizerItemDetail::DisplayLabel == detail->type())
             return static_cast<QDeclarativeOrganizerItemDisplayLabel *>(detail)->label();
     }
-    return QString::null;
+    return QString();
 }
 
 void QDeclarativeOrganizerItem::setDisplayLabel(const QString &label)
@@ -246,7 +246,7 @@ QString QDeclarativeOrganizerItem::guid() const
         if (QDeclarativeOrganizerItemDetail::Guid == detail->type())
             return static_cast<QDeclarativeOrganizerItemGuid *>(detail)->guid();
     }
-    return QString::null;
+    return QString();
 }
 
 void QDeclarativeOrganizerItem::setGuid(const QString &guid)
@@ -904,7 +904,7 @@ QString QDeclarativeOrganizerEvent::location() const
         if (QDeclarativeOrganizerItemDetail::Location == detail->type())
             return static_cast<QDeclarativeOrganizerItemLocation *>(detail)->label();
     }
-    return QString::null;
+    return QString();
 }
 
 /*!
@@ -1137,7 +1137,7 @@ QString QDeclarativeOrganizerEventOccurrence::location() const
         if (QDeclarativeOrganizerItemDetail::Location == detail->type())
             return static_cast<QDeclarativeOrganizerItemLocation *>(detail)->label();
     }
-    return QString::null;
+    return QString();
 }
 
 /*!
@@ -1172,7 +1172,7 @@ QString QDeclarativeOrganizerEventOccurrence::parentId() const
         if (QDeclarativeOrganizerItemDetail::Parent == detail->type())
             return static_cast<QDeclarativeOrganizerItemParent *>(detail)->parentId();
     }
-    return QString::null;
+    return QString();
 }
 
 /*!
@@ -1964,7 +1964,7 @@ QString QDeclarativeOrganizerTodoOccurrence::parentId() const
         if (QDeclarativeOrganizerItemDetail::Parent == detail->type())
             return static_cast<QDeclarativeOrganizerItemParent *>(detail)->parentId();
     }
-    return QString::null;
+    return QString();
 }
 
 #include "moc_qdeclarativeorganizeritem_p.cpp"

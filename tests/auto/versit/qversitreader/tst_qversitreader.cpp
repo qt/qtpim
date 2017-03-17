@@ -472,9 +472,18 @@ void tst_QVersitReader::testReading()
 
     // calling setData directly on reader
     mReader->setData(validDocumentsAndGroupedDocument);
-    QVERIFY(mReader->startReading());
-    mReader->waitForFinished();
+    mSignalCatcher->mStateChanges.clear();
+    mSignalCatcher->mResultsCount = 0;
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
+    QTRY_VERIFY(mSignalCatcher->mStateChanges.count() >= 2); // signals sent from other thread, so wait for delivery
+    QCOMPARE(mSignalCatcher->mStateChanges.at(0), QVersitReader::ActiveState);
+    QCOMPARE(mSignalCatcher->mStateChanges.at(1), QVersitReader::FinishedState);
+    QCOMPARE(mReader->state(), QVersitReader::FinishedState);
+    QCOMPARE(mReader->error(), QVersitReader::NoError);
     QCOMPARE(mReader->results().size(), 5);
+
+    qApp->processEvents(); // clean up before we start sniffing signals
 
     // Asynchronous reading
     mReader->setDevice(mInputDevice);
@@ -485,12 +494,14 @@ void tst_QVersitReader::testReading()
     mSignalCatcher->mStateChanges.clear();
     mSignalCatcher->mResultsCount = 0;
     QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
-    QTRY_VERIFY(mSignalCatcher->mStateChanges.count() >= 2);
+    QTRY_VERIFY(mSignalCatcher->mStateChanges.count() >= 2); // signals sent from other thread, so wait for delivery
     QCOMPARE(mSignalCatcher->mStateChanges.at(0), QVersitReader::ActiveState);
     QCOMPARE(mSignalCatcher->mStateChanges.at(1), QVersitReader::FinishedState);
     QVERIFY(mSignalCatcher->mResultsCount >= 2);
     QCOMPARE(mReader->results().size(), 2);
     QCOMPARE(mReader->error(), QVersitReader::NoError);
+
+    qApp->processEvents(); // clean up before we start sniffing signals
 
     // Cancelling
     mInputDevice->close();
@@ -502,7 +513,7 @@ void tst_QVersitReader::testReading()
     QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
     mReader->cancel();
     mReader->waitForFinished();
-    QTRY_VERIFY(mSignalCatcher->mStateChanges.count() >= 2);
+    QTRY_VERIFY(mSignalCatcher->mStateChanges.count() >= 2); // signals sent from other thread, so wait for delivery
     QCOMPARE(mSignalCatcher->mStateChanges.at(0), QVersitReader::ActiveState);
     QVersitReader::State state(mSignalCatcher->mStateChanges.at(1));
     // It's possible that it finishes before it cancels.

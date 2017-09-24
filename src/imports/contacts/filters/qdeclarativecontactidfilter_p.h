@@ -54,7 +54,7 @@ class QDeclarativeContactIdFilter : public QDeclarativeContactFilter
     Q_PROPERTY(QStringList ids READ ids WRITE setIds NOTIFY valueChanged)
     Q_CLASSINFO("DefaultProperty", "ids")
 public:
-    QDeclarativeContactIdFilter(QObject *parent = Q_NULLPTR)
+    QDeclarativeContactIdFilter(QObject *parent = nullptr)
         :QDeclarativeContactFilter(parent)
     {
         connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));

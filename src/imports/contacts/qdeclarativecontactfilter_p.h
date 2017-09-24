@@ -109,7 +109,7 @@ class QDeclarativeContactCompoundFilter : public QDeclarativeContactFilter
     Q_CLASSINFO("DefaultProperty", "filters")
 
 public:
-    explicit QDeclarativeContactCompoundFilter(QObject* parent = Q_NULLPTR) : QDeclarativeContactFilter(parent){}
+    explicit QDeclarativeContactCompoundFilter(QObject* parent = nullptr) : QDeclarativeContactFilter(parent){}
     virtual ~QDeclarativeContactCompoundFilter() {}
     // 'READ' accessor for the filters, basically this is also a 'WRITE' accessor
     // as per QQmlListProperty's design.

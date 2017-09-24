@@ -87,7 +87,7 @@ public:
         TodoProgress = QOrganizerItemDetail::TypeTodoProgress
     };
 
-    explicit QDeclarativeOrganizerItemDetail(QObject *parent = Q_NULLPTR);
+    explicit QDeclarativeOrganizerItemDetail(QObject *parent = nullptr);
     ~QDeclarativeOrganizerItemDetail();
 
     virtual DetailType type() const;
@@ -129,7 +129,7 @@ public:
         FieldAllDay = QOrganizerEventTime::FieldAllDay
     };
 
-    QDeclarativeOrganizerEventTime(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerEventTime(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -160,7 +160,7 @@ public:
         FieldComment = QOrganizerItemComment::FieldComment
     };
 
-    QDeclarativeOrganizerItemComment(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemComment(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -185,7 +185,7 @@ public:
         FieldDescription = QOrganizerItemDescription::FieldDescription
     };
 
-    QDeclarativeOrganizerItemDescription(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemDescription(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -210,7 +210,7 @@ public:
         FieldLabel = QOrganizerItemDisplayLabel::FieldLabel
     };
 
-    QDeclarativeOrganizerItemDisplayLabel(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemDisplayLabel(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -235,7 +235,7 @@ public:
         FieldGuid = QOrganizerItemGuid::FieldGuid
     };
 
-    QDeclarativeOrganizerItemGuid(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemGuid(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -264,7 +264,7 @@ public:
         FieldLongitude = QOrganizerItemLocation::FieldLongitude
     };
 
-    QDeclarativeOrganizerItemLocation(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemLocation(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -297,7 +297,7 @@ public:
         FieldOriginalDate = QOrganizerItemParent::FieldOriginalDate
     };
 
-    QDeclarativeOrganizerItemParent(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemParent(QObject *parent = nullptr);
 
     virtual DetailType type() const;
     virtual QVariant value(int field) const;
@@ -341,7 +341,7 @@ public:
         Lowest = QOrganizerItemPriority::LowestPriority
     };
 
-    QDeclarativeOrganizerItemPriority(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemPriority(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -372,7 +372,7 @@ public:
         FieldExceptionDates = QOrganizerItemRecurrence::FieldExceptionDates
     };
 
-    QDeclarativeOrganizerItemRecurrence(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemRecurrence(QObject *parent = nullptr);
 
     virtual DetailType type() const;
     virtual QVariant value(int field) const;
@@ -422,7 +422,7 @@ public:
         FieldTag = QOrganizerItemTag::FieldTag
     };
 
-    QDeclarativeOrganizerItemTag(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemTag(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -449,7 +449,7 @@ public:
         FieldLastModified = QOrganizerItemTimestamp::FieldLastModified
     };
 
-    QDeclarativeOrganizerItemTimestamp(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemTimestamp(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -488,7 +488,7 @@ public:
         Note = QOrganizerItemType::TypeNote
     };
 
-    QDeclarativeOrganizerItemType(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemType(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -513,7 +513,7 @@ public:
         FieldEntryDateTime = QOrganizerJournalTime::FieldEntryDateTime
     };
 
-    QDeclarativeOrganizerJournalTime(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerJournalTime(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -549,7 +549,7 @@ public:
         Complete = QOrganizerTodoProgress::StatusComplete
     };
 
-    QDeclarativeOrganizerTodoProgress(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerTodoProgress(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -583,7 +583,7 @@ public:
         FieldAllDay = QOrganizerTodoTime::FieldAllDay
     };
 
-    QDeclarativeOrganizerTodoTime(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerTodoTime(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -627,7 +627,7 @@ public:
         EmailReminder = QOrganizerItemReminder::EmailReminder
     };
 
-    QDeclarativeOrganizerItemReminder(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemReminder(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -660,7 +660,7 @@ public:
         FieldDataUrl = QOrganizerItemAudibleReminder::FieldDataUrl
     };
 
-    QDeclarativeOrganizerItemAudibleReminder(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemAudibleReminder(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -691,7 +691,7 @@ public:
         FieldAttachments = QOrganizerItemEmailReminder::FieldAttachments
     };
 
-    QDeclarativeOrganizerItemEmailReminder(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemEmailReminder(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -727,7 +727,7 @@ public:
         FieldMessage = QOrganizerItemVisualReminder::FieldMessage
     };
 
-    QDeclarativeOrganizerItemVisualReminder(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemVisualReminder(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -757,7 +757,7 @@ public:
         FieldData = QOrganizerItemExtendedDetail::FieldData
     };
 
-    QDeclarativeOrganizerItemExtendedDetail(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemExtendedDetail(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -815,7 +815,7 @@ public:
         RoleNonParticipant = QOrganizerEventAttendee::RoleNonParticipant
     };
 
-    QDeclarativeOrganizerEventAttendee(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerEventAttendee(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -868,7 +868,7 @@ public:
         ResponseRequired = QOrganizerEventRsvp::ResponseRequired
     };
 
-    QDeclarativeOrganizerEventRsvp(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerEventRsvp(QObject *parent = nullptr);
 
     virtual DetailType type() const;
     virtual QVariant value(int field) const;
@@ -918,7 +918,7 @@ public:
         AccessPrivate = QOrganizerItemClassification::AccessPrivate
     };
 
-    QDeclarativeOrganizerItemClassification(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemClassification(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 
@@ -943,7 +943,7 @@ public:
         FieldExtendedVersion = QOrganizerItemVersion::FieldExtendedVersion
     };
 
-    QDeclarativeOrganizerItemVersion(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemVersion(QObject *parent = nullptr);
 
     virtual DetailType type() const;
 

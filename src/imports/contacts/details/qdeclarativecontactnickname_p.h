@@ -59,7 +59,7 @@ public:
         NickName = QContactNickname::FieldNickname
     };
 
-    QDeclarativeContactNickname(QObject* parent = Q_NULLPTR)
+    QDeclarativeContactNickname(QObject* parent = nullptr)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactNickname());

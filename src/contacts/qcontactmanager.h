@@ -64,11 +64,11 @@ class Q_CONTACTS_EXPORT QContactManager : public QObject
 
 public:
 #ifdef Q_QDOC // qdoc's parser fails to recognise the default map argument
-    explicit QContactManager(const QString& managerName = QString(), const QMap<QString, QString>& parameters = 0, QObject* parent = Q_NULLPTR);
-    QContactManager(const QString& managerName, int implementationVersion, const QMap<QString, QString>& parameters = 0, QObject* parent = Q_NULLPTR);
+    explicit QContactManager(const QString& managerName = QString(), const QMap<QString, QString>& parameters = 0, QObject* parent = nullptr);
+    QContactManager(const QString& managerName, int implementationVersion, const QMap<QString, QString>& parameters = 0, QObject* parent = nullptr);
 #else
-    explicit QContactManager(const QString& managerName = QString(), const QMap<QString, QString>& parameters = (QMap<QString, QString>()), QObject* parent = Q_NULLPTR);
-    QContactManager(const QString& managerName, int implementationVersion, const QMap<QString, QString>& parameters = (QMap<QString, QString>()), QObject* parent = Q_NULLPTR);
+    explicit QContactManager(const QString& managerName = QString(), const QMap<QString, QString>& parameters = (QMap<QString, QString>()), QObject* parent = nullptr);
+    QContactManager(const QString& managerName, int implementationVersion, const QMap<QString, QString>& parameters = (QMap<QString, QString>()), QObject* parent = nullptr);
 #endif
     explicit QContactManager(QObject* parent);
 
@@ -77,7 +77,7 @@ public:
     inline static const QString ParameterValueOnlyOtherProcesses() {return QStringLiteral("OnlyOtherProcesses");};
     inline static const QString ParameterValueOnlyOtherManagers() {return QStringLiteral("OnlyOtherManagers");};
 
-    static QContactManager* fromUri(const QString& uri, QObject* parent = Q_NULLPTR);
+    static QContactManager* fromUri(const QString& uri, QObject* parent = nullptr);
     ~QContactManager();                     // dtor
 
     QString managerName() const;                       // e.g. "memory"
@@ -125,16 +125,16 @@ public:
 
     QList<QContact> contacts(const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const;
     QList<QContact> contacts(const QContactFilter& filter, const QList<QContactSortOrder>& sortOrders = QList<QContactSortOrder>(), const QContactFetchHint& fetchHint = QContactFetchHint()) const;
-    QList<QContact> contacts(const QList<QContactId>& contactIds, const QContactFetchHint& fetchHint = QContactFetchHint(), QMap<int, QContactManager::Error>* errorMap = Q_NULLPTR) const;
+    QList<QContact> contacts(const QList<QContactId>& contactIds, const QContactFetchHint& fetchHint = QContactFetchHint(), QMap<int, QContactManager::Error>* errorMap = nullptr) const;
 
     QContact contact(const QContactId& contactId, const QContactFetchHint& fetchHint = QContactFetchHint()) const;  // retrieve a contact
 
     bool saveContact(QContact* contact);                 // note: MODIFIES contact (sets the contactId)
     bool removeContact(const QContactId& contactId);      // remove the contact from the persistent store
 
-    bool saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap = Q_NULLPTR); // batch API - save.
-    bool saveContacts(QList<QContact>* contacts, const QList<QContactDetail::DetailType>& typeMask, QMap<int, QContactManager::Error>* errorMap = Q_NULLPTR); // Partial save
-    bool removeContacts(const QList<QContactId>& contactIds, QMap<int, QContactManager::Error>* errorMap = Q_NULLPTR); // batch API - remove.
+    bool saveContacts(QList<QContact>* contacts, QMap<int, QContactManager::Error>* errorMap = nullptr); // batch API - save.
+    bool saveContacts(QList<QContact>* contacts, const QList<QContactDetail::DetailType>& typeMask, QMap<int, QContactManager::Error>* errorMap = nullptr); // Partial save
+    bool removeContacts(const QList<QContactId>& contactIds, QMap<int, QContactManager::Error>* errorMap = nullptr); // batch API - remove.
 
     /* "Self" contact id (MyCard) */
     bool setSelfContactId(const QContactId& contactId);
@@ -144,9 +144,9 @@ public:
     QList<QContactRelationship> relationships(const QContactId& participantId, QContactRelationship::Role role = QContactRelationship::Either) const;
     QList<QContactRelationship> relationships(const QString& relationshipType = QString(), const QContactId& participantId = QContactId(), QContactRelationship::Role role = QContactRelationship::Either) const;
     bool saveRelationship(QContactRelationship* relationship);
-    bool saveRelationships(QList<QContactRelationship>* relationships, QMap<int, QContactManager::Error>* errorMap = Q_NULLPTR);
+    bool saveRelationships(QList<QContactRelationship>* relationships, QMap<int, QContactManager::Error>* errorMap = nullptr);
     bool removeRelationship(const QContactRelationship& relationship);
-    bool removeRelationships(const QList<QContactRelationship>& relationships, QMap<int, QContactManager::Error>* errorMap = Q_NULLPTR);
+    bool removeRelationships(const QList<QContactRelationship>& relationships, QMap<int, QContactManager::Error>* errorMap = nullptr);
 
     /* Capabilities reporting */
     bool isRelationshipTypeSupported(const QString& relationshipType, QContactType::TypeValues  contactType = QContactType::TypeContact) const;

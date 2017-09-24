@@ -57,7 +57,7 @@ class Q_ORGANIZER_EXPORT QOrganizerCollectionRemoveRequest : public QOrganizerAb
     Q_OBJECT
 
 public:
-    QOrganizerCollectionRemoveRequest(QObject *parent = Q_NULLPTR);
+    QOrganizerCollectionRemoveRequest(QObject *parent = nullptr);
     ~QOrganizerCollectionRemoveRequest();
 
     void setCollectionId(const QOrganizerCollectionId &collectionId);

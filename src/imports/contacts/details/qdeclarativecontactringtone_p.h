@@ -64,7 +64,7 @@ public:
         VibrationRingtoneUrl = QContactRingtone::FieldVibrationRingtoneUrl
     };
 
-    QDeclarativeContactRingtone(QObject* parent = Q_NULLPTR)
+    QDeclarativeContactRingtone(QObject* parent = nullptr)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactRingtone());

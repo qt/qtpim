@@ -70,7 +70,7 @@ public:
     };
     Q_DECLARE_FLAGS(OptimizationHints, OptimizationHint)
 
-    QDeclarativeContactFetchHint(QObject* parent = Q_NULLPTR);
+    QDeclarativeContactFetchHint(QObject* parent = nullptr);
     QList<int> detailTypesHint() const;
     void setDetailTypesHint(const QList<int> &detailTypes);
 

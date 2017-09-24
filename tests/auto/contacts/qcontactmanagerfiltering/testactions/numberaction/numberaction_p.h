@@ -54,7 +54,7 @@ QTCONTACTS_USE_NAMESPACE
 class DummyAction : public QContactAction
 {
 public:
-    DummyAction(QObject* parent = Q_NULLPTR) { Q_UNUSED(parent) }
+    DummyAction(QObject* parent = nullptr) { Q_UNUSED(parent) }
 
     QVariantMap metaData() const {return QVariantMap();}
 
@@ -87,7 +87,7 @@ class QNumberAction : public DummyAction
     Q_OBJECT
 
 public:
-    QNumberAction(QObject *parent = Q_NULLPTR) : DummyAction(parent) {}
+    QNumberAction(QObject *parent = nullptr) : DummyAction(parent) {}
     ~QNumberAction() {}
 };
 
@@ -96,7 +96,7 @@ class QNumberActionFactory : public QContactActionFactory
     Q_OBJECT
 
 public:
-    QNumberActionFactory(QObject* parent = Q_NULLPTR) : QContactActionFactory(parent)
+    QNumberActionFactory(QObject* parent = nullptr) : QContactActionFactory(parent)
     {
         m_actionDescriptor = createDescriptor("NumberAction", "tst_qcontactmanagerfiltering:numberaction", "numberaction", 1);
     }

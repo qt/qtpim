@@ -71,7 +71,7 @@ class EditCalendarsPage : public QWidget
     Q_OBJECT
 
 public:
-    EditCalendarsPage(QWidget *parent = Q_NULLPTR);
+    EditCalendarsPage(QWidget *parent = nullptr);
     ~EditCalendarsPage();
 
 public Q_SLOTS:

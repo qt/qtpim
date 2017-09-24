@@ -54,7 +54,7 @@ class Q_CONTACTS_EXPORT QContactRemoveRequest : public QContactAbstractRequest
     Q_OBJECT
 
 public:
-    QContactRemoveRequest(QObject* parent = Q_NULLPTR);
+    QContactRemoveRequest(QObject* parent = nullptr);
     ~QContactRemoveRequest();
 
     /* Selection */

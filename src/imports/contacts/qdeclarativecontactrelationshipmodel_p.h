@@ -63,7 +63,7 @@ class QDeclarativeContactRelationshipModel : public QAbstractListModel
     Q_PROPERTY(QString error READ error)
 
 public:
-    QDeclarativeContactRelationshipModel(QObject *parent = Q_NULLPTR);
+    QDeclarativeContactRelationshipModel(QObject *parent = nullptr);
     ~QDeclarativeContactRelationshipModel();
     enum {
         RelationshipRole = Qt::UserRole + 500

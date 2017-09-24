@@ -59,7 +59,7 @@ class QDeclarativeOrganizerItemFetchHint : public QObject
     Q_FLAGS(OptimizationHints)
 
 public:
-    QDeclarativeOrganizerItemFetchHint(QObject *parent = Q_NULLPTR);
+    QDeclarativeOrganizerItemFetchHint(QObject *parent = nullptr);
 
     enum OptimizationHint {
         AllRequired = QOrganizerItemFetchHint::AllRequired,

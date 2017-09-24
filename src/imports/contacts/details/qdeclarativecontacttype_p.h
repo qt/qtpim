@@ -73,7 +73,7 @@ public:
         return QDeclarativeContactDetail::Type;
     }
 
-    QDeclarativeContactType(QObject* parent = Q_NULLPTR)
+    QDeclarativeContactType(QObject* parent = nullptr)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactType());

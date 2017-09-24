@@ -54,7 +54,7 @@ QTCONTACTS_USE_NAMESPACE
 class DummyAction : public QContactAction
 {
 public:
-    DummyAction(QObject* parent = Q_NULLPTR) { Q_UNUSED(parent) }
+    DummyAction(QObject* parent = nullptr) { Q_UNUSED(parent) }
 
     QVariantMap metaData() const {return QVariantMap();}
 
@@ -88,7 +88,7 @@ class QDateAction : public DummyAction
     Q_OBJECT
 
 public:
-    QDateAction(QObject *parent = Q_NULLPTR) : DummyAction(parent) {}
+    QDateAction(QObject *parent = nullptr) : DummyAction(parent) {}
     ~QDateAction() {}
 };
 
@@ -97,7 +97,7 @@ class QDateActionFactory : public QContactActionFactory
     Q_OBJECT
 
 public:
-    QDateActionFactory(QObject* parent = Q_NULLPTR) : QContactActionFactory(parent)
+    QDateActionFactory(QObject* parent = nullptr) : QContactActionFactory(parent)
     {
         m_actionDescriptor = createDescriptor("DateAction", "tst_qcontactmanagerfiltering:dateaction", "dateaction", 1);
     }

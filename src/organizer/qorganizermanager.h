@@ -63,14 +63,14 @@ class Q_ORGANIZER_EXPORT QOrganizerManager : public QObject
 
 public:
 #ifdef Q_QDOC // qdoc's parser fails to recognize the default map argument
-    explicit QOrganizerManager(const QString &managerName, const QMap<QString, QString> &parameters = 0, QObject *parent = Q_NULLPTR);
+    explicit QOrganizerManager(const QString &managerName, const QMap<QString, QString> &parameters = 0, QObject *parent = nullptr);
 #else
-    explicit QOrganizerManager(const QString &managerName, const QMap<QString, QString> &parameters = (QMap<QString, QString>()), QObject *parent = Q_NULLPTR);
+    explicit QOrganizerManager(const QString &managerName, const QMap<QString, QString> &parameters = (QMap<QString, QString>()), QObject *parent = nullptr);
 #endif
-    explicit QOrganizerManager(QObject *parent = Q_NULLPTR);
+    explicit QOrganizerManager(QObject *parent = nullptr);
     ~QOrganizerManager();
 
-    static QOrganizerManager *fromUri(const QString &uri, QObject *parent = Q_NULLPTR);
+    static QOrganizerManager *fromUri(const QString &uri, QObject *parent = nullptr);
     static QStringList availableManagers();
 
     QString managerName() const;

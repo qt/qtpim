@@ -57,7 +57,7 @@ class Q_CONTACTS_EXPORT QContactCollectionFetchRequest : public QContactAbstract
     Q_OBJECT
 
 public:
-    QContactCollectionFetchRequest(QObject *parent = Q_NULLPTR);
+    QContactCollectionFetchRequest(QObject *parent = nullptr);
     ~QContactCollectionFetchRequest();
 
     QList<QContactCollection> collections() const;

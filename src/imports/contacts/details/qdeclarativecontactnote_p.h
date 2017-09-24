@@ -59,7 +59,7 @@ public:
         Note = QContactNote::FieldNote
     };
 
-    QDeclarativeContactNote(QObject* parent = Q_NULLPTR)
+    QDeclarativeContactNote(QObject* parent = nullptr)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactNote());

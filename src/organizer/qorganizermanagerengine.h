@@ -63,7 +63,7 @@ class Q_ORGANIZER_EXPORT QOrganizerManagerEngine : public QObject
     Q_OBJECT
 
 public:
-    QOrganizerManagerEngine(QObject *parent = Q_NULLPTR);
+    QOrganizerManagerEngine(QObject *parent = nullptr);
 
     virtual QString managerName() const;
     virtual QMap<QString, QString> managerParameters() const;

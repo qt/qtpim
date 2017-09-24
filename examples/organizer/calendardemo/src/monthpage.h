@@ -76,7 +76,7 @@ class MonthPage : public QWidget
     Q_OBJECT
 
 public:
-    MonthPage(QWidget *parent = Q_NULLPTR);
+    MonthPage(QWidget *parent = nullptr);
     ~MonthPage();
     void init();
 

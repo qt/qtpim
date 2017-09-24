@@ -104,8 +104,8 @@ public:
         ImportParseError       = QVersitReader::ParseError
     };
 
-    explicit QDeclarativeOrganizerModel(QObject *parent = Q_NULLPTR);
-    explicit QDeclarativeOrganizerModel(QOrganizerManager* manager, const QDateTime& start, const QDateTime& end, QObject *parent = Q_NULLPTR);
+    explicit QDeclarativeOrganizerModel(QObject *parent = nullptr);
+    explicit QDeclarativeOrganizerModel(QOrganizerManager* manager, const QDateTime& start, const QDateTime& end, QObject *parent = nullptr);
     ~QDeclarativeOrganizerModel();
 
     QString error() const;

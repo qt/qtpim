@@ -57,7 +57,7 @@ public:
     enum FieldType {
         EmailAddress = QContactEmailAddress::FieldEmailAddress
     };
-    QDeclarativeContactEmailAddress(QObject* parent = Q_NULLPTR)
+    QDeclarativeContactEmailAddress(QObject* parent = nullptr)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactEmailAddress());

@@ -75,7 +75,7 @@ public:
         HasSpouse
     };
 
-    QDeclarativeContactRelationship(QObject* parent = Q_NULLPTR);
+    QDeclarativeContactRelationship(QObject* parent = nullptr);
 
     QString first() const;
     QString second() const;

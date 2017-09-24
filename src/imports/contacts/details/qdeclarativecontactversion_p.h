@@ -62,7 +62,7 @@ public:
         ExtendedVersion = QContactVersion::FieldExtendedVersion
     };
 
-    QDeclarativeContactVersion(QObject* parent = Q_NULLPTR)
+    QDeclarativeContactVersion(QObject* parent = nullptr)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactVersion());

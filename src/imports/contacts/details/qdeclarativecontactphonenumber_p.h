@@ -79,7 +79,7 @@ public:
         DtmfMenu = QContactPhoneNumber::SubTypeDtmfMenu
     };
 
-    QDeclarativeContactPhoneNumber(QObject* parent = Q_NULLPTR)
+    QDeclarativeContactPhoneNumber(QObject* parent = nullptr)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactPhoneNumber());

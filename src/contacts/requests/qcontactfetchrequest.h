@@ -57,7 +57,7 @@ class Q_CONTACTS_EXPORT QContactFetchRequest : public QContactAbstractRequest
     Q_OBJECT
 
 public:
-    QContactFetchRequest(QObject* parent = Q_NULLPTR);
+    QContactFetchRequest(QObject* parent = nullptr);
     ~QContactFetchRequest();
 
     /* Selection, restriction and sorting */

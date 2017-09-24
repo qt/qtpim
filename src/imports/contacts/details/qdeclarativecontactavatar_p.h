@@ -59,7 +59,7 @@ public:
         ImageUrl = QContactAvatar::FieldImageUrl,
         VideoUrl = QContactAvatar::FieldVideoUrl
     };
-    QDeclarativeContactAvatar(QObject* parent = Q_NULLPTR)
+    QDeclarativeContactAvatar(QObject* parent = nullptr)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactAvatar());

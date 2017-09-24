@@ -70,7 +70,7 @@ public:
         Favourite = QContactUrl::SubTypeFavourite
     };
 
-    QDeclarativeContactUrl(QObject* parent = Q_NULLPTR)
+    QDeclarativeContactUrl(QObject* parent = nullptr)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactUrl());

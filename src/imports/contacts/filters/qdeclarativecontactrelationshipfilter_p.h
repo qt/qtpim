@@ -59,7 +59,7 @@ class QDeclarativeContactRelationshipFilter : public QDeclarativeContactFilter
 
 public:
 
-    QDeclarativeContactRelationshipFilter(QObject* parent = Q_NULLPTR)
+    QDeclarativeContactRelationshipFilter(QObject* parent = nullptr)
         :QDeclarativeContactFilter(parent)
     {
         connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));

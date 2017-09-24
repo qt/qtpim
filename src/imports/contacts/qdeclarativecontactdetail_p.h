@@ -65,7 +65,7 @@ class QDeclarativeContactDetail : public QObject
     Q_ENUMS(DetailType)
     Q_ENUMS(ContextField)
 public:
-    QDeclarativeContactDetail(QObject* parent = Q_NULLPTR);
+    QDeclarativeContactDetail(QObject* parent = nullptr);
 
 
     enum DetailType {

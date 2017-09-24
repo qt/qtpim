@@ -74,7 +74,7 @@ public:
         KeyExtended = QContactCollection::KeyExtended
     };
 
-    QDeclarativeContactCollection(QObject *parent = Q_NULLPTR);
+    QDeclarativeContactCollection(QObject *parent = nullptr);
 
     QString id() const;
     void setId(const QString &id);

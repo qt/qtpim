@@ -80,7 +80,7 @@ class EventOccurrenceEditPage : public QWidget
     Q_OBJECT
 
 public:
-    EventOccurrenceEditPage(QWidget *parent = Q_NULLPTR);
+    EventOccurrenceEditPage(QWidget *parent = nullptr);
     ~EventOccurrenceEditPage();
 
 public Q_SLOTS:

@@ -54,7 +54,7 @@ class QDeclarativeContactCollectionFilter : public QDeclarativeContactFilter
     Q_PROPERTY(QStringList ids READ ids WRITE setIds NOTIFY valueChanged)
 
 public:
-    QDeclarativeContactCollectionFilter(QObject *parent = Q_NULLPTR)
+    QDeclarativeContactCollectionFilter(QObject *parent = nullptr)
         : QDeclarativeContactFilter(parent)
     {
         connect(this, SIGNAL(valueChanged()), SIGNAL(filterChanged()));

@@ -55,7 +55,7 @@ class Q_CONTACTS_EXPORT QContactSaveRequest : public QContactAbstractRequest
     Q_OBJECT
 
 public:
-    QContactSaveRequest(QObject* parent = Q_NULLPTR);
+    QContactSaveRequest(QObject* parent = nullptr);
     ~QContactSaveRequest();
 
     /* Selection */

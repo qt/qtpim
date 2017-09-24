@@ -61,7 +61,7 @@ public:
         Data = QContactExtendedDetail::FieldData
     };
 
-    QDeclarativeContactExtendedDetail (QObject *parent = Q_NULLPTR)
+    QDeclarativeContactExtendedDetail (QObject *parent = nullptr)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactExtendedDetail());

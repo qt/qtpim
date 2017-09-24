@@ -66,7 +66,7 @@ public:
         return QDeclarativeContactDetail::Timestamp;
     }
 
-    QDeclarativeContactTimestamp(QObject* parent = Q_NULLPTR)
+    QDeclarativeContactTimestamp(QObject* parent = nullptr)
         :QDeclarativeContactDetail(parent)
     {
         setDetail(QContactTimestamp());

@@ -57,7 +57,7 @@ class Q_ORGANIZER_EXPORT QOrganizerItemRemoveByIdRequest : public QOrganizerAbst
     Q_OBJECT
 
 public:
-    QOrganizerItemRemoveByIdRequest(QObject* parent = Q_NULLPTR);
+    QOrganizerItemRemoveByIdRequest(QObject* parent = nullptr);
     ~QOrganizerItemRemoveByIdRequest();
 
     /* Selection */

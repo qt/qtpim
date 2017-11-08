@@ -346,7 +346,8 @@ bool QVersitOrganizerImporterPrivate::createItemReminder(
             repetitionDelay = Duration::parseDuration(valarmProperty.value()).toSeconds();
         } else if (valarmProperty.name() == QStringLiteral("ACTION")) {
             actionValue = valarmProperty.value().toUpper();
-        } else if (valarmProperty.name() == QStringLiteral("ATTACH")) {
+        } else if (valarmProperty.name() == QStringLiteral("ATTACH") ||
+                   valarmProperty.name() == QStringLiteral("X-QTPROJECT-ATTACH")) {
             attachValues.append(valarmProperty.variantValue());
         } else if (valarmProperty.name() == QStringLiteral("DESCRIPTION")) {
             descriptionValue = valarmProperty.value();
@@ -373,6 +374,8 @@ bool QVersitOrganizerImporterPrivate::createItemReminder(
         QOrganizerItemVisualReminder visualReminder;
         visualReminder.setRepetition(repetitionCount, repetitionDelay);
         visualReminder.setSecondsBeforeStart(secondsBeforeStart);
+        if (!attachValues.isEmpty())
+            visualReminder.setDataUrl(QUrl(attachValues.first().toString()));
         if (!descriptionValue.isEmpty()) {
             visualReminder.setMessage(descriptionValue);
             updatedDetails->append(visualReminder);

@@ -184,7 +184,6 @@ private:
     bool mIsCodecCertain;
     bool mIsCodecUtf8Compatible;
     int mChunkSize; // How many bytes to read in one go.
-    QList<QByteArrayMatcher> mCrlfList;
     QStack<QByteArray> mPushedLines; // Stores a lines that has been "pushed" in front by pushLine
     LByteArray mBuffer;
     int mOdometer;

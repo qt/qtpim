@@ -381,6 +381,20 @@ void tst_QVersitReader::testReading()
     QCOMPARE(mReader->error(), QVersitReader::NoError);
     QCOMPARE(results.count(),2);
 
+    // Exception case for properties not ending in in CrLf, but Cr or Lf
+    const QByteArray& lfDocument =
+        "BEGIN:VCARD\r\nVERSION:2.1\r\nFN:John\nORG:ACME\rEND:VCARD\r\n";
+    mInputDevice->close();
+    mInputDevice->setData(lfDocument);
+    mInputDevice->open(QBuffer::ReadOnly);
+    mInputDevice->seek(0);
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
+    results = mReader->results();
+    QCOMPARE(mReader->state(), QVersitReader::FinishedState);
+    QCOMPARE(mReader->error(), QVersitReader::NoError);
+    QCOMPARE(results.count(), 1);
+
     // Exception case for a property ending in =CrLfCrLf, ie "=\r\n\r\n"
     const QByteArray& myTest =
             "BEGIN:VCARD\r\nVERSION:4.0\r\nFN:John\r\n"

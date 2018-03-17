@@ -116,7 +116,6 @@ LineReader::LineReader(QIODevice* device, QTextCodec *codec)
     } else {
         mIsCodecCertain = true;
     }
-    mCrlfList = *VersitUtils::newlineList(mCodec);
 }
 
 /*!
@@ -129,7 +128,6 @@ LineReader::LineReader(QIODevice* device, QTextCodec *codec, int chunkSize)
     mCodec(codec),
     mIsCodecCertain(true),
     mChunkSize(chunkSize),
-    mCrlfList(*VersitUtils::newlineList(mCodec)),
     mOdometer(0),
     mSearchFrom(0)
 {
@@ -199,6 +197,10 @@ LByteArray LineReader::readLine()
   continuation of the next line)
   */
 void LineReader::readOneLine(LByteArray* cursor) {
+    QByteArray cr(VersitUtils::encode('\r', mCodec));
+    QByteArray lf(VersitUtils::encode('\n', mCodec));
+    QByteArray crlf(VersitUtils::encode("\r\n", mCodec));
+
     cursor->mStart = cursor->mEnd;
     mSearchFrom = cursor->mStart;
 
@@ -212,15 +214,36 @@ void LineReader::readOneLine(LByteArray* cursor) {
         QByteArray temp = mDevice->read(mChunkSize);
         if (!temp.isEmpty()) {
             cursor->mData.append(temp);
+
+            // Sanitise CRLF before proceeding to handle mixed line endings.
+            // Convert the other two possible newline representations to '\n'.
+            cursor->mData.replace(crlf, lf);
+            if (cursor->mData.endsWith(cr)) {
+                // Corner case: line ends with \r - could also be \r\n after the
+                // next read, so do not replace the last occurrence (yet)
+                // So restore it for now.
+                cursor->mData.replace(cr, lf);
+                cursor->mData.truncate(cursor->mData.length() - lf.length());
+                cursor->mData.append(cr);
+            } else {
+                cursor->mData.replace(cr, lf);
+            }
+
             if (tryReadLine(cursor, false))
                 return;
+
         } else {
             mDevice->waitForReadyRead(500);
         }
     }
 
     // We've reached the end of the stream.  Find a newline from the buffer (or return what's left).
+    // But first, strip the last occurrence of \r - if present - left from before.
+    if (cursor->mData.endsWith(cr))
+        cursor->mData.truncate(cursor->mData.length() - cr.length());
+
     tryReadLine(cursor, true);
+
     return;
 }
 
@@ -282,101 +305,95 @@ void LineReader::setCodecUtf8Incompatible() {
  * sequences of newline-space from the retrieved line.  Skips over any newlines at the start of the
  * input.
  *
- * \a cursor is filled with a the line
+ * \a cursor filled with the line to parse
  * \a atEnd is true if we've reached the end of the stream
  * Returns true if a line was completely read (ie. a newline character was found)
+ *
+ * Expects all newline sequences (\r\n, \r and \n) already changed to \n (referred as NL or 'newline'
+ * in the code) by the caller.
  */
 bool LineReader::tryReadLine(LByteArray *cursor, bool atEnd)
 {
-    int crlfPos = -1;
-    int doubleCrLfCheck = -1;
-    QByteArray space(VersitUtils::encode(' ', mCodec));
+    int nlPos = -1;
+    int doubleNlCheck = -1;
+
+    QByteArray nl(VersitUtils::encode('\n', mCodec));
     QByteArray tab(VersitUtils::encode('\t', mCodec));
+    QByteArray space(VersitUtils::encode(' ', mCodec));
     QByteArray equals(VersitUtils::encode('=', mCodec));
 
+    int nlLength = nl.length();
     int spaceLength = space.length();
     int equalsLength = equals.length();
 
     forever {
-        foreach(const QByteArrayMatcher& crlf, mCrlfList) {
-            int crlfLength = crlf.pattern().length();
-            crlfPos = crlf.indexIn(cursor->mData, mSearchFrom);
-            doubleCrLfCheck = crlf.indexIn(cursor->mData, mSearchFrom + crlfLength);
-            if ((crlfPos == cursor->mStart) && (doubleCrLfCheck != crlfPos + crlfLength)) {
-                // Single Newline at start of line.  Ignore and Set mStart to directly after it.
-                cursor->mStart += crlfLength;
-                mSearchFrom = cursor->mStart;
-                break;
-            } else if ((crlfPos == cursor->mStart) && (doubleCrLfCheck == crlfPos + crlfLength)) {
-                // Found '=CrLfCrLf' - We choose to see this as badly formed,
-                // but clear end of the versit property.
-                cursor->mData.remove(crlfPos, crlfLength);
-                cursor->mEnd = crlfPos;
-                if (QVersitReaderPrivate::containsAt(cursor->mData, equals, crlfPos - equalsLength) ) {
-                    cursor->mData.remove(crlfPos -1, 1);
-                }
-                return true;
-            } else if (crlfPos > cursor->mStart) {
-                // Found the first occurance of CRLF in the current buffer.
-                if (QVersitReaderPrivate::containsAt(cursor->mData, space, crlfPos + crlfLength)
-                    || QVersitReaderPrivate::containsAt(cursor->mData, tab, crlfPos + crlfLength)) {
-                    // If it's followed by whitespace, collapse it.
-                    cursor->mData.remove(crlfPos, crlfLength + spaceLength);
-                    mSearchFrom = crlfPos;
-                    break;
-                } else if (!atEnd && crlfPos + crlfLength + spaceLength >= cursor->mData.size()) {
-                    // If our CRLF is at the end of the current buffer but there's more to read,
-                    // it's possible that a space could be hiding on the next read from the device.
-                    // Just pretend we didn't see the CRLF and pick it up the next time round.
-                    mSearchFrom = crlfPos;
-                    return false;
-                } else {
-                    // Found the CRLF.
-                    // Hack: if malformed vCard files (having no \r\n or \r\n\r\n ending) are
-                    // concatenated, we can get a malformed line in the document which looks like:
-                    // END:VCARDBEGIN:VCARD
-                    // In that situation, we should actually insert the \r\n sequence manually,
-                    // and return mEnd after the END:VCARD\r\n position.
-                    QByteArray cr(VersitUtils::encode('\r', mCodec));
-                    QByteArray lf(VersitUtils::encode('\n', mCodec));
-                    QByteArray ev(VersitUtils::encode(QByteArray("END:VCARD"), mCodec));
-                    QByteArray evbv(VersitUtils::encode(QByteArray("END:VCARDBEGIN:VCARD"), mCodec));
-                    QByteArray evcrlf(VersitUtils::encode(QByteArray("END:VCARD\r\n"), mCodec));
-                    int crSz = cr.size();
-                    int lfSz = lf.size();
-                    int evSz = ev.size();
-                    int evcrlfSz = evcrlf.size();
+        nlPos = cursor->mData.indexOf(nl, mSearchFrom);
+        doubleNlCheck = cursor->mData.indexOf(nl, mSearchFrom + nlLength);
+        if ((nlPos == cursor->mStart) && (doubleNlCheck != nlPos + nlLength)) {
+            // Single newline at start of line - ignore and set mStart to directly after it.
+            cursor->mStart += nlLength;
+            mSearchFrom = cursor->mStart;
+            continue;
+        } else if ((nlPos == cursor->mStart) && (doubleNlCheck == nlPos + nlLength)) {
+            // Found '=NLNL' - we choose to see this as badly formed,
+            // but clearly marks the end of the versit property.
+            cursor->mData.remove(nlPos, nlLength);
+            cursor->mEnd = nlPos;
+            if (QVersitReaderPrivate::containsAt(cursor->mData, equals, nlPos - equalsLength) ) {
+                cursor->mData.remove(nlPos - 1, 1);
+            }
+            return true;
+        } else if (nlPos > cursor->mStart) {
+            // Found the first occurrence of newline in the current buffer.
+            if (QVersitReaderPrivate::containsAt(cursor->mData, space, nlPos + nlLength)
+                || QVersitReaderPrivate::containsAt(cursor->mData, tab, nlPos + nlLength)) {
+                // If it's followed by whitespace, collapse it.
+                cursor->mData.remove(nlPos, nlLength + spaceLength);
+                mSearchFrom = nlPos;
+                continue;
+            } else if (!atEnd && nlPos + nlLength + spaceLength >= cursor->mData.size()) {
+                // If our newline is at the end of the current buffer but there's more to read,
+                // it's possible that a space could be hiding on the next read from the device.
+                // Just pretend we didn't see the newline and pick it up the next time round.
+                mSearchFrom = nlPos;
+                return false;
+            } else {
+                // Found the newline.
+                // Hack: if malformed vCard files (having no NL or NLNL ending) are
+                // concatenated, we can get a malformed line in the document which looks like:
+                // END:VCARDBEGIN:VCARD
+                // In that situation, we should actually insert the newline sequence manually,
+                // and return mEnd after the END:VCARD + NL position.
+                QByteArray ev(VersitUtils::encode(QByteArray("END:VCARD"), mCodec));
+                QByteArray evbv(VersitUtils::encode(QByteArray("END:VCARDBEGIN:VCARD"), mCodec));
+                QByteArray evnl(VersitUtils::encode(QByteArray("END:VCARD\n"), mCodec));
 
-                    QByteArray possiblyMalformedLine = cursor->mData.mid(cursor->mStart, crlfPos-cursor->mStart);
-                    int pmlEnd = possiblyMalformedLine.size() - 1;
-                    while (true) {
-                        if (QVersitReaderPrivate::containsAt(possiblyMalformedLine, cr, pmlEnd - crSz)) {
-                            possiblyMalformedLine.chop(crSz);
-                        } else if (QVersitReaderPrivate::containsAt(possiblyMalformedLine, lf, pmlEnd - lfSz)) {
-                            possiblyMalformedLine.chop(lfSz);
-                        } else {
-                            break;
-                        }
-                    }
-                    if (possiblyMalformedLine == evbv) {
-                        // fix up the malformed line, return the end cursor after it.
-                        cursor->mData.replace(cursor->mStart, evSz, evcrlf);
-                        cursor->mEnd = cursor->mStart+evcrlfSz;
-                        return true;
-                    } else {
-                        // A well-formed line.
-                        cursor->mEnd = crlfPos;
-                        return true;
-                    }
+                QByteArray possiblyMalformedLine = cursor->mData.mid(cursor->mStart, nlPos-cursor->mStart);
+                int pmlEnd = possiblyMalformedLine.size() - 1;
+                while (true) {
+                    if (QVersitReaderPrivate::containsAt(possiblyMalformedLine, nl, pmlEnd - nlLength))
+                        possiblyMalformedLine.chop(nlLength);
+                    else
+                        break;
                 }
+                if (possiblyMalformedLine == evbv) {
+                    // fix up the malformed line, return the end cursor after it.
+                    cursor->mData.replace(cursor->mStart, ev.length(), evnl);
+                    cursor->mEnd = cursor->mStart + evnl.length();
+                } else {
+                    // A well-formed line.
+                    cursor->mEnd = nlPos;
+                }
+
+                return true;
             }
         }
-        if (crlfPos == -1) {
-            // No CRLF found.
+        if (nlPos == -1) {
+            // No newline found.
             cursor->mEnd = cursor->mData.size();
             // Next time, continue searching from here.
-            // The largest CRLF will have a size of 8 bytes, so we should backtrack 8 bytes
-            mSearchFrom = qMax(mSearchFrom, cursor->mEnd-8);
+            // The largest newline will have a size of 4 bytes, so we should backtrack 4 bytes
+            mSearchFrom = qMax(mSearchFrom, cursor->mEnd - 4);
             return false;
         }
     }

@@ -382,6 +382,8 @@ public:
             case Variant:    return equal<QVariant>(us, them, member);
             default: qFatal("Unsupported field type");
         }
+        Q_UNREACHABLE();
+        return false;
     }
 
     template<typename Subclass>
@@ -406,6 +408,8 @@ public:
             case Variant:    return *memberVariable<QVariant>(us, member.offset);
             default: qFatal("Unsupported field type");
         }
+        Q_UNREACHABLE();
+        return false;
     }
 
 private:

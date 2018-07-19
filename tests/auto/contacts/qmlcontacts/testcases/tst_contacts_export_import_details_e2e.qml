@@ -371,7 +371,7 @@ ContactsSavingTestCase {
                 // QML/V8 javascript Date.parse cannot be used to parse it,
                 // since it interprets a date string without timezone as using UTC.
                 compare(importedExtendedDetails[i].data,
-                        Qt.formatDateTime(megaContact.extendedDetails[i].data, 'yyyy-MM-ddThh:mm:ss'), "extended detail data");
+                        Qt.formatDateTime(megaContact.extendedDetails[i].data, 'yyyy-MM-ddThh:mm:ss.zzz'), "extended detail data");
             } else {
                 compare(importedExtendedDetails[i].data, megaContact.extendedDetails[i].data, "extended detail data");
             }

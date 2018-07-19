@@ -328,7 +328,7 @@ void tst_QContactDetail::values()
     // string accessors with const char* key
     QCOMPARE(p.value(QContactAddress::FieldStreet).toString(), QString("This is a string"));
     QCOMPARE(p.value(QContactAddress::FieldLocality).toString(), d.toString(Qt::ISODate));
-    QCOMPARE(p.value(QContactAddress::FieldRegion).toString(), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value(QContactAddress::FieldRegion).toString(), dt.toString(Qt::ISODateWithMs));
     QCOMPARE(p.value(QContactAddress::FieldPostcode).toString(), QString("6"));
     QCOMPARE(p.value(QContactAddress::FieldSubTypes).toString(), d.toString(Qt::ISODate));
     QCOMPARE(p.value(QContactAddress::FieldPostOfficeBox).toString(), dt.toString(Qt::ISODate));
@@ -344,7 +344,7 @@ void tst_QContactDetail::values()
     /* Typed accessors, string first, const char* key */
     QCOMPARE(p.value<QString>(QContactAddress::FieldStreet), QString("This is a string"));
     QCOMPARE(p.value<QString>(QContactAddress::FieldLocality), d.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>(QContactAddress::FieldRegion), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldRegion), dt.toString(Qt::ISODateWithMs));
     QCOMPARE(p.value<QString>(QContactAddress::FieldPostcode), QString("6"));
     QCOMPARE(p.value<QString>(QContactAddress::FieldSubTypes), d.toString(Qt::ISODate));
     QCOMPARE(p.value<QString>(QContactAddress::FieldPostOfficeBox), dt.toString(Qt::ISODate));
@@ -419,7 +419,7 @@ void tst_QContactDetail::values()
     /* String accessors */
     QCOMPARE(p.value(QContactAddress::FieldStreet).toString(), QString("This is a string"));
     QCOMPARE(p.value(QContactAddress::FieldLocality).toString(), d.toString(Qt::ISODate));
-    QCOMPARE(p.value(QContactAddress::FieldRegion).toString(), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value(QContactAddress::FieldRegion).toString(), dt.toString(Qt::ISODateWithMs));
     QCOMPARE(p.value(QContactAddress::FieldPostcode).toString(), QString("6"));
     QCOMPARE(p.value(QContactAddress::FieldSubTypes).toString(), d.toString(Qt::ISODate));
     QCOMPARE(p.value(QContactAddress::FieldPostOfficeBox).toString(), dt.toString(Qt::ISODate));
@@ -427,7 +427,7 @@ void tst_QContactDetail::values()
     /* Typed accessors, string first */
     QCOMPARE(p.value<QString>(QContactAddress::FieldStreet), QString("This is a string"));
     QCOMPARE(p.value<QString>(QContactAddress::FieldLocality), d.toString(Qt::ISODate));
-    QCOMPARE(p.value<QString>(QContactAddress::FieldRegion), dt.toString(Qt::ISODate));
+    QCOMPARE(p.value<QString>(QContactAddress::FieldRegion), dt.toString(Qt::ISODateWithMs));
     QCOMPARE(p.value<QString>(QContactAddress::FieldPostcode), QString("6"));
     QCOMPARE(p.value<QString>(QContactAddress::FieldSubTypes), d.toString(Qt::ISODate));
     QCOMPARE(p.value<QString>(QContactAddress::FieldPostOfficeBox), dt.toString(Qt::ISODate));

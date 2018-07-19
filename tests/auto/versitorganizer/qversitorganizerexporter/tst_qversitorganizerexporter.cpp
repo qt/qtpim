@@ -1537,17 +1537,17 @@ void tst_QVersitOrganizerExporter::testExtendedDetail_data()
         QTest::newRow("datetime data (using local time)")
                 << QString("name")
                 << QVariant(QDateTime::fromString("1997-07-16T19:20:30.123+01:00", Qt::ISODate))
-                << jsonArrayWithString.arg("1997-07-16T19:20:30+01:00")
+                << jsonArrayWithString.arg("1997-07-16T19:20:30.123+01:00")
                 << true;
         QTest::newRow("datetime data (using UTC)")
                 << QString("name")
                 << QVariant(QDateTime::fromString("1997-07-16T19:20:30.123+01:00", Qt::ISODate).toUTC())
-                << jsonArrayWithString.arg("1997-07-16T18:20:30Z")
+                << jsonArrayWithString.arg("1997-07-16T18:20:30.123Z")
                 << true;
         QTest::newRow("datetime data (using local time with unspecified timezone)")
                 << QString("name")
                 << QVariant(QDateTime::fromString("1997-07-16T19:20:30", Qt::ISODate))
-                << jsonArrayWithString.arg("1997-07-16T19:20:30")
+                << jsonArrayWithString.arg("1997-07-16T19:20:30.000")
                 << true;
     }
 

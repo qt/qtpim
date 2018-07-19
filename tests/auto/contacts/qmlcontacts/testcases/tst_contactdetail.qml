@@ -197,9 +197,16 @@ TestCase {
         compare(anniversary.calendarId, "myCalendarId")
 
         //compare(anniversary.originalDate, "")
-        var dateTime = new Date(2001, 5, 21)  // 21 May 2001 14:13:09
+        var dateTime = new Date(2001, 4, 21)  // 21 May 2001
         anniversary.originalDate = dateTime
-        compare(anniversary.originalDate, dateTime)
+        // Round trip is not guaranteed to be stable, due to the fact
+        // that ECMA262 Date does not support "Date-only" semantics.
+        // While the originalDate property in C++ side contains the
+        // appropriate QDate value, when converted back into JS Date
+        // we find that it will have been converted to a Date which
+        // matches 2001-05-21T00:00:00.000Z according to the local
+        // timezone, e.g. 2001-05-21T10:00:00.000+10:00.
+        //compare(anniversary.originalDate, dateTime)
 
         compare(anniversary.event, "")
         anniversary.event = "myEvent"
@@ -223,7 +230,7 @@ TestCase {
 
 
     function test_birthday() {
-        var dateTime = new Date(2001, 5, 21, 14, 13, 09)  // 21 May 2001 14:13:09
+        var dateTime = new Date(2001, 4, 21, 14, 13, 09)  // 21 May 2001 14:13:09
         //compare(birthday.birthday, "")
         birthday.birthday = dateTime;
         compare(birthday.birthday, dateTime)
@@ -354,14 +361,14 @@ TestCase {
         location.speed = 30.0;
         compare(location.speed, 30.0)
 
-        var dateTime = new Date(2001, 5, 21, 14, 13, 09)  // 21 May 2001 14:13:09
+        var dateTime = new Date(2001, 4, 21, 14, 13, 09)  // 21 May 2001 14:13:09
         location.timestamp = dateTime;
         compare(location.timestamp, dateTime)
     }
 
 
     function test_globalpresence() {
-        var dateTime = new Date(2001, 5, 21, 14, 13, 09)  // 21 May 2001 14:13:09
+        var dateTime = new Date(2001, 4, 21, 14, 13, 09)  // 21 May 2001 14:13:09
         globalpresence.timestamp = dateTime;
         compare(globalpresence.timestamp, dateTime)
 
@@ -498,7 +505,7 @@ TestCase {
     }
 
     function test_presence() {
-        var DateTime = new Date(2001, 5, 21)  // 21 May 2001
+        var DateTime = new Date(2001, 4, 21)  // 21 May 2001
         presence.timestamp  = DateTime;
         compare(presence.timestamp , DateTime)
 
@@ -554,7 +561,7 @@ TestCase {
 
 
     function test_timestamp() {
-        var modifiedDateTime = new Date(2002, 5, 21)  // 21 May 2001
+        var modifiedDateTime = new Date(2002, 4, 21)  // 21 May 2002
         timestamp.lastModified = modifiedDateTime;
         compare(timestamp.lastModified, modifiedDateTime)
     }

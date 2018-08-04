@@ -44,6 +44,7 @@
 #include <QtCore/qdebug.h>
 #endif
 #include <QtCore/qpluginloader.h>
+#include <QtCore/qregularexpression.h>
 #include <QtCore/private/qfactoryloader_p.h>
 
 #include "qorganizeritemobserver.h"
@@ -332,7 +333,7 @@ bool QOrganizerManagerData::parseUri(const QString &uriString, QString *managerN
     if (!paramString.isEmpty()) {
         // Now we have to decode each parameter
         QMap<QString, QString> outParams;
-        const QStringList pairs = paramString.split(QRegExp(QStringLiteral("&(?!(amp;|equ;|#))")), QString::KeepEmptyParts);
+        const QStringList pairs = paramString.split(QRegularExpression(QStringLiteral("&(?!(amp;|equ;|#))")), QString::KeepEmptyParts);
         for (int i = 0; i < pairs.size(); ++i) {
             // This should be something like "foo&amp;bar&equ;=grob&amp;"
             const QStringList pair = pairs.at(i).split(QLatin1Char('='), QString::KeepEmptyParts);

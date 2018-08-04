@@ -40,6 +40,7 @@
 #include "qvcard30writer_p.h"
 
 #include <QtCore/qbuffer.h>
+#include <QtCore/qregularexpression.h>
 #include <QtCore/qtextcodec.h>
 #include <QtCore/qvariant.h>
 
@@ -180,9 +181,9 @@ void QVCard30Writer::backSlashEscape(QString* text)
                 , with \,
                 \ with \\
      */
-    text->replace(QRegExp(m1), r1);
+    text->replace(QRegularExpression(m1), r1);
     // replaces any CRLFs with \n
-    text->replace(QRegExp(m2), r2);
+    text->replace(QRegularExpression(m2), r2);
 }
 
 QT_END_NAMESPACE_VERSIT

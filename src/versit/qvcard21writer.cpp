@@ -98,7 +98,7 @@ void QVCard21Writer::encodeVersitProperty(const QVersitProperty& property)
             separator = QStringLiteral(",");
         }
         QString replacement = QLatin1Char('\\') + separator;
-        static const QRegularExpression separatorRegex(separator);
+        const QRegularExpression separatorRegex(separator);
 
         // Check first if any of the values need to be UTF-8 encoded (if so, all of them must be
         // UTF-8 encoded)

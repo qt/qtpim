@@ -110,6 +110,6 @@ QList<int> QContactManagerEngineFactory::supportedImplementationVersions() const
     return QList<int>();
 }
 
-#include "moc_qcontactmanagerenginefactory.cpp"
-
 QT_END_NAMESPACE_CONTACTS
+
+#include "moc_qcontactmanagerenginefactory.cpp"

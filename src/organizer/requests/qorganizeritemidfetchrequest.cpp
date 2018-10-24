@@ -162,6 +162,6 @@ QList<QOrganizerItemId> QOrganizerItemIdFetchRequest::itemIds() const
     return d->m_ids;
 }
 
-#include "moc_qorganizeritemidfetchrequest.cpp"
-
 QT_END_NAMESPACE_ORGANIZER
+
+#include "moc_qorganizeritemidfetchrequest.cpp"

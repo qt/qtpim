@@ -212,6 +212,6 @@ QList<QOrganizerItem> QOrganizerItemFetchRequest::items() const
     return d->m_organizeritems;
 }
 
-#include "moc_qorganizeritemfetchrequest.cpp"
-
 QT_END_NAMESPACE_ORGANIZER
+
+#include "moc_qorganizeritemfetchrequest.cpp"

@@ -127,6 +127,6 @@ public:
     }
 };
 
-#include "plugin.moc"
-
 QT_END_NAMESPACE
+
+#include "plugin.moc"

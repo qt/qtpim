@@ -835,6 +835,6 @@ QOrganizerItemFilter QDeclarativeOrganizerItemIdFilter::filter() const
     return f;
 }
 
-#include "moc_qdeclarativeorganizeritemfilter_p.cpp"
-
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativeorganizeritemfilter_p.cpp"

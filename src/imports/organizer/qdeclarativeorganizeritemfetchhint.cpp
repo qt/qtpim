@@ -143,6 +143,6 @@ void QDeclarativeOrganizerItemFetchHint::setFetchHint(const QOrganizerItemFetchH
     emit fetchHintChanged();
 }
 
-#include "moc_qdeclarativeorganizeritemfetchhint_p.cpp"
-
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativeorganizeritemfetchhint_p.cpp"

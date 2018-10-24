@@ -172,6 +172,6 @@ void QDeclarativeContactSortOrder::setSortOrder(const QContactSortOrder& sortOrd
     emit sortOrderChanged();
 }
 
-#include "moc_qdeclarativecontactsortorder_p.cpp"
-
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativecontactsortorder_p.cpp"

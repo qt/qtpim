@@ -125,6 +125,6 @@ QContactAction* QContactActionManager::action(const QContactActionDescriptor& de
     return 0;
 }
 
-#include "moc_qcontactactionmanager_p.cpp"
-
 QT_END_NAMESPACE_CONTACTS
+
+#include "moc_qcontactactionmanager_p.cpp"

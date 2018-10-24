@@ -2481,6 +2481,6 @@ void QContactManagerEngine::updateContactFetchByIdRequest(QContactFetchByIdReque
 #endif
 }
 
-#include "moc_qcontactmanagerengine.cpp"
-
 QT_END_NAMESPACE_CONTACTS
+
+#include "moc_qcontactmanagerengine.cpp"

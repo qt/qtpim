@@ -783,6 +783,6 @@ QList<QOrganizerItemId> QOrganizerManager::extractIds(const QList<QOrganizerItem
     return ids;
 }
 
-#include "moc_qorganizermanager.cpp"
-
 QT_END_NAMESPACE_ORGANIZER
+
+#include "moc_qorganizermanager.cpp"

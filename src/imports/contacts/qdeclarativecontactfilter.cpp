@@ -417,6 +417,6 @@ void QDeclarativeContactCompoundFilter::filters_clear(QQmlListProperty<QDeclarat
     }
 }
 
-#include "moc_qdeclarativecontactfilter_p.cpp"
-
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativecontactfilter_p.cpp"

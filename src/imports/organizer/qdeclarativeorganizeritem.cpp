@@ -1973,6 +1973,6 @@ QString QDeclarativeOrganizerTodoOccurrence::parentId() const
     return QString();
 }
 
-#include "moc_qdeclarativeorganizeritem_p.cpp"
-
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativeorganizeritem_p.cpp"

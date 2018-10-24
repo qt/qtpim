@@ -138,6 +138,6 @@ QMap<int, QOrganizerManager::Error> QOrganizerItemFetchByIdRequest::errorMap() c
     return d->m_errors;
 }
 
-#include "moc_qorganizeritemfetchbyidrequest.cpp"
-
 QT_END_NAMESPACE_ORGANIZER
+
+#include "moc_qorganizeritemfetchbyidrequest.cpp"

@@ -1235,5 +1235,6 @@ void QVersitReaderPrivate::removeBackSlashEscaping(QString* text)
     }
 }
 
-#include "moc_qversitreader_p.cpp"
 QT_END_NAMESPACE_VERSIT
+
+#include "moc_qversitreader_p.cpp"

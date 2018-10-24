@@ -145,5 +145,6 @@ QStringList QVersitContactHandlerFactory::keys() const
   handler provided by this factory.
  */
 
-#include "moc_qversitcontacthandler.cpp"
 QT_END_NAMESPACE_VERSIT
+
+#include "moc_qversitcontacthandler.cpp"

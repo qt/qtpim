@@ -1305,6 +1305,6 @@ void QDeclarativeContactExtendedDetail::setData(const QVariant &newData)
   \endlist
 */
 
-#include "moc_qdeclarativecontactdetail_p.cpp"
-
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativecontactdetail_p.cpp"

@@ -193,6 +193,6 @@ void QDeclarativeContactFetchHint::setFetchHint(const QContactFetchHint& fetchHi
     emit fetchHintChanged();
 }
 
-#include "moc_qdeclarativecontactfetchhint_p.cpp"
-
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativecontactfetchhint_p.cpp"

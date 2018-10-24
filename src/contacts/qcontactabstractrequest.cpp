@@ -354,6 +354,6 @@ QDebug operator<<(QDebug dbg, const QContactAbstractRequest& request)
 }
 #endif
 
-#include "moc_qcontactabstractrequest.cpp"
-
 QT_END_NAMESPACE_CONTACTS
+
+#include "moc_qcontactabstractrequest.cpp"

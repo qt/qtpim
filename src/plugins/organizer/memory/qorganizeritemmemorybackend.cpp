@@ -1488,6 +1488,6 @@ void QOrganizerItemMemoryEngine::performAsynchronousOperation(QOrganizerAbstract
     d->emitSharedSignals(&changeSet);
 }
 
-#include "moc_qorganizeritemmemorybackend_p.cpp"
-
 QT_END_NAMESPACE_ORGANIZER
+
+#include "moc_qorganizeritemmemorybackend_p.cpp"

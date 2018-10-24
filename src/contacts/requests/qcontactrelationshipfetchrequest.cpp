@@ -144,6 +144,6 @@ QList<QContactRelationship> QContactRelationshipFetchRequest::relationships() co
     return d->m_relationships;
 }
 
-#include "moc_qcontactrelationshipfetchrequest.cpp"
-
 QT_END_NAMESPACE_CONTACTS
+
+#include "moc_qcontactrelationshipfetchrequest.cpp"

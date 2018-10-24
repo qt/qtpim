@@ -1576,6 +1576,6 @@ int QDeclarativeContactModel::contactIndex(const QDeclarativeContact* contact)
     return d->m_contacts.size();
 }
 
-#include "moc_qdeclarativecontactmodel_p.cpp"
-
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativecontactmodel_p.cpp"

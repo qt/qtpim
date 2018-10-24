@@ -287,6 +287,6 @@ QContactAction* QContactAction::action(const QContactActionDescriptor& descripto
     return qcam->action(descriptor);
 }
 
-#include "moc_qcontactaction.cpp"
-
 QT_END_NAMESPACE_CONTACTS
+
+#include "moc_qcontactaction.cpp"

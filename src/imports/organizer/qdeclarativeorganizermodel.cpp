@@ -1892,6 +1892,6 @@ QDeclarativeOrganizerCollection* QDeclarativeOrganizerModel::collection_at(QQmlL
     return collection;
 }
 
-#include "moc_qdeclarativeorganizermodel_p.cpp"
-
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativeorganizermodel_p.cpp"

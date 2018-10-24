@@ -117,6 +117,6 @@ QMap<int, QContactManager::Error> QContactRelationshipRemoveRequest::errorMap() 
     return d->m_errors;
 }
 
-#include "moc_qcontactrelationshipremoverequest.cpp"
-
 QT_END_NAMESPACE_CONTACTS
+
+#include "moc_qcontactrelationshipremoverequest.cpp"

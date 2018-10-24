@@ -108,6 +108,6 @@ QMap<int, QOrganizerManager::Error> QOrganizerCollectionSaveRequest::errorMap() 
     return d->m_errors;
 }
 
-#include "moc_qorganizercollectionsaverequest.cpp"
-
 QT_END_NAMESPACE_ORGANIZER
+
+#include "moc_qorganizercollectionsaverequest.cpp"

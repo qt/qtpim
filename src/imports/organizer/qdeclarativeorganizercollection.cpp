@@ -230,6 +230,6 @@ void QDeclarativeOrganizerCollection::setCollection(const QOrganizerCollection &
     d = collection;
 }
 
-#include "moc_qdeclarativeorganizercollection_p.cpp"
-
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativeorganizercollection_p.cpp"

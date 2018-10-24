@@ -148,6 +148,6 @@ QMap<int, QContactManager::Error> QContactFetchByIdRequest::errorMap() const
     return d->m_errors;
 }
 
-#include "moc_qcontactfetchbyidrequest.cpp"
-
 QT_END_NAMESPACE_CONTACTS
+
+#include "moc_qcontactfetchbyidrequest.cpp"

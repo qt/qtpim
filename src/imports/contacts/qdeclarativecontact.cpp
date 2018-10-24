@@ -904,6 +904,6 @@ int QDeclarativeContact::_q_detail_count(QQmlListProperty<QDeclarativeContactDet
         return 0;
 }
 
-#include "moc_qdeclarativecontact_p.cpp"
-
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativecontact_p.cpp"

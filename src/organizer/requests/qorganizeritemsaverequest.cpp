@@ -153,6 +153,6 @@ QList<QOrganizerItemDetail::DetailType> QOrganizerItemSaveRequest::detailMask() 
     return d->m_detailMask;
 }
 
-#include "moc_qorganizeritemsaverequest.cpp"
-
 QT_END_NAMESPACE_ORGANIZER
+
+#include "moc_qorganizeritemsaverequest.cpp"

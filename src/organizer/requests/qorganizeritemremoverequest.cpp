@@ -113,6 +113,6 @@ QMap<int, QOrganizerManager::Error> QOrganizerItemRemoveRequest::errorMap() cons
     return d->m_errors;
 }
 
-#include "moc_qorganizeritemremoverequest.cpp"
-
 QT_END_NAMESPACE_ORGANIZER
+
+#include "moc_qorganizeritemremoverequest.cpp"

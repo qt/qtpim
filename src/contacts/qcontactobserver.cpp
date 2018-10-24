@@ -110,6 +110,6 @@ QContactId QContactObserver::contactId() const {
   This signal is emitted when the observed contact is removed from the manager.
  */
 
-#include "moc_qcontactobserver.cpp"
-
 QT_END_NAMESPACE_CONTACTS
+
+#include "moc_qcontactobserver.cpp"

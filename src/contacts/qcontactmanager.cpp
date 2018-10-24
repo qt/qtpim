@@ -955,6 +955,6 @@ void QContactManager::disconnectNotify(const QMetaMethod &signal)
     }
 }
 
-#include "moc_qcontactmanager.cpp"
-
 QT_END_NAMESPACE_CONTACTS
+
+#include "moc_qcontactmanager.cpp"

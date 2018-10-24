@@ -312,6 +312,6 @@ QDebug operator<<(QDebug dbg, const QOrganizerAbstractRequest &request)
 }
 #endif
 
-#include "moc_qorganizerabstractrequest.cpp"
-
 QT_END_NAMESPACE_ORGANIZER
+
+#include "moc_qorganizerabstractrequest.cpp"

@@ -295,6 +295,6 @@ bool QVersitWriter::waitForFinished(int msec)
     }
 }
 
-#include "moc_qversitwriter.cpp"
-
 QT_END_NAMESPACE_VERSIT
+
+#include "moc_qversitwriter.cpp"

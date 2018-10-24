@@ -270,6 +270,6 @@ void BackupVCardHandler::contactProcessed(
     mDetailNumber = 0;
 }
 
-#include "moc_backupvcardhandler.cpp"
-
 QT_END_NAMESPACE_VERSIT
+
+#include "moc_backupvcardhandler.cpp"

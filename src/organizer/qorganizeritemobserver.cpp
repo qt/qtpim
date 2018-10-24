@@ -108,6 +108,6 @@ QOrganizerItemId QOrganizerItemObserver::itemId() const
     This signal is emitted when the observed item is removed from the manager.
  */
 
-#include "moc_qorganizeritemobserver.cpp"
-
 QT_END_NAMESPACE_ORGANIZER
+
+#include "moc_qorganizeritemobserver.cpp"

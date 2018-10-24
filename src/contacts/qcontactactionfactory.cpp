@@ -136,6 +136,6 @@ QContactActionDescriptor QContactActionFactory::createDescriptor(const QString& 
     return retn;
 }
 
-#include "moc_qcontactactionfactory.cpp"
-
 QT_END_NAMESPACE_CONTACTS
+
+#include "moc_qcontactactionfactory.cpp"

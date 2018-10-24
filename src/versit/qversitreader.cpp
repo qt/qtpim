@@ -275,6 +275,6 @@ QList<QVersitDocument> QVersitReader::results() const
     return d->mVersitDocuments;
 }
 
-#include "moc_qversitreader.cpp"
-
 QT_END_NAMESPACE_VERSIT
+
+#include "moc_qversitreader.cpp"

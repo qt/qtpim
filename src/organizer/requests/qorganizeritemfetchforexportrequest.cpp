@@ -193,6 +193,6 @@ QList<QOrganizerItem> QOrganizerItemFetchForExportRequest::items() const
     return d->m_organizeritems;
 }
 
-#include "moc_qorganizeritemfetchforexportrequest.cpp"
-
 QT_END_NAMESPACE_ORGANIZER
+
+#include "moc_qorganizeritemfetchforexportrequest.cpp"

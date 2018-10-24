@@ -149,6 +149,6 @@ QList<QContact> QContactFetchRequest::contacts() const
     return d->m_contacts;
 }
 
-#include "moc_qcontactfetchrequest.cpp"
-
 QT_END_NAMESPACE_CONTACTS
+
+#include "moc_qcontactfetchrequest.cpp"

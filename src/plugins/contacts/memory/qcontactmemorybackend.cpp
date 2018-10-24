@@ -1099,6 +1099,6 @@ bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &
     return true;
 }
 
-#include "moc_qcontactmemorybackend_p.cpp"
-
 QT_END_NAMESPACE_CONTACTS
+
+#include "moc_qcontactmemorybackend_p.cpp"

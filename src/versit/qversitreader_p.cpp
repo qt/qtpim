@@ -643,6 +643,10 @@ bool QVersitReaderPrivate::parseVersitDocumentBody(LineReader* lineReader, QVers
     while (true) {
         /* Grab it */
         QVersitProperty property = parseNextVersitProperty(document->type(), lineReader);
+        while (property.isEmpty() && !lineReader->atEnd()) {
+            // Work around malformed documents by ignoring empty interior lines
+            property = parseNextVersitProperty(document->type(), lineReader);
+        }
 
         if (property.name() == QStringLiteral("BEGIN")) {
             // Nested Versit document

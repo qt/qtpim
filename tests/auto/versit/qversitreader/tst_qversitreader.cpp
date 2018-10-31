@@ -397,6 +397,24 @@ void tst_QVersitReader::testReading()
     QCOMPARE(mReader->error(), QVersitReader::NoError);
     QCOMPARE(results.count(),1);
 
+    // Exception case for two properties separated by CrLfCrLf
+    const QByteArray emptyInteriorLinesTest =
+            "BEGIN:VCARD\r\n"
+            "VERSION:4.0\r\n"
+            "FN:John\r\n"
+            "\r\n\r\n"
+            "EMAIL;ENCODING=QUOTED-PRINTABLE:john.citizen@example.com\r\n"
+            "END:VCARD\r\n";
+    mInputDevice->close();
+    mInputDevice->setData(emptyInteriorLinesTest);
+    mInputDevice->open(QBuffer::ReadOnly);
+    mInputDevice->seek(0);
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
+    results = mReader->results();
+    QCOMPARE(mReader->state(), QVersitReader::FinishedState);
+    QCOMPARE(mReader->error(), QVersitReader::NoError);
+    QCOMPARE(results.count(), 1);
 
     // vCard 4.0
     const QByteArray& vcard40 =

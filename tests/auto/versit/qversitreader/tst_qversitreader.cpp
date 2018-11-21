@@ -416,6 +416,109 @@ void tst_QVersitReader::testReading()
     QCOMPARE(mReader->error(), QVersitReader::NoError);
     QCOMPARE(results.count(), 1);
 
+    // Exception case for whitespace-only property values
+    const QByteArray whitespaceLinesTest =
+            "BEGIN:VCARD\r\n"
+            "VERSION:4.0\r\n"
+            "FN:John\r\n"
+            " \r\n"
+            "\t\r\n"
+            "EMAIL;ENCODING=QUOTED-PRINTABLE:john.citizen@example.com\r\n"
+            "END:VCARD\r\n";
+    mInputDevice->close();
+    mInputDevice->setData(whitespaceLinesTest);
+    mInputDevice->open(QBuffer::ReadOnly);
+    mInputDevice->seek(0);
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
+    results = mReader->results();
+    QCOMPARE(mReader->state(), QVersitReader::FinishedState);
+    QCOMPARE(mReader->error(), QVersitReader::NoError);
+    QCOMPARE(results.count(), 1);
+
+    // Exception case for leading whitespace lines
+    const QByteArray leadingWhitespaceTest =
+            "\r\n"
+            " \r\n"
+            "BEGIN:VCARD\r\n"
+            "VERSION:4.0\r\n"
+            "FN:John\r\n"
+            "EMAIL;ENCODING=QUOTED-PRINTABLE:john.citizen@example.com\r\n"
+            "END:VCARD\r\n";
+    mInputDevice->close();
+    mInputDevice->setData(leadingWhitespaceTest);
+    mInputDevice->open(QBuffer::ReadOnly);
+    mInputDevice->seek(0);
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
+    results = mReader->results();
+    QCOMPARE(mReader->state(), QVersitReader::FinishedState);
+    QCOMPARE(mReader->error(), QVersitReader::NoError);
+    QCOMPARE(results.count(), 1);
+
+    // Exception case for leading whitespace lines between nested documents
+    const QByteArray interiorWhitespaceNestedTest =
+            "BEGIN:VCALENDAR\r\n"
+            "VERSION:2.0\r\n"
+            "BEGIN:VEVENT\r\n"
+            "DTSTART:20120101T120000Z\r\n"
+            "DTEND:20120101T130000Z\r\n"
+            "COMMENT:Comment\r\n"
+            "DESCRIPTION:Description\r\n"
+            "SUMMARY:Display label\r\n"
+            "PRIORITY:9\r\n"
+            "CATEGORIES:Tag\r\n"
+            "CREATED:20181121T061003Z\r\n"
+            "LAST-MODIFIED:20181121T061003Z\r\n"
+            "X-QTPROJECT-EXTENDED-DETAIL:extended detail: string data;[\\n    \"data\"\\n]\\n\r\n"
+            " \r\n"
+            "X-QTPROJECT-EXTENDED-DETAIL:extended detail: integer data;[\\n    1\\n]\\n\r\n"
+            "X-QTPROJECT-EXTENDED-DETAIL:extended detail: array data;[\\n    [\\n        \"s\r\n"
+            " tring 1\"\\,\\n        \"string 2\"\\n    ]\\n]\\n\r\n"
+            "X-QTPROJECT-EXTENDED-DETAIL:extended detail: object data;[\\n    {\\n        \"\r\n"
+            " key 1\": \"string 1\"\\,\\n        \"key 2\": \"string 2\"\\n    }\\n]\\n\r\n"
+            "X-QTPROJECT-VERSION:1;1234\r\n"
+            "UID:{024ba6db-703f-4445-ae25-2f600d7503c3}\r\n"
+            "BEGIN:VALARM\r\n"
+            "ACTION:AUDIO\r\n"
+            "TRIGGER;RELATED=START:-PT0S\r\n"
+            "REPEAT:1\r\n"
+            "DURATION:PT1S\r\n"
+            "ATTACH:ftp://audible_reminder_data_url\r\n"
+            "END:VALARM\r\n"
+            "BEGIN:VALARM\r\n"
+            "ACTION:EMAIL\r\n"
+            "TRIGGER;RELATED=START:-PT0S\r\n"
+            "REPEAT:1\r\n"
+            "DURATION:PT1S\r\n"
+            "ATTACH:Attachment 1\r\n"
+            "ATTACH:Attachment 2\r\n"
+            "ATTENDEE:Recipient 1\r\n"
+            "ATTENDEE:Recipient 2\r\n"
+            "DESCRIPTION:Email reminder body\r\n"
+            "SUMMARY:Email reminder subject\r\n"
+            "END:VALARM\r\n"
+            "BEGIN:VALARM\r\n"
+            "ACTION:DISPLAY\r\n"
+            "TRIGGER;RELATED=START:-PT0S\r\n"
+            "REPEAT:1\r\n"
+            "DURATION:PT1S\r\n"
+            "X-QTPROJECT-ATTACH:ftp://visual_reminder_data_url\r\n"
+            "DESCRIPTION:Visual reminder message\r\n"
+            "END:VALARM\r\n"
+            "END:VEVENT\r\n"
+            "END:VCALENDAR\r\n";
+    mInputDevice->close();
+    mInputDevice->setData(interiorWhitespaceNestedTest);
+    mInputDevice->open(QBuffer::ReadOnly);
+    mInputDevice->seek(0);
+    QVERIFY2(mReader->startReading(), QString::number(mReader->error()).toLatin1().data());
+    QVERIFY2(mReader->waitForFinished(), QString::number(mReader->error()).toLatin1().data());
+    results = mReader->results();
+    QCOMPARE(mReader->state(), QVersitReader::FinishedState);
+    QCOMPARE(mReader->error(), QVersitReader::NoError);
+    QCOMPARE(results.count(), 1);
+
     // vCard 4.0
     const QByteArray& vcard40 =
         "BEGIN:VCARD\r\nVERSION:4.0\r\nFN:John\r\nEND:VCARD\r\n";

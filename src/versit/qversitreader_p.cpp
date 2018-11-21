@@ -610,7 +610,12 @@ bool QVersitReaderPrivate::parseVersitDocument(LineReader* lineReader, QVersitDo
     QVersitProperty property;
 
     property = parseNextVersitProperty(document->type(), lineReader);
-    QString propertyValue = property.value().trimmed().toUpper();
+    while (property.isEmpty() && !lineReader->atEnd()) {
+        // Work around malformed documents by ignoring empty leading lines
+        property = parseNextVersitProperty(document->type(), lineReader);
+    }
+
+    const QString propertyValue = property.value().trimmed().toUpper();
     if (property.isEmpty()) {
         // A blank document (or end of file) was found.
         document->clear();
@@ -689,7 +694,7 @@ QVersitProperty QVersitReaderPrivate::parseNextVersitProperty(
         LineReader* lineReader)
 {
     LByteArray line = lineReader->readLine();
-    if (line.isEmpty())
+    if (line.isEmpty() || line.toByteArray().trimmed().isEmpty())
         return QVersitProperty();
 
     // Otherwise, do stuff.

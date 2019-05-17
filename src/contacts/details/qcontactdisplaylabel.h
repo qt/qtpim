@@ -57,11 +57,15 @@ public:
 #endif
 
     enum DisplayLabelField {
-        FieldLabel = 0
+        FieldLabel = 0,
+        FieldLabelGroup
     };
 
     void setLabel(const QString& displayLabel);
     QString label() const;
+
+    void setLabelGroup(const QString& displayLabelGroup);
+    QString labelGroup() const;
 
     static QContactFilter match(const QString& label);
 };

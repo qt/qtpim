@@ -209,6 +209,14 @@ QVariant QOrganizerCollection::extendedMetaData(const QString &key) const
 }
 
 /*!
+    Returns all extended metadata of the collection.
+ */
+QVariantMap QOrganizerCollection::extendedMetaData() const
+{
+    return d->m_metaData.value(QOrganizerCollection::KeyExtended).toMap();
+}
+
+/*!
     Returns the meta data of the collection for the given \a key.
  */
 QVariant QOrganizerCollection::metaData(MetaDataKey key) const

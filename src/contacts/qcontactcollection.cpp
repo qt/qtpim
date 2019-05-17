@@ -210,6 +210,14 @@ QVariant QContactCollection::extendedMetaData(const QString &key) const
 }
 
 /*!
+    Returns all extended metadata of the collection.
+ */
+QVariantMap QContactCollection::extendedMetaData() const
+{
+    return d->m_metaData.value(QContactCollection::KeyExtended).toMap();
+}
+
+/*!
     Returns the meta data of the collection for the given \a key.
  */
 QVariant QContactCollection::metaData(MetaDataKey key) const

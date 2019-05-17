@@ -86,6 +86,7 @@ public:
 
     void setExtendedMetaData(const QString &key, const QVariant &value);
     QVariant extendedMetaData(const QString &key) const;
+    QVariantMap extendedMetaData() const;
 
 private:
     friend Q_ORGANIZER_EXPORT size_t qHash(const QOrganizerCollection &key);

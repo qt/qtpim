@@ -344,11 +344,8 @@ QDataStream& operator>>(QDataStream& in, QContactDetail& detail)
         QContactDetail::AccessConstraints accessConstraints(accessConstraintsInt);
         detail.d->m_access = accessConstraints;
 
-        QMapIterator<int, QVariant> it(values);
-        while (it.hasNext()) {
-            it.next();
+        for (auto it = values.cbegin(), end = values.cend(); it != end; ++it)
             detail.setValue(it.key(), it.value());
-        }
     } else {
         in.setStatus(QDataStream::ReadCorruptData);
     }

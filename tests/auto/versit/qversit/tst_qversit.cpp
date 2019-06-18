@@ -136,9 +136,9 @@ void tst_QVersit::testImportVCardFiles()
 
     if (expectedContacts.size() > 0) {
         QCOMPARE(contacts.size(), expectedContacts.size());
-        QListIterator<QContact> i(expectedContacts);
+        auto i = expectedContacts.cbegin();
         foreach (QContact parsed, contacts) {
-            QContact expected = i.next();
+            QContact expected = *i++;
             QList<QContactDetail> expectedDetails = expected.details();
             foreach(QContactDetail expectedDetail, expectedDetails) {
                 QContactDetail::DetailType type = expectedDetail.type();
@@ -588,9 +588,9 @@ void tst_QVersit::testImportICalFiles()
 
     if (expectedItems.size() > 0) {
         QCOMPARE(items.size(), expectedItems.size());
-        QListIterator<QOrganizerItem> i(expectedItems);
+        auto i = expectedItems.cbegin();
         foreach (QOrganizerItem parsed, items) {
-            QOrganizerItem expected = i.next();
+            QOrganizerItem expected = *i++;
             QList<QOrganizerItemDetail> expectedDetails = expected.details();
             foreach(QOrganizerItemDetail expectedDetail, expectedDetails) {
                 QOrganizerItemDetail::DetailType name = expectedDetail.type();

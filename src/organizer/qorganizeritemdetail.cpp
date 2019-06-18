@@ -311,11 +311,8 @@ Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail
 
         detail = QOrganizerItemDetail(static_cast<QOrganizerItemDetail::DetailType>(detailType));
 
-        QMapIterator<int, QVariant> it(values);
-        while (it.hasNext()) {
-            it.next();
+        for (auto it = values.cbegin(), end = values.cend(); it != end; ++it)
             detail.setValue(it.key(), it.value());
-        }
     } else {
         in.setStatus(QDataStream::ReadCorruptData);
     }

@@ -149,10 +149,9 @@ bool QVCardRestoreHandler::propertyProcessed(
         detail.setValue(fieldName.toInt(), deserializeValue(property));
 
         // Replace the equivalent detail in updatedDetails with the new one
-        QMutableListIterator<QContactDetail> it(*updatedDetails);
-        while (it.hasNext()) {
-            if (it.next().key() == detail.key()) {
-                it.remove();
+        for (auto it = updatedDetails->begin(), end = updatedDetails->end(); it != end; ++it) {
+            if (it->key() == detail.key()) {
+                updatedDetails->erase(it);
                 break;
             }
         }

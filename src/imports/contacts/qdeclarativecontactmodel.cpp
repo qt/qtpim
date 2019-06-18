@@ -913,25 +913,21 @@ void QDeclarativeContactModel::collectionsFetched()
             declCollections.insert(declCollection->collection().id().toString(), declCollection);
         }
         // go tables through
-        QHashIterator<QString, const QContactCollection*> collIterator(collections);
-        while (collIterator.hasNext()) {
-            collIterator.next();
-            if (declCollections.contains(collIterator.key())) {
+        for (auto it = collections.cbegin(), end = collections.cend(); it != end; ++it) {
+            if (declCollections.contains(it.key())) {
                 // collection on both sides, update the declarative collection
-                declCollections.value(collIterator.key())->setCollection(*collections.value(collIterator.key()));
+                declCollections.value(it.key())->setCollection(*it.value());
             } else {
                 // new collection, add it to declarative collection list
                 QDeclarativeContactCollection* declCollection = new QDeclarativeContactCollection(this);
-                declCollection->setCollection(*collections.value(collIterator.key()));
+                declCollection->setCollection(*it.value());
                 d->m_collections.append(declCollection);
             }
         }
-        QHashIterator<QString, QDeclarativeContactCollection*> declCollIterator(declCollections);
-        while (declCollIterator.hasNext()) {
-            declCollIterator.next();
-            if (!collections.contains(declCollIterator.key())) {
+        for (auto it = declCollections.cbegin(), end = declCollections.cend(); it != end; ++it) {
+            if (!collections.contains(it.key())) {
                 // collection deleted on the backend side, delete from declarative collection list
-                QDeclarativeContactCollection* toBeDeletedColl = declCollections.value(declCollIterator.key());
+                QDeclarativeContactCollection* toBeDeletedColl = it.value();
                 d->m_collections.removeOne(toBeDeletedColl);
                 toBeDeletedColl->deleteLater();
             }

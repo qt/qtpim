@@ -203,6 +203,7 @@ QDataStream &operator>>(QDataStream &in, QOrganizerItemFilter &filter)
                 break;
             case QOrganizerItemFilter::DetailFilter:
                 filter = QOrganizerItemDetailFilter();
+                break;
             case QOrganizerItemFilter::DetailFieldFilter:
                 filter = QOrganizerItemDetailFieldFilter();
                 break;

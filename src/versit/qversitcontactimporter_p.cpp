@@ -844,15 +844,17 @@ bool QVersitContactImporterPrivate::createFavorite(
     else
         return false;
 
-    value = takeFirst(values);
-    if (value.isEmpty())
-        return false;
-    bool ok = true;
-    int index = value.toInt(&ok);
-    if (ok)
-        favorite.setIndex(index);
-    else
-        return false;
+    if (property.name() == QStringLiteral("X-QTPROJECT-FAVORITE")) {
+        value = takeFirst(values);
+        if (value.isEmpty())
+            return false;
+        bool ok = true;
+        int index = value.toInt(&ok);
+        if (ok)
+            favorite.setIndex(index);
+        else
+            return false;
+    }
 
     saveDetailWithContext(updatedDetails, favorite, extractContexts(property));
     return true;

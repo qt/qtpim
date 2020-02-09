@@ -479,6 +479,12 @@ QVersitReaderPrivate::valueTypeMap() {
                              QVersitProperty::ListType);
         mValueTypeMap->insert(qMakePair(QVersitDocument::VCard21Type, QString::fromLatin1("X-NICKNAME")),
                              QVersitProperty::ListType);
+        mValueTypeMap->insert(qMakePair(QVersitDocument::VCard21Type, QString::fromLatin1("X-FOLKS-FAVOURITE")),
+                              QVersitProperty::CompoundType);
+        mValueTypeMap->insert(qMakePair(QVersitDocument::VCard30Type, QString::fromLatin1("X-FOLKS-FAVOURITE")),
+                             QVersitProperty::CompoundType);
+        mValueTypeMap->insert(qMakePair(QVersitDocument::VCard40Type, QString::fromLatin1("X-FOLKS-FAVOURITE")),
+                             QVersitProperty::CompoundType);
         mValueTypeMap->insert(qMakePair(QVersitDocument::VCard30Type, QString::fromLatin1("X-NICKNAME")),
                              QVersitProperty::ListType);
         mValueTypeMap->insert(qMakePair(QVersitDocument::VCard40Type, QString::fromLatin1("X-NICKNAME")),

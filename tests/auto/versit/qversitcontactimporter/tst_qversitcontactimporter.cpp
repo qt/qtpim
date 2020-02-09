@@ -1375,6 +1375,42 @@ void tst_QVersitContactImporter::addFavoritePropertyToDocument(QString favorite,
     document.addProperty(property);
 }
 
+void tst_QVersitContactImporter::testFolksFavorite()
+{
+    QFETCH(QString, favoriteValue);
+    QFETCH(bool, favoriteCreated);
+    QVersitDocument document(QVersitDocument::VCard30Type);
+    QVersitProperty property;
+    property.setName(QStringLiteral("X-FOLKS-FAVOURITE"));
+    property.setValue(QStringList{favoriteValue});
+    property.setValueType(QVersitProperty::CompoundType);
+    document.addProperty(property);
+
+    QVERIFY(mImporter->importDocuments(QList<QVersitDocument>() << document));
+
+    QContact contact = mImporter->contacts().first();
+    if (!favoriteCreated) {
+        QCOMPARE(contact.details(QContactFavorite::Type).size(), 0);
+        return;
+    }
+    QContactFavorite favorite = (QContactFavorite)contact.detail(QContactFavorite::Type);
+    QString actualFavoriteValue = favorite.isFavorite() ? QStringLiteral("true") : QStringLiteral("false");
+    QCOMPARE(actualFavoriteValue, favoriteValue);
+}
+
+void tst_QVersitContactImporter::testFolksFavorite_data()
+{
+    QTest::addColumn<QString>("favoriteValue");
+    QTest::addColumn<bool>("favoriteCreated");
+
+    {
+        QTest::newRow("favorite true") << QString("true") << true;
+        QTest::newRow("favorite false") << QString("false") << true;
+        QTest::newRow("favorite invalid") << QString("invalid") << false;
+        QTest::newRow("favorite empty") << QString("") << false;
+    }
+}
+
 void tst_QVersitContactImporter::testSound()
 {
     // Test embedded sound file

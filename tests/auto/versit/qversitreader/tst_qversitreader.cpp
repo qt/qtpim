@@ -803,6 +803,17 @@ void tst_QVersitReader::testParseNextVersitProperty_data()
 
     {
         QVersitProperty expectedProperty;
+        expectedProperty.setName(QStringLiteral("X-FOLKS-FAVOURITE"));
+        expectedProperty.setValue(QStringLiteral("true"));
+        expectedProperty.setValueType(QVersitProperty::CompoundType);
+        QTest::newRow("vcard21 folks favorite")
+            << QVersitDocument::VCard21Type
+            << QByteArray("X-FOLKS-FAVOURITE:true")
+            << expectedProperty;
+    }
+
+    {
+        QVersitProperty expectedProperty;
         expectedProperty.setName(QStringLiteral("X-QTPROJECT-EXTENDED-DETAIL"));
         QStringList components;
         components << QStringLiteral("name")

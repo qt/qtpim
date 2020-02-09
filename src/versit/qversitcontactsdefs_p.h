@@ -163,7 +163,10 @@ const VersitContactDetailMapping versitContactDetailMappings[] = {
     {"X-SPOUSE",      QContactFamily::Type,
                       QContactFamily::FieldSpouse},
     {"X-YAHOO",       QContactOnlineAccount::Type,
-                      -1}
+                      -1},
+    // In the bottom, because these are lower-priority properties:
+    {"X-FOLKS-FAVOURITE", QContactFavorite::Type,
+                      -1},
 };
 //! [Property name mappings]
 

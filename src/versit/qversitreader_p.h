@@ -276,7 +276,7 @@ public: // New functions
                               bool hasEscapedBackslashes) const;
     static QStringList splitValue(const QString& string,
                                   const QChar& sep,
-                                  QString::SplitBehavior behaviour,
+                                  Qt::SplitBehavior behavior,
                                   bool hasEscapedBackslashes);
     static void removeBackSlashEscaping(QString* text);
 

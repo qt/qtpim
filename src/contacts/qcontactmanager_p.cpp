@@ -418,7 +418,7 @@ bool QContactManagerData::parseUri(const QString &uriString, QString *managerNam
     // we assume that the prefix, managerid, and params cannot contain `:', `=', or `&'
     // similarly, that neither param keys nor param values can contain these characters.
 
-    const QStringList colonSplit = uriString.split(QLatin1Char(':'), QString::KeepEmptyParts);
+    const QStringList colonSplit = uriString.split(QLatin1Char(':'), Qt::KeepEmptyParts);
     if ((colonSplit.size() != 3) && (strict || colonSplit.size() != 2))
         return false;
 
@@ -432,10 +432,10 @@ bool QContactManagerData::parseUri(const QString &uriString, QString *managerNam
     if (!paramString.isEmpty()) {
         // Now we have to decode each parameter
         QMap<QString, QString> outParams;
-        const QStringList pairs = paramString.split(QRegularExpression(QStringLiteral("&(?!(amp;|equ;|#))")), QString::KeepEmptyParts);
+        const QStringList pairs = paramString.split(QRegularExpression(QStringLiteral("&(?!(amp;|equ;|#))")), Qt::KeepEmptyParts);
         for (int i = 0; i < pairs.size(); ++i) {
             // This should be something like "foo&amp;bar&equ;=grob&amp;"
-            const QStringList pair = pairs.at(i).split(QLatin1Char('='), QString::KeepEmptyParts);
+            const QStringList pair = pairs.at(i).split(QLatin1Char('='), Qt::KeepEmptyParts);
             if (pair.size() != 2)
                 return false;
 

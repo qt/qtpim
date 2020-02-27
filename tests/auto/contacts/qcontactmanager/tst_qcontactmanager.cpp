@@ -2132,13 +2132,12 @@ void tst_QContactManager::changeSet()
     QSet<QContactId> changedIds;
     QSet<QContactDetail::DetailType> changedTypes;
     foreach (const QContactChangeSet::ContactChangeList &changes, changeSet.changedContacts()) {
-        changedIds |= changes.second.toSet();
-        if (changes.second.contains(id)) {
-            changedTypes |= changes.first.toSet();
-        }
+        changedIds |= QSet<QContactId>(changes.second.constBegin(), changes.second.constEnd());
+        if (changes.second.contains(id))
+            changedTypes |= QSet<QContactId>(changes.first.constBegin(), changes.first.constEnd());
     }
-    QCOMPARE(changedIds, (QList<QContactId>() << id).toSet());
-    QCOMPARE(changedTypes, (QList<QContactDetail::DetailType>() << QContactName::Type << QContactBirthday::Type).toSet());
+    QCOMPARE(changedIds, (QSet<QContactId>() << id));
+    QCOMPARE(changedTypes, (QSet<QContactDetail::DetailType>() << QContactName::Type << QContactBirthday::Type));
     changeSet.clearChangedContacts();
     QVERIFY(changeSet.changedContacts().isEmpty());
 
@@ -2150,7 +2149,8 @@ void tst_QContactManager::changeSet()
     changeSet.insertChangedContacts(l1, QList<QContactDetail::DetailType>() << QContactName::Type << QContactBirthday::Type);
     changeSet.insertChangedContacts(l2, QList<QContactDetail::DetailType>() << QContactBirthday::Type << QContactName::Type << QContactBirthday::Type);
     QCOMPARE(changeSet.changedContacts().size(), 1);
-    QList<QContactId> expected((l1.toSet() | l2.toSet()).toList());
+    QList<QContactId> expected((QSet<QContactId>(l1.constBegin(), l1.constEnd())
+                                | QSet<QContactId>(l2.constBegin(), l2.constEnd())).values());
     qSort(expected);
     QCOMPARE(changeSet.changedContacts().first().second, expected);
 
@@ -2167,7 +2167,7 @@ void tst_QContactManager::changeSet()
 
     changeSet2.clearAddedContacts();
     QVERIFY(changeSet2.addedContacts().isEmpty());
-    changeSet2.insertAddedContacts(changeSet.addedContacts().toList());
+    changeSet2.insertAddedContacts(changeSet.addedContacts().values());
     QVERIFY(changeSet.addedContacts() == changeSet2.addedContacts());
 
     changeSet2.clearAll();

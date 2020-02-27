@@ -2328,7 +2328,7 @@ bool QContactManagerEngine::saveContacts(QList<QContact> *contacts, const QList<
         // Prepare the list to save
         QList<QContact> contactsToSave;
         QList<int> savedToOriginalMap; // contactsToSave index to contacts index
-        QSet<QContactDetail::DetailType> mask = typeMask.toSet();
+        QSet<QContactDetail::DetailType> mask(typeMask.begin(), typeMask.end());
 
         for (int i = 0; i < contacts->count(); i++) {
             // See if this is an existing contact or a new one

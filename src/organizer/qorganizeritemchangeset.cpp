@@ -325,14 +325,14 @@ void QOrganizerItemChangeSet::emitSignals(QOrganizerManagerEngine *engine) const
         emit engine->dataChanged();
     } else {
         if (!d->m_addedItems.isEmpty())
-            emit engine->itemsAdded(d->m_addedItems.toList());
+            emit engine->itemsAdded(d->m_addedItems.values());
         if (!d->m_changedItems.isEmpty()) {
             QList<ItemChangeList>::const_iterator it = d->m_changedItems.constBegin(), end = d->m_changedItems.constEnd();
             for ( ; it != end; ++it)
                 emit engine->itemsChanged((*it).second, (*it).first);
         }
         if (!d->m_removedItems.isEmpty())
-            emit engine->itemsRemoved(d->m_removedItems.toList());
+            emit engine->itemsRemoved(d->m_removedItems.values());
         if (!d->m_modifiedItems.isEmpty())
             emit engine->itemsModified(d->m_modifiedItems);
     }

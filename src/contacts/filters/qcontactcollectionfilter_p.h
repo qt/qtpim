@@ -100,7 +100,7 @@ public:
     QDebug &debugStreamOut(QDebug &dbg) const
     {
         dbg.nospace() << "QContactCollectionFilter(collectionIds=";
-        QList<QContactCollectionId> ids(m_ids.toList());
+        QList<QContactCollectionId> ids(m_ids.values());
         std::sort(ids.begin(), ids.end());
         dbg.nospace() << ids;
         dbg.nospace() << ")";

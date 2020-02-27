@@ -2733,13 +2733,15 @@ void tst_QOrganizerManager::changeSet()
     QSet<QOrganizerItemId> changedIds;
     QSet<QOrganizerItemDetail::DetailType> changedTypes;
     foreach (const QOrganizerItemChangeSet::ItemChangeList &changes, changeSet.changedItems()) {
-        changedIds |= changes.second.toSet();
+        changedIds |= QSet<QOrganizerItemId>(changes.second.constBegin(),
+                                             changes.second.constEnd());
         if (changes.second.contains(id)) {
-            changedTypes |= changes.first.toSet();
+            changedTypes |= QSet<QOrganizerItemId>(changes.first.constBegin(),
+                                                   changes.first.constEnd());
         }
     }
-    QCOMPARE(changedIds, (QList<QOrganizerItemId>() << id).toSet());
-    QCOMPARE(changedTypes, (QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription << QOrganizerItemDetail::TypeTag).toSet());
+    QCOMPARE(changedIds, (QSet<QOrganizerItemId>() << id));
+    QCOMPARE(changedTypes, (QSet<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription << QOrganizerItemDetail::TypeTag));
     changeSet.clearChangedItems();
     QVERIFY(changeSet.changedItems().isEmpty());
 
@@ -2751,7 +2753,9 @@ void tst_QOrganizerManager::changeSet()
     changeSet.insertChangedItems(l1, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription << QOrganizerItemDetail::TypeTag);
     changeSet.insertChangedItems(l2, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeTag << QOrganizerItemDetail::TypeDescription << QOrganizerItemDetail::TypeTag);
     QCOMPARE(changeSet.changedItems().size(), 1);
-    QList<QOrganizerItemId> expected((l1.toSet() | l2.toSet()).toList());
+    QList<QOrganizerItemId> expected(
+        (QSet<QOrganizerItemId>(l1.constBegin(), l1.constEnd())
+         | QSet<QOrganizerItemId>(l2.constBegin(), l2.constEnd())).values());
     qSort(expected);
     QCOMPARE(changeSet.changedItems().first().second, expected);
 
@@ -2768,7 +2772,7 @@ void tst_QOrganizerManager::changeSet()
 
     changeSet2.clearAddedItems();
     QVERIFY(changeSet2.addedItems().isEmpty());
-    changeSet2.insertAddedItems(changeSet.addedItems().toList());
+    changeSet2.insertAddedItems(changeSet.addedItems().values());
     QVERIFY(changeSet.addedItems() == changeSet2.addedItems());
 
     changeSet2.clearAll();
@@ -2822,7 +2826,7 @@ void tst_QOrganizerManager::changeSet()
 
     colChangeSet2.clearAddedCollections();
     QVERIFY(colChangeSet2.addedCollections().isEmpty());
-    colChangeSet2.insertAddedCollections(colChangeSet.addedCollections().toList());
+    colChangeSet2.insertAddedCollections(colChangeSet.addedCollections().values());
     QVERIFY(colChangeSet.addedCollections() == colChangeSet2.addedCollections());
 
     colChangeSet2.clearAll();

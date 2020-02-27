@@ -406,18 +406,18 @@ void QContactChangeSet::emitSignals(QContactManagerEngine *engine) const
         emit engine->dataChanged();
     } else {
         if (!d->m_addedContacts.isEmpty())
-            emit engine->contactsAdded(d->m_addedContacts.toList());
+            emit engine->contactsAdded(d->m_addedContacts.values());
         if (!d->m_changedContacts.isEmpty()) {
             QList<ContactChangeList>::const_iterator it = d->m_changedContacts.constBegin(), end = d->m_changedContacts.constEnd();
             for ( ; it != end; ++it)
                 emit engine->contactsChanged((*it).second, (*it).first);
         }
         if (!d->m_removedContacts.isEmpty())
-            emit engine->contactsRemoved(d->m_removedContacts.toList());
+            emit engine->contactsRemoved(d->m_removedContacts.values());
         if (!d->m_addedRelationships.isEmpty())
-            emit engine->relationshipsAdded(d->m_addedRelationships.toList());
+            emit engine->relationshipsAdded(d->m_addedRelationships.values());
         if (!d->m_removedRelationships.isEmpty())
-            emit engine->relationshipsRemoved(d->m_removedRelationships.toList());
+            emit engine->relationshipsRemoved(d->m_removedRelationships.values());
         if (d->m_oldAndNewSelfContactId.first != d->m_oldAndNewSelfContactId.second)
             emit engine->selfContactIdChanged(d->m_oldAndNewSelfContactId.first, d->m_oldAndNewSelfContactId.second);
     }

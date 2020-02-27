@@ -99,7 +99,7 @@ public:
     QDebug &debugStreamOut(QDebug &dbg) const
     {
         dbg.nospace() << "QOrganizerItemCollectionFilter(collectionIds=";
-        QList<QOrganizerCollectionId> ids(m_ids.toList());
+        QList<QOrganizerCollectionId> ids(m_ids.values());
         std::sort(ids.begin(), ids.end());
         dbg.nospace() << ids;
         dbg.nospace() << ")";

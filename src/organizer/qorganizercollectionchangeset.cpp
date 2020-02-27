@@ -262,11 +262,11 @@ void QOrganizerCollectionChangeSet::emitSignals(QOrganizerManagerEngine *engine)
         emit engine->dataChanged();
     } else {
         if (!d->m_addedCollections.isEmpty())
-            emit engine->collectionsAdded(d->m_addedCollections.toList());
+            emit engine->collectionsAdded(d->m_addedCollections.values());
         if (!d->m_changedCollections.isEmpty())
-            emit engine->collectionsChanged(d->m_changedCollections.toList());
+            emit engine->collectionsChanged(d->m_changedCollections.values());
         if (!d->m_removedCollections.isEmpty())
-            emit engine->collectionsRemoved(d->m_removedCollections.toList());
+            emit engine->collectionsRemoved(d->m_removedCollections.values());
         if (!d->m_modifiedCollections.isEmpty())
             emit engine->collectionsModified(d->m_modifiedCollections);
 

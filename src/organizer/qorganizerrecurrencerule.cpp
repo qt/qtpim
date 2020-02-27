@@ -555,7 +555,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule &rule)
         break;
     }
     dbg.nospace() << ",daysOfWeek=\"";
-    QList<Qt::DayOfWeek> wdays(rule.daysOfWeek().toList());
+    QList<Qt::DayOfWeek> wdays(rule.daysOfWeek().values());
     std::sort(wdays.begin(), wdays.end());
     foreach (Qt::DayOfWeek day, wdays) {
         dbg.nospace() << static_cast<quint32>(day);
@@ -564,7 +564,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule &rule)
     dbg.nospace() << "\"";
 
     dbg.nospace() << ",daysOfMonth=\"";
-    QList<int> mdays(rule.daysOfMonth().toList());
+    QList<int> mdays(rule.daysOfMonth().values());
     std::sort(mdays.begin(), mdays.end());
     foreach (int day, mdays) {
         dbg.nospace() << day;
@@ -573,7 +573,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule &rule)
     dbg.nospace() << "\"";
 
     dbg.nospace() << ",daysOfYear=\"";
-    QList<int> ydays(rule.daysOfYear().toList());
+    QList<int> ydays(rule.daysOfYear().values());
     std::sort(ydays.begin(), ydays.end());
     foreach (int day, ydays) {
         dbg.nospace() << day;
@@ -582,7 +582,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule &rule)
     dbg.nospace() << "\"";
 
     dbg.nospace() << ",monthsOfYear=\"";
-    QList<QOrganizerRecurrenceRule::Month> months(rule.monthsOfYear().toList());
+    QList<QOrganizerRecurrenceRule::Month> months(rule.monthsOfYear().values());
     std::sort(months.begin(), months.end());
     foreach (QOrganizerRecurrenceRule::Month month, months) {
         dbg.nospace() << static_cast<quint32>(month);
@@ -591,7 +591,7 @@ QDebug operator<<(QDebug dbg, const QOrganizerRecurrenceRule &rule)
     dbg.nospace() << "\"";
 
     dbg.nospace() << ",positions=\"";
-    QList<int> positions(rule.positions().toList());
+    QList<int> positions(rule.positions().values());
     std::sort(positions.begin(), positions.end());
     foreach (int position, positions) {
         dbg.nospace() << position;

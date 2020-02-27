@@ -180,7 +180,7 @@ QStringList QContactAction::availableActions(const QString& serviceName)
         }
     }
 
-    return ret.toList();
+    return ret.values();
 }
 
 

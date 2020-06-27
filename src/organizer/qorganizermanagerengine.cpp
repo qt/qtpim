@@ -310,10 +310,10 @@ QList<QOrganizerItemId> QOrganizerManagerEngine::itemIds(const QOrganizerItemFil
                                                          const QList<QOrganizerItemSortOrder> &sortOrders,
                                                          QOrganizerManager::Error *error)
 {
-    Q_UNUSED(startDateTime)
-    Q_UNUSED(endDateTime)
-    Q_UNUSED(filter)
-    Q_UNUSED(sortOrders)
+    Q_UNUSED(startDateTime);
+    Q_UNUSED(endDateTime);
+    Q_UNUSED(filter);
+    Q_UNUSED(sortOrders);
 
     *error = QOrganizerManager::NotSupportedError;
     return QList<QOrganizerItemId>();
@@ -344,12 +344,12 @@ QList<QOrganizerItem> QOrganizerManagerEngine::items(const QOrganizerItemFilter 
                                                      const QList<QOrganizerItemSortOrder> &sortOrders,
                                                      const QOrganizerItemFetchHint &fetchHint, QOrganizerManager::Error *error)
 {
-    Q_UNUSED(filter)
-    Q_UNUSED(startDateTime)
-    Q_UNUSED(endDateTime)
-    Q_UNUSED(maxCount)
-    Q_UNUSED(sortOrders)
-    Q_UNUSED(fetchHint)
+    Q_UNUSED(filter);
+    Q_UNUSED(startDateTime);
+    Q_UNUSED(endDateTime);
+    Q_UNUSED(maxCount);
+    Q_UNUSED(sortOrders);
+    Q_UNUSED(fetchHint);
 
     *error = QOrganizerManager::NotSupportedError;
     return QList<QOrganizerItem>();
@@ -383,11 +383,11 @@ QList<QOrganizerItem> QOrganizerManagerEngine::itemsForExport(const QDateTime &s
                                                               const QOrganizerItemFetchHint &fetchHint,
                                                               QOrganizerManager::Error *error)
 {
-    Q_UNUSED(startDateTime)
-    Q_UNUSED(endDateTime)
-    Q_UNUSED(filter)
-    Q_UNUSED(sortOrders)
-    Q_UNUSED(fetchHint)
+    Q_UNUSED(startDateTime);
+    Q_UNUSED(endDateTime);
+    Q_UNUSED(filter);
+    Q_UNUSED(sortOrders);
+    Q_UNUSED(fetchHint);
 
     *error = QOrganizerManager::NotSupportedError;
     return QList<QOrganizerItem>();
@@ -411,9 +411,9 @@ QList<QOrganizerItem> QOrganizerManagerEngine::itemsForExport(const QDateTime &s
 QList<QOrganizerItem> QOrganizerManagerEngine::items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint,
                                                      QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
 {
-    Q_UNUSED(itemIds)
-    Q_UNUSED(fetchHint)
-    Q_UNUSED(errorMap)
+    Q_UNUSED(itemIds);
+    Q_UNUSED(fetchHint);
+    Q_UNUSED(errorMap);
 
     *error = QOrganizerManager::NotSupportedError;
     return QList<QOrganizerItem>();
@@ -434,7 +434,7 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerManagerEngine::supportedFilter
  */
 QList<QOrganizerItemDetail::DetailType> QOrganizerManagerEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
-    Q_UNUSED(itemType)
+    Q_UNUSED(itemType);
     return QList<QOrganizerItemDetail::DetailType>();
 }
 
@@ -473,9 +473,9 @@ QList<QOrganizerItemType::ItemType> QOrganizerManagerEngine::supportedItemTypes(
 bool QOrganizerManagerEngine::saveItems(QList<QOrganizerItem> *items, const QList<QOrganizerItemDetail::DetailType> &detailMask,
                                         QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
 {
-    Q_UNUSED(items)
-    Q_UNUSED(detailMask)
-    Q_UNUSED(errorMap)
+    Q_UNUSED(items);
+    Q_UNUSED(detailMask);
+    Q_UNUSED(errorMap);
 
     *error = QOrganizerManager::NotSupportedError;
     return false;
@@ -495,8 +495,8 @@ bool QOrganizerManagerEngine::saveItems(QList<QOrganizerItem> *items, const QLis
 bool QOrganizerManagerEngine::removeItems(const QList<QOrganizerItemId> &itemIds, QMap<int, QOrganizerManager::Error> *errorMap,
                                           QOrganizerManager::Error *error)
 {
-    Q_UNUSED(itemIds)
-    Q_UNUSED(errorMap)
+    Q_UNUSED(itemIds);
+    Q_UNUSED(errorMap);
 
     *error = QOrganizerManager::NotSupportedError;
     return false;
@@ -517,8 +517,8 @@ bool QOrganizerManagerEngine::removeItems(const QList<QOrganizerItemId> &itemIds
 bool QOrganizerManagerEngine::removeItems(const QList<QOrganizerItem> *items, QMap<int, QOrganizerManager::Error> *errorMap,
                                           QOrganizerManager::Error *error)
 {
-    Q_UNUSED(items)
-    Q_UNUSED(errorMap)
+    Q_UNUSED(items);
+    Q_UNUSED(errorMap);
 
     *error = QOrganizerManager::NotSupportedError;
     return false;

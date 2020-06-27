@@ -2345,7 +2345,7 @@ void tst_QOrganizerManager::observerDeletion()
     QVERIFY(manager->saveItem(&c));
     QOrganizerItemId id = c.id();
     QOrganizerItemObserver *observer = new QOrganizerItemObserver(manager, id);
-    Q_UNUSED(observer)
+    Q_UNUSED(observer);
     delete manager;
     delete observer;
     // Test for bug MOBILITY-2566 - that QOrganizerItemObserver doesn't crash when it is

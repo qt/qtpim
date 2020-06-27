@@ -480,7 +480,7 @@ void QVersitOrganizerExporterPrivate::encodeRecurDates(
         QList<QVersitProperty>* removedProperties,
         QList<QVersitProperty>* generatedProperties)
 {
-    Q_UNUSED(item)
+    Q_UNUSED(item);
 
     QVersitProperty property;
     property = takeProperty(document, propertyName, removedProperties);

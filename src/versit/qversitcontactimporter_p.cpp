@@ -310,7 +310,7 @@ bool QVersitContactImporterPrivate::createPhone(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
+    Q_UNUSED(contact);
     QContactPhoneNumber phone;
     QString value(property.value());
     if (value.isEmpty())
@@ -346,7 +346,7 @@ bool QVersitContactImporterPrivate::createAddress(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
+    Q_UNUSED(contact);
     QContactAddress address;
 
     QVariant variant = property.variantValue();
@@ -470,7 +470,7 @@ bool QVersitContactImporterPrivate::createTimeStamp(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
+    Q_UNUSED(contact);
     QContactTimestamp timeStamp;
     QString value(property.value());
     QDateTime dateTime = parseDateTime(value);
@@ -519,7 +519,7 @@ bool QVersitContactImporterPrivate::createAnniversary(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
+    Q_UNUSED(contact);
     QContactAnniversary anniversary;
     bool justDate = false;
     QDateTime dateTime = parseDateTime(property.value(), &justDate);
@@ -541,7 +541,7 @@ bool QVersitContactImporterPrivate::createBirthday(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
+    Q_UNUSED(contact);
     QContactBirthday bday;
     bool justDate = false;
     QDateTime dateTime = parseDateTime(property.value(), &justDate);
@@ -586,7 +586,7 @@ bool QVersitContactImporterPrivate::createNicknames(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
+    Q_UNUSED(contact);
     QVariant variant = property.variantValue();
     if (property.valueType() != QVersitProperty::ListType
             || variant.type() != QVariant::StringList)
@@ -618,7 +618,7 @@ bool QVersitContactImporterPrivate::createTags(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
+    Q_UNUSED(contact);
     QVariant variant = property.variantValue();
     if (property.valueType() != QVersitProperty::ListType
             || variant.type() != QVariant::StringList)
@@ -650,7 +650,7 @@ bool QVersitContactImporterPrivate::createOnlineAccount(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
+    Q_UNUSED(contact);
     QContactOnlineAccount onlineAccount;
     QString value(property.value());
     if (value.isEmpty())
@@ -718,7 +718,7 @@ bool QVersitContactImporterPrivate::createRingtone(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
+    Q_UNUSED(contact);
     QString location;
     QByteArray data;
     if (saveDataFromProperty(property, &location, &data) && !location.isEmpty()) {
@@ -738,7 +738,7 @@ bool QVersitContactImporterPrivate::createAvatar(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
+    Q_UNUSED(contact);
     QString location;
     QByteArray data;
     bool success = false;
@@ -760,7 +760,7 @@ bool QVersitContactImporterPrivate::createGeoLocation(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
+    Q_UNUSED(contact);
     QContactGeoLocation geo;
     QVariant variant = property.variantValue();
     if (property.valueType() != QVersitProperty::CompoundType
@@ -903,7 +903,7 @@ bool QVersitContactImporterPrivate::createExtendedDetail(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
+    Q_UNUSED(contact);
     QContactExtendedDetail extendedDetail;
     const QVariant variant = property.variantValue();
     if (property.valueType() != QVersitProperty::CompoundType
@@ -930,7 +930,7 @@ bool QVersitContactImporterPrivate::createNameValueDetail(
     QContact* contact,
     QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
+    Q_UNUSED(contact);
     QString value(property.value());
     if (value.isEmpty())
         return false;

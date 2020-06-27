@@ -68,13 +68,13 @@ public:
 #ifndef QT_NO_DATASTREAM
     QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
     {
-        Q_UNUSED(formatVersion)
+        Q_UNUSED(formatVersion);
         return stream;
     }
 
     QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion)
     {
-        Q_UNUSED(formatVersion)
+        Q_UNUSED(formatVersion);
         return stream;
     }
 #endif // QT_NO_DATASTREAM

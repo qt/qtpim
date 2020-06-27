@@ -169,10 +169,10 @@ QList<QOrganizerItem> QOrganizerItemSkeletonEngine::items(const QOrganizerItemFi
         fetch at least what is mentioned in the fetch hint).
     */
 
-    Q_UNUSED(startDateTime)
-    Q_UNUSED(endDateTime)
-    Q_UNUSED(maxCount)
-    Q_UNUSED(fetchHint)
+    Q_UNUSED(startDateTime);
+    Q_UNUSED(endDateTime);
+    Q_UNUSED(maxCount);
+    Q_UNUSED(fetchHint);
 
     *error = QOrganizerManager::NotSupportedError; // TODO <- remove this
 
@@ -419,7 +419,7 @@ QList<QOrganizerItemFilter::FilterType> QOrganizerItemSkeletonEngine::supportedF
 QList<QOrganizerItemDetail::DetailType> QOrganizerItemSkeletonEngine::supportedItemDetails(QOrganizerItemType::ItemType itemType) const
 {
     // TODO - return which [predefined] details this engine supports for this item type
-    Q_UNUSED(itemType)
+    Q_UNUSED(itemType);
 
     return QList<QOrganizerItemDetail::DetailType>();
 }

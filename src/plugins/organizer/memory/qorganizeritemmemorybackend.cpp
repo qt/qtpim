@@ -184,7 +184,7 @@ QMap<QString, QString> QOrganizerItemMemoryEngine::idInterpretationParameters() 
 QList<QOrganizerItem> QOrganizerItemMemoryEngine::items(const QList<QOrganizerItemId> &itemIds, const QOrganizerItemFetchHint &fetchHint,
                                                         QMap<int, QOrganizerManager::Error> *errorMap, QOrganizerManager::Error *error)
 {
-    Q_UNUSED(fetchHint)
+    Q_UNUSED(fetchHint);
 
     QList<QOrganizerItem> items;
     items.reserve(itemIds.size());

@@ -62,7 +62,7 @@ public:
     bool saveResource(const QByteArray& contents, const QVersitProperty& property,
                       QString* location)
     {
-        Q_UNUSED(property)
+        Q_UNUSED(property);
         *location = QString::number(mIndex++);
         mObjects.insert(*location, contents);
         return true;
@@ -70,9 +70,9 @@ public:
 
     bool loadResource(const QString &location, QByteArray *contents, QString *mimeType)
     {
-        Q_UNUSED(location)
-        Q_UNUSED(contents)
-        Q_UNUSED(mimeType)
+        Q_UNUSED(location);
+        Q_UNUSED(contents);
+        Q_UNUSED(mimeType);
         return false;
     }
 

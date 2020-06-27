@@ -133,8 +133,8 @@ void VCardPreserver::propertyProcessed(const QVersitDocument& document,
                                        bool* alreadyProcessed,
                                        QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(contact)
-    Q_UNUSED(document)
+    Q_UNUSED(contact);
+    Q_UNUSED(document);
     if (!updatedDetails->isEmpty() || *alreadyProcessed) {
         return;
     }
@@ -148,8 +148,8 @@ void VCardPreserver::propertyProcessed(const QVersitDocument& document,
 void VCardPreserver::documentProcessed(const QVersitDocument& document,
                                        QContact* contact)
 {
-    Q_UNUSED(document)
-    Q_UNUSED(contact)
+    Q_UNUSED(document);
+    Q_UNUSED(contact);
 }
 
 void VCardPreserver::detailProcessed(const QContact& contact,
@@ -159,9 +159,9 @@ void VCardPreserver::detailProcessed(const QContact& contact,
                                      QList<QVersitProperty>* toBeRemoved,
                                      QList<QVersitProperty>* toBeAdded)
 {
-    Q_UNUSED(contact)
-    Q_UNUSED(document)
-    Q_UNUSED(toBeRemoved)
+    Q_UNUSED(contact);
+    Q_UNUSED(document);
+    Q_UNUSED(toBeRemoved);
     if (detail.type() == DetailType
             && processedFields->isEmpty()) {
         QString key(detail.value(KeyField).toString());
@@ -180,8 +180,8 @@ void VCardPreserver::detailProcessed(const QContact& contact,
 void VCardPreserver::contactProcessed(const QContact& contact,
                                       QVersitDocument* document)
 {
-    Q_UNUSED(contact)
-    Q_UNUSED(document)
+    Q_UNUSED(contact);
+    Q_UNUSED(document);
 }
 
 QT_END_NAMESPACE_VERSIT

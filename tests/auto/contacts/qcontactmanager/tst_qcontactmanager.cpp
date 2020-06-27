@@ -276,7 +276,7 @@ class LazyEngineFactory : public QContactManagerEngineFactory
 QContactManagerEngine* LazyEngineFactory::engine(const QMap<QString, QString>& parameters, QContactManager::Error* error)
 {
     // Return one or the other
-    Q_UNUSED(error)
+    Q_UNUSED(error);
     if (parameters.value("version") == QString("1"))
         return new QContactLazyEngine();
     else
@@ -1817,7 +1817,7 @@ void tst_QContactManager::observerDeletion()
     QVERIFY(manager->saveContact(&c));
     QContactId id = c.id();
     QContactObserver *observer = new QContactObserver(manager, id);
-    Q_UNUSED(observer)
+    Q_UNUSED(observer);
     delete manager;
     delete observer;
     // Test for bug MOBILITY-2566 - that QContactObserver doesn't crash when it is

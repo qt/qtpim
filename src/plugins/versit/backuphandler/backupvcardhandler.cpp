@@ -151,19 +151,19 @@ void BackupVCardHandler::propertyProcessed(
         bool* alreadyProcessed,
         QList<QContactDetail>* updatedDetails)
 {
-    Q_UNUSED(document)
-    Q_UNUSED(property)
-    Q_UNUSED(contact)
-    Q_UNUSED(alreadyProcessed)
-    Q_UNUSED(updatedDetails)
+    Q_UNUSED(document);
+    Q_UNUSED(property);
+    Q_UNUSED(contact);
+    Q_UNUSED(alreadyProcessed);
+    Q_UNUSED(updatedDetails);
 }
 
 void BackupVCardHandler::documentProcessed(
         const QVersitDocument& document,
         QContact* contact)
 {
-    Q_UNUSED(document)
-    Q_UNUSED(contact)
+    Q_UNUSED(document);
+    Q_UNUSED(contact);
 }
 
 void BackupVCardHandler::detailProcessed(
@@ -174,9 +174,9 @@ void BackupVCardHandler::detailProcessed(
         QList<QVersitProperty>* toBeRemoved,
         QList<QVersitProperty>* toBeAdded)
 {
-    Q_UNUSED(contact)
-    Q_UNUSED(document)
-    Q_UNUSED(toBeRemoved)
+    Q_UNUSED(contact);
+    Q_UNUSED(document);
+    Q_UNUSED(toBeRemoved);
     if (detail.accessConstraints().testFlag(QContactDetail::ReadOnly))
         return;
     QMap<int, QVariant> fields = detail.values();
@@ -265,8 +265,8 @@ void BackupVCardHandler::contactProcessed(
         const QContact& contact,
         QVersitDocument* document)
 {
-    Q_UNUSED(contact)
-    Q_UNUSED(document)
+    Q_UNUSED(contact);
+    Q_UNUSED(document);
     mDetailNumber = 0;
 }
 

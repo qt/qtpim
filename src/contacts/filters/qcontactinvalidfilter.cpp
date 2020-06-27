@@ -69,13 +69,13 @@ public:
 
     QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
     {
-        Q_UNUSED(formatVersion)
+        Q_UNUSED(formatVersion);
         return stream;
     }
 
     QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
     {
-        Q_UNUSED(formatVersion)
+        Q_UNUSED(formatVersion);
         return stream;
     }
 

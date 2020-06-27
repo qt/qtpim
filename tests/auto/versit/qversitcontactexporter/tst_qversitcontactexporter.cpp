@@ -54,8 +54,8 @@ public:
                           const QContactDetail& detail,
                           QVersitDocument* document)
     {
-        Q_UNUSED(contact)
-        Q_UNUSED(document)
+        Q_UNUSED(contact);
+        Q_UNUSED(document);
         mPreProcessedDetails.append(detail);
         return mPreProcess;
     }
@@ -65,8 +65,8 @@ public:
                            bool alreadyProcessed,
                            QVersitDocument* document)
     {
-        Q_UNUSED(contact)
-        Q_UNUSED(document)
+        Q_UNUSED(contact);
+        Q_UNUSED(document);
         if (!alreadyProcessed)
             mUnknownDetails.append(detail);
         else
@@ -151,9 +151,9 @@ public:
 
     bool saveResource(const QByteArray &contents, const QVersitProperty &property, QString *location)
     {
-        Q_UNUSED(contents)
-        Q_UNUSED(property)
-        Q_UNUSED(location)
+        Q_UNUSED(contents);
+        Q_UNUSED(property);
+        Q_UNUSED(location);
         return false;
     }
 

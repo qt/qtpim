@@ -125,8 +125,8 @@ QContactFilter QContactMultiActionFactory::contactFilter(const QContactActionDes
 
 QVariant QContactMultiActionFactory::metaData(const QString& key, const QList<QContactActionTarget>& targets, const QVariantMap& parameters, const QContactActionDescriptor& which) const
 {
-    Q_UNUSED(targets)
-    Q_UNUSED(parameters)
+    Q_UNUSED(targets);
+    Q_UNUSED(parameters);
 
     if (key == QContactActionDescriptor::MetaDataLabel)
         return QString("Call with VoIP");
@@ -159,7 +159,7 @@ QContactActionOne::~QContactActionOne()
 
 bool QContactActionOne::invokeAction(const QContactActionTarget& target, const QVariantMap& params)
 {
-    Q_UNUSED(params)
+    Q_UNUSED(params);
     // this action only works on (contact + phone number) targets.
     if (target.details().size() > 1 || target.details().at(0).definitionName() != QContactPhoneNumber::DefinitionName)
         return false;
@@ -170,7 +170,7 @@ bool QContactActionOne::invokeAction(const QContactActionTarget& target, const Q
 
 bool QContactActionOne::invokeAction(const QList<QContactActionTarget>& targets, const QVariantMap& params)
 {
-    Q_UNUSED(params)
+    Q_UNUSED(params);
     foreach (const QContactActionTarget& target, targets) {
         if (target.details().size() > 1 || target.details().at(0).definitionName() != QContactPhoneNumber::DefinitionName) {
             return false;
@@ -209,7 +209,7 @@ QContactActionTwo::~QContactActionTwo()
 
 bool QContactActionTwo::invokeAction(const QContactActionTarget& target, const QVariantMap& params)
 {
-    Q_UNUSED(params)
+    Q_UNUSED(params);
     // this action only works on (contact + phone number) targets.  Note that it doesn't
     // have to be the same as QContactActionOne -- it could have an entirely different implementation!
     if (target.details().size() > 1 || target.details().at(0).definitionName() != QContactPhoneNumber::DefinitionName)
@@ -221,7 +221,7 @@ bool QContactActionTwo::invokeAction(const QContactActionTarget& target, const Q
 
 bool QContactActionTwo::invokeAction(const QList<QContactActionTarget>& targets, const QVariantMap& params)
 {
-    Q_UNUSED(params)
+    Q_UNUSED(params);
     foreach (const QContactActionTarget& target, targets) {
         if (target.details().size() > 1 || target.details().at(0).definitionName() != QContactPhoneNumber::DefinitionName) {
             return false;

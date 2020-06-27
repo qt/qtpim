@@ -54,7 +54,7 @@ QTCONTACTS_USE_NAMESPACE
 class DummyAction : public QContactAction
 {
 public:
-    DummyAction(QObject* parent = nullptr) { Q_UNUSED(parent) }
+    DummyAction(QObject* parent = nullptr) { Q_UNUSED(parent); }
 
     bool invokeAction(const QContactActionTarget&, const QVariantMap&)
     {
@@ -113,13 +113,13 @@ public:
 
     QContactAction* create(const QContactActionDescriptor& which) const
     {
-        Q_UNUSED(which)
+        Q_UNUSED(which);
         return new QBooleanAction;
     }
 
     QSet<QContactActionTarget> supportedTargets(const QContact& contact, const QContactActionDescriptor& which) const
     {
-        Q_UNUSED(which)
+        Q_UNUSED(which);
 
         QSet<QContactActionTarget> retn;
         QList<QContactDetail> boolDets = contact.details("BooleanDefinition");
@@ -135,7 +135,7 @@ public:
 
     QContactFilter contactFilter(const QContactActionDescriptor& which) const
     {
-        Q_UNUSED(which)
+        Q_UNUSED(which);
 
         /* This only likes bools that are true */
         QContactDetailFilter df;

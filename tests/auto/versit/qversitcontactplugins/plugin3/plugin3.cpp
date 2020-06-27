@@ -40,16 +40,16 @@ public:
                            bool* alreadyProcessed,
                            QList<QContactDetail>* updatedDetails)
     {
-        Q_UNUSED(document)
-        Q_UNUSED(property)
-        Q_UNUSED(contact)
-        Q_UNUSED(alreadyProcessed)
-        Q_UNUSED(updatedDetails)
+        Q_UNUSED(document);
+        Q_UNUSED(property);
+        Q_UNUSED(contact);
+        Q_UNUSED(alreadyProcessed);
+        Q_UNUSED(updatedDetails);
     }
     void documentProcessed(const QVersitDocument& document,
                            QContact* contact)
     {
-        Q_UNUSED(document)
+        Q_UNUSED(document);
         QContactDetail detail(QContactDetail::TypeExtendedDetail);
         detail.setValue(0, 3);
         contact->saveDetail(&detail);
@@ -61,17 +61,17 @@ public:
                          QList<QVersitProperty>* toBeRemoved,
                          QList<QVersitProperty>* toBeAdded)
     {
-        Q_UNUSED(contact)
-        Q_UNUSED(detail)
-        Q_UNUSED(document)
-        Q_UNUSED(processedFields)
-        Q_UNUSED(toBeRemoved)
-        Q_UNUSED(toBeAdded)
+        Q_UNUSED(contact);
+        Q_UNUSED(detail);
+        Q_UNUSED(document);
+        Q_UNUSED(processedFields);
+        Q_UNUSED(toBeRemoved);
+        Q_UNUSED(toBeAdded);
     }
     void contactProcessed(const QContact& contact,
                           QVersitDocument* document)
     {
-        Q_UNUSED(contact)
+        Q_UNUSED(contact);
         QVersitProperty property;
         property.setName("TEST-PROPERTY");
         property.setValue("3");

@@ -53,8 +53,8 @@ public:
                             int contactIndex,
                             QContact* contact)
     {
-        Q_UNUSED(document)
-        Q_UNUSED(contact)
+        Q_UNUSED(document);
+        Q_UNUSED(contact);
         Q_UNUSED(contactIndex);
         mPreProcessedProperties.append(property);
         return mPreProcess;
@@ -66,9 +66,9 @@ public:
                              int contactIndex,
                              QContact* contact)
     {
-        Q_UNUSED(document)
-        Q_UNUSED(contact)
-        Q_UNUSED(contactIndex)
+        Q_UNUSED(document);
+        Q_UNUSED(contact);
+        Q_UNUSED(contactIndex);
         if (!alreadyProcessed)
             mUnknownProperties.append(property);
         else
@@ -111,9 +111,9 @@ public:
 
     bool loadResource(const QString &location, QByteArray *contents, QString *mimeType)
     {
-        Q_UNUSED(location)
-        Q_UNUSED(contents)
-        Q_UNUSED(mimeType)
+        Q_UNUSED(location);
+        Q_UNUSED(contents);
+        Q_UNUSED(mimeType);
         return false;
     }
 

@@ -155,9 +155,9 @@ bool QVersitDefaultResourceHandler::saveResource(const QByteArray& contents,
                                                  const QVersitProperty& property,
                                                  QString* location)
 {
-    Q_UNUSED(contents)
-    Q_UNUSED(property)
-    Q_UNUSED(location)
+    Q_UNUSED(contents);
+    Q_UNUSED(property);
+    Q_UNUSED(location);
     return false;
 }
 

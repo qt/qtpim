@@ -76,7 +76,7 @@ class MyResourceHandler : public QVersitDefaultResourceHandler {
 public:
    bool saveResource(const QByteArray& contents, const QVersitProperty& property,
                      QString* location) {
-       Q_UNUSED(property)
+       Q_UNUSED(property);
        *location = QString::number(qrand());
        QFile file(*location);
        file.open(QIODevice::WriteOnly);
@@ -93,8 +93,8 @@ public:
 #if 0
 int main(int argc, char *argv[])
 {
-    Q_UNUSED(argc)
-    Q_UNUSED(argv)
+    Q_UNUSED(argc);
+    Q_UNUSED(argv);
     completeExample();
     exportExample();
     importExample();

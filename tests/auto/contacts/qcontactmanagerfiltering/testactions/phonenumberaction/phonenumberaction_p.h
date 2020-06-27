@@ -54,7 +54,7 @@ QTCONTACTS_USE_NAMESPACE
 class DummyAction : public QContactAction
 {
 public:
-    DummyAction(QObject* parent = nullptr) { Q_UNUSED(parent) }
+    DummyAction(QObject* parent = nullptr) { Q_UNUSED(parent); }
 
     QVariantMap metaData() const {return QVariantMap();}
 
@@ -115,13 +115,13 @@ public:
 
     QContactAction* create(const QContactActionDescriptor& which) const
     {
-        Q_UNUSED(which)
+        Q_UNUSED(which);
         return new QPhoneNumberAction;
     }
 
     QSet<QContactActionTarget> supportedTargets(const QContact& contact, const QContactActionDescriptor& which) const
     {
-        Q_UNUSED(which)
+        Q_UNUSED(which);
         QSet<QContactActionTarget> retn;
         QList<QContactDetail> pnDets = contact.details(QContactPhoneNumber::DefinitionName);
         foreach (const QContactDetail& det, pnDets) {
@@ -136,7 +136,7 @@ public:
 
     QContactFilter contactFilter(const QContactActionDescriptor& which) const
     {
-        Q_UNUSED(which)
+        Q_UNUSED(which);
         QContactDetailFilter df;
         // XXX TODO: find some way to pass the defAndFieldNamesForTypeForActions value for Integer to this function...
         df.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);

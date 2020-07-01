@@ -821,7 +821,7 @@ QContactCollectionId QContactManager::defaultCollectionId() const
 /*!
   Returns the collection identified by the given \a collectionId which is managed by this manager.
  */
-QContactCollection QContactManager::collection(const QContactCollectionId& collectionId)
+QContactCollection QContactManager::collection(const QContactCollectionId& collectionId) const
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->collection(collectionId, &h.error);
@@ -830,7 +830,7 @@ QContactCollection QContactManager::collection(const QContactCollectionId& colle
 /*!
   Returns a list of all of the collections managed by this manager.
  */
-QList<QContactCollection> QContactManager::collections()
+QList<QContactCollection> QContactManager::collections() const
 {
     QContactManagerSyncOpErrorHolder h(this);
     return d->m_engine->collections(&h.error);

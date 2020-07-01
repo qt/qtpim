@@ -107,8 +107,8 @@ public:
 
     // collections
     virtual QContactCollectionId defaultCollectionId() const;
-    virtual QContactCollection collection(const QContactCollectionId &collectionId, QContactManager::Error *error);
-    virtual QList<QContactCollection> collections(QContactManager::Error *error);
+    virtual QContactCollection collection(const QContactCollectionId &collectionId, QContactManager::Error *error) const;
+    virtual QList<QContactCollection> collections(QContactManager::Error *error) const;
     virtual bool saveCollection(QContactCollection *collection, QContactManager::Error *error);
     virtual bool removeCollection(const QContactCollectionId &collectionId, QContactManager::Error *error);
 

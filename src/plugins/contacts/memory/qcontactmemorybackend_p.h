@@ -165,8 +165,8 @@ public:
 
     // collections
     QContactCollectionId defaultCollectionId() const;
-    QContactCollection collection(const QContactCollectionId &collectionId, QContactManager::Error *error);
-    QList<QContactCollection> collections(QContactManager::Error* error);
+    QContactCollection collection(const QContactCollectionId &collectionId, QContactManager::Error *error) const;
+    QList<QContactCollection> collections(QContactManager::Error* error) const;
     bool saveCollection(QContactCollection* collection, QContactManager::Error* error);
     bool removeCollection(const QContactCollectionId& collectionId, QContactManager::Error* error);
 

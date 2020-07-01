@@ -464,7 +464,7 @@ QContactCollectionId QContactManagerEngine::defaultCollectionId() const
     \c QContactManager::DoesNotExistError.
 
 */
-QContactCollection QContactManagerEngine::collection(const QContactCollectionId& collectionId, QContactManager::Error* error)
+QContactCollection QContactManagerEngine::collection(const QContactCollectionId& collectionId, QContactManager::Error* error) const
 {
     Q_UNUSED(collectionId);
     *error = QContactManager::NotSupportedError;
@@ -475,7 +475,7 @@ QContactCollection QContactManagerEngine::collection(const QContactCollectionId&
     This function should be reimplemented to support synchronous calls to fetch all the collections
     managed by this backend. Any errors encountered during this operation should be stored to \a error.
  */
-QList<QContactCollection> QContactManagerEngine::collections(QContactManager::Error* error)
+QList<QContactCollection> QContactManagerEngine::collections(QContactManager::Error* error) const
 {
     *error = QContactManager::NotSupportedError;
     return QList<QContactCollection>();

@@ -540,7 +540,7 @@ QOrganizerCollectionId QOrganizerManagerEngine::defaultCollectionId() const
     \c QOrganizerManager::DoesNotExistError.
 
 */
-QOrganizerCollection QOrganizerManagerEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error)
+QOrganizerCollection QOrganizerManagerEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error) const
 {
     Q_UNUSED(collectionId);
     *error = QOrganizerManager::NotSupportedError;
@@ -551,7 +551,7 @@ QOrganizerCollection QOrganizerManagerEngine::collection(const QOrganizerCollect
     This function should be reimplemented to support synchronous calls to fetch all the collections
     managed by this backend. Any errors encountered during this operation should be stored to \a error.
  */
-QList<QOrganizerCollection> QOrganizerManagerEngine::collections(QOrganizerManager::Error* error)
+QList<QOrganizerCollection> QOrganizerManagerEngine::collections(QOrganizerManager::Error* error) const
 {
     *error = QOrganizerManager::NotSupportedError;
     return QList<QOrganizerCollection>();

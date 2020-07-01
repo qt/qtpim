@@ -149,8 +149,8 @@ public:
 
     // collections
     QOrganizerCollectionId defaultCollectionId() const;
-    QOrganizerCollection collection(const QOrganizerCollectionId& collectionId);
-    QList<QOrganizerCollection> collections();
+    QOrganizerCollection collection(const QOrganizerCollectionId& collectionId) const;
+    QList<QOrganizerCollection> collections() const;
     bool saveCollection(QOrganizerCollection* collection);
     bool removeCollection(const QOrganizerCollectionId& collectionId);
 

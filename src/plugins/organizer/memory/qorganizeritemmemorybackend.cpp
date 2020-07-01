@@ -1052,7 +1052,7 @@ QOrganizerCollectionId QOrganizerItemMemoryEngine::defaultCollectionId() const
     return collectionId(QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint)));
 }
 
-QOrganizerCollection QOrganizerItemMemoryEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error)
+QOrganizerCollection QOrganizerItemMemoryEngine::collection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error) const
 {
     if (d->m_idToCollectionHash.contains(collectionId)) {
         *error = QOrganizerManager::NoError;
@@ -1063,7 +1063,7 @@ QOrganizerCollection QOrganizerItemMemoryEngine::collection(const QOrganizerColl
     return QOrganizerCollection();
 }
 
-QList<QOrganizerCollection> QOrganizerItemMemoryEngine::collections(QOrganizerManager::Error* error)
+QList<QOrganizerCollection> QOrganizerItemMemoryEngine::collections(QOrganizerManager::Error* error) const
 {
     Q_ASSERT(!d->m_idToCollectionHash.isEmpty());
     *error = QOrganizerManager::NoError;

@@ -153,8 +153,8 @@ public:
 
     // collections
     QOrganizerCollectionId defaultCollectionId() const;
-    QOrganizerCollection collection(const QOrganizerCollectionId &collectionId, QOrganizerManager::Error *error);
-    QList<QOrganizerCollection> collections(QOrganizerManager::Error* error);
+    QOrganizerCollection collection(const QOrganizerCollectionId &collectionId, QOrganizerManager::Error *error) const;
+    QList<QOrganizerCollection> collections(QOrganizerManager::Error* error) const;
     bool saveCollection(QOrganizerCollection* collection, QOrganizerManager::Error* error);
     bool removeCollection(const QOrganizerCollectionId& collectionId, QOrganizerManager::Error* error);
 

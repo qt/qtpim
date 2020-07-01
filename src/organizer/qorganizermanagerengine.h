@@ -109,8 +109,8 @@ public:
 
     // collections
     virtual QOrganizerCollectionId defaultCollectionId() const;
-    virtual QOrganizerCollection collection(const QOrganizerCollectionId &collectionId, QOrganizerManager::Error *error);
-    virtual QList<QOrganizerCollection> collections(QOrganizerManager::Error *error);
+    virtual QOrganizerCollection collection(const QOrganizerCollectionId &collectionId, QOrganizerManager::Error *error) const;
+    virtual QList<QOrganizerCollection> collections(QOrganizerManager::Error *error) const;
     virtual bool saveCollection(QOrganizerCollection *collection, QOrganizerManager::Error *error);
     virtual bool removeCollection(const QOrganizerCollectionId &collectionId, QOrganizerManager::Error *error);
 

@@ -916,7 +916,7 @@ void QContactMemoryEngine::partiallySyncDetails(QContact *to, const QContact &fr
     // check details to save
     foreach (QContactDetail detail, fromDetails) {
         if (!toDetails.contains(detail))
-            to->saveDetail(&detail);
+            to->saveDetail(&detail, QContact::IgnoreAccessConstraints);
     }
 }
 
@@ -1040,7 +1040,7 @@ bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &
         QContactTimestamp ts = theContact->detail(QContactTimestamp::Type);
         ts.setLastModified(QDateTime::currentDateTime());
         QContactManagerEngine::setDetailAccessConstraints(&ts, QContactDetail::ReadOnly | QContactDetail::Irremovable);
-        theContact->saveDetail(&ts);
+        theContact->saveDetail(&ts, QContact::ReplaceAccessConstraints);
 
         // Looks ok, so continue
         d->m_contacts.replace(index, *theContact);
@@ -1080,7 +1080,7 @@ bool QContactMemoryEngine::saveContact(QContact *theContact, QContactChangeSet &
         ts.setLastModified(QDateTime::currentDateTime());
         ts.setCreated(ts.lastModified());
         setDetailAccessConstraints(&ts, QContactDetail::ReadOnly | QContactDetail::Irremovable);
-        theContact->saveDetail(&ts);
+        theContact->saveDetail(&ts, QContact::ReplaceAccessConstraints);
 
         // update the contact item - set its ID
         QContactId newContactId = contactId(QByteArray(reinterpret_cast<const char *>(&d->m_nextContactId), sizeof(quint32)));

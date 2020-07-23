@@ -39,7 +39,6 @@ static inline QContactId makeId(const QString &managerName, uint id)
     return QContactId(QStringLiteral("qtcontacts:basic%1:").arg(managerName), QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint)));
 }
 
-
 class tst_QContact: public QObject
 {
     Q_OBJECT
@@ -365,6 +364,43 @@ void tst_QContact::details()
     QCOMPARE(c.detail(QContactName::Type).value(QContactName::FieldFirstName).toString(), QString());
     QVERIFY(c.isEmpty());
     QCOMPARE(c.id(), oldId); // id shouldn't change.
+
+    // ensure that access constraints are enforced properly.
+    // first, save an immutable phone number in a contact.
+    QContact c3;
+    QContactPhoneNumber five;
+    five.setNumber("5");
+    QContactManagerEngine::setDetailAccessConstraints(&five, QContactDetail::ReadOnly | QContactDetail::Irremovable);
+    QCOMPARE(five.accessConstraints(), QContactDetail::ReadOnly | QContactDetail::Irremovable);
+    QVERIFY(c3.saveDetail(&five));
+    QCOMPARE(c3.detail<QContactPhoneNumber>().accessConstraints(), QContactDetail::ReadOnly | QContactDetail::Irremovable);
+    QCOMPARE(c3.detail<QContactPhoneNumber>().number(), QStringLiteral("5"));
+
+    // second, attempt to mutate it while enforcing access constraints - should fail.
+    five.setNumber("55");
+    QVERIFY(!c3.saveDetail(&five));
+    QVERIFY(!c3.saveDetail(&five, QContact::EnforceAccessConstraints));
+    QCOMPARE(c3.detail<QContactPhoneNumber>().number(), QStringLiteral("5"));
+
+    // third, attempt to mutate it while ignoring access constraints - should succeed,
+    // but the access constraints of the detail should remain unchanged.
+    QContactManagerEngine::setDetailAccessConstraints(&five, QContactDetail::Irremovable);
+    QCOMPARE(five.accessConstraints(), QContactDetail::Irremovable);
+    QVERIFY(c3.saveDetail(&five, QContact::IgnoreAccessConstraints));
+    QCOMPARE(c3.detail<QContactPhoneNumber>().accessConstraints(), QContactDetail::ReadOnly | QContactDetail::Irremovable); // unchanged.
+    QCOMPARE(c3.detail<QContactPhoneNumber>().number(), QStringLiteral("55"));
+
+    // fourth, replace the access constraints as well as the value - should succeed.
+    five.setNumber("555");
+    QCOMPARE(five.accessConstraints(), QContactDetail::Irremovable); // shouldn't have been overwritten by the above calls.
+    QVERIFY(c3.saveDetail(&five, QContact::ReplaceAccessConstraints));
+    QCOMPARE(c3.detail<QContactPhoneNumber>().accessConstraints(), QContactDetail::Irremovable); // changed.
+    QCOMPARE(c3.detail<QContactPhoneNumber>().number(), QStringLiteral("555"));
+
+    // fifth, ensure that removing the detail fails if the constraint is enforced (default).
+    QVERIFY(!c3.removeDetail(&five));
+    QVERIFY(!c3.removeDetail(&five, QContact::EnforceAccessConstraints));
+    QVERIFY(c3.removeDetail(&five, QContact::IgnoreAccessConstraints));
 }
 
 void tst_QContact::preferences()

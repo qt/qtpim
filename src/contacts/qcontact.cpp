@@ -398,10 +398,14 @@ bool QContact::appendDetail(const QContactDetail &detail)
  * this contact, that detail is overwritten.  Otherwise, a new id is generated
  * and set in the detail, and the detail is added to the contact.
  *
- * If the detail's access constraint includes \c QContactDetail::ReadOnly,
- * this function will return true and save the detail in the contact,
- * however attempting to save the contact in a manager may fail (if that manager
- * decides that the read only detail should not be updated).
+ * If the detail was previously saved, and its access constraint includes
+ * \c QContactDetail::ReadOnly, this function will return false if \a enforce
+ * is set to \c QContact::EnforceAccessConstraints.
+ * Otherwise, the detail will be saved, but any attempt to save the contact
+ * in the manager may fail due to the backend enforcing the original constraints
+ * (regardless of whether \a enforce is set to \c QContact::ReplaceAccessConstraints,
+ * which is provided for the convenience of backend implementors).
+ *
  * Details with the \c QContactDetail::ReadOnly constraint set are typically provided
  * in a contact by the manager, and are usually information that is either
  * synthesized, or not intended to be changed by the user (e.g. presence information
@@ -422,7 +426,7 @@ bool QContact::appendDetail(const QContactDetail &detail)
  *
  * Note that the caller retains ownership of the detail.
  */
-bool QContact::saveDetail(QContactDetail* detail)
+bool QContact::saveDetail(QContactDetail* detail, AccessConstraintsEnforcement enforce)
 {
     if (!detail)
         return false;
@@ -440,10 +444,24 @@ bool QContact::saveDetail(QContactDetail* detail)
         const QContactDetail& curr = d.constData()->m_details.at(i);
         if (detail->d->m_type == curr.d->m_type &&
                 detail->d->m_detailId == curr.d->m_detailId) {
-            // update the detail constraints of the supplied detail
-            detail->d->m_access = curr.accessConstraints();
             // Found the old version.  Replace it with this one.
+            QContactDetail::AccessConstraints oldAccess = detail->d->m_access;
+            if (enforce == QContact::EnforceAccessConstraints) {
+                // fail the operation if the original detail is immutable.
+                if (curr.accessConstraints() & QContactDetail::ReadOnly) {
+                    return false;
+                }
+                // enforce detail constraints of the original detail
+                detail->d->m_access = curr.accessConstraints();
+            } else if (enforce == QContact::IgnoreAccessConstraints) {
+                // keep the detail constraints of the original detail
+                // but ignore them and apply the values change in memory.
+                detail->d->m_access = curr.accessConstraints();
+            } // else QContact::ReplaceAccessConstraints, so keep as-is.
+            // add the detail to the contact
             d->m_details[i] = *detail;
+            // return the input detail to its previous state.
+            detail->d->m_access = oldAccess;
             return true;
         }
     }
@@ -468,13 +486,15 @@ bool QContact::saveDetail(QContactDetail* detail)
  * the contact, in order to ensure that the remove operation is successful.
  *
  * If the detail's access constraint includes \c QContactDetail::Irremovable,
- * this function will return false.
+ * this function will return false if \a enforce is set to \c QContact::EnforceAccessConstraints.
+ * Otherwise, the detail will be removed, but any attempt to save the contact
+ * in the manager may fail due to the backend enforcing the constraints.
  *
  * Returns true if the detail was removed successfully, false if an error occurred.
  *
  * Note that the caller retains ownership of the detail.
  */
-bool QContact::removeDetail(QContactDetail* detail)
+bool QContact::removeDetail(QContactDetail* detail, AccessConstraintsEnforcement enforce)
 {
     if (!detail)
         return false;
@@ -492,7 +512,8 @@ bool QContact::removeDetail(QContactDetail* detail)
     if (removeIndex < 0)
         return false;
 
-    if (detail->accessConstraints() & QContactDetail::Irremovable)
+    if (enforce == QContact::EnforceAccessConstraints
+            && detail->accessConstraints() & QContactDetail::Irremovable)
         return false;
 
     if (!d.constData()->m_details.contains(*detail))

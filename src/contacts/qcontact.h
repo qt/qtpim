@@ -60,6 +60,12 @@ class QContactData;
 class Q_CONTACTS_EXPORT QContact
 {
 public:
+    enum AccessConstraintsEnforcement {
+        ReplaceAccessConstraints,
+        IgnoreAccessConstraints,
+        EnforceAccessConstraints,
+    };
+
     QContact();
 
     ~QContact();
@@ -107,8 +113,8 @@ public:
     }
 
     /* generic detail addition/removal functions */
-    bool saveDetail(QContactDetail* detail);
-    bool removeDetail(QContactDetail* detail);
+    bool saveDetail(QContactDetail* detail, AccessConstraintsEnforcement enforce = EnforceAccessConstraints);
+    bool removeDetail(QContactDetail* detail, AccessConstraintsEnforcement enforce = EnforceAccessConstraints);
 
     /* Relationships that this contact was involved in when it was retrieved from the manager */
     QList<QContactRelationship> relationships(const QString& relationshipType = QString()) const;

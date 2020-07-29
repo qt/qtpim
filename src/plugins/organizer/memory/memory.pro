@@ -2,6 +2,7 @@ TARGET = qtorganizer_memory
 QT = core organizer-private
 
 PLUGIN_TYPE = organizer
+PLUGIN_CLASS_NAME = QMemoryOrganizerPlugin
 load(qt_plugin)
 
 HEADERS += \

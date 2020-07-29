@@ -2,6 +2,7 @@ TARGET = qtcontacts_serviceactionmanager
 QT = core contacts
 
 PLUGIN_TYPE = contacts
+PLUGIN_CLASS_NAME = QServiceActionManagerContactsPlugin
 load(qt_plugin)
 
 HEADERS += \

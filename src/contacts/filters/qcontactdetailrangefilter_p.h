@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the QtContacts module of the Qt Toolkit.
@@ -59,14 +59,7 @@ QT_BEGIN_NAMESPACE_CONTACTS
 class QContactDetailRangeFilterPrivate : public QContactFilterPrivate
 {
 public:
-    QContactDetailRangeFilterPrivate()
-        : QContactFilterPrivate(),
-        m_typeId(QContactDetail::TypeUndefined),
-        m_fieldId(-1),
-        m_flags(0),
-        m_rangeflags(0)
-    {
-    }
+    QContactDetailRangeFilterPrivate() = default;
 
     QContactDetailRangeFilterPrivate(const QContactDetailRangeFilterPrivate& other)
         : QContactFilterPrivate(other),
@@ -138,8 +131,8 @@ public:
 
     Q_IMPLEMENT_CONTACTFILTER_VIRTUALCTORS(QContactDetailRangeFilter, QContactFilter::ContactDetailRangeFilter)
 
-    QContactDetail::DetailType m_typeId;
-    int m_fieldId;
+    QContactDetail::DetailType m_typeId = QContactDetail::TypeUndefined;
+    int m_fieldId = -1;
     QVariant m_minValue;
     QVariant m_maxValue;
     QContactFilter::MatchFlags m_flags;

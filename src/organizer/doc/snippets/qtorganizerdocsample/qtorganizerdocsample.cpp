@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the documentation for the Qt Toolkit.
@@ -144,8 +144,8 @@ void snippets()
 
     //! [Retrieving entries for a time period]
     QList<QOrganizerItem> entries =
-        defaultManager.items(QDateTime(QDate(2010, 1, 1), QTime(0, 0, 0)),
-                             QDateTime(QDate(2010, 1, 31), QTime(23, 59, 59)));
+        defaultManager.items(QDate(2010, 1, 1).startOfDay(),
+                             QDate(2010, 1, 31).endOfDay());
     //! [Retrieving entries for a time period]
 
     //! [Retrieving entries with a filter]

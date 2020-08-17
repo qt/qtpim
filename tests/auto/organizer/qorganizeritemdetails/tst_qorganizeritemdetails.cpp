@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the test suite of the Qt Toolkit.
@@ -505,8 +505,8 @@ void tst_QOrganizerItemDetails::todoProgress()
     p.setPercentageComplete(200); // this should fail
     QVERIFY(p.percentageComplete() == 50); // value should remain unchanged.
 
-    p.setFinishedDateTime(QDateTime(QDate(2010, 10, 13)));
-    QVERIFY(p.finishedDateTime() == QDateTime(QDate(2010, 10, 13)));
+    p.setFinishedDateTime(QDate(2010, 10, 13).startOfDay());
+    QVERIFY(p.finishedDateTime() == QDate(2010, 10, 13).startOfDay());
     QVERIFY(p.status() != QOrganizerTodoProgress::StatusComplete); // XXX TODO: should this be automatic?
     p.setPercentageComplete(100);
     QVERIFY(p.percentageComplete() == 100);
@@ -584,19 +584,19 @@ void tst_QOrganizerItemDetails::eventTime()
     QVERIFY(r.isEmpty());
     QVERIFY(!r.isAllDay());
 
-    r.setStartDateTime(QDateTime(QDate(2010, 10, 13)));
-    QVERIFY(r.startDateTime() == QDateTime(QDate(2010, 10, 13)));
+    r.setStartDateTime(QDate(2010, 10, 13).startOfDay());
+    QVERIFY(r.startDateTime() == QDate(2010, 10, 13).startOfDay());
     QVERIFY(!r.isAllDay());
     r.setAllDay(true);
     QVERIFY(r.isAllDay());
 
-    r.setEndDateTime(QDateTime(QDate(2010, 10, 14)));
-    QVERIFY(r.endDateTime() == QDateTime(QDate(2010, 10, 14)));
+    r.setEndDateTime(QDate(2010, 10, 14).startOfDay());
+    QVERIFY(r.endDateTime() == QDate(2010, 10, 14).startOfDay());
 
     // add
     QOrganizerEventTime r2;
-    r2.setStartDateTime(QDateTime(QDate(2010, 10, 23)));
-    r2.setEndDateTime(QDateTime(QDate(2010, 10, 24)));
+    r2.setStartDateTime(QDate(2010, 10, 23).startOfDay());
+    r2.setEndDateTime(QDate(2010, 10, 24).startOfDay());
     QVERIFY(e.saveDetail(&r));
     QVERIFY(e.details(QOrganizerItemDetail::TypeEventTime).size() == 1);
     QVERIFY(e.detail(QOrganizerItemDetail::TypeEventTime) == r);
@@ -624,12 +624,12 @@ void tst_QOrganizerItemDetails::journalTime()
     QOrganizerJournal j;
 
     QVERIFY(r.isEmpty());
-    r.setEntryDateTime(QDateTime(QDate(2010, 10, 13)));
-    QVERIFY(r.entryDateTime() == QDateTime(QDate(2010, 10, 13)));
+    r.setEntryDateTime(QDate(2010, 10, 13).startOfDay());
+    QVERIFY(r.entryDateTime() == QDate(2010, 10, 13).startOfDay());
 
     // add
     QOrganizerJournalTime r2;
-    r2.setEntryDateTime(QDateTime(QDate(2010, 10, 23)));
+    r2.setEntryDateTime(QDate(2010, 10, 23).startOfDay());
     QVERIFY(j.saveDetail(&r));
     QVERIFY(j.details(QOrganizerItemDetail::TypeJournalTime).size() == 1);
     QVERIFY(j.detail(QOrganizerItemDetail::TypeJournalTime) == r);
@@ -640,7 +640,7 @@ void tst_QOrganizerItemDetails::journalTime()
     QVERIFY(j.detail(QOrganizerItemDetail::TypeJournalTime) == r);
 
     // update
-    r.setEntryDateTime(QDateTime(QDate(2010, 11, 05)));
+    r.setEntryDateTime(QDate(2010, 11, 05).startOfDay());
     QVERIFY(j.detail(QOrganizerItemDetail::TypeJournalTime) != r);
     QVERIFY(j.saveDetail(&r));
     QVERIFY(j.detail(QOrganizerItemDetail::TypeJournalTime) == r);
@@ -659,19 +659,19 @@ void tst_QOrganizerItemDetails::todoTime()
     QVERIFY(r.isEmpty());
     QVERIFY(!r.isAllDay());
 
-    r.setStartDateTime(QDateTime(QDate(2010, 10, 13)));
-    QVERIFY(r.startDateTime() == QDateTime(QDate(2010, 10, 13)));
+    r.setStartDateTime(QDate(2010, 10, 13).startOfDay());
+    QVERIFY(r.startDateTime() == QDate(2010, 10, 13).startOfDay());
     QVERIFY(!r.isAllDay());
     r.setAllDay(true);
     QVERIFY(r.isAllDay());
 
-    r.setDueDateTime(QDateTime(QDate(2010, 10, 14)));
-    QVERIFY(r.dueDateTime() == QDateTime(QDate(2010, 10, 14)));
+    r.setDueDateTime(QDate(2010, 10, 14).startOfDay());
+    QVERIFY(r.dueDateTime() == QDate(2010, 10, 14).startOfDay());
 
     // add
     QOrganizerTodoTime r2;
-    r2.setStartDateTime(QDateTime(QDate(2010, 10, 23)));
-    r2.setDueDateTime(QDateTime(QDate(2010, 10, 24)));
+    r2.setStartDateTime(QDate(2010, 10, 23).startOfDay());
+    r2.setDueDateTime(QDate(2010, 10, 24).startOfDay());
     QVERIFY(t.saveDetail(&r));
     QVERIFY(t.details(QOrganizerItemDetail::TypeTodoTime).size() == 1);
     QVERIFY(t.detail(QOrganizerItemDetail::TypeTodoTime) == r);

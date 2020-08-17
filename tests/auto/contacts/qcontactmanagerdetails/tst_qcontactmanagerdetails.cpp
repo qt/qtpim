@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the test suite of the Qt Toolkit.
@@ -280,7 +280,7 @@ void tst_QContactManagerDetails::testBirthday()
     QContact c;
 
     QContactBirthday b;
-    b.setDateTime( QDateTime(QDate(2001,1,1)) );
+    b.setDateTime(QDate(2001, 1, 1).startOfDay());
     c.saveDetail( &b );
 
     saveAndVerifyContact( cm.data(), c );

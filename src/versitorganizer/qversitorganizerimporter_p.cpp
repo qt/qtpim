@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the QtVersitOrganizer module of the Qt Toolkit.
@@ -525,7 +525,7 @@ bool QVersitOrganizerImporterPrivate::createStartDateTime(
         QDateTime end = etr.endDateTime();
         if (!start.isValid()) {
             // not having a start date set is treated as a start date of epoch
-            start = QDateTime(QDate(1970, 1, 1));
+            start = QDate(1970, 1, 1).startOfDay();
         }
         // newEnd = end + (newStart - start)
         int durationDays = start.daysTo(newStart);
@@ -584,7 +584,7 @@ bool QVersitOrganizerImporterPrivate::createDuration(
     QDateTime startTime = etr.startDateTime();
     if (!startTime.isValid()) {
         // not having a start date set is treated as a start date of epoch
-        startTime = QDateTime(QDate(1970, 1, 1));
+        startTime = QDate(1970, 1, 1).startOfDay();
     }
     etr.setEndDateTime(
             startTime.addDays(7*duration.weeks() + duration.days())

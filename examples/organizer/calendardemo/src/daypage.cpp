@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples for the Qt PIM module of the Qt Toolkit.
@@ -104,7 +104,8 @@ void DayPage::refresh()
     m_itemList->clear();
 
     // Today's item
-    QList<QOrganizerItem> items = m_manager->items(QDateTime(m_day), QDateTime(m_day, QTime(23, 59, 59)));
+    QList<QOrganizerItem> items
+        = m_manager->items(m_day.startOfDay(), m_day.endOfDay());
 
     foreach (const QOrganizerItem &item, items)
     {

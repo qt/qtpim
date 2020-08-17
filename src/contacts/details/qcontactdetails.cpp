@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the QtContacts module of the Qt Toolkit.
@@ -469,7 +469,7 @@ QDate QContactAnniversary::originalDate() const
  */
 void QContactAnniversary::setOriginalDate(const QDate& _value)
 {
-    reinterpret_cast<QContactAnniversaryPrivate*>(d.data())->setMemberValue<QDateTime>(QContactAnniversary::FieldOriginalDate, QDateTime(_value));
+    reinterpret_cast<QContactAnniversaryPrivate*>(d.data())->setMemberValue<QDateTime>(QContactAnniversary::FieldOriginalDate, _value.startOfDay());
 }
 
 /*!
@@ -1187,7 +1187,7 @@ QDate QContactBirthday::date() const
  */
 void QContactBirthday::setDate(const QDate& _value)
 {
-    reinterpret_cast<QContactBirthdayPrivate*>(d.data())->setMemberValue<QDateTime>(QContactBirthday::FieldBirthday, QDateTime(_value));
+    reinterpret_cast<QContactBirthdayPrivate*>(d.data())->setMemberValue<QDateTime>(QContactBirthday::FieldBirthday, _value.startOfDay());
 }
 
 /*!

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the test suite of the Qt Toolkit.
@@ -931,10 +931,10 @@ void tst_QOrganizerItem::event()
     testEvent.setLocation("test address");
     QCOMPARE(testEvent.location(), QString("test address"));
 
-    testEvent.setStartDateTime(QDateTime(QDate::currentDate()));
-    QCOMPARE(testEvent.startDateTime(), QDateTime(QDate::currentDate()));
-    testEvent.setEndDateTime(QDateTime(QDate::currentDate().addDays(1)));
-    QCOMPARE(testEvent.endDateTime(), QDateTime(QDate::currentDate().addDays(1)));
+    testEvent.setStartDateTime(QDate::currentDate().startOfDay());
+    QCOMPARE(testEvent.startDateTime(), QDate::currentDate().startOfDay());
+    testEvent.setEndDateTime(QDate::currentDate().addDays(1).startOfDay());
+    QCOMPARE(testEvent.endDateTime(), QDate::currentDate().addDays(1).startOfDay());
     QVERIFY(!testEvent.isAllDay()); // default to not all day
     testEvent.setAllDay(true);
     QVERIFY(testEvent.isAllDay());
@@ -1043,10 +1043,10 @@ void tst_QOrganizerItem::todo()
     QDateTime currentDateTime = QDateTime::currentDateTime();
     testTodo.setStartDateTime(currentDateTime);
     QCOMPARE(testTodo.startDateTime(), currentDateTime);
-    testTodo.setDueDateTime(QDateTime(QDate::currentDate()));
-    QCOMPARE(testTodo.dueDateTime(), QDateTime(QDate::currentDate()));
-    testTodo.setFinishedDateTime(QDateTime(QDate::currentDate().addDays(1)));
-    QCOMPARE(testTodo.finishedDateTime(), QDateTime(QDate::currentDate().addDays(1)));
+    testTodo.setDueDateTime(QDate::currentDate().startOfDay());
+    QCOMPARE(testTodo.dueDateTime(), QDate::currentDate().startOfDay());
+    testTodo.setFinishedDateTime(QDate::currentDate().addDays(1).startOfDay());
+    QCOMPARE(testTodo.finishedDateTime(), QDate::currentDate().addDays(1).startOfDay());
 
     QVERIFY(testTodo.isAllDay() == false); // default should not be all day event.
     testTodo.setAllDay(true);
@@ -1118,10 +1118,10 @@ void tst_QOrganizerItem::eventOccurrence()
     testEventOccurrence.setLocation("test address");
     QCOMPARE(testEventOccurrence.location(), QString("test address"));
 
-    testEventOccurrence.setStartDateTime(QDateTime(QDate::currentDate()));
-    QCOMPARE(testEventOccurrence.startDateTime(), QDateTime(QDate::currentDate()));
-    testEventOccurrence.setEndDateTime(QDateTime(QDate::currentDate().addDays(1)));
-    QCOMPARE(testEventOccurrence.endDateTime(), QDateTime(QDate::currentDate().addDays(1)));
+    testEventOccurrence.setStartDateTime(QDate::currentDate().startOfDay());
+    QCOMPARE(testEventOccurrence.startDateTime(), QDate::currentDate().startOfDay());
+    testEventOccurrence.setEndDateTime(QDate::currentDate().addDays(1).startOfDay());
+    QCOMPARE(testEventOccurrence.endDateTime(), QDate::currentDate().addDays(1).startOfDay());
 
     testEventOccurrence.setPriority(QOrganizerItemPriority::VeryHighPriority);
     QCOMPARE(testEventOccurrence.priority(), QOrganizerItemPriority::VeryHighPriority);
@@ -1153,12 +1153,12 @@ void tst_QOrganizerItem::todoOccurrence()
     testTodoOccurrence.setStatus(QOrganizerTodoProgress::StatusComplete);
     QCOMPARE(testTodoOccurrence.progressPercentage(), 50); // XXX TODO: should this update automatically?
 
-    testTodoOccurrence.setStartDateTime(QDateTime(QDate::currentDate()));
-    QCOMPARE(testTodoOccurrence.startDateTime(), QDateTime(QDate::currentDate()));
-    testTodoOccurrence.setDueDateTime(QDateTime(QDate::currentDate()));
-    QCOMPARE(testTodoOccurrence.dueDateTime(), QDateTime(QDate::currentDate()));
-    testTodoOccurrence.setFinishedDateTime(QDateTime(QDate::currentDate().addDays(1)));
-    QCOMPARE(testTodoOccurrence.finishedDateTime(), QDateTime(QDate::currentDate().addDays(1)));
+    testTodoOccurrence.setStartDateTime(QDate::currentDate()te::currentDate().addDays(1).startOfDay());
+    QCOMPARE(testTodoOccurrence.startDateTime(), QDate::currentDate().startOfDay());
+    testTodoOccurrence.setDueDateTime(QDate::currentDate().startOfDay());
+    QCOMPARE(testTodoOccurrence.dueDateTime(), QDate::currentDate().startOfDay());
+    testTodoOccurrence.setFinishedDateTime(QDate::currentDate().addDays(1).startOfDay());
+    QCOMPARE(testTodoOccurrence.finishedDateTime(), QDate::currentDate().addDays(1).startOfDay());
 
     testTodoOccurrence.setPriority(QOrganizerItemPriority::VeryHighPriority);
     QCOMPARE(testTodoOccurrence.priority(), QOrganizerItemPriority::VeryHighPriority);
@@ -1242,8 +1242,8 @@ void tst_QOrganizerItem::itemsCompare()
     a2.setEmailAddress("people3@qt-project.org");
 
     QOrganizerEventTime etr;
-    etr.setStartDateTime(QDateTime(QDate::currentDate()));
-    etr.setEndDateTime(QDateTime(QDate::currentDate().addDays(1)));
+    etr.setStartDateTime(QDate::currentDate().startOfDay());
+    etr.setEndDateTime(QDate::currentDate().addDays(1).startOfDay());
 
     QOrganizerItem item1;
     QOrganizerItem item2;

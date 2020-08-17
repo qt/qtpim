@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the test suite of the Qt Toolkit.
@@ -803,8 +803,8 @@ void tst_QVersitOrganizerImporter::testImportEventProperties_data()
         QOrganizerEventTime etr;
         // The time portion must be valid but is ignored.  This test cheats a bit because it knows
         // the implementation sets it to 00:00:00
-        etr.setStartDateTime(QDateTime(QDate(2010, 1, 2), QTime(0, 0, 0)));
-        etr.setEndDateTime(QDateTime(QDate(2010, 1, 2), QTime(0, 0, 0)));
+        etr.setStartDateTime(QDate(2010, 1, 2).startOfDay());
+        etr.setEndDateTime(QDate(2010, 1, 2).startOfDay());
         etr.setAllDay(true);
         QTest::newRow("all day event") << properties
             << (QList<QOrganizerItemDetail>() << etr);
@@ -819,7 +819,7 @@ void tst_QVersitOrganizerImporter::testImportEventProperties_data()
         duration.setName(QStringLiteral("DURATION"));
         duration.setValue(QStringLiteral("P15DT5H7M20S"));
         QOrganizerEventTime etr;
-        etr.setStartDateTime(QDateTime(QDate(2009, 12, 31), QTime(0, 0, 0)));
+        etr.setStartDateTime(QDate(2009, 12, 31).startOfDay());
         etr.setEndDateTime(QDateTime(QDate(2010, 1, 15), QTime(5, 7, 20)));
         QTest::newRow("dtstart and duration: days hours minutes seconds")
             << (QList<QVersitProperty>() << dtstart << duration)
@@ -859,13 +859,13 @@ void tst_QVersitOrganizerImporter::testImportEventProperties_data()
             << (QList<QOrganizerItemDetail>() << etr);
 
         duration.setValue(QStringLiteral("P15D"));
-        etr.setEndDateTime(QDateTime(QDate(2010, 1, 15), QTime(0, 0, 0)));
+        etr.setEndDateTime(QDate(2010, 1, 15).startOfDay());
         QTest::newRow("dtstart and duration: days")
             << (QList<QVersitProperty>() << dtstart << duration)
             << (QList<QOrganizerItemDetail>() << etr);
 
         duration.setValue(QStringLiteral("P7W"));
-        etr.setEndDateTime(QDateTime(QDate(2010, 2, 18), QTime(0, 0, 0)));
+        etr.setEndDateTime(QDate(2010, 2, 18).startOfDay());
         QTest::newRow("dtstart and duration: weeks")
             << (QList<QVersitProperty>() << dtstart << duration)
             << (QList<QOrganizerItemDetail>() << etr);
@@ -873,7 +873,7 @@ void tst_QVersitOrganizerImporter::testImportEventProperties_data()
         dtstart.setValue(QStringLiteral("20100115T050720"));
         duration.setValue(QStringLiteral("-P15DT5H7M20S"));
         etr.setStartDateTime(QDateTime(QDate(2010, 1, 15), QTime(5, 7, 20)));
-        etr.setEndDateTime(QDateTime(QDate(2009, 12, 31), QTime(0, 0, 0)));
+        etr.setEndDateTime(QDate(2009, 12, 31).startOfDay());
         QTest::newRow("dtstart and duration: negative")
             << (QList<QVersitProperty>() << dtstart << duration)
             << (QList<QOrganizerItemDetail>() << etr);
@@ -1315,8 +1315,8 @@ void tst_QVersitOrganizerImporter::testImportTodoProperties_data()
         QOrganizerTodoTime todoTime;
         // The time portion must be valid but is ignored.  This test cheats a bit because it knows
         // the implementation sets it to 00:00:00
-        todoTime.setStartDateTime(QDateTime(QDate(2010, 1, 2), QTime(0, 0, 0)));
-        todoTime.setDueDateTime(QDateTime(QDate(2010, 1, 3), QTime(0, 0, 0)));
+        todoTime.setStartDateTime(QDate(2010, 1, 2).startOfDay());
+        todoTime.setDueDateTime(QDate(2010, 1, 3).startOfDay());
         todoTime.setAllDay(true);
         QTest::newRow("all day todo") << properties
             << (QList<QOrganizerItemDetail>() << todoTime);

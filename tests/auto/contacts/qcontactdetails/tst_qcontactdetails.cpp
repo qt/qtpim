@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the test suite of the Qt Toolkit.
@@ -212,7 +212,7 @@ void tst_QContactDetails::anniversary()
     QContactAnniversary a1, a2;
     QDateTime currDateTime = QDateTime::currentDateTime();
     QDate currDate = currDateTime.date();
-    QDateTime snippedDateTime = QDateTime(currDate);
+    QDateTime snippedDateTime = currDate.startOfDay();
 
     // test property set
     a1.setCalendarId("1234");
@@ -308,7 +308,7 @@ void tst_QContactDetails::birthday()
     QContactBirthday b1, b2, b3;
     QDateTime currDateTime = QDateTime::currentDateTime();
     QDate currDate = currDateTime.date();
-    QDateTime snippedDateTime = QDateTime(currDate);
+    QDateTime snippedDateTime = currDate.startOfDay();
 
     // test property set
     b1.setDate(currDate);

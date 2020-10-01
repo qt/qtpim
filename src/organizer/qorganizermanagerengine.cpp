@@ -959,9 +959,9 @@ bool QOrganizerManagerEngine::testFilter(const QOrganizerItemFilter &filter, con
                         } else {
                             /* Have to test the length of min & max */
                             // using refs means the parameter order is backwards, so negate the result of compare
-                            if (testMin && -QString::compare(minVal, var.rightRef(minVal.length()), cs) < minComp)
+                            if (testMin && -QString::compare(minVal, var.right(minVal.length()), cs) < minComp)
                                 continue;
-                            if (testMax && -QString::compare(maxVal, var.rightRef(maxVal.length()), cs) >= maxComp)
+                            if (testMax && -QString::compare(maxVal, var.right(maxVal.length()), cs) >= maxComp)
                                 continue;
                             return true;
                         }

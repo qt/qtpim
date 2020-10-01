@@ -1226,11 +1226,11 @@ QStringList QVersitReaderPrivate::splitValue(const QString& string,
         } else if (string.at(i) == sep) {
             if (isEscaped) {
                 // we see an escaped separator - remove the backslash
-                segment += string.midRef(segmentStartIndex, i-segmentStartIndex-1);
+                segment += string.mid(segmentStartIndex, i-segmentStartIndex-1);
                 segment += sep;
             } else {
                 // we see a separator
-                segment += string.midRef(segmentStartIndex, i - segmentStartIndex);
+                segment += string.mid(segmentStartIndex, i - segmentStartIndex);
                 if (behavior == Qt::KeepEmptyParts || !segment.isEmpty())
                     list.append(segment);
                 segment.clear();
@@ -1242,7 +1242,7 @@ QStringList QVersitReaderPrivate::splitValue(const QString& string,
         }
     }
     // The rest of the string after the last sep.
-    segment += string.midRef(segmentStartIndex);
+    segment += string.mid(segmentStartIndex);
     if (behavior == Qt::KeepEmptyParts || !segment.isEmpty())
         list.append(segment);
     return list;

@@ -62,7 +62,7 @@
 QT_BEGIN_NAMESPACE_CONTACTS
 
 /* Shared QContactManager stuff here, default engine stuff below */
-QHash<QString, QContactManagerEngineFactory*> QContactManagerData::m_engines;
+QMultiHash<QString, QContactManagerEngineFactory*> QContactManagerData::m_engines;
 QSet<QContactManager*> QContactManagerData::m_aliveEngines;
 QList<QContactActionManagerPlugin*> QContactManagerData::m_actionManagers;
 
@@ -167,7 +167,7 @@ void QContactManagerData::createEngine(const QString &managerName, const QMap<QS
                         builtManagerName) {
                     QContactManagerEngineFactory *managerFactory = qobject_cast<QContactManagerEngineFactory *>(l->instance(m_metaData.indexOf(metaDataObject)));
                     QContactActionManagerPlugin *actionFactory = qobject_cast<QContactActionManagerPlugin *>(l->instance(m_metaData.indexOf(metaDataObject)));
-                    m_engines.insertMulti(builtManagerName, managerFactory);
+                    m_engines.insert(builtManagerName, managerFactory);
                     m_actionManagers.append(actionFactory);
                 }
             }
@@ -218,7 +218,7 @@ void QContactManagerData::loadStaticFactories()
                     if (m_engines.keys().contains(name)) {
                         qWarning("Static contacts plugin %s has the same name as a currently loaded plugin; ignored", qPrintable(name));
                     } else {
-                        m_engines.insertMulti(name, f);
+                        m_engines.insert(name, f);
                     }
                 } else {
                     qWarning("Static contacts plugin with reserved name %s ignored", qPrintable(name));

@@ -102,7 +102,7 @@ public:
     QMap<int, QContactManager::Error> m_lastErrorMap;
 
     /* Manager plugins */
-    static QHash<QString, QContactManagerEngineFactory*> m_engines;
+    static QMultiHash<QString, QContactManagerEngineFactory*> m_engines;
     static QSet<QContactManager*> m_aliveEngines;
     static QContactManagerData* managerData(QContactManager *manager) {return manager->d;}
     static QContactManagerData* managerData(const QContactManager *manager) {return manager->d;} // laziness to avoid const_cast

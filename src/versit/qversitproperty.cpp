@@ -162,8 +162,8 @@ uint qHash(const QVersitProperty &key)
     foreach (const QString& group, key.groups()) {
         hash += QT_PREPEND_NAMESPACE(qHash)(group);
     }
-    QHash<QString,QString>::const_iterator it = key.parameters().constBegin();
-    QHash<QString,QString>::const_iterator end = key.parameters().constEnd();
+    QMultiHash<QString,QString>::const_iterator it = key.parameters().constBegin();
+    QMultiHash<QString,QString>::const_iterator end = key.parameters().constEnd();
     while (it != end) {
         hash += QT_PREPEND_NAMESPACE(qHash)(it.key()) + QT_PREPEND_NAMESPACE(qHash)(it.value());
         ++it;
@@ -182,7 +182,7 @@ QDebug operator<<(QDebug dbg, const QVersitProperty& property)
         dbg.nospace() << group << '.';
     }
     dbg.nospace() << name;
-    QHash<QString,QString>::const_iterator it;
+    QMultiHash<QString,QString>::const_iterator it;
     for (it = parameters.constBegin(); it != parameters.constEnd(); ++it) {
         dbg.nospace() << ';' << it.key() << '=' << it.value();
     }

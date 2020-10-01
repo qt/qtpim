@@ -97,7 +97,7 @@ public:
     QMap<int, QOrganizerManager::Error> m_lastErrorMap;
 
     // manager plugins
-    static QHash<QString, QOrganizerManagerEngineFactory *> m_engines;
+    static QMultiHash<QString, QOrganizerManagerEngineFactory *> m_engines;
     static bool m_discovered;
     static bool m_discoveredStatic;
     static QStringList m_pluginPaths;

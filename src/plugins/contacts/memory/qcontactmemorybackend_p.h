@@ -103,7 +103,7 @@ public:
 
     QContactId m_selfContactId;               // the "MyCard" contact id
     QList<QContact> m_contacts;               // list of contacts
-    QHash<QContactCollectionId, QContactId> m_contactsInCollections;   // hash of contacts for each collection
+    QMultiHash<QContactCollectionId, QContactId> m_contactsInCollections; // hash of contacts for each collection
     QHash<QContactCollectionId, QContactCollection> m_idToCollectionHash; // hash of id to the collection identified by that id
     QList<QContactId> m_contactIds;           // list of contact Id's
     QList<QContactRelationship> m_relationships;   // list of contact relationships

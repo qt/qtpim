@@ -52,7 +52,7 @@
 
 QT_BEGIN_NAMESPACE_ORGANIZER
 
-QHash<QString, QOrganizerManagerEngineFactory *> QOrganizerManagerData::m_engines;
+QMultiHash<QString, QOrganizerManagerEngineFactory *> QOrganizerManagerData::m_engines;
 bool QOrganizerManagerData::m_discovered;
 bool QOrganizerManagerData::m_discoveredStatic;
 QStringList QOrganizerManagerData::m_pluginPaths;
@@ -139,7 +139,7 @@ void QOrganizerManagerData::loadStaticFactories()
                     if (m_engines.keys().contains(name))
                         qWarning("Static organizeritems plugin %s has the same name as a currently loaded plugin; ignored", qPrintable(name));
                     else
-                        m_engines.insertMulti(name, f);
+                        m_engines.insert(name, f);
                 } else {
                     qWarning("Static organizeritems plugin with reserved name %s ignored", qPrintable(name));
                 }
@@ -177,7 +177,7 @@ void QOrganizerManagerData::loadFactories()
                     if (m_engines.keys().contains(name))
                         qWarning("Organizer plugin %s has the same name as currently loaded plugin %s; ignored", qPrintable(m_pluginPaths.at(i)), qPrintable(name));
                     else
-                        m_engines.insertMulti(name, f);
+                        m_engines.insert(name, f);
                 } else {
                     qWarning("Organizer plugin %s with reserved name %s ignored", qPrintable(m_pluginPaths.at(i)), qPrintable(name));
                 }

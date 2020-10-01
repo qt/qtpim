@@ -40,7 +40,9 @@
 #include "qversitdocumentwriter_p.h"
 
 #include <QtCore/qiodevice.h>
-#include <QtCore/qtextcodec.h>
+#include <QtCore/qbytearray.h>
+
+#include <QTextCodec>
 
 #include "qversitutils_p.h"
 
@@ -86,11 +88,9 @@ void QVersitDocumentWriter::setCodec(QTextCodec *codec)
     if (mEncoder)
         delete mEncoder;
     mCodec = codec;
-    mEncoder = codec->makeEncoder();
-
-    // Hack so the encoder doesn't output a byte order mark for UTF-8.
-    if (mCodec->name() == "UTF-8")
-        mEncoder->fromUnicode(QString());
+    mEncoder = codec->makeEncoder(mCodec->name() == QByteArrayLiteral("UTF-8")
+                ? QStringConverterBase::Flag::Default
+                : QStringConverterBase::Flag::WriteBom);
 
     // UTF-(16|32)(LE|BE) are the only codecs where characters in the base64 range aren't encoded
     // the same as in ASCII.  For ASCII compatible codecs, we can do some optimizations.
@@ -225,14 +225,16 @@ void QVersitDocumentWriter::writeString(const QString &value)
         // Write the first "spaceRemaining" characters
         QStringRef line(&value, charsWritten, spaceRemaining);
         charsWritten += spaceRemaining;
-        if (mDevice->write(mEncoder->fromUnicode(line.constData(), line.length())) < 0
-               || mDevice->write(mEncoder->fromUnicode(crlfSpace)) < 0)
+        const QByteArray encodedLine = mEncoder->fromUnicode(line.constData(), line.length());
+        const QByteArray encodedCrlfSpace = mEncoder->fromUnicode(crlfSpace);
+        if (mDevice->write(encodedLine) < 0 || mDevice->write(encodedCrlfSpace) < 0)
             mSuccessful = false;
         spaceRemaining = MAX_LINE_LENGTH - 1; // minus 1 for the space at the front.
         mCurrentLineLength = 1;
     }
 
-    if (mDevice->write(mEncoder->fromUnicode(value.mid(charsWritten))) < 0)
+    const QByteArray encodedRemainder = mEncoder->fromUnicode(value.mid(charsWritten));
+    if (mDevice->write(encodedRemainder) < 0)
         mSuccessful = false;
     mCurrentLineLength += value.length() - charsWritten;
 }

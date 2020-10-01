@@ -1,6 +1,6 @@
 include(../../auto.pri)
 
-QT += versit versit-private
+QT += versit versit-private core5compat
 
 DEFINES += QT_ASCII_CAST_WARNINGS
 

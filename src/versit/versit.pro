@@ -1,5 +1,5 @@
 TARGET = QtVersit
-QT = core contacts
+QT = core contacts core5compat
 
 MODULE_PLUGIN_TYPES = \
     versit

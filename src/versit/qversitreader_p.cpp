@@ -40,8 +40,9 @@
 #include "qversitreader_p.h"
 
 #include <QtCore/qbuffer.h>
-#include <QtCore/qtextcodec.h>
 #include <QtCore/qvariant.h>
+
+#include <QTextCodec>
 
 #include "qversitutils_p.h"
 

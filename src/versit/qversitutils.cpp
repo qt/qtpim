@@ -39,14 +39,14 @@
 
 #include "qversitutils_p.h"
 
-#include <QtCore/QTextCodec>
 #include <QtCore/qstring.h>
-#include <QtCore/qtextcodec.h>
 #include <QtCore/qvariant.h>
 
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonValue>
+
+#include <QTextCodec>
 
 #include "qversitdocument.h"
 

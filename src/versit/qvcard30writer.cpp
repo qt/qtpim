@@ -41,8 +41,9 @@
 
 #include <QtCore/qbuffer.h>
 #include <QtCore/qregularexpression.h>
-#include <QtCore/qtextcodec.h>
 #include <QtCore/qvariant.h>
+
+#include <QTextCodec>
 
 #include "qversitproperty.h"
 #include "qversitutils_p.h"

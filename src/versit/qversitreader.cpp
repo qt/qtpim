@@ -41,7 +41,8 @@
 #include "qversitreader_p.h"
 
 #include <QtCore/qbuffer.h>
-#include <QtCore/qtextcodec.h>
+
+#include <QTextCodec>
 
 QT_BEGIN_NAMESPACE_VERSIT
 

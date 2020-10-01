@@ -35,6 +35,8 @@
 #include <QtTest/QtTest>
 #include <QSignalSpy>
 
+#include <QTextCodec>
+
 // This says "NOKIA" in Katakana encoded with UTF-8
 const QByteArray KATAKANA_NOKIA("\xe3\x83\x8e\xe3\x82\xad\xe3\x82\xa2");
 
@@ -1493,48 +1495,48 @@ void tst_QVersitReader::testExtractParts()
 
     // Empty value
     QByteArray text;
-    parts = mReaderPrivate->extractParts(text,";", mAsciiCodec);
+    parts = mReaderPrivate->extractParts(text, VersitUtils::encode(';', mAsciiCodec), mAsciiCodec);
     QVERIFY(parts.isEmpty());
 
     // Only separator
     text = ";";
-    parts = mReaderPrivate->extractParts(text,";", mAsciiCodec);
+    parts = mReaderPrivate->extractParts(text, VersitUtils::encode(';', mAsciiCodec), mAsciiCodec);
     QVERIFY(parts.isEmpty());
 
     // One part
     text = "part";
-    parts = mReaderPrivate->extractParts(text,";", mAsciiCodec);
+    parts = mReaderPrivate->extractParts(text, VersitUtils::encode(';', mAsciiCodec), mAsciiCodec);
     QCOMPARE(parts.count(),1);
     QCOMPARE(QLatin1String(parts[0]),QLatin1String("part"));
 
     // Separator in the beginning, one part
     text = ";part";
-    parts = mReaderPrivate->extractParts(text,";", mAsciiCodec);
+    parts = mReaderPrivate->extractParts(text, VersitUtils::encode(';', mAsciiCodec), mAsciiCodec);
     QCOMPARE(parts.count(),1);
     QCOMPARE(QLatin1String(parts[0]),QLatin1String("part"));
 
     // Separator in the end, one part
     text = "part;";
-    parts = mReaderPrivate->extractParts(text,";", mAsciiCodec);
+    parts = mReaderPrivate->extractParts(text, VersitUtils::encode(';', mAsciiCodec), mAsciiCodec);
     QCOMPARE(parts.count(),1);
     QCOMPARE(QLatin1String(parts[0]),QLatin1String("part"));
 
     // One part that contains escaped separator
     text = "part\\;";
-    parts = mReaderPrivate->extractParts(text,";", mAsciiCodec);
+    parts = mReaderPrivate->extractParts(text, VersitUtils::encode(';', mAsciiCodec), mAsciiCodec);
     QCOMPARE(parts.count(),1);
     QCOMPARE(QLatin1String(parts[0]),QLatin1String("part\\;"));
 
     // Two parts
     text = "part1;part2";
-    parts = mReaderPrivate->extractParts(text,";", mAsciiCodec);
+    parts = mReaderPrivate->extractParts(text, VersitUtils::encode(';', mAsciiCodec), mAsciiCodec);
     QCOMPARE(parts.count(),2);
     QCOMPARE(QLatin1String(parts[0]),QLatin1String("part1"));
     QCOMPARE(QLatin1String(parts[1]),QLatin1String("part2"));
 
     // Two parts that contain escaped separators
     text = "pa\\;rt1;par\\;t2";
-    parts = mReaderPrivate->extractParts(text,";", mAsciiCodec);
+    parts = mReaderPrivate->extractParts(text, VersitUtils::encode(';', mAsciiCodec), mAsciiCodec);
     QCOMPARE(parts.count(),2);
     QCOMPARE(QLatin1String(parts[0]),QLatin1String("pa\\;rt1"));
     QCOMPARE(QLatin1String(parts[1]),QLatin1String("par\\;t2"));
@@ -1542,7 +1544,7 @@ void tst_QVersitReader::testExtractParts()
     // Test wide character support
     QTextCodec* codec = QTextCodec::codecForName("UTF-16BE");
     text = codec->fromUnicode(QStringLiteral("part1;part2"));
-    parts = mReaderPrivate->extractParts(text,";", codec);
+    parts = mReaderPrivate->extractParts(text, VersitUtils::encode(';', codec), codec);
     QCOMPARE(parts.count(),2);
     QCOMPARE(codec->toUnicode(parts[0]),QStringLiteral("part1"));
     QCOMPARE(codec->toUnicode(parts[1]),QStringLiteral("part2"));
@@ -1849,8 +1851,10 @@ void tst_QVersitReader::testReadLine()
     QFETCH(QList<QString>, expectedLines);
 
     QTextCodec* codec = QTextCodec::codecForName(codecName);
-    QTextEncoder* encoder = codec->makeEncoder();
-    encoder->fromUnicode(QString());
+    QTextEncoder* encoder = codec->makeEncoder(codecName == QStringLiteral("UTF-8")
+                                               ? QStringConverterBase::Flag::Default
+                                               : QStringConverterBase::Flag::WriteBom);
+    encoder->fromUnicode(QString()); // Throw away BOM.
 
     QByteArray bytes(encoder->fromUnicode(data));
 
@@ -1868,17 +1872,16 @@ void tst_QVersitReader::testReadLine()
         QVERIFY(!lineReader.atEnd());
         LByteArray line = lineReader.readLine();
         QCOMPARE(line.toByteArray(), testLine);
-
-
         QByteArray expectedBytes(encoder->fromUnicode(expectedLine));
         QVERIFY(!lineReader.atEnd());
         line = lineReader.readLine();
-        if(line.toByteArray() != expectedBytes) {
-            qDebug() << line.toByteArray();
+        QByteArray encodedLine = line.toByteArray();
+        if (encodedLine != expectedBytes) {
+            qDebug() << encodedLine;
             qDebug() << expectedBytes;
-            QCOMPARE(line.toByteArray(), expectedBytes);
+            QCOMPARE(encodedLine, expectedBytes);
         }
-        QCOMPARE(line.size(), expectedBytes.length());
+        QCOMPARE(encodedLine.size(), expectedBytes.length());
     }
 
     // (test push a line to a line reader that's reached its end)

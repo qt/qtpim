@@ -35,6 +35,8 @@
 #include <QtTest/QtTest>
 #include <QByteArray>
 
+#include <QTextCodec>
+
 QTVERSIT_USE_NAMESPACE
 
 void tst_QVersitWriter::init()
@@ -168,7 +170,11 @@ END:VCARD\r\n");
     QCOMPARE(mWriter->error(), QVersitWriter::NoError);
     mOutputDevice->seek(0);
     result = mOutputDevice->readAll();
-    QByteArray expected(utf16->fromUnicode(QLatin1String(vCard21.data())));
+
+    QTextCodec::ConverterState state(QTextCodec::DefaultConversion);
+    const QString decodedData = QString::fromLatin1(vCard21.data());
+    QByteArray expected(utf16->fromUnicode(decodedData.constData(), decodedData.size(), &state));
+
     QCOMPARE(result, expected);
 }
 
@@ -278,7 +284,10 @@ void tst_QVersitWriter::testWritingDocument()
     QVERIFY2(mWriter->waitForFinished(), QString::number(mWriter->error()).toLatin1().data());
     mOutputDevice->seek(0);
     result = mOutputDevice->readAll();
-    expected = utf16->fromUnicode(QString::fromLatin1(expected));
+
+    QTextCodec::ConverterState state(QTextCodec::DefaultConversion);
+    const QString decodedData = QString::fromLatin1(expected);
+    expected = utf16->fromUnicode(decodedData.constData(), decodedData.size(), &state);
     if (result!=expected) qDebug() << result << expected;
     QCOMPARE(result, expected);
 }

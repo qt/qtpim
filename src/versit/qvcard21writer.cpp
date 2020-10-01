@@ -40,8 +40,9 @@
 #include "qvcard21writer_p.h"
 
 #include <QtCore/qregularexpression.h>
-#include <QtCore/qtextcodec.h>
 #include <QtCore/qvariant.h>
+
+#include <QTextCodec>
 
 #include "qversitproperty.h"
 
@@ -58,9 +59,8 @@ QTextEncoder* QVCard21Writer::utf8Encoder()
 {
     static QTextEncoder* encoder = 0;
     if (encoder == 0) {
-        encoder = QTextCodec::codecForName("UTF-8")->makeEncoder();
-        // Hack so the encoder doesn't output a byte order mark
-        encoder->fromUnicode(QString());
+        // prevent output of byte order mark for UTF-8 encoding
+        encoder = QTextCodec::codecForName("UTF-8")->makeEncoder(QStringConverterBase::Flag::Default);
     }
     return encoder;
 }

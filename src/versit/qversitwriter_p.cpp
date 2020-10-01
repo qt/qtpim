@@ -41,7 +41,8 @@
 
 #include <QtCore/qbuffer.h>
 #include <QtCore/qstringlist.h>
-#include <QtCore/qtextcodec.h>
+
+#include <QTextCodec>
 
 #include "qvcard21writer_p.h"
 #include "qvcard30writer_p.h"

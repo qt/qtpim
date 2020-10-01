@@ -1,6 +1,6 @@
 include(../../auto.pri)
 
-QT += versit versit-private
+QT += versit versit-private core5compat
 
 HEADERS += tst_qversitreader.h
 SOURCES += tst_qversitreader.cpp

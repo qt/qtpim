@@ -39,13 +39,13 @@
 
 #include "qversitproperty.h"
 #include "qversitproperty_p.h"
+#include "qversitdocument.h"
 
 #ifndef QT_NO_DEBUG_STREAM
 #include <QtCore/qdebug.h>
 #endif
-#include <QtCore/qtextcodec.h>
 
-#include "qversitdocument.h"
+#include <QTextCodec>
 
 QT_BEGIN_NAMESPACE_VERSIT
 

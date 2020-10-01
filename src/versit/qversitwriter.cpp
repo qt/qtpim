@@ -39,11 +39,11 @@
 
 #include "qversitwriter.h"
 #include "qversitwriter_p.h"
+#include "qversitutils_p.h"
 
 #include <QtCore/qbuffer.h>
-#include <QtCore/qtextcodec.h>
 
-#include "qversitutils_p.h"
+#include <QTextCodec>
 
 QT_BEGIN_NAMESPACE_VERSIT
 

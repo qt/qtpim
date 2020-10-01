@@ -73,11 +73,8 @@ void tst_QContactSortOrder::traits()
 {
     QTypeInfo<QContactSortOrder> ti;
     QVERIFY(ti.isComplex);
-    QVERIFY(!ti.isStatic);
-    QVERIFY(!ti.isLarge);
     QVERIFY(!ti.isPointer);
-    QVERIFY(!ti.isDummy);
-    QCOMPARE(uint(ti.sizeOf), uint(sizeof(void *)));
+    QCOMPARE(sizeof(QContactSortOrder), sizeof(void *));
 }
 
 void tst_QContactSortOrder::sortObject()

@@ -535,10 +535,7 @@ void tst_QContactDetail::traits()
 {
     QCOMPARE(sizeof(QContactDetail), sizeof(void *));
     QVERIFY(QTypeInfo<QContactDetail>::isComplex);
-    QVERIFY(!QTypeInfo<QContactDetail>::isStatic);
-    QVERIFY(!QTypeInfo<QContactDetail>::isLarge);
     QVERIFY(!QTypeInfo<QContactDetail>::isPointer);
-    QVERIFY(!QTypeInfo<QContactDetail>::isDummy);
 }
 
 void tst_QContactDetail::keys()

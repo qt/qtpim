@@ -364,20 +364,14 @@ void tst_QContactCollection::traits()
 {
     QCOMPARE(sizeof(QContactCollection), sizeof(void *));
     QVERIFY(QTypeInfo<QContactCollection>::isComplex);
-    QVERIFY(!QTypeInfo<QContactCollection>::isStatic);
-    QVERIFY(!QTypeInfo<QContactCollection>::isLarge);
     QVERIFY(!QTypeInfo<QContactCollection>::isPointer);
-    QVERIFY(!QTypeInfo<QContactCollection>::isDummy);
 }
 
 void tst_QContactCollection::idTraits()
 {
-    QCOMPARE(sizeof(QContactCollectionId), 2*sizeof(void *));
+    QCOMPARE(sizeof(QContactCollectionId), 6*sizeof(void *));
     QVERIFY(QTypeInfo<QContactCollectionId>::isComplex);
-    QVERIFY(!QTypeInfo<QContactCollectionId>::isStatic);
-    QVERIFY(QTypeInfo<QContactCollectionId>::isLarge);
     QVERIFY(!QTypeInfo<QContactCollectionId>::isPointer);
-    QVERIFY(!QTypeInfo<QContactCollectionId>::isDummy);
 }
 
 QTEST_MAIN(tst_QContactCollection)

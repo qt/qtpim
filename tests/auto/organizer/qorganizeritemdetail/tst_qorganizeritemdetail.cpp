@@ -593,10 +593,7 @@ void tst_QOrganizerItemDetail::traits()
     QCOMPARE(sizeof(QOrganizerItemDetail), sizeof(void *));
     QTypeInfo<QOrganizerItemDetail> ti;
     QVERIFY(ti.isComplex);
-    QVERIFY(!ti.isStatic);
-    QVERIFY(!ti.isLarge);
     QVERIFY(!ti.isPointer);
-    QVERIFY(!ti.isDummy);
 }
 
 void tst_QOrganizerItemDetail::keys()

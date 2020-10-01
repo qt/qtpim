@@ -1371,10 +1371,7 @@ void tst_QContactFilter::traits()
 {
     QCOMPARE(sizeof(QContactFilter), sizeof(void *));
     QVERIFY(QTypeInfo<QContactFilter>::isComplex);
-    QVERIFY(!QTypeInfo<QContactFilter>::isStatic);
-    QVERIFY(!QTypeInfo<QContactFilter>::isLarge);
     QVERIFY(!QTypeInfo<QContactFilter>::isPointer);
-    QVERIFY(!QTypeInfo<QContactFilter>::isDummy);
 
     QCOMPARE(sizeof(QContactDetailFilter), sizeof(void*));
     QCOMPARE(sizeof(QContactChangeLogFilter), sizeof(void*));

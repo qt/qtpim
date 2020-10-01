@@ -392,10 +392,7 @@ void tst_QContactActions::traits()
     QCOMPARE(sizeof(QContactActionDescriptor), sizeof(void *));
     QTypeInfo<QTM_PREPEND_NAMESPACE(QContactActionDescriptor)> ti;
     QVERIFY(ti.isComplex);
-    QVERIFY(!ti.isStatic);
-    QVERIFY(!ti.isLarge);
     QVERIFY(!ti.isPointer);
-    QVERIFY(!ti.isDummy);
 }
 
 QTEST_MAIN(tst_QContactActions)

@@ -1132,10 +1132,7 @@ void tst_QOrganizerItemFilter::traits()
     QCOMPARE(sizeof(QOrganizerItemFilter), sizeof(void *));
     QTypeInfo<QOrganizerItemFilter> ti;
     QVERIFY(ti.isComplex);
-    QVERIFY(!ti.isStatic);
-    QVERIFY(!ti.isLarge);
     QVERIFY(!ti.isPointer);
-    QVERIFY(!ti.isDummy);
 }
 
 void tst_QOrganizerItemFilter::testDebugStreamOut()

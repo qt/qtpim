@@ -907,20 +907,14 @@ void tst_QOrganizerItem::traits()
 {
     QCOMPARE(sizeof(QOrganizerItem), sizeof(void *));
     QVERIFY(QTypeInfo<QOrganizerItem>::isComplex);
-    QVERIFY(!QTypeInfo<QOrganizerItem>::isStatic);
-    QVERIFY(!QTypeInfo<QOrganizerItem>::isLarge);
     QVERIFY(!QTypeInfo<QOrganizerItem>::isPointer);
-    QVERIFY(!QTypeInfo<QOrganizerItem>::isDummy);
 }
 
 void tst_QOrganizerItem::idTraits()
 {
-    QCOMPARE(sizeof(QOrganizerItemId), 2*sizeof(void *));
+    QCOMPARE(sizeof(QOrganizerItemId), 6*sizeof(void *));
     QVERIFY(QTypeInfo<QOrganizerItemId>::isComplex);
-    QVERIFY(!QTypeInfo<QOrganizerItemId>::isStatic);
-    QVERIFY(QTypeInfo<QOrganizerItemId>::isLarge);
     QVERIFY(!QTypeInfo<QOrganizerItemId>::isPointer);
-    QVERIFY(!QTypeInfo<QOrganizerItemId>::isDummy);
 }
 
 void tst_QOrganizerItem::event()

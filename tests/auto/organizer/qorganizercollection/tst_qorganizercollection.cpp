@@ -444,20 +444,14 @@ void tst_QOrganizerCollection::traits()
 {
     QCOMPARE(sizeof(QOrganizerCollection), sizeof(void *));
     QVERIFY(QTypeInfo<QOrganizerCollection>::isComplex);
-    QVERIFY(!QTypeInfo<QOrganizerCollection>::isStatic);
-    QVERIFY(!QTypeInfo<QOrganizerCollection>::isLarge);
     QVERIFY(!QTypeInfo<QOrganizerCollection>::isPointer);
-    QVERIFY(!QTypeInfo<QOrganizerCollection>::isDummy);
 }
 
 void tst_QOrganizerCollection::idTraits()
 {
-    QCOMPARE(sizeof(QOrganizerCollectionId), 2*sizeof(void *));
+    QCOMPARE(sizeof(QOrganizerCollectionId), 6*sizeof(void *));
     QVERIFY(QTypeInfo<QOrganizerCollectionId>::isComplex);
-    QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isStatic);
-    QVERIFY(QTypeInfo<QOrganizerCollectionId>::isLarge);
     QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isPointer);
-    QVERIFY(!QTypeInfo<QOrganizerCollectionId>::isDummy);
 }
 
 QTEST_MAIN(tst_QOrganizerCollection)

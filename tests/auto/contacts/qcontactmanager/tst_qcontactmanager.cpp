@@ -2129,15 +2129,18 @@ void tst_QContactManager::changeSet()
     QVERIFY(!changeSet.addedContacts().isEmpty());
     QVERIFY(!changeSet.changedContacts().isEmpty());
     QVERIFY(changeSet.removedContacts().isEmpty());
-    QSet<QContactId> changedIds;
-    QSet<QContactDetail::DetailType> changedTypes;
+    QSet<QContactId> changedIds, expectedIds;
+    QSet<QContactDetail::DetailType> changedTypes, expectedTypes;
     foreach (const QContactChangeSet::ContactChangeList &changes, changeSet.changedContacts()) {
         changedIds |= QSet<QContactId>(changes.second.constBegin(), changes.second.constEnd());
-        if (changes.second.contains(id))
-            changedTypes |= QSet<QContactId>(changes.first.constBegin(), changes.first.constEnd());
+        if (changes.second.contains(id)) {
+            changedTypes |= QSet<QContactDetail::DetailType>(changes.first.constBegin(), changes.first.constEnd());
+        }
     }
-    QCOMPARE(changedIds, (QSet<QContactId>() << id));
-    QCOMPARE(changedTypes, (QSet<QContactDetail::DetailType>() << QContactName::Type << QContactBirthday::Type));
+    expectedIds.clear(); expectedIds.insert(id);
+    expectedTypes.clear(); expectedTypes.insert(QContactName::Type); expectedTypes.insert(QContactBirthday::Type);
+    QCOMPARE(changedIds, expectedIds);
+    QCOMPARE(changedTypes, expectedTypes);
     changeSet.clearChangedContacts();
     QVERIFY(changeSet.changedContacts().isEmpty());
 
@@ -2149,8 +2152,7 @@ void tst_QContactManager::changeSet()
     changeSet.insertChangedContacts(l1, QList<QContactDetail::DetailType>() << QContactName::Type << QContactBirthday::Type);
     changeSet.insertChangedContacts(l2, QList<QContactDetail::DetailType>() << QContactBirthday::Type << QContactName::Type << QContactBirthday::Type);
     QCOMPARE(changeSet.changedContacts().size(), 1);
-    QList<QContactId> expected((QSet<QContactId>(l1.constBegin(), l1.constEnd())
-                                | QSet<QContactId>(l2.constBegin(), l2.constEnd())).values());
+    QList<QContactId> expected((QSet<QContactId>(l1.constBegin(), l1.constEnd()) | QSet<QContactId>(l2.constBegin(), l2.constEnd())).values());
     qSort(expected);
     QCOMPARE(changeSet.changedContacts().first().second, expected);
 

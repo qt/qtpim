@@ -101,7 +101,7 @@ public:
     QUrl logoUrl() const {return detail().value(QContactOrganization::FieldLogoUrl).toString();}
     void setDepartment(const QStringList& v)
     {
-        if (!readOnly() && v.toSet() != department().toSet()) {
+        if (!readOnly() && QSet<QString>(v.constBegin(), v.constEnd()) != QSet<QString>(department().constBegin(), department().constEnd())) {
             detail().setValue(QContactOrganization::FieldDepartment, v);
             emit valueChanged();
         }

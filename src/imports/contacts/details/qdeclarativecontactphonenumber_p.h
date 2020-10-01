@@ -104,7 +104,7 @@ public:
     {
         QList<int> oldList = detail().value< QList<int> >(QContactPhoneNumber::FieldSubTypes);
 
-        if (!readOnly() && subTypes.toSet() != oldList.toSet()) {
+        if (!readOnly() && QSet<int>(subTypes.constBegin(), subTypes.constEnd()) != QSet<int>(oldList.constBegin(), oldList.constEnd())) {
             detail().setValue(QContactPhoneNumber::FieldSubTypes, QVariant::fromValue(subTypes));
             emit valueChanged();
         }

@@ -389,7 +389,7 @@ void QVersitOrganizerExporterPrivate::encodeRecurRule(
     if (!rule.daysOfWeek().isEmpty()) {
         value.append(QStringLiteral(";BYDAY="));
         bool first = true;
-        QList<Qt::DayOfWeek> daysOfWeek(QList<Qt::DayOfWeek>::fromSet(rule.daysOfWeek()));
+        QList<Qt::DayOfWeek> daysOfWeek(rule.daysOfWeek().values());
         std::sort(daysOfWeek.begin(), daysOfWeek.end());
         foreach (Qt::DayOfWeek day, daysOfWeek) {
             if (!first)
@@ -413,8 +413,7 @@ void QVersitOrganizerExporterPrivate::encodeRecurRule(
     if (!rule.monthsOfYear().isEmpty()) {
         value.append(QStringLiteral(";BYMONTH="));
         bool first = true;
-        QList<QOrganizerRecurrenceRule::Month> months(
-                QList<QOrganizerRecurrenceRule::Month>::fromSet(rule.monthsOfYear()));
+        QList<QOrganizerRecurrenceRule::Month> months(rule.monthsOfYear().values());
         std::sort(months.begin(), months.end());
         foreach (QOrganizerRecurrenceRule::Month month, months) {
             if (!first)
@@ -440,7 +439,7 @@ void QVersitOrganizerExporterPrivate::encodeRecurRule(
  */
 void QVersitOrganizerExporterPrivate::appendInts(QString* str, const QSet<int>& ints) {
     bool first = true;
-    QList<int> intList(QList<int>::fromSet(ints));
+    QList<int> intList(ints.values());
     std::sort(intList.begin(), intList.end());
     foreach (int n, intList) {
         if (!first)
@@ -489,7 +488,7 @@ void QVersitOrganizerExporterPrivate::encodeRecurDates(
     QString value = property.value();
     bool valueIsEmpty = value.isEmpty();
 
-    QList<QDate> dateList(QList<QDate>::fromSet(dates));
+    QList<QDate> dateList(dates.values());
     std::sort(dateList.begin(), dateList.end());
     foreach (const QDate& dt, dateList) {
         QString str;

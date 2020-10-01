@@ -80,7 +80,7 @@ public:
     QString spouse() const {return detail().value(QContactFamily::FieldSpouse).toString();}
     void setChildren(const QStringList& v)
     {
-        if (!readOnly() && v.toSet() != children().toSet()) {
+        if (!readOnly() && QSet<QString>(v.constBegin(), v.constEnd()) != QSet<QString>(children().constBegin(), children().constEnd())) {
             detail().setValue(QContactFamily::FieldChildren, v);
             emit valueChanged();
         }

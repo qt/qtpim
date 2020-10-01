@@ -121,7 +121,7 @@ public:
 
     void setCapabilities(const QStringList& v)
     {
-        if (!readOnly() && v.toSet() != capabilities().toSet()) {
+        if (!readOnly() && QSet<QString>(v.constBegin(), v.constEnd()) != QSet<QString>(capabilities().constBegin(), capabilities().constEnd())) {
             detail().setValue(QContactOnlineAccount::FieldCapabilities, v);
             emit valueChanged();
         }
@@ -132,7 +132,7 @@ public:
     {
         QList<int> oldList = detail().value< QList<int> >(QContactOnlineAccount::FieldSubTypes);
 
-        if (!readOnly() && subTypes.toSet() != oldList.toSet()) {
+        if (!readOnly() && QSet<int>(subTypes.constBegin(), subTypes.constEnd()) != QSet<int>(oldList.constBegin(), oldList.constEnd())) {
             detail().setValue(QContactOnlineAccount::FieldSubTypes, QVariant::fromValue(subTypes));
             emit valueChanged();
         }

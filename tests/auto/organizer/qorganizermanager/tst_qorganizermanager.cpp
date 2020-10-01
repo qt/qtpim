@@ -65,6 +65,12 @@ static inline QOrganizerCollectionId makeCollectionId(uint id)
     return QOrganizerCollectionId(QStringLiteral("qtorganizer:basic:"), QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint)));
 }
 
+template<typename T>
+static inline QSet<T> convertListToSet(const QList<T> &list)
+{
+    return QSet<T>(list.constBegin(), list.constEnd());
+}
+
 
 class tst_QOrganizerManager : public QObject
 {
@@ -2733,15 +2739,13 @@ void tst_QOrganizerManager::changeSet()
     QSet<QOrganizerItemId> changedIds;
     QSet<QOrganizerItemDetail::DetailType> changedTypes;
     foreach (const QOrganizerItemChangeSet::ItemChangeList &changes, changeSet.changedItems()) {
-        changedIds |= QSet<QOrganizerItemId>(changes.second.constBegin(),
-                                             changes.second.constEnd());
+        changedIds |= convertListToSet(changes.second);
         if (changes.second.contains(id)) {
-            changedTypes |= QSet<QOrganizerItemId>(changes.first.constBegin(),
-                                                   changes.first.constEnd());
+            changedTypes |= convertListToSet(changes.first);
         }
     }
-    QCOMPARE(changedIds, (QSet<QOrganizerItemId>() << id));
-    QCOMPARE(changedTypes, (QSet<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription << QOrganizerItemDetail::TypeTag));
+    QCOMPARE(changedIds, convertListToSet(QList<QOrganizerItemId>() << id));
+    QCOMPARE(changedTypes, convertListToSet(QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription << QOrganizerItemDetail::TypeTag));
     changeSet.clearChangedItems();
     QVERIFY(changeSet.changedItems().isEmpty());
 
@@ -2753,9 +2757,7 @@ void tst_QOrganizerManager::changeSet()
     changeSet.insertChangedItems(l1, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription << QOrganizerItemDetail::TypeTag);
     changeSet.insertChangedItems(l2, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeTag << QOrganizerItemDetail::TypeDescription << QOrganizerItemDetail::TypeTag);
     QCOMPARE(changeSet.changedItems().size(), 1);
-    QList<QOrganizerItemId> expected(
-        (QSet<QOrganizerItemId>(l1.constBegin(), l1.constEnd())
-         | QSet<QOrganizerItemId>(l2.constBegin(), l2.constEnd())).values());
+    QList<QOrganizerItemId> expected((convertListToSet(l1) | convertListToSet(l2)).values());
     qSort(expected);
     QCOMPARE(changeSet.changedItems().first().second, expected);
 

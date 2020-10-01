@@ -82,7 +82,7 @@ QList<int> QDeclarativeContactFetchHint::detailTypesHint() const
 }
 void QDeclarativeContactFetchHint::setDetailTypesHint(const QList<int> &detailTypes)
 {
-    if (detailTypes.toSet() != detailTypesHint().toSet()) {
+    if (QSet<int>(detailTypes.constBegin(), detailTypes.constEnd()) != QSet<int>(detailTypesHint().constBegin(), detailTypesHint().constEnd())) {
         QList<QContactDetail::DetailType> convertedDetailTypes;
         foreach (const int detailType, detailTypes) {
             convertedDetailTypes << static_cast<QContactDetail::DetailType>(detailType);
@@ -104,7 +104,8 @@ QStringList QDeclarativeContactFetchHint::relationshipTypesHint() const
 }
 void QDeclarativeContactFetchHint::setRelationshipTypesHint(const QStringList& relationshipTypes)
 {
-    if (relationshipTypes.toSet() != m_fetchHint.relationshipTypesHint().toSet()) {
+    if (QSet<QString>(relationshipTypes.constBegin(), relationshipTypes.constEnd())
+            != QSet<QString>(m_fetchHint.relationshipTypesHint().constBegin(), m_fetchHint.relationshipTypesHint().constEnd())) {
         m_fetchHint.setRelationshipTypesHint(relationshipTypes);
         emit fetchHintChanged();
     }

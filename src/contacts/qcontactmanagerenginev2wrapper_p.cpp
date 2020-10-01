@@ -313,7 +313,7 @@ bool PartialSaveRequestController::start()
         // Special case for the case where every contact is new - we don't need to bother fetching
         // any existing contacts - just prune them down to the mask and do the save request.
         QList<QContact> contactsToSave;
-        QSet<QContactDetail::DetailType> mask(request()->typeMask().toSet());
+        QSet<QContactDetail::DetailType> mask(request()->typeMask().constBegin(), request()->typeMask().constEnd());
         for (int i = 0; i < newContactIndices.count(); i++) {
             QContact contactToSave;
             partiallyCopyDetails(&contactToSave, contacts[newContactIndices[i]], mask);
@@ -341,7 +341,7 @@ void PartialSaveRequestController::handleFinishedSubRequest(QContactAbstractRequ
         QMap<int, QContactManager::Error> fetchErrors(cfbir->errorMap());
         QList<QContact> existingContacts(cfbir->contacts());
         QList<QContact> contacts(request()->contacts());
-        QSet<QContactDetail::DetailType> mask(request()->typeMask().toSet());
+        QSet<QContactDetail::DetailType> mask(request()->typeMask().constBegin(), request()->typeMask().constEnd());
         for (int i = 0; i < contacts.count(); i++) {
             // See if this is an existing contact or a new one
             const int fetchedIdx = m_existingIdMap.value(i, -1);

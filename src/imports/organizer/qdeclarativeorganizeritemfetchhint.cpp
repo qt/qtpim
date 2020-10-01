@@ -116,7 +116,7 @@ QList<int> QDeclarativeOrganizerItemFetchHint::detailTypesHint() const
 
 void QDeclarativeOrganizerItemFetchHint::setDetailTypesHint(const QList<int> &detailTypes)
 {
-    if (detailTypes.toSet() != detailTypesHint().toSet()) {
+    if (QSet<int>(detailTypes.constBegin(), detailTypes.constEnd()) != QSet<int>(detailTypesHint().constBegin(), detailTypesHint().constEnd())) {
         QList<QOrganizerItemDetail::DetailType> convertedDetailTypes;
         foreach (const int detailType, detailTypes)
             convertedDetailTypes << static_cast<QOrganizerItemDetail::DetailType>(detailType);

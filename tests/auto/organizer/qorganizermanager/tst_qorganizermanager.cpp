@@ -2267,8 +2267,8 @@ void tst_QOrganizerManager::recurrenceWithGenerator()
 
     if (cm->saveItem(&event)) {
         QList<QOrganizerItem> items = cm->itemOccurrences(event,
-                QDateTime(startDate, QTime(0, 0, 0)),
-                QDateTime(endDate, QTime(23, 59, 59, 999)));
+                startDate.startOfDay(),
+                endDate.endOfDay());
 
         QList<QDate> actualDates;
         for (int i = 0; i < items.size(); i++) {

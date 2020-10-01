@@ -1147,8 +1147,8 @@ void tst_QOrganizerItem::todoOccurrence()
     testTodoOccurrence.setStatus(QOrganizerTodoProgress::StatusComplete);
     QCOMPARE(testTodoOccurrence.progressPercentage(), 50); // XXX TODO: should this update automatically?
 
-    testTodoOccurrence.setStartDateTime(QDate::currentDate()te::currentDate().addDays(1).startOfDay());
-    QCOMPARE(testTodoOccurrence.startDateTime(), QDate::currentDate().startOfDay());
+    testTodoOccurrence.setStartDateTime(QDate::currentDate().addDays(1).startOfDay());
+    QCOMPARE(testTodoOccurrence.startDateTime(), QDate::currentDate().addDays(1).startOfDay());
     testTodoOccurrence.setDueDateTime(QDate::currentDate().startOfDay());
     QCOMPARE(testTodoOccurrence.dueDateTime(), QDate::currentDate().startOfDay());
     testTodoOccurrence.setFinishedDateTime(QDate::currentDate().addDays(1).startOfDay());

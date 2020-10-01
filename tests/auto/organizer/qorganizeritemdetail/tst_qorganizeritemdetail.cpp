@@ -321,7 +321,7 @@ void tst_QOrganizerItemDetail::values()
     dt.setTime(t);
     QDate d = dt.date();
 
-    QDateTime ddt(d); // DateTime version of a Date (QTime())
+    QDateTime ddt = d.startOfDay(); // DateTime version of a Date (QTime())
 
     p.setValue(101, "This is a string");
     p.setValue(102, d);

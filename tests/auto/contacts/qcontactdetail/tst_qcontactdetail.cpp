@@ -307,7 +307,7 @@ void tst_QContactDetail::values()
     dt.setTime(t);
     QDate d = dt.date();
 
-    QDateTime ddt(d); // DateTime version of a Date (QTime())
+    QDateTime ddt = d.startOfDay(); // DateTime version of a Date (QTime())
 
     QVERIFY(p.setValue(QContactAddress::FieldStreet, "This is a string"));
     QVERIFY(p.setValue(QContactAddress::FieldLocality, d));

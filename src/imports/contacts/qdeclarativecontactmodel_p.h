@@ -103,6 +103,8 @@ public:
         ImportParseError       = QVersitReader::ParseError
     };
 
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+
     QString manager() const;
     void setManager(const QString& manager);
 

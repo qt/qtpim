@@ -108,6 +108,8 @@ public:
     explicit QDeclarativeOrganizerModel(QOrganizerManager* manager, const QDateTime& start, const QDateTime& end, QObject *parent = nullptr);
     ~QDeclarativeOrganizerModel();
 
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+
     QString error() const;
     int itemCount() const;
 

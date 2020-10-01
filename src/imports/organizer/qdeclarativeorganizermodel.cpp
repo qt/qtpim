@@ -198,11 +198,6 @@ QDeclarativeOrganizerModel::QDeclarativeOrganizerModel(QObject *parent) :
     QAbstractListModel(parent),
     d_ptr(new QDeclarativeOrganizerModelPrivate)
 {
-    QHash<int, QByteArray> roleNames;
-    roleNames = QAbstractItemModel::roleNames();
-    roleNames.insert(OrganizerItemRole, "item");
-    setRoleNames(roleNames);
-
     d_ptr->m_updateTimer.setSingleShot(true);
     d_ptr->m_updateItemsTimer.setSingleShot(true);
     d_ptr->m_fetchCollectionsTimer.setSingleShot(true);
@@ -225,6 +220,13 @@ QDeclarativeOrganizerModel::QDeclarativeOrganizerModel(QObject *parent) :
 
 QDeclarativeOrganizerModel::~QDeclarativeOrganizerModel()
 {
+}
+
+QHash<int, QByteArray> QDeclarativeOrganizerModel::roleNames() const
+{
+    QHash<int, QByteArray> roleNames = QAbstractItemModel::roleNames();
+    roleNames.insert(OrganizerItemRole, "item");
+    return roleNames;
 }
 
 /*!

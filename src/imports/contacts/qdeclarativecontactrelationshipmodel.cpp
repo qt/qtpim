@@ -100,10 +100,6 @@ QDeclarativeContactRelationshipModel::QDeclarativeContactRelationshipModel(QObje
     : QAbstractListModel(parent)
     , d(new QDeclarativeContactRelationshipModelPrivate)
 {
-    QHash<int, QByteArray> roleNames;
-    roleNames = QAbstractItemModel::roleNames();
-    roleNames.insert(RelationshipRole, "relationship");
-    setRoleNames(roleNames);
     connect(this, SIGNAL(managerChanged()), SLOT(fetchAgain()));
     connect(this, SIGNAL(participantChanged()), SLOT(fetchAgain()));
     connect(this, SIGNAL(relationshipTypeChanged()), SLOT(fetchAgain()));
@@ -113,6 +109,13 @@ QDeclarativeContactRelationshipModel::QDeclarativeContactRelationshipModel(QObje
 QDeclarativeContactRelationshipModel::~QDeclarativeContactRelationshipModel()
 {
     delete d;
+}
+
+QHash<int, QByteArray> QDeclarativeContactRelationshipModel::roleNames() const
+{
+    QHash<int, QByteArray> roleNames = QAbstractItemModel::roleNames();
+    roleNames.insert(RelationshipRole, "relationship");
+    return roleNames;
 }
 
 /*!
@@ -265,7 +268,7 @@ void QDeclarativeContactRelationshipModel::setAutoUpdate(bool autoUpdate)
   */
 QQmlListProperty<QDeclarativeContactRelationship> QDeclarativeContactRelationshipModel::relationships()
 {
-    return QQmlListProperty<QDeclarativeContactRelationship>(this, d->m_declarativeRelationships);
+    return QQmlListProperty<QDeclarativeContactRelationship>(this, &d->m_declarativeRelationships);
 }
 
 int QDeclarativeContactRelationshipModel::rowCount(const QModelIndex &parent) const
@@ -343,15 +346,15 @@ void QDeclarativeContactRelationshipModel::requestUpdated()
 
         QList<QContactRelationship> relationships = req->relationships();
 
-        reset();
-        beginInsertRows(QModelIndex(), 0, relationships.count());
-
+        beginResetModel();
         foreach(QDeclarativeContactRelationship* dcr, d->m_declarativeRelationships) {
             dcr->deleteLater();
         }
         d->m_declarativeRelationships.clear();
         d->m_relationships.clear();
+        endResetModel();
 
+        beginInsertRows(QModelIndex(), 0, relationships.count());
         foreach (const QContactRelationship& cr, relationships) {
             QDeclarativeContactRelationship* dcr = new QDeclarativeContactRelationship(this);
             dcr->setRelationship(cr);
@@ -359,6 +362,7 @@ void QDeclarativeContactRelationshipModel::requestUpdated()
             d->m_relationships.append(cr);
         }
         endInsertRows();
+
         req->deleteLater();
         emit relationshipsChanged();
     }

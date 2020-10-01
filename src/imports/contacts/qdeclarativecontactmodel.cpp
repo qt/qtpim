@@ -225,11 +225,6 @@ QDeclarativeContactModel::QDeclarativeContactModel(QObject *parent) :
     QAbstractListModel(parent),
     d(new QDeclarativeContactModelPrivate)
 {
-    QHash<int, QByteArray> roleNames;
-    roleNames = QAbstractItemModel::roleNames();
-    roleNames.insert(ContactRole, "contact");
-    setRoleNames(roleNames);
-
     connect(this, SIGNAL(managerChanged()), SLOT(doUpdate()));
     connect(this, SIGNAL(filterChanged()), SLOT(doContactUpdate()));
     connect(this, SIGNAL(fetchHintChanged()), SLOT(doContactUpdate()));
@@ -242,6 +237,13 @@ QDeclarativeContactModel::QDeclarativeContactModel(QObject *parent) :
 
 QDeclarativeContactModel::~QDeclarativeContactModel()
 {
+}
+
+QHash<int, QByteArray> QDeclarativeContactModel::roleNames() const
+{
+    QHash<int, QByteArray> roleNames = QAbstractItemModel::roleNames();
+    roleNames.insert(ContactRole, "contact");
+    return roleNames;
 }
 
 /*!

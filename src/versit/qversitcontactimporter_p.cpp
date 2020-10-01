@@ -68,7 +68,7 @@ QVersitContactImporterPrivate::QVersitContactImporterPrivate(const QStringList& 
         sizeof(versitContactDetailMappings)/sizeof(VersitContactDetailMapping);
     for (int i=0; i < versitPropertyCount; i++) {
         QString versitPropertyName =
-            QLatin1Literal(versitContactDetailMappings[i].versitPropertyName);
+            QString::fromLatin1(versitContactDetailMappings[i].versitPropertyName);
         QPair<QContactDetail::DetailType, int> contactDetail;
         contactDetail.first =
             versitContactDetailMappings[i].detailType;

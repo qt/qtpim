@@ -41,6 +41,7 @@
 
 #include <QtCore/qregularexpression.h>
 #include <QtCore/qvariant.h>
+#include <QtCore/qurl.h>
 
 #include <QTextCodec>
 

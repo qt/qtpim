@@ -43,6 +43,7 @@
 #include <QtCore/qdatetime.h>
 #include <QtCore/qvariant.h>
 #include <QtCore/qurl.h>
+#include <QtCore/qiodevice.h>
 
 #include <QtContacts/qcontact.h>
 #include <QtContacts/qcontactdetail.h>

@@ -30,6 +30,7 @@
 
 #include <QtTest/QtTest>
 #include <QtCore/QUuid>
+#include <QtCore/QRandomGenerator>
 
 #include <QtOrganizer/qorganizer.h>
 #include <QtOrganizer/qorganizeritemchangeset.h>
@@ -2751,14 +2752,14 @@ void tst_QOrganizerManager::changeSet()
 
     QList<QOrganizerItemId> l1, l2;
     foreach (int n, QList<int>() << 1 << 1 << 1 << 2 << 2 << 3 << 3 << 4 << 4 << 4 << 5 << 10 << 9 << 8 << 8 << 8 << 7 << 7 << 6) {
-        ((qrand() % 2) ? l1 : l2).append(makeItemId(n));
+        ((QRandomGenerator::global()->generate() % 2) ? l1 : l2).append(makeItemId(n));
     }
     changeSet.clearChangedItems();
     changeSet.insertChangedItems(l1, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeDescription << QOrganizerItemDetail::TypeTag);
     changeSet.insertChangedItems(l2, QList<QOrganizerItemDetail::DetailType>() << QOrganizerItemDetail::TypeTag << QOrganizerItemDetail::TypeDescription << QOrganizerItemDetail::TypeTag);
     QCOMPARE(changeSet.changedItems().size(), 1);
     QList<QOrganizerItemId> expected((convertListToSet(l1) | convertListToSet(l2)).values());
-    qSort(expected);
+    std::sort(expected.begin(), expected.end());
     QCOMPARE(changeSet.changedItems().first().second, expected);
 
     changeSet.insertRemovedItems(QList<QOrganizerItemId>() << id);

@@ -325,7 +325,8 @@ QList<QOrganizerItem> QOrganizerItemMemoryEngine::internalItemOccurrences(const 
     // now order the contents of retn by date
     QList<QDateTime> rdates = rdateMap.keys();
 
-    if (initialDateTime.isValid() && !recur.recurrenceDates().isEmpty() && qBinaryFind(rdates, initialDateTime) == rdates.constEnd()) {
+    if (initialDateTime.isValid() && !recur.recurrenceDates().isEmpty()
+            && !std::binary_search(rdates.constBegin(), rdates.constEnd(), initialDateTime)) {
         rdates.prepend(initialDateTime);
     }
 

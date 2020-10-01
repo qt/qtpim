@@ -31,6 +31,7 @@
 #include <QtTest/QtTest>
 #include <QtGlobal>
 #include <QtCore/qnumeric.h>
+#include <QtCore/QRandomGenerator>
 
 #include <QtContacts>
 #include "qcontactmanagerdataholder.h"
@@ -2146,14 +2147,14 @@ void tst_QContactManager::changeSet()
 
     QList<QContactId> l1, l2;
     foreach (int n, QList<int>() << 1 << 1 << 1 << 2 << 2 << 3 << 3 << 4 << 4 << 4 << 5 << 10 << 9 << 8 << 8 << 8 << 7 << 7 << 6) {
-        ((qrand() % 2) ? l1 : l2).append(makeId("a", n));
+        ((QRandomGenerator::global()->generate() % 2) ? l1 : l2).append(makeId("a", n));
     }
     changeSet.clearChangedContacts();
     changeSet.insertChangedContacts(l1, QList<QContactDetail::DetailType>() << QContactName::Type << QContactBirthday::Type);
     changeSet.insertChangedContacts(l2, QList<QContactDetail::DetailType>() << QContactBirthday::Type << QContactName::Type << QContactBirthday::Type);
     QCOMPARE(changeSet.changedContacts().size(), 1);
     QList<QContactId> expected((QSet<QContactId>(l1.constBegin(), l1.constEnd()) | QSet<QContactId>(l2.constBegin(), l2.constEnd())).values());
-    qSort(expected);
+    std::sort(expected.begin(), expected.end());
     QCOMPARE(changeSet.changedContacts().first().second, expected);
 
     changeSet.insertRemovedContacts(QList<QContactId>() << id);

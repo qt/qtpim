@@ -52,6 +52,7 @@
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qfile.h>
 #include <QtCore/qlist.h>
+#include <QtCore/qrandomgenerator.h>
 
 #include <QtContacts/qtcontacts.h>
 #include <QtContacts/qcontacttag.h>
@@ -77,7 +78,7 @@ public:
    bool saveResource(const QByteArray& contents, const QVersitProperty& property,
                      QString* location) {
        Q_UNUSED(property);
-       *location = QString::number(qrand());
+       *location = QString::number(QRandomGenerator::global()->generate());
        QFile file(*location);
        file.open(QIODevice::WriteOnly);
        file.write(contents); // In a real implementation, consider when this file will be deleted.

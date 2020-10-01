@@ -39,6 +39,7 @@
 
 #include "qversitreader_p.h"
 
+#include <QtCore/qregularexpression.h>
 #include <QtCore/qbuffer.h>
 #include <QtCore/qvariant.h>
 
@@ -1262,7 +1263,7 @@ void QVersitReaderPrivate::removeBackSlashEscaping(QString* text)
                     \: with :
                     \\ with \
          */
-        text->replace(QRegExp(QStringLiteral("\\\\([;,:\\\\])")), QStringLiteral("\\1"));
+        text->replace(QRegularExpression(QStringLiteral("\\\\([;,:\\\\])")), QStringLiteral("\\1"));
         // replaces \n with a CRLF
         text->replace(QStringLiteral("\\n"), QStringLiteral("\r\n"), Qt::CaseInsensitive);
     }

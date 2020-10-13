@@ -414,7 +414,7 @@ QString tst_QContactManagerFiltering::convertIds(QList<QContactId> allIds, QList
     /* Expected is of the form "abcd".. it's possible that there are some extra contacts */
     for (int i = 0; i < ids.size(); i++) {
         if (allIds.indexOf(ids.at(i)) >= 0) {
-            QChar curr = ('a' + allIds.indexOf(ids.at(i)));
+            QChar curr = ('a' + static_cast<int>(allIds.indexOf(ids.at(i))));
             if (curr >= minimumContact && curr <= maximumContact) {
                 ret += curr;
             }

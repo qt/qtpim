@@ -142,7 +142,6 @@ public:
     Q_INVOKABLE void removeItem(const QString& id);
     Q_INVOKABLE void removeItem(QDeclarativeOrganizerItem *item);
     Q_INVOKABLE void removeItems(const QStringList& ids);
-    Q_INVOKABLE void removeItems(const QList<QDeclarativeOrganizerItem> &items);
     Q_INVOKABLE void saveItem(QDeclarativeOrganizerItem* item);
     Q_INVOKABLE int fetchItems(const QStringList &itemIds);
     Q_INVOKABLE int fetchItems(const QDateTime &start, const QDateTime &end,

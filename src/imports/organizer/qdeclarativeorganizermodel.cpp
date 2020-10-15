@@ -1351,26 +1351,6 @@ void QDeclarativeOrganizerModel::removeItems(const QStringList& ids)
 }
 
 /*!
-  \qmlmethod OrganizerModel::removeItems(list<OrganizerItem> items)
-  Removes asynchronously the organizer items in the given \a items list from the backend.
-  */
-void QDeclarativeOrganizerModel::removeItems(const QList<QDeclarativeOrganizerItem> &items)
-{
-    Q_D(QDeclarativeOrganizerModel);
-    QOrganizerItemRemoveRequest* req = new QOrganizerItemRemoveRequest(this);
-    req->setManager(d->m_manager);
-    QList<QOrganizerItem> ois;
-
-    for (int i = 0; i < items.size(); i++) {
-        ois.append(items[i].item());
-    }
-
-    req->setItems(ois);
-    connect(req, SIGNAL(stateChanged(QOrganizerAbstractRequest::State)), this, SLOT(onRequestStateChanged(QOrganizerAbstractRequest::State)));
-    req->start();
-}
-
-/*!
     \internal
  */
 void QDeclarativeOrganizerModel::onRequestStateChanged(QOrganizerAbstractRequest::State newState)

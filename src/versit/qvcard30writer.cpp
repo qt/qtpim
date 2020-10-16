@@ -80,6 +80,8 @@ void QVCard30Writer::encodeVersitProperty(const QVersitProperty& property)
     QVariant variant(modifiedProperty.variantValue());
     if (variant.type() == QVariant::ByteArray) {
         modifiedProperty.insertParameter(QStringLiteral("ENCODING"), QStringLiteral("b"));
+    } else if (variant.type() == QVariant::Url) {
+        variant = QVariant(variant.toUrl().toString());
     }
     encodeParameters(modifiedProperty.parameters());
     writeString(QStringLiteral(":"));

@@ -611,7 +611,7 @@ void QVersitOrganizerExporterPrivate::encodeAudibleReminder(
     const QUrl attachUrl = audibleReminder.dataUrl();
     if (!attachUrl.isEmpty()) {
         property.setName(QStringLiteral("ATTACH"));
-        property.setValue(attachUrl.toString());
+        property.setValue(attachUrl);
         valarmDocument.addProperty(property);
         *processedFields << QOrganizerItemAudibleReminder::FieldDataUrl;
     }
@@ -681,7 +681,7 @@ void QVersitOrganizerExporterPrivate::encodeVisualReminder(
         //ICAL specs do not include ATTACH property for DISPLAY VALARM components
         //Hence, we add it here as an (optional) extended QTPROJECT-specific property
         property.setName(QStringLiteral("X-QTPROJECT-ATTACH"));
-        property.setValue(attachUrl.toString());
+        property.setValue(attachUrl);
         valarmDocument.addProperty(property);
         *processedFields << QOrganizerItemAudibleReminder::FieldDataUrl;
     }

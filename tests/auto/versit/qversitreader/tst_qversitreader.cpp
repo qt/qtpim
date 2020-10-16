@@ -806,7 +806,7 @@ void tst_QVersitReader::testParseNextVersitProperty_data()
     {
         QVersitProperty expectedProperty;
         expectedProperty.setName(QStringLiteral("X-FOLKS-FAVOURITE"));
-        expectedProperty.setValue(QStringLiteral("true"));
+        expectedProperty.setValue(QStringList() << QStringLiteral("true"));
         expectedProperty.setValueType(QVersitProperty::CompoundType);
         QTest::newRow("vcard21 folks favorite")
             << QVersitDocument::VCard21Type
@@ -913,7 +913,7 @@ void tst_QVersitReader::testParseNextVersitProperty_data()
     {
         QVersitProperty expectedProperty;
         expectedProperty.setName(QStringLiteral("ORG"));
-        expectedProperty.setValue(QString::fromUtf8(KATAKANA_NOKIA));
+        expectedProperty.setValue(QStringList() << QString::fromUtf8(KATAKANA_NOKIA));
         expectedProperty.setValueType(QVersitProperty::CompoundType);
         QTest::newRow("org utf8")
             << QVersitDocument::VCard21Type
@@ -924,7 +924,7 @@ void tst_QVersitReader::testParseNextVersitProperty_data()
     {
         QVersitProperty expectedProperty;
         expectedProperty.setName(QStringLiteral("ORG"));
-        expectedProperty.setValue(QString::fromUtf8(KATAKANA_NOKIA));
+        expectedProperty.setValue(QStringList() << QString::fromUtf8(KATAKANA_NOKIA));
         expectedProperty.setValueType(QVersitProperty::CompoundType);
         QTest::newRow("vcard21 org utf8 qp")
             << QVersitDocument::VCard21Type
@@ -1276,7 +1276,7 @@ void tst_QVersitReader::testParseVersitDocument_data()
         nestedAlarm.addProperty(property);
         property.clear();
         property.setName(QStringLiteral("REPEAT"));
-        property.setValue(4);
+        property.setValue(QStringLiteral("4"));
         nestedAlarm.addProperty(property);
         property.setName("DURATION");
         property.setValue(QStringLiteral("PT15M"));
@@ -1288,7 +1288,7 @@ void tst_QVersitReader::testParseVersitDocument_data()
         parameters.clear();
         parameters.insert(QStringLiteral("FMTTYPE"), QStringLiteral("audio/basic"));
         property.setParameters(parameters);
-        property.setValue(QUrl(QStringLiteral("ftp://host.com/pub/sounds/bell-01.aud")));
+        property.setValue(QStringLiteral("ftp://host.com/pub/sounds/bell-01.aud"));
         nestedAlarm.addProperty(property);
         nested.addSubDocument(nestedAlarm);
         expected.addSubDocument(nested);

@@ -136,7 +136,8 @@ bool QVersitProperty::operator==(const QVersitProperty& other) const
 {
     bool equal = d->mGroups == other.d->mGroups &&
             d->mName == other.d->mName &&
-            d->mParameters == other.d->mParameters &&
+            ((d->mParameters.isEmpty() && other.d->mParameters.isEmpty()) // QTBUG-87575
+                || (d->mParameters == other.d->mParameters)) &&
             d->mValueType == other.d->mValueType;
     if (!equal)
         return false;

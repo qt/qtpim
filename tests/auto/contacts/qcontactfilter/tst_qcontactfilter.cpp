@@ -1339,31 +1339,31 @@ void tst_QContactFilter::testDebugStreamOut_data()
         ids << id1 << id2 << id3;
         filter.setCollectionIds(ids);
         // Testing method setCollectionIds
-        QTest::newRow("collection") << (QContactFilter)filter << "QContactFilter(QContactCollectionFilter(collectionIds=(QContactCollectionId(qtcontacts:basic::05000000), QContactCollectionId(qtcontacts:basic::06000000), QContactCollectionId(qtcontacts:basic::07000000))))";
+        QTest::newRow("collection") << (QContactFilter)filter << "QContactFilter(QContactCollectionFilter(collectionIds=QList(QContactCollectionId(qtcontacts:basic::05000000), QContactCollectionId(qtcontacts:basic::06000000), QContactCollectionId(qtcontacts:basic::07000000))))";
 
         filter.setCollectionId(id2);
         // Testing method setCollectionId (and the related clearing of the collection)
-        QTest::newRow("collection") << (QContactFilter)filter << "QContactFilter(QContactCollectionFilter(collectionIds=(QContactCollectionId(qtcontacts:basic::06000000))))";
+        QTest::newRow("collection") << (QContactFilter)filter << "QContactFilter(QContactCollectionFilter(collectionIds=QList(QContactCollectionId(qtcontacts:basic::06000000))))";
         filter.setCollectionId(id4);
         // Testing again method setCollectionId (and the related clearing of the collection)
-        QTest::newRow("collection") << (QContactFilter)filter << "QContactFilter(QContactCollectionFilter(collectionIds=(QContactCollectionId(qtcontacts:basic::0c000000))))";
+        QTest::newRow("collection") << (QContactFilter)filter << "QContactFilter(QContactCollectionFilter(collectionIds=QList(QContactCollectionId(qtcontacts:basic::0c000000))))";
         ids.clear();
         ids << id4;
         // Testing again method setCollectionIds
-        QTest::newRow("collection") << (QContactFilter)filter << "QContactFilter(QContactCollectionFilter(collectionIds=(QContactCollectionId(qtcontacts:basic::0c000000))))";
+        QTest::newRow("collection") << (QContactFilter)filter << "QContactFilter(QContactCollectionFilter(collectionIds=QList(QContactCollectionId(qtcontacts:basic::0c000000))))";
 
         QContactCollectionFilter filter2;
         filter2 = filter;
         // Testing again method setCollectionIds on the copied filter
-        QTest::newRow("collection") << (QContactFilter)filter2 << "QContactFilter(QContactCollectionFilter(collectionIds=(QContactCollectionId(qtcontacts:basic::0c000000))))";
+        QTest::newRow("collection") << (QContactFilter)filter2 << "QContactFilter(QContactCollectionFilter(collectionIds=QList(QContactCollectionId(qtcontacts:basic::0c000000))))";
 
         QContactFilter fil;
         fil = filter;
         // Testing that the assignment/conversion went fine
-        QTest::newRow("collection") << (QContactFilter)fil << "QContactFilter(QContactCollectionFilter(collectionIds=(QContactCollectionId(qtcontacts:basic::0c000000))))";
+        QTest::newRow("collection") << (QContactFilter)fil << "QContactFilter(QContactCollectionFilter(collectionIds=QList(QContactCollectionId(qtcontacts:basic::0c000000))))";
 
         QContactCollectionFilter filter3(fil);
-        QTest::newRow("collection") << (QContactFilter)filter3 << "QContactFilter(QContactCollectionFilter(collectionIds=(QContactCollectionId(qtcontacts:basic::0c000000))))";
+        QTest::newRow("collection") << (QContactFilter)filter3 << "QContactFilter(QContactCollectionFilter(collectionIds=QList(QContactCollectionId(qtcontacts:basic::0c000000))))";
     }
 }
 

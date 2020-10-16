@@ -1525,20 +1525,33 @@ void tst_QVersitContactImporter::testExtendedDetail_data()
     }
 
     {
+        QTest::newRow("integral data")
+                << QString("name")
+                << QVariant((qlonglong)2)
+                << jsonArrayWith.arg("2")
+                << true;
+        QTest::newRow("integral data - perfectly representable") // QTBUG-87443
+                << QString("name")
+                << QVariant((qlonglong)2)
+                << jsonArrayWith.arg("2.0")
+                << true;
+    }
+
+    {
         QTest::newRow("double data")
                 << QString("name")
-                << QVariant((double)2.0)
-                << jsonArrayWith.arg("2")
+                << QVariant((double)2.1)
+                << jsonArrayWith.arg("2.1")
                 << true;
         QTest::newRow("double data, negative")
                 << QString("name")
-                << QVariant((double)-1.0)
-                << jsonArrayWith.arg("-1")
+                << QVariant((double)-1.2)
+                << jsonArrayWith.arg("-1.2")
                 << true;
         QTest::newRow("double data, multiple digits")
                 << QString("name")
-                << QVariant((double)10.2)
-                << jsonArrayWith.arg("10.2")
+                << QVariant((double)10.23456)
+                << jsonArrayWith.arg("10.23456")
                 << true;
     }
 

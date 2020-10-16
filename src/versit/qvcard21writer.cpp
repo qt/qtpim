@@ -79,6 +79,9 @@ void QVCard21Writer::encodeVersitProperty(const QVersitProperty& property)
     encodeGroupsAndName(property);
     QMultiHash<QString,QString> parameters = property.parameters();
     QVariant variant(property.variantValue());
+    if (variant.type() == QVariant::Url) {
+        variant = QVariant(variant.toUrl().toString());
+    }
 
     QString renderedValue;
     QByteArray renderedBytes;

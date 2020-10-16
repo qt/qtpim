@@ -371,13 +371,13 @@ TestCase {
         compare(todoTime.value(TodoTime.FieldAllDay), true)
 
         compare(todoTime.value(TodoTime.FieldStartDateTime), undefined)
-        var startDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        var startDateTime = new Date("1991-08-25T20:57:08Z")
         todoTime.startDateTime = startDateTime
         compare(todoTime.startDateTime, startDateTime)
         compare(todoTime.value(TodoTime.FieldStartDateTime), startDateTime)
 
         compare(todoTime.value(TodoTime.FieldDueDateTime), undefined)
-        var dueDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
+        var dueDateTime = new Date("1995-05-20T11:22:33+0200")
         todoTime.dueDateTime = dueDateTime
         compare(todoTime.dueDateTime, dueDateTime)
         compare(todoTime.value(TodoTime.FieldDueDateTime), dueDateTime)
@@ -387,7 +387,7 @@ TestCase {
         compare(todoProgress.type, Detail.TodoProgress)
 
         compare(todoProgress.value(TodoProgress.FieldFinishedDateTime), undefined)
-        var finishedDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        var finishedDateTime = new Date("1991-08-25T20:57:08Z")
         todoProgress.finishedDateTime = finishedDateTime
         compare(todoProgress.finishedDateTime, finishedDateTime)
         compare(todoProgress.value(TodoProgress.FieldFinishedDateTime), finishedDateTime)
@@ -407,7 +407,7 @@ TestCase {
         compare(journalTime.type, Detail.JournalTime)
 
         compare(journalTime.value(JournalTime.FieldEntryDateTime), undefined)
-        var entryDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        var entryDateTime = new Date("1991-08-25T20:57:08Z")
         journalTime.entryDateTime = entryDateTime
         compare(journalTime.entryDateTime, entryDateTime)
         compare(journalTime.value(JournalTime.FieldEntryDateTime), journalTime.entryDateTime)
@@ -425,12 +425,12 @@ TestCase {
         compare(timestamp1.type, Detail.Timestamp)
 
         compare(timestamp1.value(Timestamp.FieldCreated), undefined)
-        var timestamp = new Date("1991-08-25 20:57:08 GMT+0000")
+        var timestamp = new Date("1991-08-25T20:57:08Z")
         timestamp.created = timestamp
         compare(timestamp.created, timestamp)
 
         compare(timestamp1.value(Timestamp.FieldLastModified), undefined)
-        var lastModified = new Date("1995-05-20 11:22:33 GMT+0200")
+        var lastModified = new Date("1995-05-20T11:22:33+0200")
         timestamp.lastModified = lastModified
         compare(timestamp.lastModified, lastModified)
     }
@@ -542,13 +542,13 @@ TestCase {
         compare(eventTime.value(EventTime.FieldAllDay), true)
 
         compare(eventTime.value(EventTime.FieldStartDateTime), undefined)
-        var startDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        var startDateTime = new Date("1991-08-25T20:57:08Z")
         eventTime.startDateTime = startDateTime
         compare(eventTime.startDateTime, startDateTime)
         compare(eventTime.value(EventTime.FieldStartDateTime), startDateTime)
 
         compare(eventTime.value(EventTime.FieldEndDateTime), undefined)
-        var endDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
+        var endDateTime = new Date("1995-05-20T11:22:33+0200")
         eventTime.endDateTime = endDateTime
         compare(eventTime.endDateTime, endDateTime)
         compare(eventTime.value(EventTime.FieldEndDateTime), endDateTime)

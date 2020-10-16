@@ -69,7 +69,7 @@ TestCase {
     Event {
         id: testEvent
         startDateTime: new Date("1991-08-25T20:57:08Z")
-        endDateTime: new Date("1995-05-20 11:22:33 GMT+0200")
+        endDateTime: new Date("1995-05-20T11:22:33+0200")
         displayLabel: "Versit event test"
     }
 

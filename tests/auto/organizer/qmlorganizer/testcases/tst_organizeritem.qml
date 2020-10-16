@@ -121,11 +121,11 @@ TestCase {
         todoOccurrence.startDateTime = startDateTime
         compare(todoOccurrence.startDateTime, startDateTime)
 
-        var dueDateTime = new Date("2008-12-28 15:22:33 GMT+0300")
+        var dueDateTime = new Date("2008-12-28T15:22:33+0300")
         todoOccurrence.dueDateTime = dueDateTime
         compare(todoOccurrence.dueDateTime, dueDateTime)
 
-        var finishedDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
+        var finishedDateTime = new Date("1995-05-20T11:22:33+0200")
         todoOccurrence.finishedDateTime = finishedDateTime
         compare(todoOccurrence.finishedDateTime, finishedDateTime)
 
@@ -148,15 +148,15 @@ TestCase {
         todo.percentageComplete = 64
         compare(todo.percentageComplete, 64)
 
-        var startDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        var startDateTime = new Date("1991-08-25T20:57:08Z")
         todo.startDateTime = startDateTime
         compare(todo.startDateTime, startDateTime)
 
-        var dueDateTime = new Date("2008-12-28 15:22:33 GMT+0300")
+        var dueDateTime = new Date("2008-12-28T15:22:33+0300")
         todo.dueDateTime = dueDateTime
         compare(todo.dueDateTime, dueDateTime)
 
-        var finishedDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
+        var finishedDateTime = new Date("1995-05-20T11:22:33+0200")
         todo.finishedDateTime = finishedDateTime
         compare(todo.finishedDateTime, finishedDateTime)
 
@@ -183,7 +183,7 @@ TestCase {
     function test_journal() {
         compare(journal.itemType, Type.Journal)
 
-        var dateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        var dateTime = new Date("1991-08-25T20:57:08Z")
         journal.dateTime = dateTime
         compare(journal.dateTime, dateTime)
     }
@@ -217,13 +217,13 @@ TestCase {
         compare(eventOccurrence.originalDate, utility.toUTCMidnight(originalDate))
         compare(itemChangedSpy.count, ++count)
 
-        var startDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        var startDateTime = new Date("1991-08-25T20:57:08Z")
         eventOccurrence.startDateTime = startDateTime
         itemChangedSpy.wait(waitTime);
         compare(eventOccurrence.startDateTime, startDateTime)
         compare(itemChangedSpy.count, ++count)
 
-        var endDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
+        var endDateTime = new Date("1995-05-20T11:22:33+0200")
         eventOccurrence.endDateTime = endDateTime
         itemChangedSpy.wait(waitTime);
         compare(eventOccurrence.endDateTime, endDateTime)
@@ -254,13 +254,13 @@ TestCase {
 
         //Following format does not work: GMT+0000 is not accepted by javascript
         //event.startDateTime = "1991-08-25 20:57:08 GMT+0000"
-        var startDateTime = new Date("1991-08-25 20:57:08 GMT+0000")
+        var startDateTime = new Date("1991-08-25T20:57:08Z")
         event.startDateTime = startDateTime
         itemChangedSpy.wait(waitTime);
         compare(event.startDateTime, startDateTime)
         compare(itemChangedSpy.count, ++count)
 
-        var endDateTime = new Date("1995-05-20 11:22:33 GMT+0200")
+        var endDateTime = new Date("1995-05-20T11:22:33+0200")
         event.endDateTime = endDateTime
         itemChangedSpy.wait(waitTime);
         compare(event.endDateTime, endDateTime)

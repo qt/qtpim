@@ -30,8 +30,8 @@ import QtOrganizer 5.0
 
 Event {
 
-    startDateTime: new Date("2012-01-01 12:00:00 GMT+0000")
-    endDateTime: new Date("2012-01-01 13:00:00 GMT+0000")
+    startDateTime: new Date("2012-01-01T12:00:00Z")
+    endDateTime: new Date("2012-01-01T13:00:00Z")
     allDay: false
 
     Comment {
@@ -61,8 +61,8 @@ Event {
     }
 
     Timestamp {
-        created: new Date("2012-01-01 12:00:00 GMT+0000")
-        lastModified: new Date("2012-01-01 12:00:00 GMT+0000")
+        created: new Date("2012-01-01T12:00:00Z")
+        lastModified: new Date("2012-01-01T12:00:00Z")
     }
 
     AudibleReminder {
@@ -121,8 +121,8 @@ Event {
     EventRsvp {
         organizerName: "Organizer name"
         organizerEmail: "Organizer email"
-        responseDate: new Date("2012-01-01 12:00:00 GMT+0000")
-        responseDeadline: new Date("2012-01-01 12:00:00 GMT+0000")
+        responseDate: new Date("2012-01-01T12:00:00Z")
+        responseDeadline: new Date("2012-01-01T12:00:00Z")
         participationStatus: EventAttendee.StatusAccepted
         participationRole: EventAttendee.RoleOrganizer
         responseRequirement: EventRsvp.ResponseRequired

@@ -223,7 +223,7 @@ void QVersitDocumentWriter::writeString(const QString &value)
     QString crlfSpace(QStringLiteral("\r\n "));
     while (spaceRemaining < value.length() - charsWritten) {
         // Write the first "spaceRemaining" characters
-        QStringRef line(&value, charsWritten, spaceRemaining);
+        QStringView line(value.constData() + charsWritten, spaceRemaining);
         charsWritten += spaceRemaining;
         const QByteArray encodedLine = mEncoder->fromUnicode(line.constData(), line.length());
         const QByteArray encodedCrlfSpace = mEncoder->fromUnicode(crlfSpace);
@@ -258,7 +258,7 @@ void QVersitDocumentWriter::writeStringQp(const QString &value)
         } else if (value[charsWritten + spaceRemaining - 1] == QLatin1Char('=')) {
             spaceRemaining -= 1;
         }
-        QStringRef line(&value, charsWritten, spaceRemaining);
+        QStringView line(value.constData() + charsWritten, spaceRemaining);
 
         charsWritten += spaceRemaining;
         if (mDevice->write(mEncoder->fromUnicode(line.constData(), line.length())) < 0

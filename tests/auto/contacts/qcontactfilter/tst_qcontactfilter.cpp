@@ -1166,7 +1166,7 @@ void tst_QContactFilter::testFilter_data()
                 << false;
 
         // Now case insensitive
-        df.setMatchFlags(0);
+        df.setMatchFlags(QContactFilter::MatchExactly);
         df.setValue("one"); // this is a string
         QTest::newRow("QContactOrganization::match positive insensitive against string")
                 << contact

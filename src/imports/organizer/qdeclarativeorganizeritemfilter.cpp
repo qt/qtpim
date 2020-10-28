@@ -555,7 +555,7 @@ QVariant QDeclarativeOrganizerItemDetailFieldFilter::value() const
 void QDeclarativeOrganizerItemDetailFieldFilter::setValue(const QVariant &newValue)
 {
     if (newValue != value()) {
-        if (QVariant::DateTime == newValue.type()) {
+        if (newValue.metaType().id() == QMetaType::QDateTime) {
             // handling dates and datetimes internally as UTC
             d.setValue(newValue.toDateTime().toUTC());
         } else {

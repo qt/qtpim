@@ -192,12 +192,12 @@ QStringList DummyEngine::fastFilterableDefinitions() const
 /*!
  * Returns the list of data types supported by the vCard engine
  */
-QList<QVariant::Type> DummyEngine::supportedDataTypes() const
+QList<QMetaType::Type> DummyEngine::supportedDataTypes() const
 {
-    QList<QVariant::Type> st;
-    st.append(QVariant::String);
-    st.append(QVariant::Date);
-    st.append(QVariant::DateTime);
+    QList<QMetaType::Type> st;
+    st.append(QMetaType::QString);
+    st.append(QMetaType::QDate);
+    st.append(QMetaType::QDateTime);
 
     return st;
 }

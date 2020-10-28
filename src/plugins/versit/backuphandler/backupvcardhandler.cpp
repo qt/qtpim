@@ -213,41 +213,41 @@ void BackupVCardHandler::detailProcessed(
 void BackupVCardHandler::serializeValue(QVersitProperty* property, const QVariant& value)
 {
     // serialize the value
-    if (value.type() == QVariant::String
-        || value.type() == QVariant::ByteArray) {
+    if (value.metaType().id() == QMetaType::QString
+        || value.metaType().id() == QMetaType::QByteArray) {
         // store QStrings and QByteArrays as-is
         property->setValue(value);
-    } else if (value.type() == QVariant::Date) {
+    } else if (value.metaType().id() == QMetaType::QDate) {
         // Store a QDate as a string
         QString valueString(value.toDate().toString(Qt::ISODate));
         property->insertParameter(DatatypeParameter, DatatypeParameterDate);
         property->setValue(valueString);
-    } else if (value.type() == QVariant::Time) {
+    } else if (value.metaType().id() == QMetaType::QTime) {
         // Store a QTime as a string
         QString valueString(value.toTime().toString(Qt::ISODate));
         property->insertParameter(DatatypeParameter, DatatypeParameterTime);
         property->setValue(valueString);
-    } else if (value.type() == QVariant::DateTime) {
+    } else if (value.metaType().id() == QMetaType::QDateTime) {
         // Store a QDateTime as a string
         QString valueString(value.toDateTime().toString(Qt::ISODate));
         property->insertParameter(DatatypeParameter, DatatypeParameterDateTime);
         property->setValue(valueString);
-    } else if (value.type() == QVariant::Bool) {
+    } else if (value.metaType().id() == QMetaType::Bool) {
         // Store an int as a string
         QString valueString(QString::number(value.toBool() ? 1 : 0));
         property->insertParameter(DatatypeParameter, DatatypeParameterBool);
         property->setValue(valueString);
-    } else if (value.type() == QVariant::Int) {
+    } else if (value.metaType().id() == QMetaType::Int) {
         // Store an int as a string
         QString valueString(QString::number(value.toInt()));
         property->insertParameter(DatatypeParameter, DatatypeParameterInt);
         property->setValue(valueString);
-    } else if (value.type() == QVariant::UInt) {
+    } else if (value.metaType().id() == QMetaType::UInt) {
         // Store a uint as a string
         QString valueString(QString::number(value.toUInt()));
         property->insertParameter(DatatypeParameter, DatatypeParameterUInt);
         property->setValue(valueString);
-    } else if (value.type() == QVariant::Url) {
+    } else if (value.metaType().id() == QMetaType::QUrl) {
         // Store a QUrl as a string
         QString valueString(value.toUrl().toString());
         property->insertParameter(DatatypeParameter, DatatypeParameterUrl);

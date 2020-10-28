@@ -78,9 +78,9 @@ void QVCard30Writer::encodeVersitProperty(const QVersitProperty& property)
     encodeGroupsAndName(modifiedProperty);
 
     QVariant variant(modifiedProperty.variantValue());
-    if (variant.type() == QVariant::ByteArray) {
+    if (variant.metaType().id() == QMetaType::QByteArray) {
         modifiedProperty.insertParameter(QStringLiteral("ENCODING"), QStringLiteral("b"));
-    } else if (variant.type() == QVariant::Url) {
+    } else if (variant.metaType().id() == QMetaType::QUrl) {
         variant = QVariant(variant.toUrl().toString());
     }
     encodeParameters(modifiedProperty.parameters());
@@ -100,12 +100,12 @@ void QVCard30Writer::encodeVersitProperty(const QVersitProperty& property)
         QString documentString(mCodec->toUnicode(data));
         backSlashEscape(&documentString);
         renderedValue = documentString;
-    } else if (variant.type() == QVariant::String) {
+    } else if (variant.metaType().id() == QMetaType::QString) {
         renderedValue = variant.toString();
         if (property.valueType() != QVersitProperty::PreformattedType) {
             backSlashEscape(&renderedValue);
         }
-    } else if (variant.type() == QVariant::StringList) {
+    } else if (variant.metaType().id() == QMetaType::QStringList) {
         // We need to backslash escape and concatenate the values in the list
         QStringList values = property.variantValue().toStringList();
         QString separator;
@@ -130,7 +130,7 @@ void QVCard30Writer::encodeVersitProperty(const QVersitProperty& property)
                 first = false;
             }
         }
-    } else if (variant.type() == QVariant::ByteArray) {
+    } else if (variant.metaType().id() == QMetaType::QByteArray) {
         if (mCodecIsAsciiCompatible) // optimize by not converting to unicode
             renderedBytes = variant.toByteArray().toBase64();
         else

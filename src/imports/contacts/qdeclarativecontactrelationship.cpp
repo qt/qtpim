@@ -125,7 +125,7 @@ void QDeclarativeContactRelationship::setSecond(const QString& secondContactId)
 
 void QDeclarativeContactRelationship::setRelationshipType(const QVariant& relationshipType)
 {
-    if (relationshipType.type() == QVariant::Int) {
+    if (relationshipType.metaType().id() == QMetaType::Int) {
         switch (relationshipType.toInt()) {
         case QDeclarativeContactRelationship::HasMember:
             m_relationship.setRelationshipType(QContactRelationship::HasMember());

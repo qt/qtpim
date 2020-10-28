@@ -72,7 +72,7 @@ public:
     void setRelationshipType(const QVariant& v)
     {
         QString rt;
-        if (v.type() != QVariant::String) {
+        if (v.metaType().id() != QMetaType::QString) {
             switch (v.toInt()) {
             case QDeclarativeContactRelationship::HasMember:
                 rt = QContactRelationship::HasMember();

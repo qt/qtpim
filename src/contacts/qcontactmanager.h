@@ -150,7 +150,7 @@ public:
 
     /* Capabilities reporting */
     bool isRelationshipTypeSupported(const QString& relationshipType, QContactType::TypeValues  contactType = QContactType::TypeContact) const;
-    QList<QVariant::Type> supportedDataTypes() const;
+    QList<QMetaType::Type> supportedDataTypes() const;
     bool isFilterSupported(const QContactFilter& filter) const;
     QList<QContactType::TypeValues> supportedContactTypes() const;
     QList<QContactDetail::DetailType> supportedContactDetailTypes() const;

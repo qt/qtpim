@@ -79,7 +79,7 @@ void QVCard21Writer::encodeVersitProperty(const QVersitProperty& property)
     encodeGroupsAndName(property);
     QMultiHash<QString,QString> parameters = property.parameters();
     QVariant variant(property.variantValue());
-    if (variant.type() == QVariant::Url) {
+    if (variant.metaType().id() == QMetaType::QUrl) {
         variant = QVariant(variant.toUrl().toString());
     }
 
@@ -88,7 +88,7 @@ void QVCard21Writer::encodeVersitProperty(const QVersitProperty& property)
 
     /* Structured values need to have their components backslash-escaped (in vCard 2.1, semicolons
        must be escaped for compound values and commas must be escaped for list values). */
-    if (variant.type() == QVariant::StringList) {
+    if (variant.metaType().id() == QMetaType::QStringList) {
         QStringList values = property.variantValue().toStringList();
         QString separator;
         if (property.valueType() == QVersitProperty::CompoundType) {
@@ -119,10 +119,10 @@ void QVCard21Writer::encodeVersitProperty(const QVersitProperty& property)
                 first = false;
             }
         }
-    } else if (variant.type() == QVariant::String) {
+    } else if (variant.metaType().id() == QMetaType::QString) {
         renderedValue = variant.toString();
         encodeVersitValue(parameters, renderedValue, false);
-    } else if (variant.type() == QVariant::ByteArray) {
+    } else if (variant.metaType().id() == QMetaType::QByteArray) {
         parameters.replace(QStringLiteral("ENCODING"), QStringLiteral("BASE64"));
         if (mCodecIsAsciiCompatible) // optimize by not converting to unicode
             renderedBytes = variant.toByteArray().toBase64();
@@ -139,7 +139,7 @@ void QVCard21Writer::encodeVersitProperty(const QVersitProperty& property)
         writeCrlf();
         QVersitDocument embeddedDocument = variant.value<QVersitDocument>();
         encodeVersitDocument(embeddedDocument);
-    } else if (variant.type() == QVariant::String || variant.type() == QVariant::StringList) {
+    } else if (variant.metaType().id() == QMetaType::QString || variant.metaType().id() == QMetaType::QStringList) {
         // Some devices don't support vCard-style line folding if the property is
         // quoted-printable-encoded.  Therefore, we use QP soft linebreaks if the property is being
         // QP-encoded, and normal vCard folding otherwise.
@@ -147,7 +147,7 @@ void QVCard21Writer::encodeVersitProperty(const QVersitProperty& property)
             writeStringQp(renderedValue);
         else
             writeString(renderedValue);
-    } else if (variant.type() == QVariant::ByteArray) {
+    } else if (variant.metaType().id() == QMetaType::QByteArray) {
         // One extra folding before the value and
         // one extra line break after the value are needed in vCard 2.1
         writeCrlf();

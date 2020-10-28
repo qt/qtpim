@@ -184,13 +184,13 @@ const QString TEST_AUDIO_FILE(QStringLiteral("versitTest001.wav"));
 #define CHECK_VALUE(property,expectedValueType,expectedValue) {\
     QCOMPARE(property.valueType(), expectedValueType); \
     QVariant value = property.variantValue(); \
-    QCOMPARE(value.type(), QVariant::StringList); \
+    QCOMPARE(value.metaType().id(), QMetaType::QStringList); \
     QCOMPARE(value.toStringList(), expectedValue); \
 }
 #define CHECK_FLOATING_POINT_VALUE(property, expectedValueType, expectedValue, isDouble) {\
     QCOMPARE(property.valueType(), expectedValueType); \
     QVariant value = property.variantValue(); \
-    QCOMPARE(value.type(), QVariant::StringList); \
+    QCOMPARE(value.metaType().id(), QMetaType::QStringList); \
     QVERIFY(value.toStringList().size() == 2); \
     QVERIFY(expectedValue.size() == 2); \
     QString actualString = value.toStringList().at(1); \
@@ -822,7 +822,7 @@ void tst_QVersitContactExporter::testEncodeOrganization()
             QStringLiteral("TYPE"), QStringLiteral("JPEG")));
     // Verify value.
     QVariant variantValue = property.variantValue();
-    QVERIFY(variantValue.type() == QVariant::ByteArray);
+    QVERIFY(variantValue.metaType().id() == QMetaType::QByteArray);
     QCOMPARE(variantValue.value<QByteArray>(), mResourceHandler->mSimulatedData);
 
     // Assistant Name Test.
@@ -882,7 +882,7 @@ void tst_QVersitContactExporter::testEncodeAvatar()
     property = findPropertyByName(document, QStringLiteral("PHOTO"));
     QVERIFY(!property.isEmpty());
     QVariant variantValue = property.variantValue();
-    QVERIFY(variantValue.type() == QVariant::ByteArray);
+    QVERIFY(variantValue.metaType().id() == QMetaType::QByteArray);
     QCOMPARE(variantValue.value<QByteArray>(), mResourceHandler->mSimulatedData);
     QVERIFY(property.parameters().contains(QStringLiteral("TYPE"),
                                            QStringLiteral("JPEG")));
@@ -925,7 +925,7 @@ void tst_QVersitContactExporter::testEncodeEmbeddedContent()
     QVERIFY(photoProperty.parameters().contains(QStringLiteral("TYPE"),
                                                 QStringLiteral("JPEG")));
     variantValue = photoProperty.variantValue();
-    QVERIFY(variantValue.type() == QVariant::ByteArray);
+    QVERIFY(variantValue.metaType().id() == QMetaType::QByteArray);
     QCOMPARE(variantValue.value<QByteArray>(), mResourceHandler->mSimulatedData);
 
     // Without a resource handler
@@ -959,7 +959,7 @@ void tst_QVersitContactExporter::testEncodeRingtone()
         QStringLiteral("TYPE"),
         QStringLiteral("WAV")));
     QVariant variantValue = soundProperty.variantValue();
-    QVERIFY(variantValue.type() == QVariant::ByteArray);
+    QVERIFY(variantValue.metaType().id() == QMetaType::QByteArray);
     QCOMPARE(variantValue.value<QByteArray>(), mResourceHandler->mSimulatedData);
 
     // Test url ringtone
@@ -1390,9 +1390,9 @@ void tst_QVersitContactExporter::testEncodeExtendedDetail()
     QVERIFY(!property.isEmpty());
     QCOMPARE(property.parameters().count(), 0);
     QStringList expectedValue = QStringList() << extendedDetailName << extendedDetailDataInProperty;
-    if (static_cast<QMetaType::Type>(extendedDetailData.type()) == QMetaType::Double) {
+    if (extendedDetailData.metaType().id() == QMetaType::Double) {
         CHECK_FLOATING_POINT_VALUE(property, QVersitProperty::CompoundType, expectedValue, true);
-    } else if (static_cast<QMetaType::Type>(extendedDetailData.type()) == QMetaType::Float) {
+    } else if (extendedDetailData.metaType().id() == QMetaType::Float) {
         CHECK_FLOATING_POINT_VALUE(property, QVersitProperty::CompoundType, expectedValue, false);
     } else {
         CHECK_VALUE(property, QVersitProperty::CompoundType, expectedValue);

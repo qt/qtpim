@@ -332,7 +332,7 @@ void tst_QContactDetails::birthday()
     b3.setDateTime(currDateTime);
     QCOMPARE(QContactDetail(b3).value(QContactBirthday::FieldBirthday), QVariant(currDateTime));
     b3.setDateTime(QDateTime(currDate, QTime(0,0,0,0)));
-    QCOMPARE(QContactDetail(b3).value(QContactBirthday::FieldBirthday).type(), QVariant::Date);    // unfortunate but unavoidable with current impl.
+    QCOMPARE(QContactDetail(b3).value(QContactBirthday::FieldBirthday).metaType().id(), QMetaType::QDate);    // unfortunate but unavoidable with current impl.
     QCOMPARE(QContactDetail(b3).value<QDateTime>(QContactBirthday::FieldBirthday), b3.dateTime());
 
     // test property add

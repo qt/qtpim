@@ -272,7 +272,7 @@ bool QVersitOrganizerImporterPrivate::createVersion(
 
     QVariant variant = property.variantValue();
     if (property.valueType() != QVersitProperty::CompoundType
-            || variant.type() != QVariant::StringList) {
+            || variant.metaType().id() != QMetaType::QStringList) {
         return false;
     }
     QStringList values = variant.toStringList();
@@ -476,7 +476,7 @@ bool QVersitOrganizerImporterPrivate::createExtendedDetail(
     QOrganizerItemExtendedDetail extendedDetail;
     const QVariant variant = property.variantValue();
     if (property.valueType() != QVersitProperty::CompoundType
-            || variant.type() != QVariant::StringList)
+            || variant.metaType().id() != QMetaType::QStringList)
         return false;
 
     QStringList values = variant.toStringList();

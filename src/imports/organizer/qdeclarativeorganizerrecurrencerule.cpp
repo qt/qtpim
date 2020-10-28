@@ -102,26 +102,26 @@ void QDeclarativeOrganizerRecurrenceRule::setLimit(const QVariant &value)
 {
     if (!value.isValid() ||
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-        (static_cast<QMetaType::Type>(value.type()) == QMetaType::Nullptr) ||
+        (value.metaType().id() == QMetaType::Nullptr) ||
 #endif
-        (static_cast<QMetaType::Type>(value.type()) == QMetaType::VoidStar && value.value<void *>() == 0)) {
+        (value.metaType().id() == QMetaType::VoidStar && value.value<void *>() == 0)) {
         if (m_rule.limitType() != QOrganizerRecurrenceRule::NoLimit) {
             m_rule.clearLimit();
             emit recurrenceRuleChanged();
         }
-    } else if (value.type() == QVariant::DateTime) {
+    } else if (value.metaType().id() == QMetaType::QDateTime) {
         QDate v = value.toDateTime().toUTC().date();
         if (v != m_rule.limitDate()) {
             m_rule.setLimit(v);
             emit recurrenceRuleChanged();
         }
-    } else if (value.type() == QVariant::Date) {
+    } else if (value.metaType().id() == QMetaType::QDate) {
         QDate v = value.value<QDate>();
         if (v != m_rule.limitDate()) {
             m_rule.setLimit(v);
             emit recurrenceRuleChanged();
         }
-    }  else if ((value.type() == QVariant::Int) || (value.type() == QVariant::Double)) {
+    }  else if ((value.metaType().id() == QMetaType::Int) || (value.metaType().id() == QMetaType::Double)) {
         int v = value.value<int>();
         if (v != m_rule.limitCount()) {
             m_rule.setLimit(v);

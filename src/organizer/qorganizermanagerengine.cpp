@@ -732,42 +732,42 @@ QOrganizerItemFilter QOrganizerManagerEngine::canonicalizedFilter(const QOrganiz
  */
 int QOrganizerManagerEngine::compareVariant(const QVariant& first, const QVariant& second, Qt::CaseSensitivity sensitivity)
 {
-    switch(first.type()) {
-        case QVariant::Int:
+    switch (first.metaType().id()) {
+        case QMetaType::Int:
             return first.toInt() - second.toInt();
 
-        case QVariant::LongLong:
+        case QMetaType::LongLong:
             return first.toLongLong() - second.toLongLong();
 
-        case QVariant::Bool:
-        case QVariant::Char:
-        case QVariant::UInt:
+        case QMetaType::Bool:
+        case QMetaType::Char:
+        case QMetaType::UInt:
             return first.toUInt() - second.toUInt();
 
-        case QVariant::ULongLong:
+        case QMetaType::ULongLong:
             return first.toULongLong() - second.toULongLong();
 
-       case QVariant::String:
+        case QMetaType::QString:
             return first.toString().compare(second.toString(), sensitivity);
 
-        case QVariant::Double:
+        case QMetaType::Double:
             {
                 const double a = first.toDouble();
                 const double b = second.toDouble();
                 return (a < b) ? -1 : ((a == b) ? 0 : 1);
             }
 
-        case QVariant::DateTime:
+        case QMetaType::QDateTime:
             {
                 const QDateTime a = first.toDateTime();
                 const QDateTime b = second.toDateTime();
                 return (a < b) ? -1 : ((a == b) ? 0 : 1);
             }
 
-        case QVariant::Date:
+        case QMetaType::QDate:
             return first.toDate().toJulianDay() - second.toDate().toJulianDay();
 
-        case QVariant::Time:
+        case QMetaType::QTime:
             {
                 const QTime a = first.toTime();
                 const QTime b = second.toTime();
@@ -1189,10 +1189,10 @@ int QOrganizerManagerEngine::compareItem(const QOrganizerItem& a, const QOrganiz
         bool bIsNull = false;
 
         // treat empty strings as null qvariants.
-        if ((aVal.type() == QVariant::String && aVal.toString().isEmpty()) || aVal.isNull()) {
+        if ((aVal.metaType().id() == QMetaType::QString && aVal.toString().isEmpty()) || aVal.isNull()) {
             aIsNull = true;
         }
-        if ((bVal.type() == QVariant::String && bVal.toString().isEmpty()) || bVal.isNull()) {
+        if ((bVal.metaType().id() == QMetaType::QString && bVal.toString().isEmpty()) || bVal.isNull()) {
             bIsNull = true;
         }
 

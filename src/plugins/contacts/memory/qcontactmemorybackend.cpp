@@ -948,20 +948,20 @@ bool QContactMemoryEngine::isRelationshipTypeSupported(const QString& relationsh
 /*!
  * \reimp
  */
-QList<QVariant::Type> QContactMemoryEngine::supportedDataTypes() const
+QList<QMetaType::Type> QContactMemoryEngine::supportedDataTypes() const
 {
-    QList<QVariant::Type> st;
-    st.append(QVariant::String);
-    st.append(QVariant::Date);
-    st.append(QVariant::DateTime);
-    st.append(QVariant::Time);
-    st.append(QVariant::Bool);
-    st.append(QVariant::Char);
-    st.append(QVariant::Int);
-    st.append(QVariant::UInt);
-    st.append(QVariant::LongLong);
-    st.append(QVariant::ULongLong);
-    st.append(QVariant::Double);
+    QList<QMetaType::Type> st;
+    st.append(QMetaType::QString);
+    st.append(QMetaType::QDate);
+    st.append(QMetaType::QDateTime);
+    st.append(QMetaType::QTime);
+    st.append(QMetaType::Bool);
+    st.append(QMetaType::Char);
+    st.append(QMetaType::Int);
+    st.append(QMetaType::UInt);
+    st.append(QMetaType::LongLong);
+    st.append(QMetaType::ULongLong);
+    st.append(QMetaType::Double);
 
     return st;
 }

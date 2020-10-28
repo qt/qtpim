@@ -141,7 +141,7 @@ public:
         return QContactManagerEngine::isFilterSupported(fil);
     }
 
-    QList<QVariant::Type> supportedDataTypes() const
+    QList<QMetaType::Type> supportedDataTypes() const
     {
         return QContactManagerEngine::supportedDataTypes();
     }

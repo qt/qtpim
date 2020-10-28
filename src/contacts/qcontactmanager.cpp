@@ -754,7 +754,7 @@ bool QContactManager::removeRelationships(const QList<QContactRelationship> &rel
 /*!
   Returns the list of data types supported by the manager
  */
-QList<QVariant::Type> QContactManager::supportedDataTypes() const
+QList<QMetaType::Type> QContactManager::supportedDataTypes() const
 {
     return d->m_engine->supportedDataTypes();
 }

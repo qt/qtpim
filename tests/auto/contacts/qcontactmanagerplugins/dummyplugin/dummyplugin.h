@@ -57,7 +57,7 @@ public:
     /* Capabilities reporting */
     QStringList capabilities() const;
     QStringList fastFilterableDefinitions() const;
-    QList<QVariant::Type> supportedDataTypes() const;
+    QList<QMetaType::Type> supportedDataTypes() const;
 
     QMap<QString, QString> managerParameters() const {return QMap<QString, QString>();}
     int managerVersion() const {return 0;}

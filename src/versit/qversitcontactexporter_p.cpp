@@ -498,9 +498,9 @@ void QVersitContactExporterPrivate::encodeBirthDay(
     property.setName(mPropertyMappings.value(detail.type()).second);
     QVariant variant = bday.value(QContactBirthday::FieldBirthday);
     QString value;
-    if (variant.type() == QVariant::Date) {
+    if (variant.metaType().id() == QMetaType::QDate) {
         value = variant.toDate().toString(Qt::ISODate);
-    } else if (variant.type() == QVariant::DateTime) {
+    } else if (variant.metaType().id() == QMetaType::QDateTime) {
         value = variant.toDateTime().toString(Qt::ISODate);
     } else {
         return;

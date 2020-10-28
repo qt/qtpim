@@ -320,7 +320,7 @@ QVariant QVersitProperty::variantValue() const
  */
 QString QVersitProperty::value() const
 {
-    if (d->mValue.type() == QVariant::ByteArray) {
+    if (d->mValue.metaType().id() == QMetaType::QByteArray) {
         if (d->mParameters.contains(QStringLiteral("CHARSET"))) {
             QTextCodec* codec = QTextCodec::codecForName(
                     d->mParameters.value(QStringLiteral("CHARSET")).toLatin1());

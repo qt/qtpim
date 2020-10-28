@@ -68,11 +68,6 @@ QMap<QString, QPair<QContactDetail::DetailType, int> > defAndFieldNamesForTypeFo
 
 namespace {
 
-bool validDetailType(const QPair<QContactDetail::DetailType, int> &pair)
-{
-    return pair.first != QContactDetail::TypeUndefined;
-}
-
 bool validDetailField(const QPair<QContactDetail::DetailType, int> &pair)
 {
     return pair.first != QContactDetail::TypeUndefined && pair.second != -1;

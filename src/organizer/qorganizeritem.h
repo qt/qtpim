@@ -123,7 +123,7 @@ protected:
     QSharedDataPointer<QOrganizerItemData> d;
 };
 
-Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItem &key);
+Q_ORGANIZER_EXPORT size_t qHash(const QOrganizerItem &key);
 
 #ifndef QT_NO_DATASTREAM
 Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItem &item);

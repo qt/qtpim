@@ -145,9 +145,9 @@ bool QVersitDocument::operator!=(const QVersitDocument& other) const
 }
 
 /*! Returns the hash value for \a key. */
-uint qHash(const QVersitDocument &key)
+size_t qHash(const QVersitDocument &key)
 {
-    int hash = QT_PREPEND_NAMESPACE(qHash)(key.type());
+    size_t hash = QT_PREPEND_NAMESPACE(qHash)(key.type());
     hash += QT_PREPEND_NAMESPACE(qHash)(key.componentType());
     hash += key.properties().length() + key.subDocuments().length();
     foreach (const QVersitProperty& property, key.properties()) {

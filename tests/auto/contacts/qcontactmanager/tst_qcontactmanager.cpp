@@ -213,7 +213,7 @@ private:
 };
 
 QT_BEGIN_NAMESPACE
-static uint qHash(const QMetaMethod &m)
+static size_t qHash(const QMetaMethod &m)
 {
     return qHash(m.methodIndex());
 }

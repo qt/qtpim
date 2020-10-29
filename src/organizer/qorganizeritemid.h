@@ -82,7 +82,7 @@ private:
 inline bool operator<(const QOrganizerItemId &id1, const QOrganizerItemId &id2)
 { return id1.managerUri() != id2.managerUri() ? id1.managerUri() < id2.managerUri() : id1.localId() < id2.localId(); }
 
-inline uint qHash(const QOrganizerItemId &id)
+inline size_t qHash(const QOrganizerItemId &id)
 { return qHash(id.localId()); }
 
 #ifndef QT_NO_DATASTREAM

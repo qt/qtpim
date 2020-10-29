@@ -303,9 +303,9 @@ bool QContactActionDescriptor::operator!=(const QContactActionDescriptor& other)
 }
 
 /*! Returns the hash value for \a key. */
-uint qHash(const QContactActionDescriptor& key)
+size_t qHash(const QContactActionDescriptor& key)
 {
-    uint ret = 0;
+    size_t ret = 0;
 
     ret += QT_PREPEND_NAMESPACE(qHash)(key.serviceName())
             + QT_PREPEND_NAMESPACE(qHash)(key.actionName())

@@ -157,9 +157,9 @@ bool QVersitProperty::operator!=(const QVersitProperty& other) const
 }
 
 /*! Returns the hash value for \a key. */
-uint qHash(const QVersitProperty &key)
+size_t qHash(const QVersitProperty &key)
 {
-    uint hash = QT_PREPEND_NAMESPACE(qHash)(key.name()) + QT_PREPEND_NAMESPACE(qHash)(key.value());
+    size_t hash = QT_PREPEND_NAMESPACE(qHash)(key.name()) + QT_PREPEND_NAMESPACE(qHash)(key.value());
     foreach (const QString& group, key.groups()) {
         hash += QT_PREPEND_NAMESPACE(qHash)(group);
     }

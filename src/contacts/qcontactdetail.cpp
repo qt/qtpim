@@ -286,9 +286,9 @@ bool QContactDetail::operator==(const QContactDetail& other) const
 
 /*! Returns the hash value for \a key.
 */
-uint qHash(const QContactDetail &key)
+size_t qHash(const QContactDetail &key)
 {
-    uint hash = qHash(QString().setNum(key.type()))
+    size_t hash = qHash(QString().setNum(key.type()))
                 + QT_PREPEND_NAMESPACE(qHash)(key.accessConstraints());
     QMap<int, QVariant> values = key.values();
     QMap<int, QVariant>::const_iterator it = values.constBegin(), end = values.constEnd();

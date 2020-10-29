@@ -221,9 +221,9 @@ QVariant QContactCollection::metaData(MetaDataKey key) const
     \relates QContactCollection
     Returns the hash value for \a key.
  */
-Q_CONTACTS_EXPORT uint qHash(const QContactCollection &key)
+Q_CONTACTS_EXPORT size_t qHash(const QContactCollection &key)
 {
-    uint hash = qHash(key.id());
+    size_t hash = qHash(key.id());
     QMap<QContactCollection::MetaDataKey, QVariant>::const_iterator i = key.d->m_metaData.constBegin();
     while (i != key.d->m_metaData.constEnd()) {
         if (i.key() == QContactCollection::KeyExtended) {

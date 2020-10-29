@@ -110,7 +110,7 @@ QT_BEGIN_NAMESPACE_CONTACTS
 */
 
 /*!
-    \fn uint qHash(const QContactCollectionId &id)
+    \fn size_t qHash(const QContactCollectionId &id)
     \relates QContactCollectionId
 
     Returns the hash value for \a id.

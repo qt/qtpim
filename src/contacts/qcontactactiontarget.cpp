@@ -194,9 +194,9 @@ QContactActionTarget::Type QContactActionTarget::type() const
 }
 
 /*! Returns the hash value for \a key. */
-uint qHash(const QContactActionTarget& key)
+size_t qHash(const QContactActionTarget& key)
 {
-    uint ret = qHash(key.contact());
+    size_t ret = qHash(key.contact());
     foreach (const QContactDetail& det, key.details()) {
         ret += qHash(det);
     }

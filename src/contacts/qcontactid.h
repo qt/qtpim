@@ -82,7 +82,7 @@ private:
 inline bool operator<(const QContactId &id1, const QContactId &id2)
 { return id1.managerUri() != id2.managerUri() ? id1.managerUri() < id2.managerUri() : id1.localId() < id2.localId(); }
 
-inline uint qHash(const QContactId &id)
+inline size_t qHash(const QContactId &id)
 { return qHash(id.localId()); }
 
 #ifndef QT_NO_DEBUG_STREAM

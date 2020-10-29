@@ -450,9 +450,9 @@ bool QOrganizerItem::operator==(const QOrganizerItem &other) const
 
     Returns the hash value for \a key.
  */
-uint qHash(const QOrganizerItem &key)
+size_t qHash(const QOrganizerItem &key)
 {
-    uint hash = qHash(key.id());
+    size_t hash = qHash(key.id());
     hash += qHash(key.collectionId());
     foreach (const QOrganizerItemDetail &detail, key.details())
         hash += qHash(detail);

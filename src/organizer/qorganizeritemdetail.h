@@ -112,7 +112,7 @@ protected:
     QOrganizerItemDetail &assign(const QOrganizerItemDetail &other, DetailType expectedDetailType);
 
 private:
-    friend Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemDetail &key);
+    friend Q_ORGANIZER_EXPORT size_t qHash(const QOrganizerItemDetail &key);
     friend class QOrganizerItem;
     friend class QOrganizerItemDetailPrivate;
 
@@ -123,7 +123,7 @@ private:
     QSharedDataPointer<QOrganizerItemDetailPrivate> d;
 };
 
-Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemDetail &key);
+Q_ORGANIZER_EXPORT size_t qHash(const QOrganizerItemDetail &key);
 #ifndef QT_NO_DATASTREAM
 Q_ORGANIZER_EXPORT QDataStream &operator<<(QDataStream &out, const QOrganizerItemDetail &detail);
 Q_ORGANIZER_EXPORT QDataStream &operator>>(QDataStream &in, QOrganizerItemDetail &detail);

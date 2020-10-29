@@ -255,9 +255,9 @@ bool QOrganizerItemDetail::operator==(const QOrganizerItemDetail &other) const
     \relates QOrganizerItemDetail
     Returns the hash value for \a key.
  */
-Q_ORGANIZER_EXPORT uint qHash(const QOrganizerItemDetail &key)
+Q_ORGANIZER_EXPORT size_t qHash(const QOrganizerItemDetail &key)
 {
-    uint hash = QT_PREPEND_NAMESPACE(qHash)(key.d->m_detailType);
+    size_t hash = QT_PREPEND_NAMESPACE(qHash)(key.d->m_detailType);
     QMap<int, QVariant>::const_iterator it = key.d->m_values.constBegin();
     while (it != key.d->m_values.constEnd()) {
         hash += QT_PREPEND_NAMESPACE(qHash)(it.key()) + QT_PREPEND_NAMESPACE(qHash)(it.value().toString());

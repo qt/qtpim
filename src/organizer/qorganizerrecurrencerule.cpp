@@ -485,12 +485,12 @@ Qt::DayOfWeek QOrganizerRecurrenceRule::firstDayOfWeek() const
     \relates QOrganizerRecurrenceRule
     Returns the hash value for \a key.
  */
-uint qHash(const QOrganizerRecurrenceRule &key)
+size_t qHash(const QOrganizerRecurrenceRule &key)
 {
-    uint hash(0);
-    static const unsigned int prime1 = 11;
-    static const unsigned int prime2 = 31;
-    static const unsigned int prime3 = 47;
+    size_t hash(0);
+    static const size_t prime1 = 11;
+    static const size_t prime2 = 31;
+    static const size_t prime3 = 47;
 
     foreach (int day, key.daysOfMonth())
         hash += day;
@@ -516,12 +516,12 @@ uint qHash(const QOrganizerRecurrenceRule &key)
         hash += pos;
     hash *= prime3;
 
-    hash += static_cast<uint>(key.firstDayOfWeek())
-            + static_cast<uint>(key.frequency())
-            + key.interval()
-            + key.limitCount()
+    hash += static_cast<size_t>(key.firstDayOfWeek())
+            + static_cast<size_t>(key.frequency())
+            + static_cast<size_t>(key.interval())
+            + static_cast<size_t>(key.limitCount())
             + qHash(key.limitDate())
-            + static_cast<uint>(key.limitType());
+            + static_cast<size_t>(key.limitType());
 
     return hash * prime1;
 }

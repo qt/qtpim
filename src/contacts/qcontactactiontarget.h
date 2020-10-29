@@ -88,7 +88,7 @@ private:
     QSharedDataPointer<QContactActionTargetPrivate> d;
 };
 
-Q_CONTACTS_EXPORT uint qHash(const QContactActionTarget& key);
+Q_CONTACTS_EXPORT size_t qHash(const QContactActionTarget& key);
 #ifndef QT_NO_DATASTREAM
 Q_CONTACTS_EXPORT QDataStream& operator<<(QDataStream& out, const QContactActionTarget& target);
 Q_CONTACTS_EXPORT QDataStream& operator>>(QDataStream& in, QContactActionTarget& target);

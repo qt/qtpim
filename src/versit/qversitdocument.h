@@ -100,7 +100,7 @@ private:
     QSharedDataPointer<QVersitDocumentPrivate> d;
 };
 
-Q_VERSIT_EXPORT uint qHash(const QVersitDocument& key);
+Q_VERSIT_EXPORT size_t qHash(const QVersitDocument& key);
 #ifndef QT_NO_DEBUG_STREAM
 Q_VERSIT_EXPORT QDebug operator<<(QDebug dbg, const QVersitDocument& property);
 #endif

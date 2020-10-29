@@ -535,9 +535,9 @@ bool QContact::operator==(const QContact& other) const
     \relates QContact
     Returns the hash value for \a key.
 */
-uint qHash(const QContact &key)
+size_t qHash(const QContact &key)
 {
-    uint hash = qHash(key.id());
+    size_t hash = qHash(key.id());
     foreach (const QContactDetail& detail, key.details()) {
         hash += qHash(detail);
     }

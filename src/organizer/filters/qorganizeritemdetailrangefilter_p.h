@@ -70,7 +70,7 @@ public:
     {
     }
 
-    virtual bool compare(const QOrganizerItemFilterPrivate *other) const
+    virtual bool compare(const QOrganizerItemFilterPrivate *other) const override
     {
         const QOrganizerItemDetailRangeFilterPrivate *od = static_cast<const QOrganizerItemDetailRangeFilterPrivate *>(other);
         if (od) {
@@ -82,7 +82,7 @@ public:
     }
 
 #ifndef QT_NO_DATASTREAM
-    QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
+    QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const override
     {
         if (formatVersion == 1) {
             stream << static_cast<quint32>(m_detailType)
@@ -93,7 +93,7 @@ public:
         return stream;
     }
 
-    QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion)
+    QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion) override
     {
         if (formatVersion == 1) {
             quint32 flags;
@@ -109,7 +109,7 @@ public:
 #endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug &debugStreamOut(QDebug &dbg) const
+    QDebug &debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QOrganizerItemDetailRangeFilter(";
         dbg.nospace() << "detailType=";

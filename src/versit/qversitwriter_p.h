@@ -87,7 +87,7 @@ public:
     void setDocumentType(QVersitDocument::VersitType type);
     QVersitDocument::VersitType documentType() const;
 
-    void run();
+    void run() override;
 
     static QVersitDocumentWriter* writerForType(QVersitDocument::VersitType type, const QVersitDocument& document);
 

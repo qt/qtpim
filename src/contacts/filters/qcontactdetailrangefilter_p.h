@@ -72,7 +72,7 @@ public:
     {
     }
 
-    bool compare(const QContactFilterPrivate* other) const
+    bool compare(const QContactFilterPrivate* other) const override
     {
         const QContactDetailRangeFilterPrivate *od = static_cast<const QContactDetailRangeFilterPrivate*>(other);
         if (m_typeId != od->m_typeId)
@@ -90,7 +90,7 @@ public:
         return true;
     }
 
-    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
+    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const override
     {
         if (formatVersion == 1) {
             stream << quint32(m_typeId) << m_fieldId << m_minValue << m_maxValue
@@ -100,7 +100,7 @@ public:
         return stream;
     }
 
-    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
+    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion) override
     {
         if (formatVersion == 1) {
             quint32 flags;
@@ -115,7 +115,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QContactDetailRangeFilter(";
         dbg.nospace() << "detailType=" << static_cast<quint32>(m_typeId) << ","

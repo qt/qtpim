@@ -207,7 +207,7 @@ signals:
     void resultsAvailable();
 
 protected: // From QThread
-     void run();
+     void run() override;
 
 public: // New functions
     void read();

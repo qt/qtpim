@@ -62,25 +62,25 @@ public:
     {
     }
 
-    bool compare(const QContactFilterPrivate*) const
+    bool compare(const QContactFilterPrivate*) const override
     {
         return true; // all invalid filters are alike
     }
 
-    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
+    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const override
     {
         Q_UNUSED(formatVersion);
         return stream;
     }
 
-    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
+    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion) override
     {
         Q_UNUSED(formatVersion);
         return stream;
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QContactInvalidFilter()";
         return dbg.maybeSpace() ;
@@ -88,12 +88,12 @@ public:
 #endif
 
     /* There is no way this can be called - d is never detached */
-    QContactFilterPrivate* clone() const
+    QContactFilterPrivate* clone() const override
     {
         return new QContactInvalidFilterPrivate();
     }
 
-    QContactFilter::FilterType type() const
+    QContactFilter::FilterType type() const override
     {
         return QContactFilter::InvalidFilter;
     }

@@ -59,10 +59,10 @@ class QContactInvalidEngine : public QContactManagerEngine
 {
 public:
     QContactInvalidEngine();
-    QString managerName() const;
+    QString managerName() const override;
 
     /*! \reimp */
-    int managerVersion() const {return 0;}
+    int managerVersion() const override {return 0;}
 };
 
 QT_END_NAMESPACE_CONTACTS

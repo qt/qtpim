@@ -72,7 +72,7 @@ public:
     {
     }
 
-    virtual bool compare(const QContactFilterPrivate *other) const
+    virtual bool compare(const QContactFilterPrivate *other) const override
     {
         const QContactCollectionFilterPrivate *od = static_cast<const QContactCollectionFilterPrivate *>(other);
         if (od)
@@ -81,14 +81,14 @@ public:
     }
 
 #ifndef QT_NO_DATASTREAM
-    QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
+    QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const override
     {
         if (formatVersion == 1)
             stream << m_ids;
         return stream;
     }
 
-    QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion)
+    QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion) override
     {
         if (formatVersion == 1)
             stream >> m_ids;
@@ -97,7 +97,7 @@ public:
 #endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug &debugStreamOut(QDebug &dbg) const
+    QDebug &debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QContactCollectionFilter(collectionIds=";
         QList<QContactCollectionId> ids(m_ids.values());

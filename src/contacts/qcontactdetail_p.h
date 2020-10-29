@@ -452,7 +452,7 @@ public:
         return static_cast<Subclass *>(this);
     }
 
-    QContactDetailPrivate *clone() {
+    QContactDetailPrivate *clone() override {
         return new Subclass(*subclass());
     }
 
@@ -481,7 +481,7 @@ public:
         setHasValueBitfieldBit(true, field + BaseFieldOffset);
     }
 
-    bool setValue(int field, const QVariant &value)
+    bool setValue(int field, const QVariant &value) override
     {
         if (field < Subclass::FieldCount) {
             setValueFromVariant(subclass(), value, s_members[field]);
@@ -491,7 +491,7 @@ public:
         return QContactDetailPrivate::setValue(field, value);
     }
 
-    bool removeValue(int field)
+    bool removeValue(int field) override
     {
         if (field < Subclass::FieldCount) {
             reinitialize(subclass(), s_members[field]);
@@ -501,7 +501,7 @@ public:
         return QContactDetailPrivate::removeValue(field);
     }
 
-    bool hasValue(int field) const
+    bool hasValue(int field) const override
     {
         if (field < Subclass::FieldCount) {
             return hasValueBitfieldBitSet(field + BaseFieldOffset);
@@ -509,7 +509,7 @@ public:
         return QContactDetailPrivate::hasValue(field);
     }
 
-    QMap<int, QVariant> values() const
+    QMap<int, QVariant> values() const override
     {
         QMap<int, QVariant> retn = QContactDetailPrivate::values();
         for (int i = 0; i < Subclass::FieldCount; ++i) {
@@ -520,7 +520,7 @@ public:
         return retn;
     }
 
-    QVariant value(int field) const
+    QVariant value(int field) const override
     {
         if (field < Subclass::FieldCount) {
             return toVariant(subclass(), s_members[field]);

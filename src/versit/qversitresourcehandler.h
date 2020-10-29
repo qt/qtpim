@@ -64,9 +64,9 @@ class Q_VERSIT_EXPORT QVersitDefaultResourceHandler : public QVersitResourceHand
 public:
     QVersitDefaultResourceHandler();
     virtual ~QVersitDefaultResourceHandler();
-    virtual bool loadResource(const QString& location, QByteArray* contents, QString* mimeType);
+    virtual bool loadResource(const QString& location, QByteArray* contents, QString* mimeType) override;
     virtual bool saveResource(const QByteArray& contents, const QVersitProperty& property,
-                              QString* location);
+                              QString* location) override;
 
 protected:
     QVersitDefaultResourceHandlerPrivate* d;

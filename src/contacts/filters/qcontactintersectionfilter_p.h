@@ -72,7 +72,7 @@ public:
 
     }
 
-    bool compare(const QContactFilterPrivate* other) const
+    bool compare(const QContactFilterPrivate* other) const override
     {
         const QContactIntersectionFilterPrivate *od = static_cast<const QContactIntersectionFilterPrivate*>(other);
         if (m_filters != od->m_filters)
@@ -80,7 +80,7 @@ public:
         return true;
     }
 
-    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
+    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const override
     {
         if (formatVersion == 1) {
             stream << m_filters;
@@ -88,7 +88,7 @@ public:
         return stream;
     }
 
-    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
+    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion) override
     {
         if (formatVersion == 1) {
             stream >> m_filters;
@@ -97,7 +97,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QContactIntersectionFilter(";
         dbg.nospace() << "filters=" << m_filters;

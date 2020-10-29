@@ -179,8 +179,8 @@ Q_SIGNALS:
     void collectionsModified(const QList<QPair<QContactCollectionId, QContactManager::Operation> > &collectionIds);
 
 protected:
-    void connectNotify(const QMetaMethod &signal);
-    void disconnectNotify(const QMetaMethod &signal);
+    void connectNotify(const QMetaMethod &signal) override;
+    void disconnectNotify(const QMetaMethod &signal) override;
 
 private:
     friend class QContactManagerData;

@@ -73,7 +73,7 @@ public:
     {
     }
 
-    bool compare(const QContactFilterPrivate* other) const
+    bool compare(const QContactFilterPrivate* other) const override
     {
         const QContactRelationshipFilterPrivate *od = static_cast<const QContactRelationshipFilterPrivate*>(other);
         if (m_relatedContactRole != od->m_relatedContactRole)
@@ -85,7 +85,7 @@ public:
         return true;
     }
 
-    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
+    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const override
     {
         if (formatVersion == 1) {
             stream << m_relationshipType << m_relatedContactId << static_cast<quint32>(m_relatedContactRole);
@@ -93,7 +93,7 @@ public:
         return stream;
     }
 
-    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
+    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion) override
     {
         if (formatVersion == 1) {
             quint32 role;
@@ -104,7 +104,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QContactRelationshipFilter(";
         dbg.nospace() << "relationshipType=" << m_relationshipType << ","

@@ -70,7 +70,7 @@ public:
     {
     }
 
-    bool compare(const QContactFilterPrivate* other) const
+    bool compare(const QContactFilterPrivate* other) const override
     {
         const QContactActionFilterPrivate *od = static_cast<const QContactActionFilterPrivate*>(other);
         if (m_action != od->m_action)
@@ -78,7 +78,7 @@ public:
         return true;
     }
 
-    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const
+    QDataStream& outputToStream(QDataStream& stream, quint8 formatVersion) const override
     {
         if (formatVersion == 1) {
             stream << m_action;
@@ -86,7 +86,7 @@ public:
         return stream;
     }
 
-    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion)
+    QDataStream& inputFromStream(QDataStream& stream, quint8 formatVersion) override
     {
         if (formatVersion == 1) {
             stream >> m_action;
@@ -95,7 +95,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QContactActionFilter(";
         dbg.nospace() << "action=" << m_action;

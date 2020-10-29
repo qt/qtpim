@@ -81,7 +81,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const
+    QDebug& debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QOrganizerItemSaveRequest(\n";
         dbg.nospace() << "* items=";
@@ -116,7 +116,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const
+    QDebug& debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QOrganizerItemFetchRequest(\n";
         dbg.nospace() << "* items=";
@@ -169,7 +169,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const
+    QDebug& debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QOrganizerItemFetchForExportRequest(\n";
         dbg.nospace() << "* items=";
@@ -217,7 +217,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const
+    QDebug& debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QOrganizerItemFetchByIdRequest(\n";
         dbg.nospace() << "* items=";
@@ -257,7 +257,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const
+    QDebug& debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QOrganizerItemOccurrenceFetchRequest(\n";
         dbg.nospace() << "* itemOccurrences=";
@@ -304,7 +304,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const
+    QDebug& debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QOrganizerItemRemoveRequest(";
         dbg.nospace() << "items=";
@@ -334,7 +334,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QOrganizerItemRemoveByIdRequest(";
         dbg.nospace() << "itemIds=";
@@ -364,7 +364,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const
+    QDebug& debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QOrganizerItemIdFetchRequest(\n";
         dbg.nospace() << "* itemIds=";
@@ -408,7 +408,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const
+    QDebug& debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QOrganizerCollectionFetchRequest(";
         dbg.nospace() << "collections=";
@@ -434,7 +434,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const
+    QDebug& debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QOrganizerCollectionRemoveRequest(";
         dbg.nospace() << "collectionIds=";
@@ -464,7 +464,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const
+    QDebug& debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QOrganizerCollectionSaveRequest(";
         dbg.nospace() << "collections=";

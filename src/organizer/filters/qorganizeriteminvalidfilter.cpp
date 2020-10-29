@@ -60,19 +60,19 @@ public:
     {
     }
 
-    bool compare(const QOrganizerItemFilterPrivate *) const
+    bool compare(const QOrganizerItemFilterPrivate *) const override
     {
         return true;
     }
 
 #ifndef QT_NO_DATASTREAM
-    QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const
+    QDataStream &outputToStream(QDataStream &stream, quint8 formatVersion) const override
     {
         Q_UNUSED(formatVersion);
         return stream;
     }
 
-    QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion)
+    QDataStream &inputFromStream(QDataStream &stream, quint8 formatVersion) override
     {
         Q_UNUSED(formatVersion);
         return stream;
@@ -80,19 +80,19 @@ public:
 #endif // QT_NO_DATASTREAM
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug &debugStreamOut(QDebug &dbg) const
+    QDebug &debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QOrganizerItemInvalidFilter()";
         return dbg.maybeSpace() ;
     }
 #endif // QT_NO_DEBUG_STREAM
 
-    QOrganizerItemFilterPrivate *clone() const
+    QOrganizerItemFilterPrivate *clone() const override
     {
         return new QOrganizerItemInvalidFilterPrivate();
     }
 
-    QOrganizerItemFilter::FilterType type() const
+    QOrganizerItemFilter::FilterType type() const override
     {
         return QOrganizerItemFilter::InvalidFilter;
     }

@@ -80,7 +80,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QContactSaveRequest(";
         dbg.nospace() << "contacts=" << m_contacts << ","
@@ -109,7 +109,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QContactFetchRequest("
                       << "filter=" << m_filter << ","
@@ -140,7 +140,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QContactFetchByIdRequest(\n"
                       << "* contactIds=" << m_contactIds << ",\n"
@@ -172,7 +172,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QContactRemoveRequest("
                       << "contactIds=" << m_contactIds << ","
@@ -199,7 +199,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QContactIdFetchRequest("
                       << "filter=" << m_filter << ","
@@ -229,7 +229,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QContactRelationshipFetchRequest("
                       << "first=" << m_first << ","
@@ -263,7 +263,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QContactRelationshipSaveRequest("
                       << "relationships=" << m_relationships << ","
@@ -290,7 +290,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug& dbg) const
+    QDebug& debugStreamOut(QDebug& dbg) const override
     {
         dbg.nospace() << "QContactRelationshipRemoveRequest("
                       << "relationships=" << m_relationships << ","
@@ -317,7 +317,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const
+    QDebug& debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QContactCollectionFetchRequestPrivate(";
         dbg.nospace() << "collections=";
@@ -343,7 +343,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const
+    QDebug& debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QContactCollectionRemoveRequestPrivate(";
         dbg.nospace() << "collectionIds=";
@@ -373,7 +373,7 @@ public:
     }
 
 #ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const
+    QDebug& debugStreamOut(QDebug &dbg) const override
     {
         dbg.nospace() << "QContactCollectionSaveRequestPrivate(";
         dbg.nospace() << "collections=";

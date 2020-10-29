@@ -61,8 +61,8 @@ public:
     QVCard30Writer(QVersitDocument::VersitType type);
     ~QVCard30Writer();
 
-    void encodeVersitProperty(const QVersitProperty& property);
-    void encodeParameters(const QMultiHash<QString,QString>& parameters);
+    void encodeVersitProperty(const QVersitProperty& property) override;
+    void encodeParameters(const QMultiHash<QString,QString>& parameters) override;
     static void backSlashEscape(QString* text);
     QHash<QString,QString> mPropertyNameMappings;
 };

@@ -73,11 +73,11 @@ class Q_VERSIT_EXPORT QVersitContactHandlerFactory : public QObject, public QVer
     Q_INTERFACES(QtVersit::QVersitContactHandlerFactoryInterface:QFactoryInterface)
 public:
     virtual ~QVersitContactHandlerFactory() {}
-    virtual QSet<QString> profiles() const { return QSet<QString>(); }
-    virtual QString name() const = 0;
-    virtual int index() const { return 0; }
-    virtual QVersitContactHandler* createHandler() const = 0;
-    virtual QStringList keys() const;
+    virtual QSet<QString> profiles() const override { return QSet<QString>(); }
+    virtual QString name() const override = 0;
+    virtual int index() const override { return 0; }
+    virtual QVersitContactHandler* createHandler() const override = 0;
+    virtual QStringList keys() const override;
 
     inline static const QString ProfileSync() {return QStringLiteral("Sync");};
     inline static const QString ProfileBackup() {return QStringLiteral("Backup");};

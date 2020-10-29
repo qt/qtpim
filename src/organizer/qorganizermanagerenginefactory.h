@@ -66,10 +66,10 @@ class Q_ORGANIZER_EXPORT QOrganizerManagerEngineFactory : public QObject, public
 
 public:
     virtual ~QOrganizerManagerEngineFactory();
-    virtual QOrganizerManagerEngine *engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error) = 0;
-    virtual QString managerName() const = 0;
+    virtual QOrganizerManagerEngine *engine(const QMap<QString, QString> &parameters, QOrganizerManager::Error *error) override = 0;
+    virtual QString managerName() const override = 0;
 
-    QStringList keys() const;
+    QStringList keys() const override;
 };
 QT_END_NAMESPACE_ORGANIZER
 

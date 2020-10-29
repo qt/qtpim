@@ -68,9 +68,9 @@ public:
     // engine factory functions
     virtual QList<int> supportedImplementationVersions() const;
     virtual ~QContactManagerEngineFactory();
-    virtual QContactManagerEngine* engine(const QMap<QString, QString> &parameters, QContactManager::Error *error) = 0;
-    virtual QString managerName() const = 0;
-    virtual QStringList keys() const;
+    virtual QContactManagerEngine* engine(const QMap<QString, QString> &parameters, QContactManager::Error *error) override = 0;
+    virtual QString managerName() const override = 0;
+    virtual QStringList keys() const override;
 };
 
 QT_END_NAMESPACE_CONTACTS

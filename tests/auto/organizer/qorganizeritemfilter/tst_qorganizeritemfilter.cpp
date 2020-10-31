@@ -40,11 +40,13 @@ Q_DECLARE_METATYPE(QOrganizerItemDetailFieldFilter)
 
 static inline QOrganizerItemId makeItemId(uint id)
 {
+    id = qToLittleEndian(id);
     return QOrganizerItemId(QStringLiteral("qtorganizer:basic:"), QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint)));
 }
 
 static inline QOrganizerCollectionId makeCollectionId(uint id)
 {
+    id = qToLittleEndian(id);
     return QOrganizerCollectionId(QStringLiteral("qtorganizer:basic:"), QByteArray(reinterpret_cast<const char *>(&id), sizeof(uint)));
 }
 

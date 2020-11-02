@@ -265,7 +265,7 @@ void CalendarDemo::activatePreviousPage()
 void CalendarDemo::addNewEvent()
 {
     QOrganizerEvent newEvent;
-    QDateTime time(m_currentDate);
+    QDateTime time(m_currentDate.startOfDay());
     newEvent.setStartDateTime(time);
     time = time.addSecs(60*30); // add 30 minutes to end time
     newEvent.setEndDateTime(time);
@@ -275,7 +275,7 @@ void CalendarDemo::addNewEvent()
 void CalendarDemo::addNewTodo()
 {
     QOrganizerTodo newTodo;
-    QDateTime time(m_currentDate);
+    QDateTime time(m_currentDate.startOfDay());
     newTodo.setStartDateTime(time);
     time = time.addSecs(60*30); // add 30 minutes to due time
     newTodo.setDueDateTime(time);
@@ -285,7 +285,7 @@ void CalendarDemo::addNewTodo()
 void CalendarDemo::addNewJournal()
 {
     QOrganizerJournal newJournal;
-    QDateTime time(m_currentDate);
+    QDateTime time(m_currentDate.startOfDay());
     newJournal.setDateTime(time);
     activateEditPage(newJournal);
 }

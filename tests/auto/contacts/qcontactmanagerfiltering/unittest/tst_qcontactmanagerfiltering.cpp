@@ -409,7 +409,7 @@ QString tst_QContactManagerFiltering::convertIds(QList<QContactId> allIds, QList
     /* Expected is of the form "abcd".. it's possible that there are some extra contacts */
     for (int i = 0; i < ids.size(); i++) {
         if (allIds.indexOf(ids.at(i)) >= 0) {
-            QChar curr = ('a' + static_cast<int>(allIds.indexOf(ids.at(i))));
+            QChar curr = (static_cast<ushort>('a' + allIds.indexOf(ids.at(i))));
             if (curr >= minimumContact && curr <= maximumContact) {
                 ret += curr;
             }
@@ -2155,7 +2155,9 @@ void tst_QContactManagerFiltering::relationshipFiltering()
         QCOMPARE_UNSORTED(output, expected);
         QCOMPARE(ids2, QList<QContactId>());
     } else {
-        QString msg = "Manager does not support relationship type " + relationshipType + " between " + contactA.type() + " and " + contactB.type() + " type contacts.";
+        QString msg = "Manager does not support relationship type " + relationshipType
+                    + " between " + QString::number(contactA.type())
+                    + " and " + QString::number(contactB.type()) + " type contacts.";
         QSKIP(msg.toLatin1());
     }
 }

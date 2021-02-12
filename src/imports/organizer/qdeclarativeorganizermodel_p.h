@@ -108,8 +108,6 @@ public:
     explicit QDeclarativeOrganizerModel(QOrganizerManager* manager, const QDateTime& start, const QDateTime& end, QObject *parent = nullptr);
     ~QDeclarativeOrganizerModel();
 
-    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
-
     QString error() const;
     int itemCount() const;
 
@@ -124,11 +122,12 @@ public:
     void setEndPeriod(const QDateTime& end);
 
     // From QQmlParserStatus
-    virtual void classBegin() {}
-    virtual void componentComplete();
+    void classBegin() override {}
+    void componentComplete() override;
 
-    int rowCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
+    QHash<int, QByteArray> roleNames() const override;
+    int rowCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
 
     QDeclarativeOrganizerItemFilter* filter() const;
 
@@ -224,16 +223,16 @@ private:
     QDeclarativeOrganizerItem* createItem(const QOrganizerItem& item);
     void checkError(const QOrganizerAbstractRequest *request);
 
-    static int  item_count(QQmlListProperty<QDeclarativeOrganizerItem> *p);
-    static QDeclarativeOrganizerItem * item_at(QQmlListProperty<QDeclarativeOrganizerItem> *p, int idx);
+    static qsizetype item_count(QQmlListProperty<QDeclarativeOrganizerItem> *p);
+    static QDeclarativeOrganizerItem * item_at(QQmlListProperty<QDeclarativeOrganizerItem> *p, qsizetype idx);
 
     static void sortOrder_append(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p, QDeclarativeOrganizerItemSortOrder *sortOrder);
-    static int  sortOrder_count(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p);
-    static QDeclarativeOrganizerItemSortOrder * sortOrder_at(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p, int idx);
-    static void  sortOrder_clear(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p);
+    static qsizetype sortOrder_count(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p);
+    static QDeclarativeOrganizerItemSortOrder * sortOrder_at(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p, qsizetype idx);
+    static void sortOrder_clear(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p);
 
-    static int collection_count(QQmlListProperty<QDeclarativeOrganizerCollection> *p);
-    static QDeclarativeOrganizerCollection* collection_at(QQmlListProperty<QDeclarativeOrganizerCollection> *p, int idx);
+    static qsizetype collection_count(QQmlListProperty<QDeclarativeOrganizerCollection> *p);
+    static QDeclarativeOrganizerCollection* collection_at(QQmlListProperty<QDeclarativeOrganizerCollection> *p, qsizetype idx);
 
     QScopedPointer<QDeclarativeOrganizerModelPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QDeclarativeOrganizerModel)

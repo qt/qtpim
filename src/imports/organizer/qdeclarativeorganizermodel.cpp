@@ -744,12 +744,12 @@ QString QDeclarativeOrganizerModel::error() const
   */
 QQmlListProperty<QDeclarativeOrganizerItemSortOrder> QDeclarativeOrganizerModel::sortOrders()
 {
-    return QQmlListProperty<QDeclarativeOrganizerItemSortOrder>(this,
-                                                                        0,
-                                                                        sortOrder_append,
-                                                                        sortOrder_count,
-                                                                        sortOrder_at,
-                                                                        sortOrder_clear);
+    return { this,
+             nullptr,
+             &sortOrder_append,
+             &sortOrder_count,
+             &sortOrder_at,
+             &sortOrder_clear };
 }
 
 void QDeclarativeOrganizerModel::startImport(QVersitReader::State state)
@@ -1775,7 +1775,7 @@ QVariant QDeclarativeOrganizerModel::data(const QModelIndex &index, int role) co
   */
 QQmlListProperty<QDeclarativeOrganizerItem> QDeclarativeOrganizerModel::items()
 {
-    return QQmlListProperty<QDeclarativeOrganizerItem>(this, 0, item_count, item_at);
+    return { this, nullptr, item_count, item_at };
 }
 
 /*!
@@ -1787,10 +1787,10 @@ QQmlListProperty<QDeclarativeOrganizerItem> QDeclarativeOrganizerModel::items()
   */
 QQmlListProperty<QDeclarativeOrganizerCollection> QDeclarativeOrganizerModel::collections()
 {
-    return QQmlListProperty<QDeclarativeOrganizerCollection>(this, 0, collection_count, collection_at);
+    return { this, nullptr, collection_count, collection_at };
 }
 
-int  QDeclarativeOrganizerModel::item_count(QQmlListProperty<QDeclarativeOrganizerItem> *p)
+qsizetype QDeclarativeOrganizerModel::item_count(QQmlListProperty<QDeclarativeOrganizerItem> *p)
 {
     QDeclarativeOrganizerModel* model = qobject_cast<QDeclarativeOrganizerModel*>(p->object);
     if (model)
@@ -1798,7 +1798,7 @@ int  QDeclarativeOrganizerModel::item_count(QQmlListProperty<QDeclarativeOrganiz
     return 0;
 }
 
-QDeclarativeOrganizerItem * QDeclarativeOrganizerModel::item_at(QQmlListProperty<QDeclarativeOrganizerItem> *p, int idx)
+QDeclarativeOrganizerItem * QDeclarativeOrganizerModel::item_at(QQmlListProperty<QDeclarativeOrganizerItem> *p, qsizetype idx)
 {
     QDeclarativeOrganizerModel* model = qobject_cast<QDeclarativeOrganizerModel*>(p->object);
     if (model && idx >= 0 && idx < model->d_ptr->m_items.size())
@@ -1817,20 +1817,21 @@ void QDeclarativeOrganizerModel::sortOrder_append(QQmlListProperty<QDeclarativeO
     }
 }
 
-int  QDeclarativeOrganizerModel::sortOrder_count(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p)
+qsizetype QDeclarativeOrganizerModel::sortOrder_count(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p)
 {
     QDeclarativeOrganizerModel* model = qobject_cast<QDeclarativeOrganizerModel*>(p->object);
     if (model)
         return model->d_ptr->m_declarativeSortOrders.size();
     return 0;
 }
-QDeclarativeOrganizerItemSortOrder * QDeclarativeOrganizerModel::sortOrder_at(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p, int idx)
+
+QDeclarativeOrganizerItemSortOrder * QDeclarativeOrganizerModel::sortOrder_at(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p, qsizetype idx)
 {
     QDeclarativeOrganizerModel* model = qobject_cast<QDeclarativeOrganizerModel*>(p->object);
 
     QDeclarativeOrganizerItemSortOrder* sortOrder = 0;
     if (model) {
-        int i = 0;
+        qsizetype i = 0;
         foreach (QDeclarativeOrganizerItemSortOrder* s, model->d_ptr->m_declarativeSortOrders) {
             if (i == idx) {
                 sortOrder = s;
@@ -1842,6 +1843,7 @@ QDeclarativeOrganizerItemSortOrder * QDeclarativeOrganizerModel::sortOrder_at(QQ
     }
     return sortOrder;
 }
+
 void  QDeclarativeOrganizerModel::sortOrder_clear(QQmlListProperty<QDeclarativeOrganizerItemSortOrder> *p)
 {
     QDeclarativeOrganizerModel* model = qobject_cast<QDeclarativeOrganizerModel*>(p->object);
@@ -1853,13 +1855,13 @@ void  QDeclarativeOrganizerModel::sortOrder_clear(QQmlListProperty<QDeclarativeO
     }
 }
 
-int  QDeclarativeOrganizerModel::collection_count(QQmlListProperty<QDeclarativeOrganizerCollection> *p)
+qsizetype QDeclarativeOrganizerModel::collection_count(QQmlListProperty<QDeclarativeOrganizerCollection> *p)
 {
     QDeclarativeOrganizerModel* model = qobject_cast<QDeclarativeOrganizerModel*>(p->object);
     return model ? model->d_ptr->m_collections.count() : 0;
 }
 
-QDeclarativeOrganizerCollection* QDeclarativeOrganizerModel::collection_at(QQmlListProperty<QDeclarativeOrganizerCollection> *p, int idx)
+QDeclarativeOrganizerCollection* QDeclarativeOrganizerModel::collection_at(QQmlListProperty<QDeclarativeOrganizerCollection> *p, qsizetype idx)
 {
     QDeclarativeOrganizerModel* model = qobject_cast<QDeclarativeOrganizerModel*>(p->object);
     QDeclarativeOrganizerCollection* collection = 0;

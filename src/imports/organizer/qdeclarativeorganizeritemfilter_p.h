@@ -118,8 +118,8 @@ public:
     QQmlListProperty<QDeclarativeOrganizerItemFilter> filters();
 
     static void filters_append(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop, QDeclarativeOrganizerItemFilter *filter);
-    static int filters_count(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop);
-    static QDeclarativeOrganizerItemFilter *filters_at(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop, int index);
+    static qsizetype filters_count(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop);
+    static QDeclarativeOrganizerItemFilter *filters_at(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop, qsizetype index);
     static void filters_clear(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop);
 
 Q_SIGNALS:

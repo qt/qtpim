@@ -157,7 +157,7 @@ QDeclarativeOrganizerItemCompoundFilter::~QDeclarativeOrganizerItemCompoundFilte
  */
 QQmlListProperty<QDeclarativeOrganizerItemFilter> QDeclarativeOrganizerItemCompoundFilter::filters()
 {
-    return QQmlListProperty<QDeclarativeOrganizerItemFilter>(this, 0, filters_append, filters_count, filters_at, filters_clear);
+    return { this, nullptr, filters_append, filters_count, filters_at, filters_clear };
 }
 
 /*!
@@ -175,7 +175,7 @@ void QDeclarativeOrganizerItemCompoundFilter::filters_append(QQmlListProperty<QD
 /*!
     \internal
  */
-int QDeclarativeOrganizerItemCompoundFilter::filters_count(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop)
+qsizetype QDeclarativeOrganizerItemCompoundFilter::filters_count(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop)
 {
     return static_cast<QDeclarativeOrganizerItemCompoundFilter *>(prop->object)->m_filters.count();
 }
@@ -183,7 +183,7 @@ int QDeclarativeOrganizerItemCompoundFilter::filters_count(QQmlListProperty<QDec
 /*!
     \internal
  */
-QDeclarativeOrganizerItemFilter *QDeclarativeOrganizerItemCompoundFilter::filters_at(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop, int index)
+QDeclarativeOrganizerItemFilter *QDeclarativeOrganizerItemCompoundFilter::filters_at(QQmlListProperty<QDeclarativeOrganizerItemFilter> *prop, qsizetype index)
 {
     return static_cast<QDeclarativeOrganizerItemCompoundFilter *>(prop->object)->m_filters.at(index);
 }

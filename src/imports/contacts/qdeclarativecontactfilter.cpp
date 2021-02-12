@@ -378,12 +378,12 @@ QT_BEGIN_NAMESPACE
 
 QQmlListProperty<QDeclarativeContactFilter> QDeclarativeContactCompoundFilter::filters()
 {
-    return QQmlListProperty<QDeclarativeContactFilter>(this,
-                                                          0, // opaque data parameter
-                                                          filters_append,
-                                                          filters_count,
-                                                          filters_at,
-                                                          filters_clear);
+    return { this,
+             nullptr, // opaque data parameter
+             &filters_append,
+             &filters_count,
+             &filters_at,
+             &filters_clear };
 }
 
 void QDeclarativeContactCompoundFilter::filters_append(QQmlListProperty<QDeclarativeContactFilter>* prop, QDeclarativeContactFilter* filter)
@@ -394,13 +394,13 @@ void QDeclarativeContactCompoundFilter::filters_append(QQmlListProperty<QDeclara
     emit compoundFilter->filterChanged();
 }
 
-int QDeclarativeContactCompoundFilter::filters_count(QQmlListProperty<QDeclarativeContactFilter>* prop)
+qsizetype QDeclarativeContactCompoundFilter::filters_count(QQmlListProperty<QDeclarativeContactFilter>* prop)
 {
     // The 'prop' is in a sense 'this' for this static function (as given in filters() function)
     return static_cast<QDeclarativeContactCompoundFilter*>(prop->object)->m_filters.count();
 }
 
-QDeclarativeContactFilter* QDeclarativeContactCompoundFilter::filters_at(QQmlListProperty<QDeclarativeContactFilter>* prop, int index)
+QDeclarativeContactFilter* QDeclarativeContactCompoundFilter::filters_at(QQmlListProperty<QDeclarativeContactFilter>* prop, qsizetype index)
 {
     return static_cast<QDeclarativeContactCompoundFilter*>(prop->object)->m_filters.at(index);
 }

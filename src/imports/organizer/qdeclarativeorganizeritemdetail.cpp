@@ -1035,12 +1035,12 @@ void QDeclarativeOrganizerItemRecurrence::xrule_append(QQmlListProperty<QDeclara
     emit recurrence->exceptionRulesChanged();
 }
 
-int  QDeclarativeOrganizerItemRecurrence::rule_count(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p)
+qsizetype QDeclarativeOrganizerItemRecurrence::rule_count(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p)
 {
     return static_cast<QList<QDeclarativeOrganizerRecurrenceRule*>*>(p->data)->count();
 }
 
-QDeclarativeOrganizerRecurrenceRule* QDeclarativeOrganizerItemRecurrence::rule_at(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p, int idx)
+QDeclarativeOrganizerRecurrenceRule* QDeclarativeOrganizerItemRecurrence::rule_at(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p, qsizetype idx)
 {
     return static_cast<QList<QDeclarativeOrganizerRecurrenceRule*>*>(p->data)->at(idx);
 }

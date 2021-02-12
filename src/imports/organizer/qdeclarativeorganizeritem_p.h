@@ -137,9 +137,9 @@ private:
 
     // call-back functions for list property
     static void _q_detail_append(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property, QDeclarativeOrganizerItemDetail *value);
-    static QDeclarativeOrganizerItemDetail *_q_detail_at(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property, int index);
+    static QDeclarativeOrganizerItemDetail *_q_detail_at(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property, qsizetype index);
     static void _q_detail_clear(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property);
-    static int _q_detail_count(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property);
+    static qsizetype _q_detail_count(QQmlListProperty<QDeclarativeOrganizerItemDetail> *property);
 };
 
 
@@ -187,9 +187,9 @@ Q_SIGNALS:
 private:
     // call-back functions for attendees list property
     static void _q_attendee_append(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property, QDeclarativeOrganizerEventAttendee *value);
-    static QDeclarativeOrganizerEventAttendee *_q_attendee_at(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property, int index);
+    static QDeclarativeOrganizerEventAttendee *_q_attendee_at(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property, qsizetype index);
     static void _q_attendee_clear(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property);
-    static int _q_attendee_count(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property);
+    static qsizetype _q_attendee_count(QQmlListProperty<QDeclarativeOrganizerEventAttendee> *property);
 };
 
 

@@ -399,8 +399,8 @@ private Q_SLOTS:
 private:
     static void rrule_append(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p, QDeclarativeOrganizerRecurrenceRule *item);
     static void xrule_append(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p, QDeclarativeOrganizerRecurrenceRule *item);
-    static int  rule_count(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p);
-    static QDeclarativeOrganizerRecurrenceRule *rule_at(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p, int idx);
+    static qsizetype  rule_count(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p);
+    static QDeclarativeOrganizerRecurrenceRule *rule_at(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p, qsizetype idx);
     static void  rrule_clear(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p);
     static void  xrule_clear(QQmlListProperty<QDeclarativeOrganizerRecurrenceRule> *p);
 

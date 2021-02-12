@@ -119,31 +119,31 @@ public:
     void setFetchHint(QDeclarativeContactFetchHint* fetchHint);
 
     // From QQmlParserStatus
-    virtual void classBegin() {}
-    virtual void componentComplete();
+    void classBegin() override {}
+    void componentComplete() override;
 
     // From QAbstractListModel
-    int rowCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
+    int rowCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
 
     bool autoUpdate() const;
     void setAutoUpdate(bool autoUpdate);
 
     QQmlListProperty<QDeclarativeContact> contacts() ;
     static void contacts_append(QQmlListProperty<QDeclarativeContact>* prop, QDeclarativeContact* contact);
-    static int contacts_count(QQmlListProperty<QDeclarativeContact>* prop);
-    static QDeclarativeContact* contacts_at(QQmlListProperty<QDeclarativeContact>* prop, int index);
+    static qsizetype contacts_count(QQmlListProperty<QDeclarativeContact>* prop);
+    static QDeclarativeContact* contacts_at(QQmlListProperty<QDeclarativeContact>* prop, qsizetype index);
     static void contacts_clear(QQmlListProperty<QDeclarativeContact>* prop);
 
     QQmlListProperty<QDeclarativeContactSortOrder> sortOrders();
     static void sortOrder_append(QQmlListProperty<QDeclarativeContactSortOrder> *p, QDeclarativeContactSortOrder *sortOrder);
-    static int  sortOrder_count(QQmlListProperty<QDeclarativeContactSortOrder> *p);
-    static QDeclarativeContactSortOrder * sortOrder_at(QQmlListProperty<QDeclarativeContactSortOrder> *p, int idx);
+    static qsizetype sortOrder_count(QQmlListProperty<QDeclarativeContactSortOrder> *p);
+    static QDeclarativeContactSortOrder * sortOrder_at(QQmlListProperty<QDeclarativeContactSortOrder> *p, qsizetype idx);
     static void  sortOrder_clear(QQmlListProperty<QDeclarativeContactSortOrder> *p);
 
     QQmlListProperty<QDeclarativeContactCollection> collections();
-    static int collection_count(QQmlListProperty<QDeclarativeContactCollection> *p);
-    static QDeclarativeContactCollection* collection_at(QQmlListProperty<QDeclarativeContactCollection> *p, int idx);
+    static qsizetype collection_count(QQmlListProperty<QDeclarativeContactCollection> *p);
+    static QDeclarativeContactCollection* collection_at(QQmlListProperty<QDeclarativeContactCollection> *p, qsizetype idx);
 
     Q_INVOKABLE void removeContact(QString id);
     Q_INVOKABLE void removeContacts(const QStringList& ids);

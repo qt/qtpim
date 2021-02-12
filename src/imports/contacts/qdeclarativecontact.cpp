@@ -79,12 +79,7 @@ QT_BEGIN_NAMESPACE
 
 // call-back function templates for list properties
 template <typename T, QDeclarativeContactDetail::DetailType detailType>
-static void list_property_append(QQmlListProperty<T> *, T *)
-{
-}
-
-template <typename T, QDeclarativeContactDetail::DetailType detailType>
-static int list_property_count(QQmlListProperty<T> *property)
+static qsizetype list_property_count(QQmlListProperty<T> *property)
 {
     QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
     if (object)
@@ -94,18 +89,13 @@ static int list_property_count(QQmlListProperty<T> *property)
 }
 
 template <typename T, QDeclarativeContactDetail::DetailType detailType>
-static T *list_property_at(QQmlListProperty<T> *property, int index)
+static T *list_property_at(QQmlListProperty<T> *property, qsizetype index)
 {
     QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
     if (object)
         return qobject_cast<T *>(qvariant_cast<QObject*>(object->details(detailType).at(index)));
     else
         return 0;
-}
-
-template <typename T, QDeclarativeContactDetail::DetailType detailType>
-static void list_property_clear(QQmlListProperty<T> *)
-{
 }
 
 QDeclarativeContact::QDeclarativeContact(QObject *parent)
@@ -383,11 +373,12 @@ void QDeclarativeContact::setCollectionId(const QString &collectionId)
 */
 QQmlListProperty<QDeclarativeContactDetail> QDeclarativeContact::contactDetails()
 {
-    return QQmlListProperty<QDeclarativeContactDetail>(this, 0,
-                                                                     &QDeclarativeContact::_q_detail_append,
-                                                                     &QDeclarativeContact::_q_detail_count,
-                                                                     &QDeclarativeContact::_q_detail_at,
-                                                                     &QDeclarativeContact::_q_detail_clear);
+    return { this,
+             nullptr,
+             &QDeclarativeContact::_q_detail_append,
+             &QDeclarativeContact::_q_detail_count,
+             &QDeclarativeContact::_q_detail_at,
+             &QDeclarativeContact::_q_detail_clear };
 }
 
 /*!
@@ -497,13 +488,10 @@ QDeclarativeContactAddress* QDeclarativeContact::address()
 */
 QQmlListProperty<QDeclarativeContactAddress> QDeclarativeContact::addresses()
 {
-    return QQmlListProperty<QDeclarativeContactAddress>(
-                this,
-                0,
-                &list_property_append<QDeclarativeContactAddress, QDeclarativeContactDetail::Address>,
-                &list_property_count<QDeclarativeContactAddress, QDeclarativeContactDetail::Address>,
-                &list_property_at<QDeclarativeContactAddress, QDeclarativeContactDetail::Address>,
-                &list_property_clear<QDeclarativeContactAddress, QDeclarativeContactDetail::Address>);
+    return { this,
+             nullptr,
+             &list_property_count<QDeclarativeContactAddress, QDeclarativeContactDetail::Address>,
+             &list_property_at<QDeclarativeContactAddress, QDeclarativeContactDetail::Address> };
 }
 
 /*!
@@ -565,13 +553,10 @@ QDeclarativeContactEmailAddress*  QDeclarativeContact::email()
 */
 QQmlListProperty<QDeclarativeContactEmailAddress> QDeclarativeContact::emails()
 {
-    return QQmlListProperty<QDeclarativeContactEmailAddress>(
-                this,
-                0,
-                &list_property_append<QDeclarativeContactEmailAddress, QDeclarativeContactDetail::Email>,
-                &list_property_count<QDeclarativeContactEmailAddress, QDeclarativeContactDetail::Email>,
-                &list_property_at<QDeclarativeContactEmailAddress, QDeclarativeContactDetail::Email>,
-                &list_property_clear<QDeclarativeContactEmailAddress, QDeclarativeContactDetail::Email>);
+    return { this,
+             nullptr,
+             &list_property_count<QDeclarativeContactEmailAddress, QDeclarativeContactDetail::Email>,
+             &list_property_at<QDeclarativeContactEmailAddress, QDeclarativeContactDetail::Email> };
 }
 
 /*!
@@ -592,13 +577,10 @@ QDeclarativeContactExtendedDetail*  QDeclarativeContact::extendedDetail()
 */
 QQmlListProperty<QDeclarativeContactExtendedDetail> QDeclarativeContact::extendedDetails()
 {
-    return QQmlListProperty<QDeclarativeContactExtendedDetail>(
-                this,
-                0,
-                &list_property_append<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
-                &list_property_count<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
-                &list_property_at<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
-                &list_property_clear<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>);
+    return { this,
+             nullptr,
+             &list_property_count<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail>,
+             &list_property_at<QDeclarativeContactExtendedDetail, QDeclarativeContactDetail::ExtendedDetail> };
 }
 
 /*!
@@ -729,13 +711,10 @@ QDeclarativeContactOrganization*  QDeclarativeContact::organization()
 */
 QQmlListProperty<QDeclarativeContactOrganization> QDeclarativeContact::organizations()
 {
-    return QQmlListProperty<QDeclarativeContactOrganization>(
-                this,
-                0,
-                &list_property_append<QDeclarativeContactOrganization, QDeclarativeContactDetail::Organization>,
-                &list_property_count<QDeclarativeContactOrganization, QDeclarativeContactDetail::Organization>,
-                &list_property_at<QDeclarativeContactOrganization, QDeclarativeContactDetail::Organization>,
-                &list_property_clear<QDeclarativeContactOrganization, QDeclarativeContactDetail::Organization>);
+    return { this,
+             nullptr,
+             &list_property_count<QDeclarativeContactOrganization, QDeclarativeContactDetail::Organization>,
+             &list_property_at<QDeclarativeContactOrganization, QDeclarativeContactDetail::Organization> };
 }
 
 /*!
@@ -756,13 +735,10 @@ QDeclarativeContactPhoneNumber*  QDeclarativeContact::phoneNumber()
 */
 QQmlListProperty<QDeclarativeContactPhoneNumber> QDeclarativeContact::phoneNumbers()
 {
-    return QQmlListProperty<QDeclarativeContactPhoneNumber>(
-                this,
-                0,
-                &list_property_append<QDeclarativeContactPhoneNumber, QDeclarativeContactDetail::PhoneNumber>,
-                &list_property_count<QDeclarativeContactPhoneNumber, QDeclarativeContactDetail::PhoneNumber>,
-                &list_property_at<QDeclarativeContactPhoneNumber, QDeclarativeContactDetail::PhoneNumber>,
-                &list_property_clear<QDeclarativeContactPhoneNumber, QDeclarativeContactDetail::PhoneNumber>);
+    return { this,
+             nullptr,
+             &list_property_count<QDeclarativeContactPhoneNumber, QDeclarativeContactDetail::PhoneNumber>,
+             &list_property_at<QDeclarativeContactPhoneNumber, QDeclarativeContactDetail::PhoneNumber> };
 }
 
 /*!
@@ -832,13 +808,10 @@ QDeclarativeContactUrl*  QDeclarativeContact::url()
 */
 QQmlListProperty<QDeclarativeContactUrl> QDeclarativeContact::urls()
 {
-    return QQmlListProperty<QDeclarativeContactUrl>(
-                this,
-                0,
-                &list_property_append<QDeclarativeContactUrl, QDeclarativeContactDetail::Url>,
-                &list_property_count<QDeclarativeContactUrl, QDeclarativeContactDetail::Url>,
-                &list_property_at<QDeclarativeContactUrl, QDeclarativeContactDetail::Url>,
-                &list_property_clear<QDeclarativeContactUrl, QDeclarativeContactDetail::Url>);
+    return { this,
+             nullptr,
+             &list_property_count<QDeclarativeContactUrl, QDeclarativeContactDetail::Url>,
+             &list_property_at<QDeclarativeContactUrl, QDeclarativeContactDetail::Url> };
 }
 
 /*!
@@ -870,7 +843,7 @@ void QDeclarativeContact::_q_detail_append(QQmlListProperty<QDeclarativeContactD
 /*!
     \internal
  */
-QDeclarativeContactDetail *QDeclarativeContact::_q_detail_at(QQmlListProperty<QDeclarativeContactDetail> *property, int index)
+QDeclarativeContactDetail *QDeclarativeContact::_q_detail_at(QQmlListProperty<QDeclarativeContactDetail> *property, qsizetype index)
 {
     QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
     if (object)
@@ -895,7 +868,7 @@ void QDeclarativeContact::_q_detail_clear(QQmlListProperty<QDeclarativeContactDe
 /*!
     \internal
  */
-int QDeclarativeContact::_q_detail_count(QQmlListProperty<QDeclarativeContactDetail> *property)
+qsizetype QDeclarativeContact::_q_detail_count(QQmlListProperty<QDeclarativeContactDetail> *property)
 {
     QDeclarativeContact *object = qobject_cast<QDeclarativeContact *>(property->object);
     if (object)

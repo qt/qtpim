@@ -210,9 +210,9 @@ private:
 
     // call-back functions for list property
     static void _q_detail_append(QQmlListProperty<QDeclarativeContactDetail> *property, QDeclarativeContactDetail *value);
-    static QDeclarativeContactDetail *_q_detail_at(QQmlListProperty<QDeclarativeContactDetail> *property, int index);
+    static QDeclarativeContactDetail *_q_detail_at(QQmlListProperty<QDeclarativeContactDetail> *property, qsizetype index);
     static void _q_detail_clear(QQmlListProperty<QDeclarativeContactDetail> *property);
-    static int _q_detail_count(QQmlListProperty<QDeclarativeContactDetail> *property);
+    static qsizetype _q_detail_count(QQmlListProperty<QDeclarativeContactDetail> *property);
 };
 
 QT_END_NAMESPACE

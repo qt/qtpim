@@ -116,8 +116,8 @@ public:
     QQmlListProperty<QDeclarativeContactFilter> filters();
 
     static void filters_append(QQmlListProperty<QDeclarativeContactFilter>* prop, QDeclarativeContactFilter* filter);
-    static int filters_count(QQmlListProperty<QDeclarativeContactFilter>* prop);
-    static QDeclarativeContactFilter* filters_at(QQmlListProperty<QDeclarativeContactFilter>* prop, int index);
+    static qsizetype filters_count(QQmlListProperty<QDeclarativeContactFilter>* prop);
+    static QDeclarativeContactFilter* filters_at(QQmlListProperty<QDeclarativeContactFilter>* prop, qsizetype index);
     static void filters_clear(QQmlListProperty<QDeclarativeContactFilter>* prop);
 
 protected:

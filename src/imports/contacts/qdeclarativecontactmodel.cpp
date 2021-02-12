@@ -667,12 +667,12 @@ void QDeclarativeContactModel::setFetchHint(QDeclarativeContactFetchHint* fetchH
   */
 QQmlListProperty<QDeclarativeContact> QDeclarativeContactModel::contacts()
 {
-    return QQmlListProperty<QDeclarativeContact>(this,
-                                                         0,
-                                                         contacts_append,
-                                                         contacts_count,
-                                                         contacts_at,
-                                                         contacts_clear);
+    return { this,
+             nullptr,
+             &contacts_append,
+             &contacts_count,
+             &contacts_at,
+             &contacts_clear };
 }
 
 
@@ -684,12 +684,12 @@ void QDeclarativeContactModel::contacts_append(QQmlListProperty<QDeclarativeCont
     qWarning() << Q_FUNC_INFO << "appending contacts is not currently supported";
 }
 
-int QDeclarativeContactModel::contacts_count(QQmlListProperty<QDeclarativeContact>* prop)
+qsizetype QDeclarativeContactModel::contacts_count(QQmlListProperty<QDeclarativeContact>* prop)
 {
     return static_cast<QDeclarativeContactModel*>(prop->object)->d->m_contacts.count();
 }
 
-QDeclarativeContact* QDeclarativeContactModel::contacts_at(QQmlListProperty<QDeclarativeContact>* prop, int index)
+QDeclarativeContact* QDeclarativeContactModel::contacts_at(QQmlListProperty<QDeclarativeContact>* prop, qsizetype index)
 {
     return static_cast<QDeclarativeContactModel*>(prop->object)->d->m_contacts.at(index);
 }
@@ -710,12 +710,12 @@ void QDeclarativeContactModel::contacts_clear(QQmlListProperty<QDeclarativeConta
   */
 QQmlListProperty<QDeclarativeContactSortOrder> QDeclarativeContactModel::sortOrders()
 {
-    return QQmlListProperty<QDeclarativeContactSortOrder>(this,
-                                                                  0,
-                                                                  sortOrder_append,
-                                                                  sortOrder_count,
-                                                                  sortOrder_at,
-                                                                  sortOrder_clear);
+    return { this,
+             nullptr,
+             &sortOrder_append,
+             &sortOrder_count,
+             &sortOrder_at,
+             &sortOrder_clear };
 }
 
 void QDeclarativeContactModel::startImport(QVersitReader::State state)
@@ -1348,20 +1348,21 @@ void QDeclarativeContactModel::sortOrder_append(QQmlListProperty<QDeclarativeCon
     }
 }
 
-int  QDeclarativeContactModel::sortOrder_count(QQmlListProperty<QDeclarativeContactSortOrder> *p)
+qsizetype  QDeclarativeContactModel::sortOrder_count(QQmlListProperty<QDeclarativeContactSortOrder> *p)
 {
     QDeclarativeContactModel* model = qobject_cast<QDeclarativeContactModel*>(p->object);
     if (model)
         return model->d->m_sortOrders.size();
     return 0;
 }
-QDeclarativeContactSortOrder * QDeclarativeContactModel::sortOrder_at(QQmlListProperty<QDeclarativeContactSortOrder> *p, int idx)
+
+QDeclarativeContactSortOrder * QDeclarativeContactModel::sortOrder_at(QQmlListProperty<QDeclarativeContactSortOrder> *p, qsizetype idx)
 {
     QDeclarativeContactModel* model = qobject_cast<QDeclarativeContactModel*>(p->object);
 
     QDeclarativeContactSortOrder* sortOrder = 0;
     if (model) {
-        int i = 0;
+        qsizetype i = 0;
         foreach (QDeclarativeContactSortOrder* s, model->d->m_sortOrders) {
             if (i == idx) {
                 sortOrder = s;
@@ -1373,6 +1374,7 @@ QDeclarativeContactSortOrder * QDeclarativeContactModel::sortOrder_at(QQmlListPr
     }
     return sortOrder;
 }
+
 void  QDeclarativeContactModel::sortOrder_clear(QQmlListProperty<QDeclarativeContactSortOrder> *p)
 {
     QDeclarativeContactModel* model = qobject_cast<QDeclarativeContactModel*>(p->object);
@@ -1392,16 +1394,16 @@ void  QDeclarativeContactModel::sortOrder_clear(QQmlListProperty<QDeclarativeCon
   */
 QQmlListProperty<QDeclarativeContactCollection> QDeclarativeContactModel::collections()
 {
-    return QQmlListProperty<QDeclarativeContactCollection>(this, 0, collection_count, collection_at);
+    return { this, nullptr, &collection_count, &collection_at };
 }
 
-int QDeclarativeContactModel::collection_count(QQmlListProperty<QDeclarativeContactCollection> *p)
+qsizetype QDeclarativeContactModel::collection_count(QQmlListProperty<QDeclarativeContactCollection> *p)
 {
     QDeclarativeContactModel* model = qobject_cast<QDeclarativeContactModel*>(p->object);
     return model ? model->d->m_collections.count() : 0;
 }
 
-QDeclarativeContactCollection *QDeclarativeContactModel::collection_at(QQmlListProperty<QDeclarativeContactCollection> *p, int idx)
+QDeclarativeContactCollection *QDeclarativeContactModel::collection_at(QQmlListProperty<QDeclarativeContactCollection> *p, qsizetype idx)
 {
     QDeclarativeContactModel* model = qobject_cast<QDeclarativeContactModel*>(p->object);
     QDeclarativeContactCollection* collection = 0;
@@ -1411,6 +1413,7 @@ QDeclarativeContactCollection *QDeclarativeContactModel::collection_at(QQmlListP
     }
     return collection;
 }
+
 /*!
     \internal
 
